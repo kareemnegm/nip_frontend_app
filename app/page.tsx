@@ -1,65 +1,130 @@
-import Image from "next/image";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { StickyCta } from "@/components/StickyCta";
+import {
+  AdvisorCard,
+  Button,
+  CommunityCard,
+  ConsultationRequestForm,
+  Container,
+  FactsStrip,
+  GenericSearchBar,
+  InsightCard,
+  OffPlanCard,
+  PrivateAdvisoryForm,
+  PropertyCard,
+  PropertyFilterBar,
+  TextInput,
+} from "@/components/ui";
+
+const propertyFacts = [
+  { label: "Bedrooms", value: "2", icon: "bed" as const },
+  { label: "Bathrooms", value: "3", icon: "bath" as const },
+  { label: "Total Area", value: "2,315 sq ft", icon: "home" as const },
+  { label: "Property Type", value: "Apartment", icon: "building" as const },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="min-h-screen bg-background text-ink">
+      <Header />
+      <StickyCta />
+
+      <main className="py-12">
+        <Container className="space-y-16">
+          <section>
+            <p className="text-sm font-bold uppercase tracking-wide text-sapphire-400">
+              Components - NIP Design System
+            </p>
+            <h1 className="mt-2 text-5xl font-bold tracking-tight text-brand">
+              Component Library
+            </h1>
+            <p className="mt-3 max-w-2xl text-base text-ink-secondary">
+              Shared components built from the Figma screenshots: buttons,
+              search, facts strips, cards, lead forms, header, sticky CTA, and
+              footer.
+            </p>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl font-bold text-brand">Buttons</h2>
+            <div className="rounded-lg bg-surface-muted p-6">
+              <div className="flex flex-wrap gap-4">
+                <Button>Speak with NIP</Button>
+                <Button variant="secondary">Speak with NIP</Button>
+                <Button variant="light">Speak with NIP</Button>
+                <Button variant="muted">Request Details</Button>
+                <Button variant="outline">Speak with NIP</Button>
+                <Button variant="link">Explore Property</Button>
+              </div>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl font-bold text-brand">Search / Filter Bar</h2>
+            <PropertyFilterBar />
+            <GenericSearchBar />
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl font-bold text-brand">Property / Facts Strip</h2>
+            <div className="rounded-lg bg-surface-muted p-6">
+              <FactsStrip items={propertyFacts} />
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl font-bold text-brand">Input Field</h2>
+            <div className="max-w-md rounded-lg bg-surface-muted p-6">
+              <TextInput label="Full Name" placeholder="Enter your full name" />
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl font-bold text-brand">Cards</h2>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <PropertyCard
+                title="Property Name"
+                location="Sheikh Zayed Road, Dubai"
+                price="AED 2,658,000"
+              />
+              <InsightCard
+                category="Market Intelligence"
+                title="The Article's Headline"
+                excerpt="The article's stand-first: a one-to-two-line summary of the article."
+              />
+              <OffPlanCard
+                title="Residences Name"
+                location="Palm Jumeirah | Emaar"
+                price="AED 4,710,000"
+              />
+              <AdvisorCard
+                title="Selected for You by your Advisor"
+                excerpt="A confidential selection aligned to your mandate."
+              />
+              <CommunityCard
+                title="Community Name"
+                facts={[
+                  "Family Oriented",
+                  "Blue Metro Line",
+                  "Green Area & Parks",
+                  "Retails & Outlets",
+                ]}
+              />
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h2 className="text-2xl font-bold text-brand">Forms</h2>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <PrivateAdvisoryForm />
+              <ConsultationRequestForm />
+            </div>
+          </section>
+        </Container>
       </main>
+
+      <Footer />
     </div>
   );
 }

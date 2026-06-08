@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NIP Reality Frontend
 
-## Getting Started
+Next.js frontend for the NIP Reality platform. **Open this folder** as your workspace in Cursor.
 
-First, run the development server:
+| | |
+|---|---|
+| Stack | Next.js 16, React 19, TypeScript, Tailwind v4 |
+| Data | External backend REST API (no Prisma in frontend) |
 
-```bash
+## Quick start
+
+```powershell
+npm install
+copy .env.example .env.local   # set NEXT_PUBLIC_API_URL when backend is ready
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```powershell
+npm run dev       # development server
+npm run check     # lint + typecheck
+npm run build     # production build
+```
 
-## Learn More
+## Documentation
 
-To learn more about Next.js, take a look at the following resources:
+| Doc | Purpose |
+|-----|---------|
+| **[docs/WORKING-WITH-JIMMY.md](./docs/WORKING-WITH-JIMMY.md)** | **How to talk to Jimmy (start here)** |
+| [AGENTS.md](./AGENTS.md) | Cursor agent rules — Jimmy persona |
+| [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | Structure and API data flow |
+| [docs/JIMMY-WORKFLOW.md](./docs/JIMMY-WORKFLOW.md) | Figma → React workflow |
+| [docs/EDITABLE-BLOCKS.md](./docs/EDITABLE-BLOCKS.md) | CMS editable sections |
+| [docs/CURSOR-SKILLS.md](./docs/CURSOR-SKILLS.md) | Cursor skills guide |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Cursor setup
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Rules:** `.cursor/rules/` — auto-attached project context
+- **Skills:** `.cursor/skills/` — figma-to-frontend, react-patterns, nextjs-app-router, nip-architecture
 
-## Deploy on Vercel
+## Reference project
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+UI/pattern reference: `c:\laragon\www\website` (uses Prisma — NIP uses backend API instead).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Phases
+
+| Phase | Status |
+|-------|--------|
+| 1 — Init + folder structure | Done |
+| 2 — Docs, Cursor rules/skills | Done |
+| 3 — Backend API contract + editable components | Next |
+| 4 — Figma page builds | Ongoing |

@@ -1,0 +1,7 @@
+{
+    "explorer.decorations.badges": true,
+    "workbench.sideBar.location": "left",
+    "workbench.panel.defaultLocation": "bottom",
+    "workbench.statusBar.visible": true,
+    "workbench.activityBar.orientation": "vertical"
+}

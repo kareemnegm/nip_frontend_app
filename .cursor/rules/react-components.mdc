@@ -1,0 +1,51 @@
+---
+description: React component and Tailwind conventions for nip_frontend_app
+globs: **/*.tsx
+alwaysApply: false
+---
+
+# React + Tailwind Patterns
+
+## Components
+
+- Functional components only
+- PascalCase files in `components/` (e.g. `HeroSection.tsx`)
+- Section components: `components/sections/`
+- Hooks co-located in `components/` (e.g. `useIsAdmin.ts`)
+
+## Server vs client
+
+```tsx
+// Default — no directive
+export default async function Page() { ... }
+
+// Only when needed — interactivity, hooks, browser APIs
+"use client";
+export function MobileMenu() { ... }
+```
+
+## Figma → Tailwind
+
+- Match spacing/sizing from Figma inspect
+- Use flex/grid; avoid absolute positioning unless design requires
+- `next/image` for photos; explicit width/height or `fill` + `sizes`
+- Extract repeated colors/spacing to `app/globals.css` `@theme`
+
+## Editable blocks
+
+Wrap CMS slots:
+
+```tsx
+<EditableText
+  relUrl="/about"
+  blockKey="hero-title"
+  placeholderContent="Title"
+  placeholderTag="h1"
+  className="text-4xl font-bold"
+/>
+```
+
+## Styling
+
+- Tailwind utilities primary; CSS modules optional for complex one-offs
+- No inline styles except dynamic values
