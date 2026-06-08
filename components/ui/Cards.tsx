@@ -79,7 +79,7 @@ export function PropertyCard({
             <span key={item}>{item}</span>
           ))}
         </div>
-        <div className="flex items-end justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs text-ink-tertiary">Starting From</p>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -93,9 +93,11 @@ export function PropertyCard({
               ))}
             </div>
           </div>
-          <div className="text-right">
+          <div className="sm:text-right">
             <p className="text-xl font-bold text-brand">{price}</p>
-            <Button variant="link">Explore Property <Icon name="arrowRight" className="h-4 w-4" /></Button>
+            <Button variant="link">
+              Explore Property <Icon name="arrowRight" className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </div>

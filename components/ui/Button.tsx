@@ -4,9 +4,11 @@ import { cn } from "@/lib/cn";
 export type ButtonVariant =
   | "primary"
   | "secondary"
+  | "accent"
   | "light"
   | "muted"
   | "outline"
+  | "outlineInverse"
   | "link";
 
 export type ButtonSize = "sm" | "md" | "lg";
@@ -25,10 +27,13 @@ export type ButtonProps = BaseButtonProps &
 const variantClasses: Record<ButtonVariant, string> = {
   primary: "bg-brand text-white hover:bg-brand-hover active:bg-brand-pressed",
   secondary: "bg-sapphire-500 text-white hover:bg-sapphire-600",
+  accent: "bg-accent text-white hover:bg-accent-hover active:bg-accent-pressed",
   light: "bg-sapphire-100 text-brand hover:bg-sapphire-200",
   muted: "bg-ink-tertiary text-white hover:bg-ink-secondary",
   outline:
     "border border-brand bg-transparent text-brand hover:bg-sapphire-50",
+  outlineInverse:
+    "border border-white bg-transparent text-white hover:bg-white/10",
   link: "bg-transparent px-0 text-brand hover:text-brand-hover",
 };
 
