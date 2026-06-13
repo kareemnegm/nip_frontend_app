@@ -2,7 +2,7 @@ export { Badge } from "./Badge";
 export type { BadgeProps } from "./Badge";
 export { Breadcrumbs } from "./Breadcrumbs";
 export type { BreadcrumbItem, BreadcrumbsProps } from "./Breadcrumbs";
-export { Button } from "./Button";
+export { Button, SpeakWithNipButton } from "./Button";
 export type { ButtonProps, ButtonSize, ButtonVariant } from "./Button";
 export {
   AdvisorCard,
@@ -32,9 +32,12 @@ export type {
 } from "./FormControls";
 export { Icon } from "./Icon";
 export type { IconName, IconProps } from "./Icon";
+export { InsightCategoryFilters } from "./InsightCategoryFilters";
 export { ImagePlaceholder } from "./ImagePlaceholder";
 export type { ImagePlaceholderProps } from "./ImagePlaceholder";
 export { ConsultationRequestForm, PrivateAdvisoryForm } from "./LeadForms";
 export { Logo } from "./Logo";
 export type { LogoProps } from "./Logo";
 export { GenericSearchBar, PropertyFilterBar } from "./SearchBars";
+export { PropertyResultsToolbar } from "./PropertyResultsToolbar";
+export type { PropertyResultsToolbarProps } from "./PropertyResultsToolbar";

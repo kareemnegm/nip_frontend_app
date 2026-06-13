@@ -2,23 +2,29 @@ import { Button } from "@/components/ui/Button";
 import { PropertyCard } from "@/components/ui/Cards";
 import { Container } from "@/components/ui/Container";
 import { curatedProperties } from "./home-data";
+import { homeEditable } from "./home-editable";
 import { SectionHeading } from "./SectionHeading";
 
-export function CuratedCollectionSection() {
+export async function CuratedCollectionSection() {
   return (
-    <section className="bg-sapphire-50 py-16 sm:py-20 lg:py-24">
-      <Container className="space-y-10 lg:space-y-12">
+    <section className="bg-sapphire-50 py-16 sm:py-20">
+      <Container className="space-y-10">
         <SectionHeading
           title="Curated Collection"
-          description="A refined selection of residences chosen for location, quality, and long-term value across Dubai's most sought-after communities."
+          description="A considered selection of properties, projects, and places connected by a clear point of view - not a search filter."
+          editable={{
+            relUrl: homeEditable.relUrl,
+            titleKey: homeEditable.curatedCollection.titleKey,
+            descKey: homeEditable.curatedCollection.descKey,
+          }}
         />
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-6 xl:grid-cols-3">
           {curatedProperties.map((property, index) => (
-            <PropertyCard key={`curated-${index}`} {...property} />
+            <PropertyCard key={`curated-${index}`} className="min-h-[480px]" {...property} />
           ))}
         </div>
-        <div className="flex justify-center pt-2">
-          <Button href="/properties" size="lg">
+        <div className="flex justify-center">
+          <Button href="/properties" size="lg" className="h-9">
             Explore the Collection
           </Button>
         </div>

@@ -26,6 +26,7 @@ export function PageHero({
 
   return (
     <section
+      data-site-hero
       className={cn(
         "w-full",
         isDark

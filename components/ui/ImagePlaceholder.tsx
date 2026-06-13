@@ -17,12 +17,12 @@ export function ImagePlaceholder({
   return (
     <div
       className={cn(
-        "flex items-center justify-center bg-sapphire-100 text-white",
+        "flex items-center justify-center bg-basalt-100 text-white",
         rounded && "rounded-[var(--radius-card)]",
         className,
       )}
     >
-      <Icon name={icon} className="h-14 w-14" />
+      <Icon name={icon} className="h-[70px] w-[70px]" />
       {label ? <span className="sr-only">{label}</span> : null}
     </div>
   );

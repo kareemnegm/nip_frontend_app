@@ -1,37 +1,58 @@
-import { apiFetch } from "@/lib/api/client";
-import type {
-  Block,
-  BlockRecord,
-  DeleteBlockPayload,
-  SaveBlockPayload,
-} from "@/types/blocks";
+import { cache } from "react";
+import { apiFetch } from "./client";
 
-/** Fetch all CMS blocks for a page path. Backend contract TBD. */
-export async function getBlocksForPage(relUrl: string): Promise<BlockRecord> {
+export type BlockType = "TEXT" | "IMAGE" | "VIDEO" | "HTML";
+
+export type Block = {
+  key: string;
+  content: string;
+  blockType: BlockType;
+  elementTag?: string | null;
+};
+
+export type BlockRecord = Record<
+  string,
+  {
+    content: string | null;
+    blockType: BlockType;
+    elementTag?: string | null;
+  }
+>;
+
+export const getBlocksForPage = cache(async (relUrl: string): Promise<BlockRecord> => {
   try {
     const blocks = await apiFetch<Block[]>("/api/v1/blocks", {
       params: { relUrl },
-      cache: "no-store",
     });
     return Object.fromEntries(
-      blocks.map((b) => [
-        b.key,
-        { content: b.content, blockType: b.blockType, elementTag: b.elementTag },
+      blocks.map((block) => [
+        block.key,
+        {
+          content: block.content,
+          blockType: block.blockType,
+          elementTag: block.elementTag,
+        },
       ]),
     );
   } catch {
     return {};
   }
-}
+});
 
-export async function saveBlock(payload: SaveBlockPayload) {
+export async function saveBlock(payload: {
+  relUrl: string;
+  key: string;
+  content: string;
+  blockType: BlockType;
+  elementTag?: string;
+}) {
   return apiFetch("/api/v1/blocks", {
     method: "POST",
     body: JSON.stringify(payload),
   });
 }
 
-export async function deleteBlock(payload: DeleteBlockPayload) {
+export async function deleteBlock(payload: { relUrl: string; key: string }) {
   return apiFetch("/api/v1/blocks", {
     method: "DELETE",
     body: JSON.stringify(payload),

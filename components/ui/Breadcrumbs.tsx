@@ -8,10 +8,55 @@ export type BreadcrumbItem = {
 export type BreadcrumbsProps = {
   items: BreadcrumbItem[];
   tone?: "light" | "dark";
+  format?: "default" | "property";
   className?: string;
 };
 
-export function Breadcrumbs({ items, tone = "light", className }: BreadcrumbsProps) {
+export function Breadcrumbs({
+  items,
+  tone = "light",
+  format = "default",
+  className,
+}: BreadcrumbsProps) {
+  if (format === "property") {
+    return (
+      <nav
+        aria-label="Breadcrumb"
+        className={cn("text-xs leading-4 text-basalt-300", className)}
+      >
+        <ol className="flex flex-wrap items-center">
+          {items.map((item, index) => {
+            const isLast = index === items.length - 1;
+            return (
+              <li
+                key={`${item.label}-${index}`}
+                className="flex items-center"
+              >
+                {index > 0 ? (
+                  <span aria-hidden className="mx-2">
+                    ›
+                  </span>
+                ) : null}
+                {item.href && !isLast ? (
+                  <a
+                    href={item.href}
+                    className="transition-colors hover:text-brand"
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <span className={isLast ? "text-basalt-300" : undefined}>
+                    {item.label}
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+    );
+  }
+
   const base = tone === "dark" ? "text-white/60" : "text-ink-tertiary";
   const active = tone === "dark" ? "text-white" : "text-ink-secondary";
 

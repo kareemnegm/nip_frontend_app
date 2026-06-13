@@ -1,55 +1,108 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f1f4f7;
-  --foreground: #1b1f2e;
+  --background: #eef3fa;
+  --foreground: #171e2d;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-archivo);
   --font-mono: var(--font-geist-mono);
 
-  --color-sapphire-50: #f1f4f7;
-  --color-sapphire-100: #dde4ed;
-  --color-sapphire-200: #b5c4d6;
-  --color-sapphire-300: #7293bf;
-  --color-sapphire-400: #446591;
-  --color-sapphire-500: #254672;
-  --color-sapphire-600: #12335f;
-  --color-sapphire-700: #0c2547;
-  --color-sapphire-800: #081a33;
-  --color-brand: #12335f;
-  --color-brand-hover: #0c2547;
-  --color-brand-pressed: #081a33;
-  --color-accent: #3776d5;
-  --color-accent-hover: #2f68a8;
-  --color-accent-pressed: #235a89;
-  --color-ink: #1b1f2e;
-  --color-ink-secondary: #3a485f;
-  --color-ink-tertiary: #52617d;
-  --color-text-inactive: #b5c0d3;
+  --color-sapphire-50: #eef3fa;
+  --color-sapphire-100: #d6e2f2;
+  --color-sapphire-200: #a8bfdf;
+  --color-sapphire-300: #6f95c5;
+  --color-sapphire-400: #3e6aa4;
+  --color-sapphire-500: #1e5394;
+  --color-sapphire-600: #0e4286;
+  --color-sapphire-700: #0b3268;
+  --color-sapphire-800: #071e40;
+  --color-brand: #0b3268;
+  --color-brand-hover: #071e40;
+  --color-brand-pressed: #071e40;
+  --color-accent: #3778ce;
+  --color-accent-hover: #174379;
+  --color-accent-pressed: #103466;
+  --color-accent-on-dark: #8fb0dc;
+  --color-ink: #171e2d;
+  --color-ink-secondary: #323e58;
+  --color-ink-tertiary: #4e5a78;
+  --color-text-inactive: #a6adba;
   --color-surface: #ffffff;
-  --color-surface-muted: #f1f4f7;
-  --color-line: #c0c8d6;
+  --color-surface-muted: #eef3fa;
+  --color-bg-secondary: #f1f4f7;
+  --color-line: #d9deea;
+  --color-border-default: #bbcadd;
+  --color-border-strong: #6f95c5;
   --color-success: #2e7d5b;
   --color-warning: #b07a1e;
   --color-error: #b23a48;
   --color-gold: #b07a1e;
   --color-gold-muted: #9a6818;
+  --color-basalt-50: #eef1f5;
+  --color-basalt-100: #d9e0ea;
+  --color-basalt-200: #b3bdd0;
+  --color-basalt-300: #7e8aa4;
+  --color-basalt-400: #4e5a78;
+  --color-basalt-500: #323e58;
+  --color-basalt-600: #212b3f;
+  --color-platinum-400: #aeb6c2;
+  --color-platinum-600: #7c8694;
 
-  --font-display: var(--font-cormorant);
+  --font-display: Didot, "Bodoni 72", var(--font-cormorant), serif;
+  --font-logo: var(--font-kalnia);
 
-  --radius-card: 10px;
+  --radius-card: 8px;
   --radius-field: 4px;
-  --shadow-card: 0 10px 25px rgb(8 26 51 / 8%);
+  --shadow-card: 0 2px 4px rgb(18 51 94 / 6%);
+
+  /* Typography — Figma foundations (1300:10840) */
+  --text-display-lg: 3.5rem;
+  --text-display-lg--line-height: 4rem;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-md: 2.25rem;
+  --text-display-md--line-height: 2.625rem;
+  --text-display-md--letter-spacing: -0.02em;
+  --text-h1: 1.75rem;
+  --text-h1--line-height: 2rem;
+  --text-h1--letter-spacing: -0.01em;
+  --text-h2: 1.375rem;
+  --text-h2--line-height: 1.625rem;
+  --text-h3: 1.0625rem;
+  --text-h3--line-height: 1.375rem;
+  --text-h3--letter-spacing: -0.01em;
+  --text-h4: 0.9375rem;
+  --text-h4--line-height: 1.375rem;
+  --text-h4--letter-spacing: -0.01em;
+  --text-body-lg: 1.0625rem;
+  --text-body-lg--line-height: 1.625rem;
+  --text-body-md: 0.9375rem;
+  --text-body-md--line-height: 1.5rem;
+  --text-body-sm: 0.8125rem;
+  --text-body-sm--line-height: 1.125rem;
+  --text-body-xs: 0.75rem;
+  --text-body-xs--line-height: 1rem;
+  --text-overline: 0.75rem;
+  --text-overline--line-height: 1rem;
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.125rem;
+  --text-label-sm: 0.6875rem;
+  --text-label-sm--line-height: 0.875rem;
+}
+
+html {
+  font-size: 16px;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-archivo), Arial, Helvetica, sans-serif;
+  font-size: var(--text-body-sm);
+  line-height: var(--text-body-sm--line-height);
 }
 
 button,

@@ -1,168 +1,124 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/SiteShell";
-import { SectionHeading } from "@/components/sections";
+import {
+  PropertyGallery,
+  PropertyStoryContent,
+  PropertyViewingCard,
+} from "@/components/sections/PropertyStorySections";
 import {
   Badge,
   Breadcrumbs,
   Button,
-  Container,
   FactsStrip,
   Icon,
-  ImagePlaceholder,
   PropertyCard,
 } from "@/components/ui";
+import {
+  siteMaxWidth,
+  sitePageGutterX,
+  sitePageInnerClassName,
+} from "@/components/ui/SiteChrome";
 import { propertyFacts, sampleProperties } from "@/components/placeholders";
+import { cn } from "@/lib/cn";
 
 export const metadata: Metadata = {
-  title: "Property Story | NIP Reality",
+  title: "Trump International Hotel & Tower | NIP Reality",
+  description:
+    "Property story for Trump International Hotel & Tower on Sheikh Zayed Road, Dubai.",
 };
-
-const amenities = [
-  "Infinity Pool",
-  "Basketball Court",
-  "Concierge",
-  "Flower Garden",
-  "Fitness Centre",
-  "BBQ Area",
-  "Kids Area",
-  "Cycling Trail",
-  "Valet Parking",
-];
 
 export default function PropertyStoryPage() {
   return (
     <SiteShell>
-      <section className="w-full bg-surface">
-        <Container className="py-10 sm:py-12">
-          <Breadcrumbs
-            items={[
-              { label: "Properties", href: "/properties" },
-              { label: "Apartments", href: "/properties" },
-              { label: "Sheikh Zayed Road" },
-            ]}
-          />
-
-          <div className="mt-6 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
-            <div>
-              <div className="flex flex-wrap gap-2">
-                <Badge>Apartment</Badge>
-                <Badge>For Sale</Badge>
-              </div>
-              <h1 className="mt-4 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-brand sm:text-4xl lg:text-5xl">
-                Trump International Hotel &amp; Tower
-              </h1>
-              <p className="mt-3 flex items-center gap-1 text-sm text-ink-secondary">
-                <Icon name="mapPin" className="h-4 w-4 text-brand" />
-                Sheikh Zayed Road, Dubai
-              </p>
-            </div>
-            <div className="lg:text-right">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-tertiary">
-                Guide Price
-              </p>
-              <p className="mt-2 text-2xl font-bold text-brand">AED 2,658,000</p>
-              <Button href="/contact" className="mt-4">
-                Request Private Advisory
-              </Button>
-            </div>
-          </div>
-
-          <div className="mt-8 grid gap-4 lg:grid-cols-[2fr_1fr]">
-            <ImagePlaceholder className="aspect-[16/10]" />
-            <div className="grid gap-4">
-              <ImagePlaceholder className="aspect-[16/10]" />
-              <ImagePlaceholder className="aspect-[16/10]" />
-            </div>
-          </div>
-
-          <FactsStrip items={propertyFacts} className="mt-8" />
-
-          <div className="mt-12 grid gap-10 lg:grid-cols-[2fr_1fr]">
-            <div className="space-y-10">
-              <div>
-                <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-brand sm:text-3xl">
-                  The Story
-                </h2>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-ink-secondary">
-                  {
-                    "A landmark residence on Sheikh Zayed Road, pairing branded service with skyline views and a position at the centre of the city's commercial spine. Interiors are delivered to a turn-key standard, with floor-to-ceiling glazing and a layout tuned for both living and long-let yield."
-                  }
-                </p>
-              </div>
-
-              <div>
-                <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-brand sm:text-3xl">
-                  Amenities
-                </h2>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {amenities.map((amenity) => (
-                    <span
-                      key={amenity}
-                      className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-xs text-ink-secondary"
-                    >
-                      <Icon name="check" className="h-3.5 w-3.5 text-brand" />
-                      {amenity}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h2 className="font-[family-name:var(--font-display)] text-2xl font-semibold text-brand sm:text-3xl">
-                  Location
-                </h2>
-                <ImagePlaceholder
-                  icon="mapPin"
-                  className="mt-4 aspect-[16/7]"
+      <section className="bg-white pb-6 pt-10">
+        <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
+          <div className={sitePageInnerClassName}>
+            <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
+              <div className="flex max-w-[614px] flex-col gap-5">
+                <Breadcrumbs
+                  format="property"
+                  items={[
+                    { label: "Properties", href: "/properties" },
+                    { label: "Apartments", href: "/properties" },
+                    { label: "Sheikh Zayed Road" },
+                  ]}
                 />
+                <div className="flex flex-wrap gap-2">
+                  <Badge tone="property">Apartment</Badge>
+                  <Badge tone="property">For Sale</Badge>
+                </div>
+                <h1 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
+                  Trump International Hotel &amp; Tower
+                </h1>
+                <p className="flex items-center gap-1.5 text-body-sm text-ink-tertiary">
+                  <Icon
+                    name="mapPin"
+                    className="h-3.5 w-3.5 shrink-0 text-brand"
+                  />
+                  Sheikh Zayed Road, Dubai
+                </p>
+              </div>
+
+              <div className="flex flex-col items-start gap-4 lg:items-end">
+                <p className="text-[11px] font-medium leading-[14px] text-basalt-300 lg:text-right">
+                  GUIDE PRICE
+                </p>
+                <p className="flex items-center gap-2 text-[30px] font-bold leading-[38px] text-brand">
+                  <Icon name="currency" className="h-6 w-6 shrink-0" />
+                  2,658,000
+                </p>
+                <Button href="/contact" className="w-full sm:w-auto">
+                  Request Private Advisory
+                </Button>
               </div>
             </div>
-
-            <aside className="lg:sticky lg:top-28 lg:self-start">
-              <div className="rounded-[var(--radius-card)] border border-line bg-sapphire-50 p-6">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-tertiary">
-                  Arrange a Viewing
-                </p>
-                <p className="mt-3 text-sm text-ink-secondary">
-                  Speak with the advisor handling this residence.
-                </p>
-                <div className="mt-5 flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-brand text-white">
-                    <Icon name="user" className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <p className="text-sm font-bold text-brand">NIP Private Advisory</p>
-                    <p className="text-xs text-ink-tertiary">
-                      Responds within 1 business day
-                    </p>
-                  </div>
-                </div>
-                <div className="mt-5 space-y-3">
-                  <Button href="/contact" className="w-full">
-                    Request Details
-                  </Button>
-                  <Button href="/contact" variant="outline" className="w-full">
-                    Speak with NIP
-                  </Button>
-                </div>
-              </div>
-            </aside>
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="w-full bg-sapphire-50">
-        <Container className="py-16 sm:py-20">
-          <SectionHeading
-            title="Similar Properties"
-            description="A few residences with a comparable profile and position."
-          />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {sampleProperties.slice(0, 3).map((property, index) => (
-              <PropertyCard key={`similar-${index}`} {...property} />
-            ))}
+      <section className="bg-white pb-8">
+        <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
+          <div className={sitePageInnerClassName}>
+            <PropertyGallery />
           </div>
-        </Container>
+        </div>
+      </section>
+
+      <section className="bg-white pb-10">
+        <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
+          <div className={sitePageInnerClassName}>
+            <FactsStrip items={propertyFacts} variant="property" />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white pb-[72px]">
+        <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
+          <div
+            className={cn(
+              sitePageInnerClassName,
+              "flex flex-col gap-12 lg:flex-row lg:gap-24",
+            )}
+          >
+            <PropertyStoryContent />
+            <PropertyViewingCard />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-surface-muted pb-20 pt-16">
+        <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
+          <div className={cn(sitePageInnerClassName, "space-y-7")}>
+            <p className="text-center text-overline font-semibold leading-4 text-accent">
+              SIMILAR PROPERTIES
+            </p>
+            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              {sampleProperties.slice(0, 3).map((property, index) => (
+                <PropertyCard key={`similar-${index}`} {...property} />
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
     </SiteShell>
   );

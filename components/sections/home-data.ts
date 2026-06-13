@@ -3,21 +3,21 @@ export const featuredInsights = [
     category: "Market Intelligence",
     title: "The Article's Headline",
     excerpt:
-      "The article's stand-first: a one-to-two-line summary of the article.",
+      "The article's stand-first: a one-to-two-line summary of the article. This is simply dummy text of the digital and typesetting industry.",
     readTime: "6 min read",
   },
   {
     category: "Market Intelligence",
     title: "The Article's Headline",
     excerpt:
-      "The article's stand-first: a one-to-two-line summary of the article.",
+      "The article's stand-first: a one-to-two-line summary of the article. This is simply dummy text of the digital and typesetting industry.",
     readTime: "6 min read",
   },
   {
     category: "Market Intelligence",
     title: "The Article's Headline",
     excerpt:
-      "The article's stand-first: a one-to-two-line summary of the article.",
+      "The article's stand-first: a one-to-two-line summary of the article. This is simply dummy text of the digital and typesetting industry.",
     readTime: "6 min read",
   },
 ];
@@ -26,23 +26,28 @@ export const curatedProperties = [
   {
     title: "Property Name",
     location: "Sheikh Zayed Road, Dubai",
-    price: "AED 2,658,000",
+    price: "2,658,000",
   },
   {
     title: "Property Name",
     location: "Sheikh Zayed Road, Dubai",
-    price: "AED 2,658,000",
+    price: "2,658,000",
   },
   {
     title: "Property Name",
     location: "Sheikh Zayed Road, Dubai",
-    price: "AED 2,658,000",
+    price: "2,658,000",
   },
 ];
 
 export const marketPulseStats = [
-  { label: "Price per sq ft", value: "AED 2,400" },
-  { label: "Active Listings", value: "12" },
-  { label: "Rental Yield", value: "6.2%" },
-  { label: "Communities under Coverage", value: "28" },
+  {
+    context: "Prime Communities",
+    label: "AVG Price /Sq Ft",
+    value: "2,400",
+    icon: true,
+  },
+  { context: "Active Launches", label: "Off-Plan Projects", value: "12" },
+  { context: "Investor Segment", label: "AVG Gross Yield", value: "6.2%" },
+  { context: "Across Dubai", label: "Communities under Coverage", value: "28" },
 ];

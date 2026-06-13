@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Geist, Geist_Mono } from "next/font/google";
+import { Archivo, Cormorant_Garamond, Geist_Mono, Kalnia } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const geistMono = Geist_Mono({
@@ -14,6 +15,12 @@ const geistMono = Geist_Mono({
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const kalnia = Kalnia({
+  variable: "--font-kalnia",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
@@ -32,7 +39,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${cormorant.variable} h-full antialiased`}
+      className={`${archivo.variable} ${geistMono.variable} ${cormorant.variable} ${kalnia.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

@@ -1,4 +1,11 @@
+import { EditableText } from "@/components/EditableText";
 import { cn } from "@/lib/cn";
+
+export type SectionHeadingEditable = {
+  relUrl: string;
+  titleKey: string;
+  descKey?: string;
+};
 
 export type SectionHeadingProps = {
   title: string;
@@ -6,14 +13,22 @@ export type SectionHeadingProps = {
   align?: "left" | "center";
   className?: string;
   titleClassName?: string;
+  editable?: SectionHeadingEditable;
 };
 
-export function SectionHeading({
+const titleClasses =
+  "font-[family-name:var(--font-display)] text-[36px] font-normal uppercase leading-[38px] tracking-[-0.02em] text-brand sm:text-[44px] sm:leading-[42px]";
+
+const descriptionClasses =
+  "mx-auto mt-4 max-w-[464px] text-body-md leading-[22px] text-ink-secondary";
+
+export async function SectionHeading({
   title,
   description,
   align = "center",
   className,
   titleClassName,
+  editable,
 }: SectionHeadingProps) {
   return (
     <div
@@ -23,18 +38,29 @@ export function SectionHeading({
         className,
       )}
     >
-      <h2
-        className={cn(
-          "font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-brand sm:text-4xl lg:text-5xl",
-          titleClassName,
-        )}
-      >
-        {title}
-      </h2>
+      {editable ? (
+        <EditableText
+          relUrl={editable.relUrl}
+          blockKey={editable.titleKey}
+          placeholderContent={title}
+          placeholderTag="h2"
+          className={cn(titleClasses, titleClassName)}
+        />
+      ) : (
+        <h2 className={cn(titleClasses, titleClassName)}>{title}</h2>
+      )}
       {description ? (
-        <p className="mt-4 text-sm leading-7 text-ink-secondary sm:text-base">
-          {description}
-        </p>
+        editable?.descKey ? (
+          <EditableText
+            relUrl={editable.relUrl}
+            blockKey={editable.descKey}
+            placeholderContent={description}
+            placeholderTag="p"
+            className={descriptionClasses}
+          />
+        ) : (
+          <p className={descriptionClasses}>{description}</p>
+        )
       ) : null}
     </div>
   );

@@ -1,30 +1,17 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/SiteShell";
-import { StatusScreen } from "@/components/sections";
-import { Button, Icon } from "@/components/ui";
+import { ThankYouSection } from "@/components/sections/ThankYouStorySections";
 
 export const metadata: Metadata = {
   title: "Thank You | NIP Reality",
+  description:
+    "Your request has been received. A NIP Private Advisor will be in touch within one business day.",
 };
 
 export default function ThankYouPage() {
   return (
     <SiteShell>
-      <StatusScreen
-        icon="check"
-        iconTone="success"
-        eyebrow="Request Received"
-        title="Thank You"
-        description="We've received your Request. A Private Advisor will be in touch within One Business Day."
-        actions={
-          <>
-            <Button href="/">Back to Home</Button>
-            <Button href="/insights" variant="accent">
-              Explore Insights <Icon name="arrowRight" className="h-4 w-4" />
-            </Button>
-          </>
-        }
-      />
+      <ThankYouSection />
     </SiteShell>
   );
 }

@@ -25,7 +25,7 @@ export type ButtonProps = BaseButtonProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof BaseButtonProps>;
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary: "bg-brand text-white hover:bg-brand-hover active:bg-brand-pressed",
+  primary: "bg-sapphire-600 text-white hover:bg-brand-hover active:bg-brand-pressed",
   secondary: "bg-sapphire-500 text-white hover:bg-sapphire-600",
   accent: "bg-accent text-white hover:bg-accent-hover active:bg-accent-pressed",
   light: "bg-sapphire-100 text-brand hover:bg-sapphire-200",
@@ -38,10 +38,48 @@ const variantClasses: Record<ButtonVariant, string> = {
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: "h-8 px-4 text-xs",
-  md: "h-10 px-6 text-sm",
-  lg: "h-12 px-8 text-sm",
+  sm: "h-8 px-4 text-xs leading-4",
+  md: "px-6 py-[9px] text-xs leading-4",
+  lg: "px-6 py-[9px] text-xs leading-4",
 };
+
+export function SpeakWithNipButton({
+  className,
+  href = "/contact",
+  onClick,
+}: {
+  className?: string;
+  href?: string;
+  onClick?: () => void;
+}) {
+  const content = (
+    <>
+      <span className="font-semibold">Speak with</span>
+      <span className="font-[family-name:var(--font-logo)] font-medium">
+        NIP
+      </span>
+    </>
+  );
+
+  const classes = cn(
+    "inline-flex items-center justify-center gap-[3px] rounded-[var(--radius-field)] bg-sapphire-600 px-[24px] py-[9px] text-xs leading-4 text-white transition-colors hover:bg-brand-hover active:bg-brand-pressed",
+    className,
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className={classes} onClick={onClick}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <button className={classes} onClick={onClick} type="button">
+      {content}
+    </button>
+  );
+}
 
 export function Button({
   variant = "primary",
@@ -52,7 +90,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const classes = cn(
-    "inline-flex items-center justify-center gap-2 rounded-[var(--radius-field)] font-semibold transition-colors disabled:pointer-events-none disabled:opacity-40",
+    "inline-flex items-center justify-center gap-2 rounded-[var(--radius-field)] font-semibold leading-4 transition-colors disabled:pointer-events-none disabled:opacity-40",
     variantClasses[variant],
     variant !== "link" && sizeClasses[size],
     variant === "link" && "h-auto text-sm",

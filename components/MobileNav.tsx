@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "./ui/Button";
+import { SpeakWithNipButton } from "./ui/Button";
 import { Icon } from "./ui/Icon";
 import { Logo } from "./ui/Logo";
 
@@ -67,12 +67,17 @@ export function MobileNav() {
 
             <div className="mt-auto space-y-4 border-t border-line pt-6">
               <div className="flex items-center gap-2 text-sm font-semibold text-ink">
-                <Icon name="globe" className="h-4 w-4 text-brand" />
-                <span>EN | AR</span>
+                <Icon name="globe" className="h-[18px] w-[18px] text-brand" />
+                <span className="text-xs leading-4">
+                  <span className="text-sapphire-600">EN</span>
+                  <span className="mx-1 text-ink-secondary">|</span>
+                  <span className="text-ink-secondary">AR</span>
+                </span>
               </div>
-              <Button href="/contact" className="w-full" onClick={() => setOpen(false)}>
-                Speak with NIP
-              </Button>
+              <SpeakWithNipButton
+                className="w-full"
+                onClick={() => setOpen(false)}
+              />
             </div>
           </div>
         </div>
