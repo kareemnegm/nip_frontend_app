@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, Cormorant_Garamond, Geist_Mono, Kalnia } from "next/font/google";
+import { Archivo, Cairo, Cormorant_Garamond, Geist_Mono, Kalnia } from "next/font/google";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -25,6 +25,12 @@ const kalnia = Kalnia({
   weight: ["400", "500", "600", "700"],
 });
 
+const cairo = Cairo({
+  variable: "--font-cairo",
+  subsets: ["latin", "arabic"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "NIP Reality | Novel Insight Property",
   description:
@@ -38,10 +44,10 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${archivo.variable} ${geistMono.variable} ${cormorant.variable} ${kalnia.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${archivo.variable} ${geistMono.variable} ${cormorant.variable} ${kalnia.variable} ${cairo.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }

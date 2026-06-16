@@ -1,11 +1,17 @@
+import { MemberAdvisorMessageDialog } from "@/components/forms/MemberAdvisorMessageForm";
+import { MemberSignOutButton } from "@/components/forms/MemberSignOutButton";
 import Link from "next/link";
 import { AdvisorCard, Button, Icon, PropertyCard } from "@/components/ui";
+import type { PropertyCardProps } from "@/components/ui/Cards";
+import { CatalogEmptyState } from "@/components/ui/ApiPagination";
 import {
   siteMaxWidth,
   sitePageGutterX,
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
-import { sampleAdvisorSelection, sampleProperties } from "@/components/placeholders";
+import type { ApiMemberAdvisor, ApiMemberUser } from "@/types/api";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/helpers";
 import { cn } from "@/lib/cn";
 
 export function PrivateOfficeSectionHeading({
@@ -34,7 +40,15 @@ export function PrivateOfficeSectionHeading({
   );
 }
 
-export function PrivateOfficeMemberHero() {
+export function PrivateOfficeMemberHero({
+  user,
+  locale = "en",
+}: {
+  user: ApiMemberUser;
+  locale?: Locale;
+}) {
+  const advisorName = user.advisor?.name ?? "Your Advisor";
+
   return (
     <section
       data-site-hero
@@ -50,22 +64,24 @@ export function PrivateOfficeMemberHero() {
           <div className="flex max-w-[620px] flex-col gap-4">
             <p className="text-overline font-semibold text-gold">Private Office</p>
             <h1 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-white sm:text-[52px] sm:leading-[50px]">
-              Welcome Back, Mr. Kamyar
+              Welcome Back, {user.displayName ?? user.name}
             </h1>
             <p className="text-body-sm text-sapphire-100">
-              Curated by Sara N. | NIP Private Advisory
+              Curated by {advisorName} | NIP Private Advisory
             </p>
+            <MemberSignOutButton
+              className="mt-4 border-white/30 text-white hover:bg-white/10"
+              redirectTo={localizedHref(locale, "/private-office")}
+            />
           </div>
           <div className="shrink-0 lg:text-right">
-            <p className="text-overline font-semibold text-platinum-400">
-              Your Advisor
-            </p>
-            <p className="mt-2 text-lg font-bold text-white">Sara N.</p>
+            <p className="text-overline font-semibold text-platinum-400">Your Advisor</p>
+            <p className="mt-2 text-lg font-bold text-white">{advisorName}</p>
             <p className="mt-1 text-body-xs text-sapphire-100">
-              Responds within hours | Mon–Fri
+              {user.advisor?.availability ?? "Responds within hours | Mon–Fri"}
             </p>
             <Link
-              href="/curated"
+              href={localizedHref(locale, "/curated")}
               className="mt-4 inline-flex items-center gap-1 text-body-sm font-semibold text-accent-on-dark hover:text-white"
             >
               View curated selection
@@ -78,7 +94,11 @@ export function PrivateOfficeMemberHero() {
   );
 }
 
-export function PrivateOfficeMemberCuratedSection() {
+export function PrivateOfficeMemberCuratedSection({
+  items = [],
+}: {
+  items?: Array<{ id?: number; title: string; excerpt: string }>;
+}) {
   return (
     <section className="bg-white py-16 sm:py-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
@@ -88,18 +108,26 @@ export function PrivateOfficeMemberCuratedSection() {
             title="Curated for You"
             description="A confidential selection of properties and projects aligned with your mandate. Released by your advisor as relevant."
           />
-          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-            {sampleAdvisorSelection.slice(0, 3).map((item, index) => (
-              <AdvisorCard key={`curated-${index}`} {...item} />
-            ))}
-          </div>
+          {items.length === 0 ? (
+            <CatalogEmptyState message="Your advisor has not released curated selections yet." />
+          ) : (
+            <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+              {items.map((item) => (
+                <AdvisorCard key={item.id ?? item.title} title={item.title} excerpt={item.excerpt} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>
   );
 }
 
-export function PrivateOfficeMemberSavedSection() {
+export function PrivateOfficeMemberSavedSection({
+  properties = [],
+}: {
+  properties?: PropertyCardProps[];
+}) {
   return (
     <section className="bg-sapphire-50 py-16 sm:py-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
@@ -109,22 +137,34 @@ export function PrivateOfficeMemberSavedSection() {
             title="Saved Properties"
             description="Properties you have marked for follow-up. Your advisor can add context or arrange a private viewing."
           />
-          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
-            {sampleProperties.slice(0, 3).map((property, index) => (
-              <PropertyCard
-                key={`saved-${index}`}
-                className="min-h-[480px]"
-                {...property}
-              />
-            ))}
-          </div>
+          {properties.length === 0 ? (
+            <CatalogEmptyState message="You have not saved any properties yet." />
+          ) : (
+            <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+              {properties.map((property) => (
+                <PropertyCard
+                  key={property.href ?? property.title}
+                  className="min-h-[480px]"
+                  {...property}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>
   );
 }
 
-export function PrivateOfficeMemberAdvisorBar() {
+export function PrivateOfficeMemberAdvisorBar({
+  advisor,
+  locale = "en",
+}: {
+  advisor?: ApiMemberAdvisor | null;
+  locale?: Locale;
+}) {
+  const name = advisor?.name ?? "Your Advisor";
+
   return (
     <section className="border-t border-line bg-sapphire-50">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
@@ -139,18 +179,14 @@ export function PrivateOfficeMemberAdvisorBar() {
               <Icon name="user" className="h-5 w-5" />
             </span>
             <div>
-              <p className="text-body-sm font-bold text-brand">
-                Your Advisor | Sara N.
-              </p>
+              <p className="text-body-sm font-bold text-brand">Your Advisor | {name}</p>
               <p className="text-body-xs text-ink-tertiary">
-                Available Mon–Fri | Responds within hours
+                {advisor?.availability ?? "Available Mon–Fri | Responds within hours"}
               </p>
             </div>
           </div>
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <Button href="/contact" className="justify-center">
-              Message your Advisor
-            </Button>
+            <MemberAdvisorMessageDialog advisorName={name} locale={locale} />
             <Button href="/contact" variant="accent" className="justify-center">
               Request a private viewing
               <Icon name="arrowRight" className="h-4 w-4" />

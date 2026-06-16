@@ -1,10 +1,15 @@
+import { EditableText } from "@/components/EditableText";
 import { ContributeInsightForm } from "@/components/ui/LeadForms";
+import { pageBlockKeys } from "@/lib/i18n/block-keys";
+import { getRequestLocale } from "@/lib/i18n/server";
 import {
   siteMaxWidth,
   sitePageGutterX,
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
+
+const blocks = pageBlockKeys.contribute;
 
 export const contributePublishPoints = [
   {
@@ -21,30 +26,48 @@ export const contributePublishPoints = [
   },
 ];
 
-export function ContributeHeroSection() {
+export async function ContributeHeroSection() {
+  const locale = await getRequestLocale();
+
   return (
     <section data-site-hero className="bg-surface-muted pt-16 pb-9">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className={cn(sitePageInnerClassName, "space-y-4")}>
           <div className="space-y-2">
-            <p className="text-overline font-semibold leading-4 text-accent">
-              CONTRIBUTE
-            </p>
-            <h1 className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand">
-              Contribute an Insight
-            </h1>
+            <EditableText
+              relUrl={blocks.relUrl}
+              blockKey={blocks.hero.eyebrow}
+              locale={locale}
+              placeholderContent="CONTRIBUTE"
+              placeholderTag="p"
+              className="text-overline font-semibold leading-4 text-accent"
+            />
+            <EditableText
+              relUrl={blocks.relUrl}
+              blockKey={blocks.hero.title}
+              locale={locale}
+              placeholderContent="Contribute an Insight"
+              placeholderTag="h1"
+              className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
+            />
           </div>
-          <p className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary">
-            Share market perspective with the NIP audience. Submissions are reviewed
-            by our editorial team before publication.
-          </p>
+          <EditableText
+            relUrl={blocks.relUrl}
+            blockKey={blocks.hero.description}
+            locale={locale}
+            placeholderContent="Share market perspective with the NIP audience. Submissions are reviewed by our editorial team before publication."
+            placeholderTag="p"
+            className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary"
+          />
         </div>
       </div>
     </section>
   );
 }
 
-export function ContributeFormSection() {
+export async function ContributeFormSection() {
+  const locale = await getRequestLocale();
+
   return (
     <section className="bg-white pb-[72px] pt-10">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
@@ -55,9 +78,14 @@ export function ContributeFormSection() {
           )}
         >
           <div className="max-w-[512px] lg:pt-4">
-            <h2 className="text-xl font-bold leading-[26px] text-brand">
-              What We Publish
-            </h2>
+            <EditableText
+              relUrl={blocks.relUrl}
+              blockKey={blocks.sidebar.title}
+              locale={locale}
+              placeholderContent="What We Publish"
+              placeholderTag="h2"
+              className="text-xl font-bold leading-[26px] text-brand"
+            />
             <ul className="mt-6 space-y-6">
               {contributePublishPoints.map((point) => (
                 <li key={point.title} className="flex gap-3">

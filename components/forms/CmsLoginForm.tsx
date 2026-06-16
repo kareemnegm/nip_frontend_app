@@ -1,0 +1,123 @@
+"use client";
+
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useCanEditCms } from "@/components/cms/CmsAuthProvider";
+import { Button } from "@/components/ui/Button";
+import { Icon, Logo } from "@/components/ui";
+import { TextInput } from "@/components/ui/FormControls";
+import type { Locale } from "@/lib/i18n/config";
+import { localizedHref } from "@/lib/i18n/helpers";
+
+function CmsLoginFormInner({ locale }: { locale: Locale }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { refresh } = useCanEditCms();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function onSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/cms/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = (await res.json()) as { message?: string; canEdit?: boolean };
+      if (!res.ok) {
+        setError(data.message ?? "Sign in failed");
+        return;
+      }
+      if (data.canEdit === false) {
+        setError("Your account cannot edit CMS content.");
+        return;
+      }
+      await refresh();
+      const returnUrl = searchParams.get("returnUrl");
+      router.push(returnUrl ? decodeURIComponent(returnUrl) : localizedHref(locale, "/"));
+      router.refresh();
+    } catch {
+      setError("Sign in failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <form className="mt-8 space-y-4" onSubmit={onSubmit}>
+      <TextInput
+        label="Email"
+        type="email"
+        placeholder="admin@niprealty.com"
+        value={email}
+        onChange={(event) => setEmail(event.target.value)}
+        required
+      />
+      <TextInput
+        label="Password"
+        type="password"
+        placeholder="••••••••"
+        value={password}
+        onChange={(event) => setPassword(event.target.value)}
+        required
+      />
+      {error ? (
+        <p className="text-sm text-error" role="alert">
+          {error}
+        </p>
+      ) : null}
+      <div className="flex justify-center pt-2">
+        <Button type="submit" disabled={loading}>
+          {loading ? "Signing in…" : "Sign In"}
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+export function CmsLoginForm({ locale }: { locale: Locale }) {
+  return (
+    <Suspense fallback={null}>
+      <CmsLoginFormInner locale={locale} />
+    </Suspense>
+  );
+}
+
+export function CmsLoginCard({ locale }: { locale: Locale }) {
+  return (
+    <div className="w-full max-w-md rounded-[var(--radius-card)] border border-line bg-white p-8 shadow-[var(--shadow-card)] sm:p-10">
+      <div className="flex items-start justify-between">
+        <Logo />
+        <span className="text-right text-[10px] font-semibold uppercase leading-tight tracking-wide text-ink-tertiary">
+          Content
+          <br />
+          Editor
+        </span>
+      </div>
+
+      <div className="mt-8 text-center">
+        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white">
+          <Icon name="lock" className="h-5 w-5" />
+        </span>
+        <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-tertiary">
+          Staff Access
+        </p>
+        <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-brand">
+          CMS Editor Login
+        </h1>
+        <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-ink-secondary">
+          Sign in with your NIP staff account to edit page content inline on the
+          live site.
+        </p>
+      </div>
+
+      <CmsLoginForm locale={locale} />
+    </div>
+  );
+}

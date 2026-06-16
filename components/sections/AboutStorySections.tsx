@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EditableText } from "@/components/EditableText";
 import { SpeakWithNipButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import {
@@ -7,6 +8,8 @@ import {
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
+import { pageBlockKeys } from "@/lib/i18n/block-keys";
+import { getRequestLocale } from "@/lib/i18n/server";
 
 const partners = ["MERAAS", "H&H", "EMAAR", "ALDAR", "OMNIYAT"];
 
@@ -30,21 +33,40 @@ export function AboutCtaRow({ className }: { className?: string }) {
   );
 }
 
-export function AboutHeroSection() {
+const aboutBlocks = pageBlockKeys.about;
+
+export async function AboutHeroSection() {
+  const locale = await getRequestLocale();
+
   return (
     <section data-site-hero className="bg-white pt-[72px] pb-12">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className="mx-auto flex w-full max-w-[846px] flex-col items-center gap-10 text-center">
           <div className="flex flex-col items-center gap-4">
-            <p className="text-overline font-semibold text-accent">ABOUT NIP</p>
-            <h1 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand">
-              One Source. One System. One Standard.
-            </h1>
-            <p className="max-w-[680px] text-body-lg text-ink-secondary">
-              NIP was created for clients who want more than access to property.
-              They want context, judgment, and a single advisory standard across
-              every step of the real estate journey.
-            </p>
+            <EditableText
+              relUrl={aboutBlocks.relUrl}
+              blockKey={aboutBlocks.hero.eyebrow}
+              locale={locale}
+              placeholderContent="ABOUT NIP"
+              placeholderTag="p"
+              className="text-overline font-semibold text-accent"
+            />
+            <EditableText
+              relUrl={aboutBlocks.relUrl}
+              blockKey={aboutBlocks.hero.title}
+              locale={locale}
+              placeholderContent="One Source. One System. One Standard."
+              placeholderTag="h1"
+              className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand"
+            />
+            <EditableText
+              relUrl={aboutBlocks.relUrl}
+              blockKey={aboutBlocks.hero.description}
+              locale={locale}
+              placeholderContent="NIP was created for clients who want more than access to property. They want context, judgment, and a single advisory standard across every step of the real estate journey."
+              placeholderTag="p"
+              className="max-w-[680px] text-body-lg text-ink-secondary"
+            />
           </div>
           <AboutCtaRow />
         </div>

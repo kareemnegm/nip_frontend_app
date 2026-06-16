@@ -1,5 +1,6 @@
 import { cache } from "react";
-import { apiFetch } from "./client";
+import { defaultLocale, type Locale } from "@/lib/i18n/config";
+import { apiGet, apiPost, apiRequest } from "./client";
 
 export type BlockType = "TEXT" | "IMAGE" | "VIDEO" | "HTML";
 
@@ -8,6 +9,7 @@ export type Block = {
   content: string;
   blockType: BlockType;
   elementTag?: string | null;
+  locale?: string;
 };
 
 export type BlockRecord = Record<
@@ -16,45 +18,60 @@ export type BlockRecord = Record<
     content: string | null;
     blockType: BlockType;
     elementTag?: string | null;
+    locale?: string;
   }
 >;
 
-export const getBlocksForPage = cache(async (relUrl: string): Promise<BlockRecord> => {
-  try {
-    const blocks = await apiFetch<Block[]>("/api/v1/blocks", {
-      params: { relUrl },
-    });
-    return Object.fromEntries(
-      blocks.map((block) => [
-        block.key,
-        {
-          content: block.content,
-          blockType: block.blockType,
-          elementTag: block.elementTag,
-        },
-      ]),
-    );
-  } catch {
-    return {};
-  }
-});
+export const getBlocksForPage = cache(
+  async (relUrl: string, locale: Locale = defaultLocale): Promise<BlockRecord> => {
+    try {
+      const blocks = await apiGet<Block[]>("/blocks", {
+        params: { relUrl, locale },
+        revalidate: false,
+      });
+      return Object.fromEntries(
+        blocks.map((block) => [
+          block.key,
+          {
+            content: block.content,
+            blockType: block.blockType,
+            elementTag: block.elementTag,
+            locale: block.locale ?? locale,
+          },
+        ]),
+      );
+    } catch {
+      return {};
+    }
+  },
+);
 
-export async function saveBlock(payload: {
-  relUrl: string;
-  key: string;
-  content: string;
-  blockType: BlockType;
-  elementTag?: string;
-}) {
-  return apiFetch("/api/v1/blocks", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+export async function saveBlock(
+  payload: {
+    relUrl: string;
+    key: string;
+    locale: Locale;
+    content: string;
+    blockType: BlockType;
+    elementTag?: string;
+  },
+  token?: string,
+) {
+  return apiPost("/blocks", payload, { token, revalidate: false });
 }
 
-export async function deleteBlock(payload: { relUrl: string; key: string }) {
-  return apiFetch("/api/v1/blocks", {
+export async function deleteBlock(
+  payload: {
+    relUrl: string;
+    key: string;
+    locale: Locale;
+  },
+  token?: string,
+) {
+  return apiRequest("/blocks", {
     method: "DELETE",
-    body: JSON.stringify(payload),
+    body: payload,
+    token,
+    revalidate: false,
   });
 }

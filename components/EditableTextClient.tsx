@@ -3,8 +3,10 @@
 import { useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
+import { EditableBlockEditButton } from "@/components/cms/EditableBlockEditButton";
 import { useIsAdmin } from "./useIsAdmin";
 import type { BlockType } from "@/lib/api/blocks";
+import { redirectIfCmsUnauthorized } from "@/lib/cms/redirect.client";
 
 const TAGS = [
   "p",
@@ -28,11 +30,13 @@ export type EditableTag = (typeof TAGS)[number];
 export function EditableTextClient({
   relUrl,
   blockKey,
+  locale,
   initialContent,
   initialTag = "p",
 }: {
   relUrl: string;
   blockKey: string;
+  locale: string;
   initialContent: string;
   initialTag?: EditableTag;
 }) {
@@ -64,11 +68,14 @@ export function EditableTextClient({
         body: JSON.stringify({
           relUrl,
           key: blockKey,
+          locale,
           content: newContent,
           blockType: "TEXT" as BlockType,
           elementTag: tag,
         }),
       });
+
+      if (redirectIfCmsUnauthorized(res, locale)) return;
 
       if (res.ok) {
         closeEditor();
@@ -88,8 +95,10 @@ export function EditableTextClient({
       const res = await fetch("/api/blocks", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ relUrl, key: blockKey }),
+        body: JSON.stringify({ relUrl, key: blockKey, locale }),
       });
+
+      if (redirectIfCmsUnauthorized(res, locale)) return;
 
       if (res.ok) {
         closeEditor();
@@ -157,18 +166,14 @@ export function EditableTextClient({
   return (
     <>
       {!editing && isAdmin ? (
-        <button
-          type="button"
-          aria-label="Edit this text block"
-          className="absolute right-1 top-1 z-10 rounded bg-white/90 px-1.5 py-0.5 text-xs shadow-sm ring-1 ring-line hover:bg-white"
+        <EditableBlockEditButton
+          label="Edit this text block"
           onClick={(event) => {
             event.preventDefault();
             event.stopPropagation();
             openEditor();
           }}
-        >
-          Edit
-        </button>
+        />
       ) : null}
       {editing && mounted ? createPortal(overlay, document.body) : null}
     </>

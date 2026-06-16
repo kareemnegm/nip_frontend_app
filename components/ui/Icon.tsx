@@ -27,6 +27,7 @@ export type IconName =
   | "menu"
   | "phone"
   | "percent"
+  | "pencil"
   | "plus"
   | "search"
   | "send"
@@ -85,6 +86,7 @@ const strokePaths: Record<
   percent: (
     <path d="M19 5 5 19M6.5 9a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM17.5 20a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
   ),
+  pencil: <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />,
   plus: <path d="M12 5v14M5 12h14" />,
   search: (
     <path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM21 21l-4.3-4.3" />

@@ -1,21 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCanEditCms } from "@/components/cms/CmsAuthProvider";
 
+/** @deprecated Use useCanEditCms().canEdit */
 export function useIsAdmin(): boolean {
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    const check = () => {
-      const has =
-        typeof document !== "undefined" && document.cookie.includes("admin=1");
-      setIsAdmin(Boolean(has));
-    };
-
-    check();
-    const interval = setInterval(check, 2000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return isAdmin;
+  const { canEdit } = useCanEditCms();
+  return canEdit;
 }

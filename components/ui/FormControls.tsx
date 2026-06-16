@@ -8,10 +8,12 @@ type FieldShellProps = {
 
 export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string;
+  error?: string;
 };
 
 export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   label?: string;
+  error?: string;
 };
 
 export type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement> & {
@@ -35,21 +37,23 @@ function FieldShell({ label, children, className }: FieldShellProps) {
 const fieldClasses =
   "h-11 w-full rounded-[var(--radius-field)] border border-line bg-white px-4 text-sm text-ink outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-sapphire-100";
 
-export function TextInput({ label, className, ...props }: TextInputProps) {
+export function TextInput({ label, className, error, ...props }: TextInputProps) {
   return (
     <FieldShell label={label}>
-      <input className={cn(fieldClasses, className)} {...props} />
+      <input className={cn(fieldClasses, error && "border-error", className)} {...props} />
+      {error ? <span className="text-xs font-normal text-error">{error}</span> : null}
     </FieldShell>
   );
 }
 
-export function Textarea({ label, className, ...props }: TextareaProps) {
+export function Textarea({ label, className, error, ...props }: TextareaProps) {
   return (
     <FieldShell label={label}>
       <textarea
-        className={cn(fieldClasses, "min-h-28 resize-y py-4", className)}
+        className={cn(fieldClasses, "min-h-28 resize-y py-4", error && "border-error", className)}
         {...props}
       />
+      {error ? <span className="text-xs font-normal text-error">{error}</span> : null}
     </FieldShell>
   );
 }
@@ -87,18 +91,22 @@ export function Checkbox({ label, className, ...props }: CheckboxProps) {
 export function PhoneInput({
   label = "Phone Number",
   placeholder = "Phone number",
+  error,
+  ...props
 }: {
   label?: string;
   placeholder?: string;
-}) {
+  error?: string;
+} & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <FieldShell label={label}>
       <div className="grid grid-cols-[88px_1fr] gap-3">
         <select className={cn(fieldClasses, "px-2")} defaultValue="+971">
           <option value="+971">AE +971</option>
         </select>
-        <input className={fieldClasses} placeholder={placeholder} />
+        <input className={cn(fieldClasses, error && "border-error")} placeholder={placeholder} {...props} />
       </div>
+      {error ? <span className="text-xs font-normal text-error">{error}</span> : null}
     </FieldShell>
   );
 }

@@ -1,5 +1,21 @@
+"use client";
+
 import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { useOptionalLocale } from "@/lib/i18n/context";
+import { localizedHref } from "@/lib/i18n/helpers";
+
+function resolveHref(href: string | undefined, locale: string | undefined) {
+  if (!href) return href;
+  if (
+    locale &&
+    href.startsWith("/") &&
+    !href.startsWith("//")
+  ) {
+    return localizedHref(locale as "en" | "ar", href);
+  }
+  return href;
+}
 
 export type ButtonVariant =
   | "primary"
@@ -52,6 +68,8 @@ export function SpeakWithNipButton({
   href?: string;
   onClick?: () => void;
 }) {
+  const localeContext = useOptionalLocale();
+  const resolvedHref = resolveHref(href, localeContext?.locale);
   const content = (
     <>
       <span className="font-semibold">Speak with</span>
@@ -66,9 +84,9 @@ export function SpeakWithNipButton({
     className,
   );
 
-  if (href) {
+  if (resolvedHref) {
     return (
-      <Link href={href} className={classes} onClick={onClick}>
+      <Link href={resolvedHref} className={classes} onClick={onClick}>
         {content}
       </Link>
     );
@@ -89,6 +107,8 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
+  const localeContext = useOptionalLocale();
+  const resolvedHref = resolveHref(href, localeContext?.locale);
   const classes = cn(
     "inline-flex items-center justify-center gap-2 rounded-[var(--radius-field)] font-semibold leading-4 transition-colors disabled:pointer-events-none disabled:opacity-40",
     variantClasses[variant],
@@ -97,9 +117,9 @@ export function Button({
     className,
   );
 
-  if (href) {
+  if (resolvedHref) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={resolvedHref} className={classes}>
         {children}
       </Link>
     );

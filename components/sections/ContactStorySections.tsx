@@ -1,4 +1,7 @@
-import { ConsultationRequestForm } from "@/components/ui/LeadForms";
+import { EditableText } from "@/components/EditableText";
+import { ContactRequestForm } from "@/components/ui/LeadForms";
+import { pageBlockKeys } from "@/lib/i18n/block-keys";
+import { getRequestLocale } from "@/lib/i18n/server";
 import {
   siteMaxWidth,
   sitePageGutterX,
@@ -6,29 +9,50 @@ import {
 } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
 
-export function ContactHeroSection() {
+const blocks = pageBlockKeys.contact;
+
+export async function ContactHeroSection() {
+  const locale = await getRequestLocale();
+
   return (
     <section data-site-hero className="bg-surface-muted pt-16 pb-9">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className={cn(sitePageInnerClassName, "space-y-4")}>
           <div className="space-y-2">
-            <p className="text-overline font-semibold leading-4 text-accent">
-              NIP PRIVATE ADVISORY
-            </p>
-            <h1 className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand">
-              Speak with NIP
-            </h1>
+            <EditableText
+              relUrl={blocks.relUrl}
+              blockKey={blocks.hero.eyebrow}
+              locale={locale}
+              placeholderContent="NIP PRIVATE ADVISORY"
+              placeholderTag="p"
+              className="text-overline font-semibold leading-4 text-accent"
+            />
+            <EditableText
+              relUrl={blocks.relUrl}
+              blockKey={blocks.hero.title}
+              locale={locale}
+              placeholderContent="Speak with NIP"
+              placeholderTag="h1"
+              className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
+            />
           </div>
-          <p className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary">
-            A considered property decision begins with a conversation.
-          </p>
+          <EditableText
+            relUrl={blocks.relUrl}
+            blockKey={blocks.hero.description}
+            locale={locale}
+            placeholderContent="A considered property decision begins with a conversation."
+            placeholderTag="p"
+            className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary"
+          />
         </div>
       </div>
     </section>
   );
 }
 
-export function ContactFormSection() {
+export async function ContactFormSection() {
+  const locale = await getRequestLocale();
+
   return (
     <section className="bg-white pb-[72px] pt-10">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
@@ -39,16 +63,24 @@ export function ContactFormSection() {
           )}
         >
           <div className="max-w-[512px] lg:pt-4">
-            <p className="text-overline font-semibold text-accent">
-              PRIVATE ADVISORY | BY INVITATION
-            </p>
-            <p className="mt-5 text-body-lg leading-[28px] text-ink-secondary">
-              Whether you are exploring Dubai for residence, investment, relocation,
-              portfolio strategy, or a private acquisition, NIP can help you understand
-              the market before you commit to a path.
-            </p>
+            <EditableText
+              relUrl={blocks.relUrl}
+              blockKey={blocks.intro.overline}
+              locale={locale}
+              placeholderContent="PRIVATE ADVISORY | BY INVITATION"
+              placeholderTag="p"
+              className="text-overline font-semibold text-accent"
+            />
+            <EditableText
+              relUrl={blocks.relUrl}
+              blockKey={blocks.intro.body}
+              locale={locale}
+              placeholderContent="Whether you are exploring Dubai for residence, investment, relocation, portfolio strategy, or a private acquisition, NIP can help you understand the market before you commit to a path."
+              placeholderTag="p"
+              className="mt-5 text-body-lg leading-[28px] text-ink-secondary"
+            />
           </div>
-          <ConsultationRequestForm />
+          <ContactRequestForm />
         </div>
       </div>
     </section>

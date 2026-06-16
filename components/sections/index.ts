@@ -35,7 +35,6 @@ export {
   CuratedHeroSection,
   CuratedNotesSection,
   CuratedSelectionSection,
-  curatedAdvisorNotes,
 } from "./CuratedStorySections";
 export { CtaBand } from "./CtaBand";
 export type { CtaBandProps } from "./CtaBand";
@@ -44,14 +43,9 @@ export {
   FaqAccordionSection,
   FaqCtaSection,
   FaqHeroSection,
-  faqItems,
 } from "./FaqStorySections";
 export { FeaturedInsightSection } from "./FeaturedInsightSection";
 export { FeaturedSelectionSection } from "./FeaturedSelectionSection";
-export {
-  InsightsHubHero,
-  InsightsHubMainSection,
-} from "./InsightsHubSections";
 export {
   LegalContentSection,
   LegalHeroSection,

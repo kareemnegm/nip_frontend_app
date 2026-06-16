@@ -1,5 +1,8 @@
-import Link from "next/link";
+import { EditableText } from "@/components/EditableText";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { Button, Icon, ImagePlaceholder } from "@/components/ui";
+import { pageBlockKeys } from "@/lib/i18n/block-keys";
+import { getRequestLocale } from "@/lib/i18n/server";
 import {
   siteMaxWidth,
   sitePageGutterX,
@@ -89,19 +92,39 @@ function ConciergePropertyCard() {
   );
 }
 
-export function ConciergeHeroSection() {
+const conciergeBlocks = pageBlockKeys.concierge;
+
+export async function ConciergeHeroSection() {
+  const locale = await getRequestLocale();
+
   return (
     <section data-site-hero className="bg-white pt-[72px] pb-10">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className="mx-auto flex w-full max-w-[846px] flex-col items-center gap-4 text-center">
-          <p className="text-overline font-semibold text-accent">AI CONCIERGE</p>
-          <h1 className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand">
-            Ask the Concierge
-          </h1>
-          <p className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary">
-            Instant answers on communities, pricing, off-plan and the Golden Visa
-            — and a direct line to a private advisor whenever you want one.
-          </p>
+          <EditableText
+            relUrl={conciergeBlocks.relUrl}
+            blockKey={conciergeBlocks.hero.eyebrow}
+            locale={locale}
+            placeholderContent="AI CONCIERGE"
+            placeholderTag="p"
+            className="text-overline font-semibold text-accent"
+          />
+          <EditableText
+            relUrl={conciergeBlocks.relUrl}
+            blockKey={conciergeBlocks.hero.title}
+            locale={locale}
+            placeholderContent="Ask the Concierge"
+            placeholderTag="h1"
+            className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
+          />
+          <EditableText
+            relUrl={conciergeBlocks.relUrl}
+            blockKey={conciergeBlocks.hero.description}
+            locale={locale}
+            placeholderContent="Instant answers on communities, pricing, off-plan and the Golden Visa — and a direct line to a private advisor whenever you want one."
+            placeholderTag="p"
+            className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary"
+          />
         </div>
       </div>
     </section>
@@ -156,13 +179,13 @@ export function ConciergeChatSection() {
 
           <p className="mt-6 text-center text-body-sm leading-[18px] text-ink-secondary">
             Prefer a Person?{" "}
-            <Link
+            <LocalizedLink
               href="/contact"
               className="inline-flex items-center gap-1 font-semibold text-brand transition-colors hover:text-brand-hover"
             >
               Speak with a Private Advisor
-              <Icon name="arrowRight" className="h-4 w-4" />
-            </Link>
+              <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
+            </LocalizedLink>
           </p>
         </div>
       </div>

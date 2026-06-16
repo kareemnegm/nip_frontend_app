@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn } from "@/lib/cn";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
@@ -6,23 +7,25 @@ type BaseCardProps = {
   className?: string;
 };
 
-type PropertyCardProps = BaseCardProps & {
+export type PropertyCardProps = BaseCardProps & {
   title: string;
   location: string;
   price: string;
   href?: string;
   handover?: string;
   imageLabel?: string;
+  imageUrl?: string;
   meta?: string[];
   badges?: string[];
 };
 
-type InsightCardProps = BaseCardProps & {
+export type InsightCardProps = BaseCardProps & {
   category: string;
   title: string;
   excerpt: string;
   readTime?: string;
   href?: string;
+  imageUrl?: string;
 };
 
 type AdvisorCardProps = BaseCardProps & {
@@ -56,10 +59,39 @@ function ImagePlaceholder({ dark = false }: { dark?: boolean }) {
   );
 }
 
-function PropertyImagePlaceholder() {
+function CardImage({
+  imageUrl,
+  alt,
+  icon = "home",
+  className,
+}: {
+  imageUrl?: string;
+  alt: string;
+  icon?: "home" | "building" | "mapPin";
+  className?: string;
+}) {
+  if (imageUrl) {
+    return (
+      <div className={cn("relative h-[236px] w-full overflow-hidden rounded-[4px]", className)}>
+        <Image
+          src={imageUrl}
+          alt={alt}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, 33vw"
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex h-[236px] w-full items-center justify-center rounded-[4px] bg-basalt-100">
-      <Icon name="home" className="h-[70px] w-[70px] text-white" />
+    <div
+      className={cn(
+        "flex h-[236px] w-full items-center justify-center rounded-[4px] bg-basalt-100",
+        className,
+      )}
+    >
+      <Icon name={icon} className="h-[70px] w-[70px] text-white" />
     </div>
   );
 }
@@ -68,10 +100,11 @@ export function PropertyCard({
   title,
   location,
   price,
-  href = "/properties/sample-property",
+  href,
   imageLabel,
-  meta = ["2 Beds", "3 Baths", "2,315 sq ft"],
-  badges = ["Apartment", "For Sale"],
+  imageUrl,
+  meta = [],
+  badges = [],
   className,
 }: PropertyCardProps) {
   return (
@@ -81,7 +114,7 @@ export function PropertyCard({
         className,
       )}
     >
-      <PropertyImagePlaceholder />
+      <CardImage imageUrl={imageUrl} alt={imageLabel ?? title} />
       {imageLabel ? <span className="sr-only">{imageLabel}</span> : null}
       <div className="flex flex-1 flex-col justify-between px-6 pb-4 pt-6">
         <div className="space-y-3">
@@ -152,12 +185,13 @@ export function OffPlanCard({
   title,
   location,
   price,
-  handover = "Q4 2026",
-  href = "/off-plan/sample-project",
+  handover = "On Request",
+  href,
+  imageUrl,
   className,
 }: Pick<
   PropertyCardProps,
-  "title" | "location" | "price" | "handover" | "href" | "className"
+  "title" | "location" | "price" | "handover" | "href" | "imageUrl" | "className"
 >) {
   const displayPrice = price.replace(/^AED\s*/i, "");
 
@@ -168,9 +202,7 @@ export function OffPlanCard({
         className,
       )}
     >
-      <div className="flex h-[236px] w-full items-center justify-center rounded-[4px] bg-basalt-100">
-        <Icon name="building" className="h-[70px] w-[70px] text-white" />
-      </div>
+      <CardImage imageUrl={imageUrl} alt={title} icon="building" />
       <div className="flex flex-1 flex-col justify-between px-6 pb-4 pt-6">
         <div className="space-y-4">
           <div className="flex items-start justify-between gap-3">
@@ -225,8 +257,9 @@ export function InsightCard({
   category,
   title,
   excerpt,
-  readTime = "6 min read",
-  href = "/insights/sample",
+  readTime = "Read time not available",
+  href,
+  imageUrl,
   className,
 }: InsightCardProps) {
   return (
@@ -236,7 +269,19 @@ export function InsightCard({
         className,
       )}
     >
-      <ImagePlaceholder />
+      {imageUrl ? (
+        <div className="relative h-[220px] overflow-hidden rounded-[4px]">
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+        </div>
+      ) : (
+        <ImagePlaceholder />
+      )}
       <div className="flex flex-1 flex-col justify-between px-6 pb-2 pt-6">
         <p className="text-overline font-semibold uppercase text-accent">
           {category}
@@ -298,10 +343,11 @@ const communityFactIcons = ["user", "mapPin", "grid", "building"] as const;
 export function CommunityCard({
   title,
   facts,
-  projectCount = "6 Projects Available",
-  href = "/areas/palm-jumeirah",
+  projectCount = "Projects Available",
+  href,
+  imageUrl,
   className,
-}: CommunityCardProps) {
+}: CommunityCardProps & { imageUrl?: string }) {
   const leftFacts = facts.slice(0, 2);
   const rightFacts = facts.slice(2, 4);
 
@@ -312,9 +358,7 @@ export function CommunityCard({
         className,
       )}
     >
-      <div className="flex h-[236px] w-full items-center justify-center rounded-[4px] bg-basalt-100">
-        <Icon name="mapPin" className="h-[70px] w-[70px] text-white" />
-      </div>
+      <CardImage imageUrl={imageUrl} alt={title} icon="mapPin" />
       <div className="flex flex-1 flex-col justify-between px-6 pb-4 pt-6">
         <div className="space-y-5">
           <h3 className="flex items-center gap-1.5 text-xl font-bold leading-[26px] text-brand">

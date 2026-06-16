@@ -1,4 +1,5 @@
 import { EditableText } from "@/components/EditableText";
+import { getRequestLocale } from "@/lib/i18n/server";
 import { cn } from "@/lib/cn";
 
 export type SectionHeadingEditable = {
@@ -30,6 +31,8 @@ export async function SectionHeading({
   titleClassName,
   editable,
 }: SectionHeadingProps) {
+  const locale = await getRequestLocale();
+
   return (
     <div
       className={cn(
@@ -42,6 +45,7 @@ export async function SectionHeading({
         <EditableText
           relUrl={editable.relUrl}
           blockKey={editable.titleKey}
+          locale={locale}
           placeholderContent={title}
           placeholderTag="h2"
           className={cn(titleClasses, titleClassName)}
@@ -54,6 +58,7 @@ export async function SectionHeading({
           <EditableText
             relUrl={editable.relUrl}
             blockKey={editable.descKey}
+            locale={locale}
             placeholderContent={description}
             placeholderTag="p"
             className={descriptionClasses}

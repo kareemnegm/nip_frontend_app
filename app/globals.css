@@ -105,6 +105,27 @@ body {
   line-height: var(--text-body-sm--line-height);
 }
 
+html[dir="rtl"] body {
+  font-family: var(--font-cairo), var(--font-archivo), Arial, Helvetica, sans-serif;
+}
+
+html[dir="rtl"] [data-site-hero] h1,
+html[dir="rtl"] [data-site-hero] h2,
+html[dir="rtl"] .font-\[family-name\:var\(--font-display\)\] {
+  font-family: var(--font-cairo), Didot, var(--font-cormorant), serif;
+}
+
+html[dir="rtl"] input,
+html[dir="rtl"] textarea,
+html[dir="rtl"] select {
+  text-align: right;
+}
+
+html[dir="rtl"] input::placeholder,
+html[dir="rtl"] textarea::placeholder {
+  text-align: right;
+}
+
 button,
 input,
 select,
