@@ -140,7 +140,20 @@
     "messageSent": "تم إرسال الرسالة",
     "messageCouldNotBeSent": "تعذر إرسال الرسالة.",
     "phoneNumber": "رقم الهاتف",
-    "phonePlaceholder": "رقم الهاتف"
+    "phonePlaceholder": "رقم الهاتف",
+    "stepIndicator": "الخطوة 1 من 2",
+    "fullName": "الاسم الكامل",
+    "emailAddress": "البريد الإلكتروني",
+    "yourMessage": "رسالتك",
+    "consentUpdates": "أوافق على تلقي تحديثات منسقة من Novel Insight Property.",
+    "requirementTitle": "أخبرنا قليلاً عن متطلباتك",
+    "requirementSubtitle": "سيراجع مستشار NIP ملاحظتك ويرد بأكثر الخطوات التالية ملاءمة.",
+    "submitConsultationRequest": "إرسال طلب الاستشارة",
+    "privateAdvisoryTitle": "طلب استشارة خاصة",
+    "privateAdvisorySubtitle": "بسرية وتخصيص. يرد المستشار خلال يوم عمل واحد.",
+    "requestPrivateAdvisory": "طلب استشارة خاصة",
+    "formErrorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "invalidValue": "قيمة غير صالحة"
   },
   "privateOffice": {
     "title": "المكتب الخاص",
@@ -534,6 +547,13 @@
     }
   },
   "cms": {
+    "contentEditorLine1": "محرر",
+    "contentEditorLine2": "المحتوى",
+    "staffAccess": "دخول الموظفين",
+    "loginTitle": "تسجيل دخول محرر المحتوى",
+    "loginDescription": "سجّل الدخول بحساب موظف NIP لتحرير محتوى الصفحات مباشرة على الموقع.",
+    "cannotEditCms": "لا يمكن لحسابك تحرير محتوى نظام إدارة المحتوى.",
+    "emailPlaceholder": "admin@niprealty.com",
     "editTextBlock": "تحرير هذا النص",
     "editImageBlock": "تحرير هذه الصورة",
     "deleteBlockConfirm": "حذف هذا المحتوى؟ لا يمكن التراجع.",

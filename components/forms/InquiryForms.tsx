@@ -10,20 +10,14 @@ import { useLocale } from "@/lib/i18n/context";
 import { localizedHref } from "@/lib/i18n/helpers";
 
 type InquiryFormProps = {
-  variant: "contact" | "consultation";
-  title: string;
-  subtitle: string;
-  submitLabel: string;
+  variant: "contact" | "consultation" | "privateAdvisory";
 };
 
-export function InquiryForm({
-  variant,
-  title,
-  subtitle,
-  submitLabel,
-}: InquiryFormProps) {
+export function InquiryForm({ variant }: InquiryFormProps) {
   const locale = useLocale().locale;
   const router = useRouter();
+  const t = useTranslations("forms");
+  const tc = useTranslations("common");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -32,6 +26,17 @@ export function InquiryForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const title =
+    variant === "privateAdvisory" ? t("privateAdvisoryTitle") : t("requirementTitle");
+  const subtitle =
+    variant === "privateAdvisory" ? t("privateAdvisorySubtitle") : t("requirementSubtitle");
+  const submitLabel =
+    variant === "contact"
+      ? t("sendMessage")
+      : variant === "consultation"
+        ? t("submitConsultationRequest")
+        : t("requestPrivateAdvisory");
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -56,31 +61,34 @@ export function InquiryForm({
           body: JSON.stringify(payload),
         });
         const data = await res.json();
-        if (!res.ok) throw Object.assign(new Error(data.message ?? "Failed"), { status: res.status, errors: data.errors });
+        if (!res.ok) throw Object.assign(new Error(data.message ?? t("messageCouldNotBeSent")), { status: res.status, errors: data.errors });
       } else {
         const res = await fetch("/api/forms/consultation", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...payload,
-            external_source: "Website Consultation",
+            external_source:
+              variant === "privateAdvisory"
+                ? "Website Private Advisory"
+                : "Website Consultation",
           }),
         });
         const data = await res.json();
-        if (!res.ok) throw Object.assign(new Error(data.message ?? "Failed"), { status: res.status, errors: data.errors });
+        if (!res.ok) throw Object.assign(new Error(data.message ?? t("messageCouldNotBeSent")), { status: res.status, errors: data.errors });
       }
       router.push(localizedHref(locale, "/thank-you"));
     } catch (error) {
       if (isApiError(error) && error.errors) {
         const mapped: Record<string, string> = {};
         for (const [field, messages] of Object.entries(error.errors)) {
-          mapped[field] = messages[0] ?? "Invalid value";
+          mapped[field] = messages[0] ?? t("invalidValue");
         }
         setErrors(mapped);
       } else if (isApiError(error)) {
         setFormError(error.message);
       } else {
-        setFormError("Something went wrong. Please try again.");
+        setFormError(t("formErrorGeneric"));
       }
     } finally {
       setLoading(false);
@@ -92,7 +100,7 @@ export function InquiryForm({
       <div className="rounded-[var(--radius-card)] border border-line bg-white p-8 shadow-[var(--shadow-card)]">
         <form className="space-y-5" onSubmit={onSubmit}>
           <div>
-            <p className="text-overline font-semibold text-accent">Step 1 of 2</p>
+            <p className="text-overline font-semibold text-accent">{t("stepIndicator")}</p>
             <h2 className="mt-3 text-xl font-bold leading-[26px] text-brand">{title}</h2>
             <p className="mt-2 text-body-sm leading-[18px] text-ink-secondary">{subtitle}</p>
           </div>
@@ -109,14 +117,14 @@ export function InquiryForm({
           />
 
           <TextInput
-            label="Full Name"
+            label={t("fullName")}
             value={name}
             onChange={(event) => setName(event.target.value)}
             error={errors.name}
             required
           />
           <TextInput
-            label="E-mail Address"
+            label={t("emailAddress")}
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
@@ -124,18 +132,20 @@ export function InquiryForm({
             required
           />
           <PhoneInput
+            label={t("phoneNumber")}
+            placeholder={t("phonePlaceholder")}
             value={phone}
             onChange={(event) => setPhone(event.target.value)}
             error={errors.phone}
           />
           <Textarea
-            label="Your Message"
+            label={t("yourMessage")}
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             error={errors.message}
             required
           />
-          <Checkbox label="I agree to receive curated updates from Novel Insight Property." />
+          <Checkbox label={t("consentUpdates")} />
 
           {formError ? (
             <p className="text-sm text-error" role="alert">
@@ -144,7 +154,7 @@ export function InquiryForm({
           ) : null}
 
           <Button type="submit" className="w-full justify-center" disabled={loading}>
-            {loading ? "Sending…" : submitLabel}
+            {loading ? tc("sending") : submitLabel}
           </Button>
         </form>
       </div>

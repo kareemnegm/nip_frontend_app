@@ -1,14 +1,14 @@
 export const mainNavItems = [
   { key: "home", href: "/" as const },
-  { key: "insights", href: "/insights" as const, caret: true },
+  { key: "insights", href: "/insights" as const },
   {
     key: "properties",
     href: "/properties" as const,
     dropdown: "properties" as const,
   },
   { key: "offPlan", href: "/off-plan" as const, dropdown: "offPlan" as const },
-  { key: "areas", href: "/areas" as const, caret: true },
-  { key: "developers", href: "/developers" as const, caret: true },
+  { key: "areas", href: "/areas" as const },
+  { key: "developers", href: "/developers" as const },
   { key: "concierge", href: "/concierge" as const, caret: true },
 ] as const;
 

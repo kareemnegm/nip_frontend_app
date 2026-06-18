@@ -38,6 +38,8 @@ export {
 } from "./CuratedStorySections";
 export { CtaBand } from "./CtaBand";
 export type { CtaBandProps } from "./CtaBand";
+export { EditableCtaBand } from "./EditableCtaBand";
+export type { EditableCtaBandProps } from "./EditableCtaBand";
 export { CuratedCollectionSection } from "./CuratedCollectionSection";
 export {
   FaqAccordionSection,

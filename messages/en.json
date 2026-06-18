@@ -140,7 +140,20 @@
     "messageSent": "Message sent",
     "messageCouldNotBeSent": "Message could not be sent.",
     "phoneNumber": "Phone Number",
-    "phonePlaceholder": "Phone number"
+    "phonePlaceholder": "Phone number",
+    "stepIndicator": "Step 1 of 2",
+    "fullName": "Full Name",
+    "emailAddress": "E-mail Address",
+    "yourMessage": "Your Message",
+    "consentUpdates": "I agree to receive curated updates from Novel Insight Property.",
+    "requirementTitle": "Tell us a little about your Requirement",
+    "requirementSubtitle": "A NIP advisor will review your note and respond with the most relevant next step.",
+    "submitConsultationRequest": "Submit Consultation Request",
+    "privateAdvisoryTitle": "Request Private Advisory",
+    "privateAdvisorySubtitle": "Discreet and tailored. An advisor responds within one business day.",
+    "requestPrivateAdvisory": "Request Private Advisory",
+    "formErrorGeneric": "Something went wrong. Please try again.",
+    "invalidValue": "Invalid value"
   },
   "privateOffice": {
     "title": "Private Office",
@@ -534,6 +547,13 @@
     }
   },
   "cms": {
+    "contentEditorLine1": "Content",
+    "contentEditorLine2": "Editor",
+    "staffAccess": "Staff Access",
+    "loginTitle": "CMS Editor Login",
+    "loginDescription": "Sign in with your NIP staff account to edit page content inline on the live site.",
+    "cannotEditCms": "Your account cannot edit CMS content.",
+    "emailPlaceholder": "admin@niprealty.com",
     "editTextBlock": "Edit this text block",
     "editImageBlock": "Edit this image block",
     "deleteBlockConfirm": "Delete this block? This cannot be undone.",

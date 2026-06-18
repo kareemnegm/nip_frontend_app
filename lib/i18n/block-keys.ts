@@ -53,14 +53,17 @@ export const pageBlockKeys = {
   areas: {
     relUrl: "/areas",
     hero: { eyebrow: "hero-eyebrow", title: "hero-title", description: "hero-description" },
+    cta: { title: "cta-title" },
   },
   developers: {
     relUrl: "/developers",
     hero: { eyebrow: "hero-eyebrow", title: "hero-title", description: "hero-description" },
+    cta: { title: "cta-title" },
   },
   insights: {
     relUrl: "/insights",
     hero: { eyebrow: "hero-eyebrow", title: "hero-title", description: "hero-description" },
+    cta: { title: "cta-title" },
   },
   faq: {
     relUrl: "/faq",
@@ -141,6 +144,7 @@ export const globalBlockKeys = {
     tagline: "footer-tagline",
     newsletterTitle: "footer-newsletter-title",
     newsletterDesc: "footer-newsletter-desc",
+    copyright: "footer-copyright",
   },
 } as const;
 

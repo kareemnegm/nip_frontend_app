@@ -23,36 +23,15 @@ function FormCard({ children }: { children: React.ReactNode }) {
 }
 
 export function PrivateAdvisoryForm() {
-  return (
-    <InquiryForm
-      variant="consultation"
-      title="Request Private Advisory"
-      subtitle="Discreet and tailored. An advisor responds within one business day."
-      submitLabel="Request Private Advisory"
-    />
-  );
+  return <InquiryForm variant="privateAdvisory" />;
 }
 
 export function ContactRequestForm() {
-  return (
-    <InquiryForm
-      variant="contact"
-      title="Tell us a little about your Requirement"
-      subtitle="A NIP advisor will review your note and respond with the most relevant next step."
-      submitLabel="Send Message"
-    />
-  );
+  return <InquiryForm variant="contact" />;
 }
 
 export function ConsultationRequestForm() {
-  return (
-    <InquiryForm
-      variant="consultation"
-      title="Tell us a little about your Requirement"
-      subtitle="A NIP advisor will review your note and respond with the most relevant next step."
-      submitLabel="Submit Consultation Request"
-    />
-  );
+  return <InquiryForm variant="consultation" />;
 }
 
 export function ContributeInsightForm() {

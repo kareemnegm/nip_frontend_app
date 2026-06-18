@@ -1,12 +1,13 @@
 "use client";
 
-import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { LocalizedLink } from "./LocalizedLink";
 import { SpeakWithNipButton } from "./ui/Button";
 import { Icon } from "./ui/Icon";
 import { Logo } from "./ui/Logo";
+import { clientT } from "@/lib/i18n/client-messages";
+import { useOptionalLocale } from "@/lib/i18n/context";
 import {
   mainNavItems,
   offPlanDropdownItems,
@@ -17,7 +18,8 @@ const navLinkClass =
   "rounded-[var(--radius-field)] px-3 py-3 text-base font-semibold text-ink hover:bg-sapphire-50 hover:text-brand";
 
 export function MobileNav() {
-  const t = useTranslations("nav");
+  const localeContext = useOptionalLocale();
+  const navT = (key: string) => clientT(localeContext?.locale, "nav", key);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export function MobileNav() {
       <button
         type="button"
         aria-expanded={open}
-        aria-label={open ? t("closeMenu") : t("openMenu")}
+        aria-label={open ? navT("closeMenu") : navT("openMenu")}
         className="inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-field)] border border-line text-brand"
         onClick={() => setOpen((value) => !value)}
       >
@@ -48,7 +50,7 @@ export function MobileNav() {
               </LocalizedLink>
               <button
                 type="button"
-                aria-label={t("closeMenu")}
+                aria-label={navT("closeMenu")}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-field)] border border-line text-brand"
                 onClick={() => setOpen(false)}
               >
@@ -71,7 +73,7 @@ export function MobileNav() {
                         className={navLinkClass}
                         onClick={() => setOpen(false)}
                       >
-                        {t(item.key)}
+                        {navT(item.key)}
                       </LocalizedLink>
                       <div className="ms-3 flex flex-col gap-[2px] border-s border-sapphire-100 ps-3">
                         {dropdownItems.map((link) => (
@@ -81,7 +83,7 @@ export function MobileNav() {
                             className="rounded-[var(--radius-field)] px-2 py-[6px] text-[13px] font-medium text-ink-secondary hover:bg-sapphire-50 hover:text-brand"
                             onClick={() => setOpen(false)}
                           >
-                            {t(link.key)}
+                            {navT(link.key)}
                           </LocalizedLink>
                         ))}
                       </div>
@@ -96,7 +98,7 @@ export function MobileNav() {
                     className={navLinkClass}
                     onClick={() => setOpen(false)}
                   >
-                    {t(item.key)}
+                    {navT(item.key)}
                   </LocalizedLink>
                 );
               })}

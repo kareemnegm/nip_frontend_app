@@ -59,12 +59,14 @@ export type FooterContentProps = {
   tagline: React.ReactNode;
   newsletterTitle: React.ReactNode;
   newsletterDesc: React.ReactNode;
+  copyright: React.ReactNode;
 };
 
 export async function FooterContent({
   tagline,
   newsletterTitle,
   newsletterDesc,
+  copyright,
 }: FooterContentProps) {
   const t = await getTranslations("footer");
 
@@ -209,7 +211,7 @@ export async function FooterContent({
         <div className="h-px w-full bg-basalt-300" />
 
         <div className="flex w-full flex-col gap-5 text-[12px] leading-4 md:flex-row md:items-center md:justify-between rtl:md:flex-row-reverse">
-          <p className="text-basalt-300">{t("copyright")}</p>
+          <div className="text-basalt-300">{copyright}</div>
           <div className="flex flex-wrap gap-x-5 gap-y-2 text-text-inactive">
             {legalLinks.map((link) => (
               <LocalizedLink

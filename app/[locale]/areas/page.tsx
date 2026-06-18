@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { SiteShell } from "@/components/SiteShell";
 import { CatalogHeroSection } from "@/components/sections/CatalogHeroSection";
-import { CtaBand } from "@/components/sections";
+import { EditableCtaBand } from "@/components/sections/EditableCtaBand";
 import { ApiPagination, CatalogEmptyState, CommunityCard } from "@/components/ui";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui";
 import { getAreas } from "@/lib/api/areas";
 import { mapAreaToCommunityCard } from "@/lib/mappers/area";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
+import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { localizedHref, resolveLocale } from "@/lib/i18n/helpers";
 import { localizedMetadata } from "@/lib/i18n/metadata";
 
@@ -31,6 +32,7 @@ export default async function AreasPage({ params, searchParams }: PageProps) {
   const areas = data.map((area) => mapAreaToCommunityCard(area, locale));
   const t = await getTranslations({ locale, namespace: "pages.areas" });
   const tc = await getTranslations({ locale, namespace: "common" });
+  const areaBlocks = pageBlockKeys.areas;
 
   return (
     <SiteShell>
@@ -63,8 +65,11 @@ export default async function AreasPage({ params, searchParams }: PageProps) {
         </Container>
       </section>
 
-      <CtaBand
-        title={t("ctaTitle")}
+      <EditableCtaBand
+        relUrl={areaBlocks.relUrl}
+        blockKey={areaBlocks.cta.title}
+        locale={locale}
+        placeholderContent={await getCmsPlaceholder("pages.areas", "ctaTitle", locale)}
         actions={
           <Button href="/contact" variant="accent">
             {tc("speakWith")} {tc("nip")}

@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/Container";
 
 export type CtaBandProps = {
   eyebrow?: string;
-  title: string;
+  title: React.ReactNode;
   description?: string;
   tone?: "dark" | "light";
   actions?: React.ReactNode;
@@ -39,14 +39,18 @@ export function CtaBand({
             {eyebrow}
           </p>
         ) : null}
-        <h2
-          className={cn(
-            "mt-3 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl",
-            isDark ? "text-white" : "text-brand",
-          )}
-        >
-          {title}
-        </h2>
+        {typeof title === "string" ? (
+          <h2
+            className={cn(
+              "mt-3 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl",
+              isDark ? "text-white" : "text-brand",
+            )}
+          >
+            {title}
+          </h2>
+        ) : (
+          title
+        )}
         {description ? (
           <p
             className={cn(

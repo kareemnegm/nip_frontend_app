@@ -5,6 +5,8 @@ const DEFAULT_TAGLINE =
 const DEFAULT_NEWSLETTER_TITLE = "Stay Ahead of the Market";
 const DEFAULT_NEWSLETTER_DESC =
   "Curated market updates from Dubai's leading communities.";
+const DEFAULT_COPYRIGHT =
+  "© 2026 NIP — Novel Insight Property. All rights reserved.";
 
 export function FooterStatic() {
   return (
@@ -12,6 +14,7 @@ export function FooterStatic() {
       tagline={DEFAULT_TAGLINE}
       newsletterTitle={DEFAULT_NEWSLETTER_TITLE}
       newsletterDesc={DEFAULT_NEWSLETTER_DESC}
+      copyright={DEFAULT_COPYRIGHT}
     />
   );
 }

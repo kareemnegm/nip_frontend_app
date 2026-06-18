@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Suspense, useState } from "react";
 import { useCanEditCms } from "@/components/cms/CmsAuthProvider";
 import { Button } from "@/components/ui/Button";
@@ -13,6 +14,9 @@ function CmsLoginFormInner({ locale }: { locale: Locale }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { refresh } = useCanEditCms();
+  const t = useTranslations("cms");
+  const tf = useTranslations("forms");
+  const tc = useTranslations("common");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -31,11 +35,11 @@ function CmsLoginFormInner({ locale }: { locale: Locale }) {
       });
       const data = (await res.json()) as { message?: string; canEdit?: boolean };
       if (!res.ok) {
-        setError(data.message ?? "Sign in failed");
+        setError(data.message ?? tf("signInFailed"));
         return;
       }
       if (data.canEdit === false) {
-        setError("Your account cannot edit CMS content.");
+        setError(t("cannotEditCms"));
         return;
       }
       await refresh();
@@ -43,7 +47,7 @@ function CmsLoginFormInner({ locale }: { locale: Locale }) {
       router.push(returnUrl ? decodeURIComponent(returnUrl) : localizedHref(locale, "/"));
       router.refresh();
     } catch {
-      setError("Sign in failed. Please try again.");
+      setError(tf("signInFailedRetry"));
     } finally {
       setLoading(false);
     }
@@ -52,17 +56,17 @@ function CmsLoginFormInner({ locale }: { locale: Locale }) {
   return (
     <form className="mt-8 space-y-4" onSubmit={onSubmit}>
       <TextInput
-        label="Email"
+        label={tf("email")}
         type="email"
-        placeholder="admin@niprealty.com"
+        placeholder={t("emailPlaceholder")}
         value={email}
         onChange={(event) => setEmail(event.target.value)}
         required
       />
       <TextInput
-        label="Password"
+        label={tf("password")}
         type="password"
-        placeholder="••••••••"
+        placeholder={tf("passwordPlaceholder")}
         value={password}
         onChange={(event) => setPassword(event.target.value)}
         required
@@ -74,7 +78,7 @@ function CmsLoginFormInner({ locale }: { locale: Locale }) {
       ) : null}
       <div className="flex justify-center pt-2">
         <Button type="submit" disabled={loading}>
-          {loading ? "Signing in…" : "Sign In"}
+          {loading ? tc("signingIn") : tc("signIn")}
         </Button>
       </div>
     </form>
@@ -90,14 +94,16 @@ export function CmsLoginForm({ locale }: { locale: Locale }) {
 }
 
 export function CmsLoginCard({ locale }: { locale: Locale }) {
+  const t = useTranslations("cms");
+
   return (
     <div className="w-full max-w-md rounded-[var(--radius-card)] border border-line bg-white p-8 shadow-[var(--shadow-card)] sm:p-10">
       <div className="flex items-start justify-between">
         <Logo />
-        <span className="text-right text-[10px] font-semibold uppercase leading-tight tracking-wide text-ink-tertiary">
-          Content
+        <span className="text-end text-[10px] font-semibold uppercase leading-tight tracking-wide text-ink-tertiary">
+          {t("contentEditorLine1")}
           <br />
-          Editor
+          {t("contentEditorLine2")}
         </span>
       </div>
 
@@ -106,14 +112,13 @@ export function CmsLoginCard({ locale }: { locale: Locale }) {
           <Icon name="lock" className="h-5 w-5" />
         </span>
         <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-tertiary">
-          Staff Access
+          {t("staffAccess")}
         </p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-brand">
-          CMS Editor Login
+          {t("loginTitle")}
         </h1>
         <p className="mx-auto mt-3 max-w-xs text-sm leading-6 text-ink-secondary">
-          Sign in with your NIP staff account to edit page content inline on the
-          live site.
+          {t("loginDescription")}
         </p>
       </div>
 

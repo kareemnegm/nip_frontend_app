@@ -2,10 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { SiteShell } from "@/components/SiteShell";
-import { CtaBand, SectionHeading } from "@/components/sections";
+import { EditableCtaBand } from "@/components/sections/EditableCtaBand";
+import { SectionHeading } from "@/components/sections";
 import { Button, Container, InsightCard } from "@/components/ui";
 import { getBlogBySlug, getBlogs } from "@/lib/api/blogs";
 import { resolveBlogFeaturedImage } from "@/lib/api/media-url";
+import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
+import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { localizedHref, resolveLocale } from "@/lib/i18n/helpers";
 import { mapBlogToInsightCard } from "@/lib/mappers/blog";
 
@@ -40,6 +43,7 @@ export default async function InsightArticlePage({ params }: PageProps) {
   const featuredImage = resolveBlogFeaturedImage(blog);
   const t = await getTranslations({ locale, namespace: "pages.insights" });
   const tc = await getTranslations({ locale, namespace: "common" });
+  const insightBlocks = pageBlockKeys.insights;
 
   return (
     <SiteShell>
@@ -92,8 +96,11 @@ export default async function InsightArticlePage({ params }: PageProps) {
         </section>
       ) : null}
 
-      <CtaBand
-        title={t("ctaTitle")}
+      <EditableCtaBand
+        relUrl={insightBlocks.relUrl}
+        blockKey={insightBlocks.cta.title}
+        locale={locale}
+        placeholderContent={await getCmsPlaceholder("pages.insights", "ctaTitle", locale)}
         actions={
           <Button href={localizedHref(locale, "/contact")} variant="accent">
             {tc("speakWith")} {tc("nip")}

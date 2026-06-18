@@ -3,10 +3,11 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { SiteShell } from "@/components/SiteShell";
 import { CatalogHeroSection } from "@/components/sections/CatalogHeroSection";
-import { CtaBand } from "@/components/sections";
+import { EditableCtaBand } from "@/components/sections/EditableCtaBand";
 import { ApiPagination, CatalogEmptyState, Button, Container, Icon } from "@/components/ui";
 import { getDevelopers } from "@/lib/api/developers";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
+import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { localizedHref, resolveLocale } from "@/lib/i18n/helpers";
 import { localizedMetadata } from "@/lib/i18n/metadata";
 
@@ -28,6 +29,7 @@ export default async function DevelopersPage({ params, searchParams }: PageProps
   const { data, meta } = await getDevelopers({ page, per_page: 9, locale });
   const t = await getTranslations({ locale, namespace: "pages.developers" });
   const tc = await getTranslations({ locale, namespace: "common" });
+  const developerBlocks = pageBlockKeys.developers;
 
   return (
     <SiteShell>
@@ -77,8 +79,11 @@ export default async function DevelopersPage({ params, searchParams }: PageProps
         </Container>
       </section>
 
-      <CtaBand
-        title={t("ctaTitle")}
+      <EditableCtaBand
+        relUrl={developerBlocks.relUrl}
+        blockKey={developerBlocks.cta.title}
+        locale={locale}
+        placeholderContent={await getCmsPlaceholder("pages.developers", "ctaTitle", locale)}
         actions={
           <Button href="/contact" variant="accent">
             {tc("speakWith")} {tc("nip")}

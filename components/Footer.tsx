@@ -31,6 +31,14 @@ export function Footer() {
           placeholderTag="p"
         />
       }
+      copyright={
+        <EditableText
+          relUrl={relUrl}
+          blockKey={footer.copyright}
+          placeholderContent="© 2026 NIP — Novel Insight Property. All rights reserved."
+          placeholderTag="p"
+        />
+      }
     />
   );
 }
