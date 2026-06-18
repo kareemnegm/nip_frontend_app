@@ -1,4 +1,9 @@
+"use client";
+
 import Image from "next/image";
+import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
@@ -107,10 +112,13 @@ export function PropertyCard({
   badges = [],
   className,
 }: PropertyCardProps) {
-  return (
+  const t = useTranslations("catalog");
+
+  const card = (
     <article
       className={cn(
-        "flex h-full min-h-[480px] flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)]",
+        "flex h-full min-h-[480px] flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
+        href && "cursor-pointer",
         className,
       )}
     >
@@ -150,7 +158,7 @@ export function PropertyCard({
         </div>
         <div className="mt-6 space-y-4">
           <div className="flex items-center justify-between gap-4 pt-6">
-            <p className="text-xs leading-4 text-ink-tertiary">Starting From</p>
+            <p className="text-xs leading-4 text-ink-tertiary">{t("startingFrom")}</p>
             <p className="flex items-center gap-2 text-xl font-bold leading-[26px] text-brand">
               <Icon name="currency" className="h-[18px] w-[18px] shrink-0" />
               {price.replace(/^AED\s*/i, "")}
@@ -167,18 +175,26 @@ export function PropertyCard({
                 </span>
               ))}
             </div>
-            <Button
-              href={href}
-              variant="link"
-              className="shrink-0 text-body-sm leading-[18px]"
-            >
-              Explore Property <Icon name="arrowRight" className="h-4 w-4" />
-            </Button>
+            {href ? (
+              <span className="inline-flex shrink-0 items-center gap-1 text-body-sm leading-[18px] text-accent">
+                {t("exploreProperty")} <Icon name="arrowRight" className="h-4 w-4" />
+              </span>
+            ) : null}
           </div>
         </div>
       </div>
     </article>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2">
+        {card}
+      </Link>
+    );
+  }
+
+  return card;
 }
 
 export function OffPlanCard({
@@ -193,12 +209,14 @@ export function OffPlanCard({
   PropertyCardProps,
   "title" | "location" | "price" | "handover" | "href" | "imageUrl" | "className"
 >) {
+  const t = useTranslations("catalog");
   const displayPrice = price.replace(/^AED\s*/i, "");
 
-  return (
+  const card = (
     <article
       className={cn(
-        "flex h-full min-h-[480px] flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)]",
+        "flex h-full min-h-[480px] flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
+        href && "cursor-pointer",
         className,
       )}
     >
@@ -207,7 +225,7 @@ export function OffPlanCard({
         <div className="space-y-4">
           <div className="flex items-start justify-between gap-3">
             <span className="rounded-[2px] bg-basalt-50 px-2.5 py-1 text-[11px] font-medium leading-[14px] text-ink-secondary">
-              Off-Plan
+              {t("breadcrumbOffPlan")}
             </span>
             <Icon name="building" className="h-6 w-6 shrink-0 text-brand" />
           </div>
@@ -222,13 +240,13 @@ export function OffPlanCard({
         <div className="mt-6 space-y-4">
           <div className="flex items-start justify-between gap-4 pt-2">
             <div>
-              <p className="text-xs leading-4 text-ink-tertiary">Handover</p>
+              <p className="text-xs leading-4 text-ink-tertiary">{t("handoverLabel")}</p>
               <p className="mt-2 text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
                 {handover}
               </p>
             </div>
             <div className="text-right">
-              <p className="text-xs leading-4 text-ink-tertiary">Starting From</p>
+              <p className="text-xs leading-4 text-ink-tertiary">{t("startingFrom")}</p>
               <p className="mt-2 flex items-center justify-end gap-2 text-xl font-bold leading-[26px] text-brand">
                 <Icon name="currency" className="h-[18px] w-[18px] shrink-0" />
                 {displayPrice}
@@ -237,20 +255,28 @@ export function OffPlanCard({
           </div>
           <div className="flex items-center justify-between gap-4">
             <span className="rounded-[2px] bg-basalt-50 px-2.5 py-1 text-[11px] font-medium leading-[14px] text-ink-secondary">
-              Payment Plan Available
+              {t("paymentPlanAvailable")}
             </span>
-            <Button
-              href={href}
-              variant="link"
-              className="shrink-0 text-xs font-semibold leading-4 text-accent"
-            >
-              Explore Property <Icon name="arrowRight" className="h-4 w-4" />
-            </Button>
+            {href ? (
+              <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold leading-4 text-accent">
+                {t("exploreProperty")} <Icon name="arrowRight" className="h-4 w-4" />
+              </span>
+            ) : null}
           </div>
         </div>
       </div>
     </article>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2">
+        {card}
+      </Link>
+    );
+  }
+
+  return card;
 }
 
 export function InsightCard({
@@ -262,21 +288,27 @@ export function InsightCard({
   imageUrl,
   className,
 }: InsightCardProps) {
-  return (
+  const t = useTranslations("common");
+  const [imageError, setImageError] = useState(false);
+  const showImage = Boolean(imageUrl) && !imageError;
+
+  const card = (
     <article
       className={cn(
-        "flex h-full flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)]",
+        "flex h-full flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
+        href && "cursor-pointer",
         className,
       )}
     >
-      {imageUrl ? (
+      {showImage ? (
         <div className="relative h-[220px] overflow-hidden rounded-[4px]">
           <Image
-            src={imageUrl}
+            src={imageUrl!}
             alt={title}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 33vw"
+            onError={() => setImageError(true)}
           />
         </div>
       ) : (
@@ -294,17 +326,25 @@ export function InsightCard({
         </p>
         <div className="mt-5 flex items-center justify-between gap-4 text-[11px] font-medium leading-[14px] text-platinum-400">
           <span>{readTime} | NIP Advisory</span>
-          <Button
-            href={href}
-            variant="link"
-            className="text-[13px] leading-[18px]"
-          >
-            Read the Insight <Icon name="arrowRight" className="h-4 w-4" />
-          </Button>
+          {href ? (
+            <span className="inline-flex items-center gap-1 text-[13px] leading-[18px] text-accent">
+              {t("readInsight")} <Icon name="arrowRight" className="h-4 w-4" />
+            </span>
+          ) : null}
         </div>
       </div>
     </article>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2">
+        {card}
+      </Link>
+    );
+  }
+
+  return card;
 }
 
 export function AdvisorCard({ title, excerpt, className }: AdvisorCardProps) {

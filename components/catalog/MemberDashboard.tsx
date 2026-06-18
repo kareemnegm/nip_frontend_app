@@ -29,9 +29,9 @@ export async function loadMemberDashboard(
   token: string,
 ): Promise<MemberDashboardData> {
   const [user, curatedResponse, savedResponse] = await Promise.all([
-    getMemberProfile(token),
-    getMemberCurated(token, { limit: 3 }),
-    getMemberSaved(token, { limit: 12 }),
+    getMemberProfile(token, locale),
+    getMemberCurated(token, { limit: 3, locale }),
+    getMemberSaved(token, { limit: 12, locale }),
   ]);
 
   return {
@@ -63,8 +63,8 @@ export function MemberDashboardView({
   return (
     <SiteShell>
       <PrivateOfficeMemberHero user={data.user} locale={locale} />
-      <PrivateOfficeMemberCuratedSection items={curatedCards} />
-      <PrivateOfficeMemberSavedSection properties={data.saved} />
+      <PrivateOfficeMemberCuratedSection items={curatedCards} locale={locale} />
+      <PrivateOfficeMemberSavedSection properties={data.saved} locale={locale} />
       <PrivateOfficeMemberAdvisorBar advisor={data.user.advisor} locale={locale} />
     </SiteShell>
   );

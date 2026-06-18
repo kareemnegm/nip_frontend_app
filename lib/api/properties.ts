@@ -1,15 +1,18 @@
 import { cache } from "react";
+import { defaultLocale, type Locale } from "@/lib/i18n/config";
 import type {
   ApiProperty,
   LaravelPaginated,
   PropertyListParams,
 } from "@/types/api";
 import { ApiError } from "./errors";
+import { emptyPaginated, isOfflineError } from "./fallbacks";
 import { apiGet, unwrapData } from "./client";
 
 function toQueryParams(params: PropertyListParams = {}) {
   const query: Record<string, string | number> = {};
   for (const [key, value] of Object.entries(params)) {
+    if (key === "locale") continue;
     if (value !== undefined && value !== null && value !== "") {
       query[key] = value;
     }
@@ -18,29 +21,45 @@ function toQueryParams(params: PropertyListParams = {}) {
 }
 
 export async function getProperties(params: PropertyListParams = {}) {
-  return apiGet<LaravelPaginated<ApiProperty>>("/properties", {
-    params: toQueryParams(params),
-  });
+  const { locale = defaultLocale, ...rest } = params;
+  try {
+    return await apiGet<LaravelPaginated<ApiProperty>>("/properties", {
+      params: toQueryParams(rest),
+      locale,
+    });
+  } catch {
+    return emptyPaginated<ApiProperty>(Number(rest.per_page) || 9);
+  }
 }
 
-export const getPropertyBySlug = cache(async (slug: string) => {
-  try {
-    const response = await apiGet<ApiProperty | { data: ApiProperty }>(
-      `/properties/${slug}`,
-    );
-    return unwrapData(response);
-  } catch (error) {
-    if (error instanceof ApiError && error.status === 404) {
-      return null;
+export const getPropertyBySlug = cache(
+  async (slug: string, locale: Locale = defaultLocale) => {
+    try {
+      const response = await apiGet<ApiProperty | { data: ApiProperty }>(
+        `/properties/${slug}`,
+        { locale },
+      );
+      return unwrapData(response);
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 404) {
+        return null;
+      }
+      if (isOfflineError(error)) {
+        return null;
+      }
+      throw error;
     }
-    throw error;
-  }
-});
+  },
+);
 
-export async function getSimilarProperties(slug: string) {
+export async function getSimilarProperties(
+  slug: string,
+  locale: Locale = defaultLocale,
+) {
   try {
     const response = await apiGet<{ data: ApiProperty[] } | ApiProperty[]>(
       `/properties/${slug}/similar`,
+      { locale },
     );
     return Array.isArray(response) ? response : unwrapData(response);
   } catch {

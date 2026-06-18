@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { EditableText } from "@/components/EditableText";
 import { FaqAccordion, type FaqItem } from "@/components/FaqAccordion";
@@ -5,6 +6,7 @@ import { SpeakWithNipButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { getFaqs } from "@/lib/api/faqs";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
+import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
 import {
   siteMaxWidth,
@@ -53,7 +55,7 @@ export async function FaqHeroSection() {
             relUrl={faqBlocks.relUrl}
             blockKey={faqBlocks.hero.eyebrow}
             locale={locale}
-            placeholderContent="HELP & FAQ"
+            placeholderContent={await getCmsPlaceholder("placeholders.faq.hero", "eyebrow", locale)}
             placeholderTag="p"
             className="text-overline font-semibold text-accent"
           />
@@ -61,7 +63,7 @@ export async function FaqHeroSection() {
             relUrl={faqBlocks.relUrl}
             blockKey={faqBlocks.hero.title}
             locale={locale}
-            placeholderContent="Frequently Asked Questions"
+            placeholderContent={await getCmsPlaceholder("placeholders.faq.hero", "title", locale)}
             placeholderTag="h1"
             className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
           />
@@ -69,7 +71,7 @@ export async function FaqHeroSection() {
             relUrl={faqBlocks.relUrl}
             blockKey={faqBlocks.hero.description}
             locale={locale}
-            placeholderContent="Everything you need to know about working with NIP — buying, off-plan, the Golden Visa and our private advisory."
+            placeholderContent={await getCmsPlaceholder("placeholders.faq.hero", "description", locale)}
             placeholderTag="p"
             className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary"
           />
@@ -80,7 +82,8 @@ export async function FaqHeroSection() {
 }
 
 export async function FaqAccordionSection() {
-  const apiFaqs = await getFaqs().catch(() => []);
+  const locale = await getRequestLocale();
+  const apiFaqs = await getFaqs(locale).catch(() => []);
   const faqItems: FaqItem[] =
     apiFaqs.length > 0
       ? apiFaqs.map((item) => ({
@@ -102,6 +105,7 @@ export async function FaqAccordionSection() {
 
 export async function FaqCtaSection() {
   const locale = await getRequestLocale();
+  const tc = await getTranslations({ locale, namespace: "common" });
 
   return (
     <section className="bg-sapphire-50 py-16 sm:py-20">
@@ -112,7 +116,7 @@ export async function FaqCtaSection() {
               relUrl={faqBlocks.relUrl}
               blockKey={faqBlocks.cta.title}
               locale={locale}
-              placeholderContent="Still Have Questions?"
+              placeholderContent={await getCmsPlaceholder("placeholders.faq.cta", "title", locale)}
               placeholderTag="h2"
               className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand sm:text-[36px] sm:leading-[40px]"
             />
@@ -120,7 +124,7 @@ export async function FaqCtaSection() {
               relUrl={faqBlocks.relUrl}
               blockKey={faqBlocks.cta.description}
               locale={locale}
-              placeholderContent="Ask the Concierge for an instant answer, or speak with a Private Advisor."
+              placeholderContent={await getCmsPlaceholder("placeholders.faq.cta", "description", locale)}
               placeholderTag="p"
               className="max-w-[464px] text-body-md leading-[22px] text-ink-secondary"
             />
@@ -130,7 +134,7 @@ export async function FaqCtaSection() {
               href="/concierge"
               className="inline-flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-field)] bg-accent px-6 py-[9px] text-[13px] font-semibold leading-[18px] text-white transition-colors hover:bg-accent-hover active:bg-accent-pressed"
             >
-              Ask the Concierge
+              {tc("askConcierge")}
               <Icon name="arrowRight" className="h-4 w-4 shrink-0 rtl:rotate-180" />
             </LocalizedLink>
             <SpeakWithNipButton href="/contact" className="flex-1 justify-center" />

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { clientT } from "@/lib/i18n/client-messages";
 import { useOptionalLocale } from "@/lib/i18n/context";
 import { localizedHref } from "@/lib/i18n/helpers";
 
@@ -72,9 +73,11 @@ export function SpeakWithNipButton({
   const resolvedHref = resolveHref(href, localeContext?.locale);
   const content = (
     <>
-      <span className="font-semibold">Speak with</span>
+      <span className="font-semibold">
+        {clientT(localeContext?.locale, "common", "speakWith")}
+      </span>
       <span className="font-[family-name:var(--font-logo)] font-medium">
-        NIP
+        {clientT(localeContext?.locale, "common", "nip")}
       </span>
     </>
   );

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/cn";
 import { Icon } from "./Icon";
 
@@ -33,6 +36,8 @@ export function ApiPagination({
   query,
   className,
 }: ApiPaginationProps) {
+  const t = useTranslations("catalog");
+
   if (lastPage <= 1) return null;
 
   const cellClasses =
@@ -45,20 +50,20 @@ export function ApiPagination({
 
   return (
     <nav
-      aria-label="Pagination"
+      aria-label={t("pagination")}
       className={cn("flex items-center gap-2 pt-4", className)}
     >
       {currentPage > 1 ? (
         <Link
           href={buildHref(basePath, currentPage - 1, query)}
-          aria-label="Previous page"
+          aria-label={t("previousPage")}
           className={cellClasses}
         >
-          <Icon name="chevronDown" className="h-3 w-3 rotate-90" />
+          <Icon name="chevronDown" className="h-3 w-3 rotate-90 rtl:-rotate-90" />
         </Link>
       ) : (
         <span className={cn(cellClasses, "pointer-events-none opacity-40")}>
-          <Icon name="chevronDown" className="h-3 w-3 rotate-90" />
+          <Icon name="chevronDown" className="h-3 w-3 rotate-90 rtl:-rotate-90" />
         </span>
       )}
 
@@ -80,14 +85,14 @@ export function ApiPagination({
       {currentPage < lastPage ? (
         <Link
           href={buildHref(basePath, currentPage + 1, query)}
-          aria-label="Next page"
+          aria-label={t("nextPage")}
           className={cellClasses}
         >
-          <Icon name="chevronDown" className="h-3 w-3 -rotate-90" />
+          <Icon name="chevronDown" className="h-3 w-3 -rotate-90 rtl:rotate-90" />
         </Link>
       ) : (
         <span className={cn(cellClasses, "pointer-events-none opacity-40")}>
-          <Icon name="chevronDown" className="h-3 w-3 -rotate-90" />
+          <Icon name="chevronDown" className="h-3 w-3 -rotate-90 rtl:rotate-90" />
         </span>
       )}
     </nav>

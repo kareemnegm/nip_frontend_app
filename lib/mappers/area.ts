@@ -1,5 +1,6 @@
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
+import { resolveMediaUrl } from "@/lib/api/media-url";
 import type { ApiArea } from "@/types/api";
 
 export type CommunityCardModel = {
@@ -32,6 +33,6 @@ export function mapAreaToCommunityCard(
     facts: facts.slice(0, 4),
     projectCount: `${count} Project${count === 1 ? "" : "s"} Available`,
     href: localizedHref(locale, `/areas/${area.slug}`),
-    imageUrl: area.image_url ?? area.photo_url ?? undefined,
+    imageUrl: resolveMediaUrl(area.image_url ?? area.photo_url),
   };
 }

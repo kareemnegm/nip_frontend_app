@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
 import { Archivo, Cairo, Cormorant_Garamond, Geist_Mono, Kalnia } from "next/font/google";
+import { defaultLocale, getDirection, isLocale, LOCALE_COOKIE } from "@/lib/i18n/config";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -37,13 +39,21 @@ export const metadata: Metadata = {
     "Prudent, knowledge-first global real estate advisory for elevated living in Dubai.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const cookieLocale = cookieStore.get(LOCALE_COOKIE)?.value;
+  const locale =
+    cookieLocale && isLocale(cookieLocale) ? cookieLocale : defaultLocale;
+  const direction = getDirection(locale);
+
   return (
     <html
+      lang={locale}
+      dir={direction}
       suppressHydrationWarning
       className={`${archivo.variable} ${geistMono.variable} ${cormorant.variable} ${kalnia.variable} ${cairo.variable} h-full antialiased`}
     >

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { clientTPath } from "@/lib/i18n/client-messages";
+import { useOptionalLocale } from "@/lib/i18n/context";
 import { SpeakWithNipButton } from "./ui/Button";
 import { Logo } from "./ui/Logo";
 import { siteChromeClassName } from "./ui/SiteChrome";
@@ -65,6 +67,11 @@ function useStickyCtaVisible() {
 
 export function StickyCta() {
   const visible = useStickyCtaVisible();
+  const localeContext = useOptionalLocale();
+  const tagline = clientTPath(
+    localeContext?.locale,
+    "placeholders.global.footer.tagline",
+  );
 
   return (
     <aside
@@ -82,9 +89,7 @@ export function StickyCta() {
         <Logo inverted className="shrink-0" />
 
         <div className="flex items-center gap-5">
-          <p className="hidden text-body-sm text-basalt-200 sm:block">
-            Discreet Advisory for Elevated Living
-          </p>
+          <p className="hidden text-body-sm text-basalt-200 sm:block">{tagline}</p>
           <SpeakWithNipButton className="shrink-0" />
         </div>
       </div>

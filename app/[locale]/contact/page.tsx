@@ -4,12 +4,15 @@ import {
   ContactFormSection,
   ContactHeroSection,
 } from "@/components/sections/ContactStorySections";
+import { resolveLocale } from "@/lib/i18n/helpers";
+import { localizedMetadata } from "@/lib/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "Speak with NIP | NIP Reality",
-  description:
-    "A considered property decision begins with a conversation. Request a private consultation with NIP advisory.",
-};
+type PageProps = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  return localizedMetadata(resolveLocale(rawLocale), "contact");
+}
 
 export default function ContactPage() {
   return (

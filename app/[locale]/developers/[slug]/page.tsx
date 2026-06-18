@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { SiteShell } from "@/components/SiteShell";
 import {
   DeveloperAdvisoryCta,
@@ -26,8 +27,9 @@ type PageProps = {
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const developer = await getDeveloperBySlug(slug);
+  const { slug, locale: rawLocale } = await params;
+  const locale = resolveLocale(rawLocale);
+  const developer = await getDeveloperBySlug(slug, locale);
   if (!developer) return { title: "Developer | NIP Reality" };
   return {
     title: `${developer.name} | Developers | NIP Reality`,
@@ -38,29 +40,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function DeveloperPage({ params }: PageProps) {
   const { locale: rawLocale, slug } = await params;
   const locale = resolveLocale(rawLocale);
-  const developer = await getDeveloperBySlug(slug);
+  const developer = await getDeveloperBySlug(slug, locale);
   if (!developer) notFound();
 
-  const { data: properties } = await getProperties({ developer: slug, per_page: 9 });
+  const { data: properties } = await getProperties({ developer: slug, per_page: 9, locale });
+  const t = await getTranslations({ locale, namespace: "pages.developers" });
 
   return (
     <SiteShell>
       <DeveloperHero
         title={developer.name}
-        description={
-          developer.description ??
-          "Master developer portfolio reviewed for build quality, liquidity and handover record."
-        }
+        description={developer.description ?? t("portfolioFallback")}
       />
 
       <section className="bg-white py-16">
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
           <div className={cn(sitePageInnerClassName, "space-y-8")}>
             <h2 className="font-[family-name:var(--font-display)] text-2xl uppercase text-brand">
-              Portfolio
+              {t("portfolio")}
             </h2>
             {properties.length === 0 ? (
-              <CatalogEmptyState message="No published listings for this developer yet." />
+              <CatalogEmptyState message={t("noListings")} />
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {properties.map((property) => {

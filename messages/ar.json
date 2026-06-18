@@ -1,0 +1,544 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "properties": "العقارات",
+    "offPlan": "على الخارطة",
+    "developers": "المطورون",
+    "areas": "المناطق",
+    "insights": "رؤى السوق",
+    "concierge": "الاستشاري الذكي",
+    "apartments": "شقق",
+    "townhouses": "تاون هاوس",
+    "villas": "فلل",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة"
+  },
+  "common": {
+    "speakWith": "تحدث مع",
+    "nip": "NIP",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "signingOut": "جارٍ تسجيل الخروج…",
+    "signingIn": "جارٍ تسجيل الدخول…",
+    "requestAccess": "طلب الوصول",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "close": "إغلاق",
+    "send": "إرسال",
+    "sending": "جارٍ الإرسال…",
+    "loading": "جارٍ التحميل…",
+    "viewAll": "عرض الكل",
+    "learnMore": "اعرف المزيد",
+    "readMore": "اقرأ المزيد",
+    "backToHome": "العودة للرئيسية",
+    "contactUs": "تواصل معنا",
+    "detailsOnRequest": "التفاصيل عند الطلب",
+    "property": "عقار",
+    "offPlanBadge": "على الخارطة",
+    "search": "بحث",
+    "askConcierge": "اسأل الاستشاري",
+    "readLatestInsights": "اقرأ أحدث الرؤى",
+    "readInsight": "اقرأ الرؤية",
+    "exploreCollection": "استكشف المجموعة",
+    "searchProperties": "البحث عن عقارات",
+    "viewMaker": "عرض المطور",
+    "latest": "الأحدث",
+    "projects": "{count} مشروع",
+    "dubai": "دبي"
+  },
+  "footer": {
+    "properties": "العقارات",
+    "buyProperties": "شراء عقارات",
+    "rentProperties": "إيجار عقارات",
+    "exclusives": "حصري",
+    "newLaunches": "إطلاقات جديدة",
+    "areas": "المناطق",
+    "palmJumeirah": "نخلة جميرا",
+    "dubaiMarina": "دبي مارينا",
+    "downtown": "وسط المدينة",
+    "businessBay": "الخليج التجاري",
+    "allAreas": "جميع المناطق",
+    "offPlan": "على الخارطة",
+    "featuredProjects": "مشاريع مميزة",
+    "upcoming": "قريباً",
+    "paymentPlans": "خطط الدفع",
+    "developersLink": "المطورون",
+    "resources": "الموارد",
+    "faq": "الأسئلة الشائعة",
+    "aiConcierge": "المساعد الذكي",
+    "submitArticle": "إرسال مقال",
+    "insights": "رؤى السوق",
+    "marketIntelligence": "ذكاء السوق",
+    "investmentGuides": "أدلة الاستثمار",
+    "goldenVisa": "الإقامة الذهبية",
+    "journal": "المجلة",
+    "aboutNip": "عن NIP",
+    "ourApproach": "نهجنا",
+    "whyNip": "لماذا NIP",
+    "team": "الفريق",
+    "careers": "الوظائف",
+    "contact": "تواصل",
+    "followUs": "تابعنا",
+    "copyright": "© 2026 NIP — Novel Insight Property. جميع الحقوق محفوظة.",
+    "privacy": "الخصوصية",
+    "terms": "الشروط",
+    "cookies": "ملفات تعريف الارتباط",
+    "disclaimer": "إخلاء المسؤولية",
+    "reraInfo": "معلومات RERA",
+    "staffLogin": "دخول الموظفين"
+  },
+  "home": {
+    "byIntroductionOnly": "بالتعارف فقط",
+    "hero": {
+      "readInsights": "اقرأ أحدث الرؤى"
+    },
+    "search": {
+      "label": "هل تبحث عن شيء محدد؟",
+      "placeholder": "ابحث عن عقارات أو مناطق أو مشاريع",
+      "submit": "بحث",
+      "ariaLabel": "بحث"
+    },
+    "empty": {
+      "insights": "ستظهر الرؤى هنا بمجرد نشر المقالات.",
+      "curated": "ستظهر القوائم المنسقة هنا بمجرد نشر المناطق والعقارات.",
+      "areas": "ستظهر أبرز المناطق هنا بمجرد نشر المجتمعات.",
+      "featured": "ستظهر العقارات المميزة هنا بمجرد نشرها على النظام."
+    },
+    "marketPulse": {
+      "viewPerspective": "عرض منظور السوق",
+      "stat1Context": "مجتمعات متميزة",
+      "stat1Label": "متوسط السعر / قدم مربع",
+      "stat2Context": "إطلاقات نشطة",
+      "stat2Label": "مشاريع على الخارطة",
+      "stat3Context": "شريحة المستثمرين",
+      "stat3Label": "متوسط العائد الإجمالي",
+      "stat4Context": "في جميع أنحاء دبي",
+      "stat4Label": "مجتمعات تحت التغطية"
+    },
+    "featuredAreas": {
+      "title": "مناطق مميزة",
+      "description": "مجتمعات تشكل قيمة طويلة الأمد في جميع أنحاء دبي."
+    }
+  },
+  "forms": {
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "subject": "الموضوع",
+    "message": "الرسالة",
+    "name": "الاسم",
+    "phone": "الهاتف",
+    "emailPlaceholder": "you@email.com",
+    "passwordPlaceholder": "••••••••",
+    "subscribe": "اشترك",
+    "subscribing": "جارٍ الاشتراك…",
+    "sendMessage": "إرسال الرسالة",
+    "requestAccess": "طلب الوصول",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "signInFailed": "فشل تسجيل الدخول",
+    "signInFailedRetry": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
+    "messageSent": "تم إرسال الرسالة",
+    "messageCouldNotBeSent": "تعذر إرسال الرسالة.",
+    "phoneNumber": "رقم الهاتف",
+    "phonePlaceholder": "رقم الهاتف"
+  },
+  "privateOffice": {
+    "title": "المكتب الخاص",
+    "welcomeBack": "مرحباً بعودتك، {name}",
+    "curatedBy": "منسق بواسطة {advisor} | NIP Private Advisory",
+    "yourAdvisor": "مستشارك",
+    "viewCuratedSelection": "عرض الاختيارات المنسقة",
+    "curatedForYou": "منسق لك",
+    "savedProperties": "العقارات المحفوظة",
+    "advisorNotes": "ملاحظات المستشار",
+    "messageAdvisor": "راسل مستشارك",
+    "requestPrivateViewing": "طلب معاينة خاصة",
+    "haveQuestion": "لديك سؤال حول هذا الاختيار؟",
+    "messageDirectly": "راسل {name} مباشرة — عادةً ما يرد خلال ساعات.",
+    "noCuratedYet": "لا توجد اختيارات منسقة بعد.",
+    "noSavedYet": "لا توجد عقارات محفوظة بعد.",
+    "noNotesYet": "لا توجد ملاحظات من المستشار بعد.",
+    "respondsWithinHours": "يرد خلال ساعات | الإثنين–الجمعة",
+    "availableMonFri": "متاح الإثنين–الجمعة | يرد خلال ساعات",
+    "curatedEyebrow": "منظورك المنسق",
+    "curatedDescription": "اختيار سري من العقارات والمشاريع المتوافقة مع تفويضك. يصدره مستشارك حسب الصلة.",
+    "savedDescription": "العقارات التي حددتها للمتابعة. يمكن لمستشارك إضافة سياق أو ترتيب معاينة خاصة.",
+    "noCuratedReleased": "لم يصدر مستشارك اختيارات منسقة بعد.",
+    "noSavedProperties": "لم تحفظ أي عقارات بعد."
+  },
+  "status": {
+    "notFoundTitle": "الصفحة غير موجودة",
+    "notFoundDescription": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+    "serverErrorTitle": "حدث خطأ ما",
+    "serverErrorDescription": "تعذر تحميل هذه الصفحة. يرجى المحاولة مرة أخرى قريباً.",
+    "thankYouTitle": "شكراً لك",
+    "thankYouDescription": "تم استلام طلبك. سنتواصل معك قريباً.",
+    "notFoundEyebrow": "404",
+    "serverErrorEyebrow": "500",
+    "thankYouEyebrow": "تأكيد"
+  },
+  "catalog": {
+    "noResults": "لا توجد نتائج",
+    "noResultsDescription": "جرّب تعديل الفلاتر أو كلمات البحث.",
+    "previous": "السابق",
+    "next": "التالي",
+    "pageOf": "صفحة {page} من {total}",
+    "beds": "{count, plural, one {غرفة نوم #} other {# غرف نوم}}",
+    "baths": "{count, plural, one {حمام #} other {# حمامات}}",
+    "sqft": "{count} قدم مربع",
+    "pagination": "ترقيم الصفحات",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية",
+    "emptyListings": "لا توجد قوائم تطابق بحثك بعد. تحقق لاحقاً أو تحدث مع مستشار.",
+    "searchPlaceholder": "ابحث حسب المجتمع أو المشروع أو المنطقة",
+    "searchAria": "ابحث حسب المجتمع أو المشروع أو المنطقة",
+    "location": "الموقع",
+    "type": "النوع",
+    "price": "السعر",
+    "bedsFilter": "غرف النوم",
+    "propertiesCount": "{count} عقار | {location}",
+    "sortLabel": "ترتيب العقارات",
+    "sortNewest": "الترتيب: الأحدث",
+    "sortPriceLow": "الترتيب: السعر (الأقل)",
+    "sortPriceHigh": "الترتيب: السعر (الأعلى)",
+    "gridView": "عرض شبكي",
+    "listView": "عرض قائمة",
+    "guidePrice": "السعر الإرشادي",
+    "requestAdvisory": "طلب استشارة خاصة",
+    "similarProperties": "عقارات مشابهة",
+    "breadcrumbProperties": "العقارات",
+    "breadcrumbOffPlan": "على الخارطة",
+    "bedroomLabel": "غرف النوم",
+    "bathroomLabel": "الحمامات",
+    "areaLabel": "المساحة",
+    "typeLabel": "النوع",
+    "apartment": "شقة",
+    "villa": "فيلا",
+    "townhouse": "تاون هاوس",
+    "penthouse": "بنتهاوس",
+    "bed1": "غرفة نوم واحدة",
+    "bed2": "غرفتا نوم",
+    "bed3": "3 غرف نوم",
+    "bed4": "4+ غرف نوم",
+    "price1m": "مليون درهم+",
+    "price2m": "2 مليون درهم+",
+    "price5m": "5 ملايين درهم+",
+    "price10m": "10 ملايين درهم+",
+    "viewAllPhotos": "عرض كل الصور",
+    "photosCount": "{count} صورة",
+    "closeGallery": "إغلاق المعرض",
+    "storyTitle": "القصة",
+    "amenitiesTitle": "المرافق",
+    "locationTitle": "الموقع",
+    "interior": "داخلي",
+    "exterior": "خارجي",
+    "morePhotos": "+{count} أخرى",
+    "photoOf": "{current} من {total}",
+    "previousPhoto": "الصورة السابقة",
+    "nextPhoto": "الصورة التالية",
+    "exploreProperty": "استكشف العقار",
+    "startingFrom": "يبدأ من",
+    "handoverLabel": "التسليم",
+    "paymentPlanAvailable": "خطة دفع متاحة",
+    "privateViewingEyebrow": "معاينة خاصة",
+    "privateViewingTitle": "رتّب زيارة سرية",
+    "privateViewingDescription": "شارك بياناتك وسيتواصل معك مستشار NIP لتأكيد الخطوة التالية.",
+    "requestViewing": "طلب معاينة"
+  },
+  "pages": {
+    "areas": {
+      "empty": "ستظهر المجتمعات هنا بمجرد نشر المناطق على النظام.",
+      "ctaTitle": "تفكر في الانتقال إلى دبي؟",
+      "exploreFallback": "استكشف هذا المجتمع واكتشف العقارات المتوافقة مع أولوياتك.",
+      "noListings": "لا توجد قوائم منشورة في هذا المجتمع بعد.",
+      "availableIn": "متاح في {name}"
+    },
+    "developers": {
+      "leadingTitle": "أبرز مطوري دبي",
+      "empty": "ستظهر شركات التطوير هنا بمجرد نشرها على النظام.",
+      "ctaTitle": "تبحث عن المطور المناسب؟",
+      "aboutDeveloper": "عن المطور",
+      "communities": "المجتمعات",
+      "portfolioFallback": "محفظة مطور رئيسي عبر مجتمعات دبي المتميزة.",
+      "noProjects": "لا توجد مشاريع منشورة لهذا المطور بعد.",
+      "listingsFor": "مشاريع {name}",
+      "noListings": "لا توجد قوائم منشورة لهذا المطور بعد.",
+      "portfolio": "المحفظة"
+    },
+    "insights": {
+      "empty": "ستظهر المقالات هنا بمجرد نشرها على النظام.",
+      "latest": "الأحدث",
+      "featuredPrefix": "مميز",
+      "ctaTitle": "هل أنت مستعد لمناقشة خطوتك القادمة؟",
+      "relatedTitle": "رؤى ذات صلة"
+    },
+    "concierge": {
+      "inputPlaceholder": "اسأل عن المجتمعات، الأسعار، على الخارطة، الإقامة الذهبية…",
+      "chip1": "أفضل المناطق للعائلات",
+      "chip2": "خطط دفع على الخارطة",
+      "chip3": "متطلبات الإقامة الذهبية",
+      "chip4": "عوائد الإيجار في دبي مارينا"
+    },
+    "curated": {
+      "selectionTitle": "اختيار مدروس",
+      "selectionDesc": "عقارات ومشاريع صدرت لتفويضك — كل منها مع سياق المستشار أدناه.",
+      "notesTitle": "السياق وراء الاختيار",
+      "notesDesc": "ملاحظات خاصة من مستشارك تشرح لماذا تم تضمين كل فرصة — أو استبعادها.",
+      "noCurated": "لم يصدر أي اختيار منسق بعد.",
+      "noNotes": "ستظهر ملاحظات المستشار هنا عندما يضيف سياقاً."
+    }
+  },
+  "placeholders": {
+    "home": {
+      "hero": {
+        "eyebrow": "منظور استشاري خاص | عقارات دبي",
+        "title": "لمن يتوقعون أكثر",
+        "body": "لا يوجد نقص في خيارات العقارات في دبي. الفرق يكمن في معرفة ما يستحق اهتمامك. يجمع NIP بين رؤى السوق والمنظور التحريري والاستشارة الخاصة للعملاء الذين يريدون التحرك بحكمة."
+      },
+      "featuredInsight": {
+        "title": "رؤية مميزة",
+        "desc": "نظرة أقرب على الإشارات والمواقع وقرارات الملكية التي تشكل الفصل التالي لدبي."
+      },
+      "curatedCollection": {
+        "title": "مجموعة منسقة",
+        "desc": "اختيار مدروس من العقارات والمشاريع والأماكن يربطها منظور واضح — وليس مجرد فلتر بحث."
+      },
+      "marketPulse": {
+        "title": "نبض السوق",
+        "desc": "تابع إشارات السوق التي تهم قبل أن تصبح عناوين"
+      },
+      "privateOffice": {
+        "title": "المكتب الخاص",
+        "desc": "للعملاء الذين يُعرّفون إلى NIP، يوفر المكتب الخاص الوصول إلى فرص مختارة وملاحظات المستشار وذكاء العقارات الخاص."
+      },
+      "featuredSelection": {
+        "title": "اختيار مميز",
+        "desc": "اختيار صغير من منظور NIP الحالي — مختار للصلة، لا للحجم"
+      },
+      "cta": {
+        "title": "لست متأكداً من أين تبدأ",
+        "desc": "تحدث مع NIP قبل أن تبحث. يمكن لفريقنا الاستشاري مساعدتك في فهم السوق وتحديد أولوياتك وتحديد ما يستحق اهتمامك."
+      }
+    },
+    "properties": {
+      "hero": {
+        "eyebrow": "العقارات | اكتشاف",
+        "title": "اعثر على مكانك في دبي",
+        "description": "ابحث واكتشف عقارات منسقة في جميع أنحاء دبي مع NIP Reality."
+      }
+    },
+    "offPlan": {
+      "hero": {
+        "eyebrow": "على الخارطة | اكتشاف",
+        "title": "مشاريع جاهزة للمستقبل",
+        "description": "استكشف فرص على الخارطة في أكثر مجتمعات دبي جاذبية."
+      }
+    },
+    "areas": {
+      "hero": {
+        "eyebrow": "المناطق | المجتمعات",
+        "title": "استكشف مجتمعات دبي",
+        "description": "دليل مدروس للأحياء التي تشكل قيمة طويلة الأمد في جميع أنحاء دبي."
+      }
+    },
+    "developers": {
+      "hero": {
+        "eyebrow": "المطورون | شركاء",
+        "title": "أبرز مطوري دبي",
+        "description": "المطورون الرئيسيون الذين يشكلون أفق دبي وقيمة المجتمعات على المدى الطويل."
+      }
+    },
+    "insights": {
+      "hero": {
+        "eyebrow": "رؤى السوق | تحريري",
+        "title": "منظور السوق",
+        "description": "ذكاء تحريري عن عقارات دبي — إشارات ومجتمعات وقرارات ملكية."
+      }
+    },
+    "about": {
+      "hero": {
+        "eyebrow": "عن NIP",
+        "title": "مصدر واحد. نظام واحد. معيار واحد.",
+        "description": "أُنشئ NIP للعملاء الذين يريدون أكثر من الوصول إلى العقارات. يريدون السياق والحكمة ومعياراً استشارياً واحداً في كل خطوة من رحلة العقارات."
+      }
+    },
+    "contact": {
+      "hero": {
+        "eyebrow": "NIP استشارة خاصة",
+        "title": "تحدث مع NIP",
+        "description": "قرار عقاري مدروس يبدأ بمحادثة."
+      },
+      "intro": {
+        "overline": "استشارة خاصة | بالدعوة",
+        "body": "سواء كنت تستكشف دبي للإقامة أو الاستثمار أو الانتقال أو استراتيجية المحفظة أو شراء خاص، يمكن لـ NIP مساعدتك في فهم السوق قبل أن تلتزم بمسار."
+      }
+    },
+    "faq": {
+      "hero": {
+        "eyebrow": "المساعدة والأسئلة الشائعة",
+        "title": "الأسئلة الشائعة",
+        "description": "كل ما تحتاج معرفته عن العمل مع NIP — الشراء، على الخارطة، الإقامة الذهبية واستشارتنا الخاصة."
+      },
+      "cta": {
+        "title": "لا تزال لديك أسئلة؟",
+        "description": "اسأل الاستشاري للحصول على إجابة فورية، أو تحدث مع مستشار خاص."
+      }
+    },
+    "concierge": {
+      "hero": {
+        "eyebrow": "المساعد الذكي",
+        "title": "اسأل الاستشاري",
+        "description": "إجابات فورية عن المجتمعات والأسعار وعلى الخارطة والإقامة الذهبية — وخط مباشر لمستشار خاص متى شئت."
+      }
+    },
+    "contribute": {
+      "hero": {
+        "eyebrow": "المساهمة",
+        "title": "ساهم برؤية",
+        "description": "شارك منظور السوق مع جمهور NIP. تُراجع المشاركات من قبل فريقنا التحريري قبل النشر."
+      },
+      "sidebar": {
+        "title": "ما ننشره"
+      }
+    },
+    "legal": {
+      "hero": {
+        "eyebrow": "قانوني",
+        "title": "الشروط والسياسات",
+        "lastUpdated": "آخر تحديث: يونيو 2026"
+      }
+    },
+    "curated": {
+      "hero": {
+        "eyebrow": "المكتب الخاص | منسق لك",
+        "badge": "بالتعارف فقط",
+        "title": "مختار لك، من مستشارك",
+        "description": "اختيار سري من العقارات والمشاريع المتوافقة مع تفويضك. منسق، وليس مُدرجاً. يصدره مستشارك حسب الصلة."
+      },
+      "selection": {
+        "eyebrow": "منظورك المنسق",
+        "title": "منسق لك",
+        "description": "اختيار سري من العقارات والمشاريع المتوافقة مع تفويضك. يصدره مستشارك حسب الصلة."
+      },
+      "notes": {
+        "eyebrow": "ملاحظات المستشار",
+        "title": "السياق وراء الاختيار",
+        "description": "ملاحظات خاصة من مستشارك تشرح لماذا تم تضمين كل فرصة — أو استبعادها."
+      }
+    },
+    "privateOffice": {
+      "login": {
+        "title": "مساحتك الخاصة",
+        "description": "الوصول بالدعوة. سجّل الدخول لعرض اختياراتك المنسقة والعقارات المحفوظة والمستشار."
+      }
+    },
+    "thankYou": {
+      "eyebrow": "تأكيد",
+      "title": "تم استلام الطلب",
+      "description": "استلمنا طلبك. سيتواصل معك أحد أعضاء فريق NIP الاستشاري قريباً."
+    },
+    "notFound": {
+      "eyebrow": "خطأ 404",
+      "title": "الصفحة غير موجودة",
+      "description": "الصفحة التي تبحث عنها نُقلت أو لم تعد موجودة. دعنا نعيدك إلى المسار الصحيح."
+    },
+    "serverError": {
+      "eyebrow": "500",
+      "title": "حدث خطأ ما",
+      "description": "تعذر تحميل هذه الصفحة. يرجى المحاولة مرة أخرى قريباً."
+    },
+    "global": {
+      "footer": {
+        "tagline": "استشارة سرية لحياة راقية",
+        "newsletterTitle": "ابق على اطلاع",
+        "newsletterDesc": "إشارات السوق ومنظور تحريري — يُقدّم بسرية."
+      }
+    }
+  },
+  "meta": {
+    "home": {
+      "title": "NIP Reality | استشارات عقارات دبي",
+      "description": "استشارة خاصة ورؤى السوق وذكاء عقاري منسق في جميع أنحاء دبي."
+    },
+    "properties": {
+      "title": "العقارات | NIP Reality",
+      "description": "ابحث واكتشف عقارات منسقة في جميع أنحاء دبي مع NIP Reality."
+    },
+    "offPlan": {
+      "title": "على الخارطة | NIP Reality",
+      "description": "استكشف فرص على الخارطة في أكثر مجتمعات دبي جاذبية."
+    },
+    "areas": {
+      "title": "المناطق | NIP Reality",
+      "description": "استكشف مجتمعات وأحياء دبي مع NIP Reality."
+    },
+    "developers": {
+      "title": "المطورون | NIP Reality",
+      "description": "اكتشف أبرز مطوري العقارات في دبي مع NIP Reality."
+    },
+    "insights": {
+      "title": "رؤى السوق | NIP Reality",
+      "description": "ذكاء تحريري عن عقارات دبي من NIP Reality."
+    },
+    "about": {
+      "title": "عن NIP | NIP Reality",
+      "description": "تعرف على NIP — استشارة خاصة لعقارات دبي."
+    },
+    "contact": {
+      "title": "تواصل | NIP Reality",
+      "description": "تحدث مع فريق NIP الاستشاري."
+    },
+    "faq": {
+      "title": "الأسئلة الشائعة | NIP Reality",
+      "description": "أسئلة شائعة عن العمل مع NIP."
+    },
+    "concierge": {
+      "title": "الاستشاري | NIP Reality",
+      "description": "اسأل استشاري NIP عن عقارات دبي."
+    },
+    "contribute": {
+      "title": "المساهمة | NIP Reality",
+      "description": "ساهم بمنظور السوق في رؤى NIP."
+    },
+    "legal": {
+      "title": "قانوني | NIP Reality",
+      "description": "الشروط والخصوصية وسياسات NIP Reality."
+    },
+    "curated": {
+      "title": "الاختيار المنسق | NIP Private Office",
+      "description": "اختيار العقارات المنسق من مستشارك."
+    },
+    "privateOffice": {
+      "title": "المكتب الخاص | NIP Reality",
+      "description": "سجّل الدخول إلى NIP Private Office."
+    },
+    "privateOfficeMember": {
+      "title": "المكتب الخاص | NIP Reality",
+      "description": "لوحة تحكم NIP Private Office."
+    },
+    "thankYou": {
+      "title": "شكراً | NIP Reality",
+      "description": "تم استلام طلبك."
+    },
+    "notFound": {
+      "title": "الصفحة غير موجودة | NIP Reality",
+      "description": "الصفحة التي تبحث عنها غير موجودة."
+    },
+    "serverError": {
+      "title": "خطأ | NIP Reality",
+      "description": "حدث خطأ ما."
+    },
+    "adminLogin": {
+      "title": "دخول الموظفين | NIP Reality",
+      "description": "تسجيل دخول موظفي نظام إدارة المحتوى في NIP Reality."
+    }
+  },
+  "cms": {
+    "editTextBlock": "تحرير هذا النص",
+    "editImageBlock": "تحرير هذه الصورة",
+    "deleteBlockConfirm": "حذف هذا المحتوى؟ لا يمكن التراجع.",
+    "deleteImageConfirm": "حذف صورة هذا المحتوى؟",
+    "editingAs": "التحرير كـ {name}",
+    "signOut": "تسجيل الخروج"
+  }
+}

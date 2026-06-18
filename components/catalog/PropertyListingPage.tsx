@@ -19,53 +19,61 @@ import {
 import { buildPropertyListParams, listingBasePath, searchParamsToObject } from "@/lib/catalog/helpers";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/i18n/config";
+import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getProperties } from "@/lib/api/properties";
 import {
   isOffPlanProperty,
   mapPropertyToCard,
   mapPropertyToOffPlanCard,
 } from "@/lib/mappers/property";
+import { getTranslations } from "next-intl/server";
 
 type PropertyListingPageProps = {
   locale: Locale;
   searchParams: Record<string, string | string[] | undefined>;
   mode: "sale" | "offplan";
   catalogPage: CatalogPage;
-  heroEyebrow: string;
-  heroTitle: string;
-  heroDescription?: string;
   afterContent?: React.ReactNode;
 };
+
+async function getHeroPlaceholders(catalogPage: CatalogPage, locale: Locale) {
+  const ns =
+    catalogPage === "offPlan"
+      ? "placeholders.offPlan.hero"
+      : "placeholders.properties.hero";
+
+  return {
+    eyebrow: await getCmsPlaceholder(ns, "eyebrow", locale),
+    title: await getCmsPlaceholder(ns, "title", locale),
+    description: await getCmsPlaceholder(ns, "description", locale),
+  };
+}
 
 export async function PropertyListingPage({
   locale,
   searchParams,
   mode,
   catalogPage,
-  heroEyebrow,
-  heroTitle,
-  heroDescription,
   afterContent,
 }: PropertyListingPageProps) {
   const params = buildPropertyListParams(searchParams, {
     listing_type: mode === "offplan" ? "offplan" : undefined,
     per_page: 9,
+    locale,
   });
   const { data, meta } = await getProperties(params);
   const basePath = listingBasePath(locale, mode === "offplan" ? "offplan" : undefined);
   const query = searchParamsToQuery(searchParams, mode);
   const filterValues = searchParamsToObject(searchParams);
+  const heroPlaceholders = await getHeroPlaceholders(catalogPage, locale);
+  const t = await getTranslations({ locale, namespace: "catalog" });
 
   return (
     <SiteShell>
       <CatalogHeroSection
         page={catalogPage}
         locale={locale}
-        placeholders={{
-          eyebrow: heroEyebrow,
-          title: heroTitle,
-          description: heroDescription,
-        }}
+        placeholders={heroPlaceholders}
       >
         {mode === "sale" ? (
           <PropertyFilterBar
@@ -89,7 +97,7 @@ export async function PropertyListingPage({
             ) : null}
 
             {data.length === 0 ? (
-              <CatalogEmptyState message="No listings match your search yet. Check back soon or speak with an advisor." />
+              <CatalogEmptyState message={t("emptyListings")} />
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {data.map((property) => {

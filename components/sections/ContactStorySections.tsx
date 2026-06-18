@@ -1,6 +1,7 @@
 import { EditableText } from "@/components/EditableText";
 import { ContactRequestForm } from "@/components/ui/LeadForms";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
+import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
 import {
   siteMaxWidth,
@@ -23,7 +24,7 @@ export async function ContactHeroSection() {
               relUrl={blocks.relUrl}
               blockKey={blocks.hero.eyebrow}
               locale={locale}
-              placeholderContent="NIP PRIVATE ADVISORY"
+              placeholderContent={await getCmsPlaceholder("placeholders.contact.hero", "eyebrow", locale)}
               placeholderTag="p"
               className="text-overline font-semibold leading-4 text-accent"
             />
@@ -31,7 +32,7 @@ export async function ContactHeroSection() {
               relUrl={blocks.relUrl}
               blockKey={blocks.hero.title}
               locale={locale}
-              placeholderContent="Speak with NIP"
+              placeholderContent={await getCmsPlaceholder("placeholders.contact.hero", "title", locale)}
               placeholderTag="h1"
               className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
             />
@@ -40,7 +41,7 @@ export async function ContactHeroSection() {
             relUrl={blocks.relUrl}
             blockKey={blocks.hero.description}
             locale={locale}
-            placeholderContent="A considered property decision begins with a conversation."
+            placeholderContent={await getCmsPlaceholder("placeholders.contact.hero", "description", locale)}
             placeholderTag="p"
             className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary"
           />
@@ -67,7 +68,7 @@ export async function ContactFormSection() {
               relUrl={blocks.relUrl}
               blockKey={blocks.intro.overline}
               locale={locale}
-              placeholderContent="PRIVATE ADVISORY | BY INVITATION"
+              placeholderContent={await getCmsPlaceholder("placeholders.contact.intro", "overline", locale)}
               placeholderTag="p"
               className="text-overline font-semibold text-accent"
             />
@@ -75,7 +76,7 @@ export async function ContactFormSection() {
               relUrl={blocks.relUrl}
               blockKey={blocks.intro.body}
               locale={locale}
-              placeholderContent="Whether you are exploring Dubai for residence, investment, relocation, portfolio strategy, or a private acquisition, NIP can help you understand the market before you commit to a path."
+              placeholderContent={await getCmsPlaceholder("placeholders.contact.intro", "body", locale)}
               placeholderTag="p"
               className="mt-5 text-body-lg leading-[28px] text-ink-secondary"
             />

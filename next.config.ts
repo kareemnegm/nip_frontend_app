@@ -1,4 +1,7 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 function apiImageHosts(): { protocol: "http" | "https"; hostname: string }[] {
   const raw =
@@ -26,9 +29,9 @@ function apiImageHosts(): { protocol: "http" | "https"; hostname: string }[] {
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: apiImageHosts(),
-    // Laragon / local Laravel serves storage at http://localhost/storage/...
+    // Media is served from NEXT_PUBLIC_API_URL (see lib/api/media-url.ts).
     dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

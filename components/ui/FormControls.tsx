@@ -27,7 +27,7 @@ export type CheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
 
 function FieldShell({ label, children, className }: FieldShellProps) {
   return (
-    <label className={cn("flex flex-col gap-2 text-xs font-semibold text-ink-secondary", className)}>
+    <label className={cn("flex flex-col gap-2 text-start text-xs font-semibold text-ink-secondary", className)}>
       {label ? <span>{label}</span> : null}
       {children}
     </label>
@@ -35,7 +35,7 @@ function FieldShell({ label, children, className }: FieldShellProps) {
 }
 
 const fieldClasses =
-  "h-11 w-full rounded-[var(--radius-field)] border border-line bg-white px-4 text-sm text-ink outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-sapphire-100";
+  "h-11 w-full rounded-[var(--radius-field)] border border-line bg-white px-4 text-sm text-ink outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-sapphire-100 rtl:text-right";
 
 export function TextInput({ label, className, error, ...props }: TextInputProps) {
   return (
@@ -50,7 +50,7 @@ export function Textarea({ label, className, error, ...props }: TextareaProps) {
   return (
     <FieldShell label={label}>
       <textarea
-        className={cn(fieldClasses, "min-h-28 resize-y py-4", error && "border-error", className)}
+        className={cn(fieldClasses, "min-h-28 resize-y py-4 rtl:text-right", error && "border-error", className)}
         {...props}
       />
       {error ? <span className="text-xs font-normal text-error">{error}</span> : null}
@@ -100,11 +100,11 @@ export function PhoneInput({
 } & React.InputHTMLAttributes<HTMLInputElement>) {
   return (
     <FieldShell label={label}>
-      <div className="grid grid-cols-[88px_1fr] gap-3">
-        <select className={cn(fieldClasses, "px-2")} defaultValue="+971">
+      <div className="flex gap-3 rtl:flex-row-reverse">
+        <select className={cn(fieldClasses, "w-[88px] shrink-0 px-2")} defaultValue="+971">
           <option value="+971">AE +971</option>
         </select>
-        <input className={cn(fieldClasses, error && "border-error")} placeholder={placeholder} {...props} />
+        <input className={cn(fieldClasses, "min-w-0 flex-1", error && "border-error")} placeholder={placeholder} {...props} />
       </div>
       {error ? <span className="text-xs font-normal text-error">{error}</span> : null}
     </FieldShell>

@@ -1,5 +1,6 @@
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
+import { resolveBlogFeaturedImage } from "@/lib/api/media-url";
 import type { ApiBlog } from "@/types/api";
 
 export type InsightCardModel = {
@@ -26,6 +27,6 @@ export function mapBlogToInsightCard(
     excerpt,
     readTime: blog.read_time ?? "5 min read",
     href: localizedHref(locale, `/insights/${blog.slug}`),
-    imageUrl: blog.featured_image_url ?? undefined,
+    imageUrl: resolveBlogFeaturedImage(blog),
   };
 }

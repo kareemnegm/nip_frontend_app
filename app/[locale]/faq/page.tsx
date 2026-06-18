@@ -5,12 +5,15 @@ import {
   FaqCtaSection,
   FaqHeroSection,
 } from "@/components/sections/FaqStorySections";
+import { resolveLocale } from "@/lib/i18n/helpers";
+import { localizedMetadata } from "@/lib/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "FAQ | NIP Reality",
-  description:
-    "Everything you need to know about working with NIP — buying, off-plan, the Golden Visa and our private advisory.",
-};
+type PageProps = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  return localizedMetadata(resolveLocale(rawLocale), "faq");
+}
 
 export default async function FaqPage() {
   return (

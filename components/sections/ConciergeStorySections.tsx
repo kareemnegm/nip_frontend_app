@@ -1,7 +1,9 @@
+import { getTranslations } from "next-intl/server";
 import { EditableText } from "@/components/EditableText";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { Button, Icon, ImagePlaceholder } from "@/components/ui";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
+import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
 import {
   siteMaxWidth,
@@ -105,7 +107,7 @@ export async function ConciergeHeroSection() {
             relUrl={conciergeBlocks.relUrl}
             blockKey={conciergeBlocks.hero.eyebrow}
             locale={locale}
-            placeholderContent="AI CONCIERGE"
+            placeholderContent={await getCmsPlaceholder("placeholders.concierge.hero", "eyebrow", locale)}
             placeholderTag="p"
             className="text-overline font-semibold text-accent"
           />
@@ -113,7 +115,7 @@ export async function ConciergeHeroSection() {
             relUrl={conciergeBlocks.relUrl}
             blockKey={conciergeBlocks.hero.title}
             locale={locale}
-            placeholderContent="Ask the Concierge"
+            placeholderContent={await getCmsPlaceholder("placeholders.concierge.hero", "title", locale)}
             placeholderTag="h1"
             className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
           />
@@ -121,7 +123,7 @@ export async function ConciergeHeroSection() {
             relUrl={conciergeBlocks.relUrl}
             blockKey={conciergeBlocks.hero.description}
             locale={locale}
-            placeholderContent="Instant answers on communities, pricing, off-plan and the Golden Visa — and a direct line to a private advisor whenever you want one."
+            placeholderContent={await getCmsPlaceholder("placeholders.concierge.hero", "description", locale)}
             placeholderTag="p"
             className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary"
           />
@@ -131,8 +133,12 @@ export async function ConciergeHeroSection() {
   );
 }
 
-export function ConciergeChatSection() {
+export async function ConciergeChatSection() {
+  const locale = await getRequestLocale();
+  const t = await getTranslations({ locale, namespace: "pages.concierge" });
+  const tc = await getTranslations({ locale, namespace: "common" });
   const { greeting, userQuestion, reply } = conciergeSampleMessages;
+  const quickPrompts = [t("chip1"), t("chip2"), t("chip3"), t("chip4")];
 
   return (
     <section className="bg-surface-muted pb-[72px] pt-2">
@@ -140,7 +146,7 @@ export function ConciergeChatSection() {
         <div className={cn(sitePageInnerClassName, "mx-auto max-w-[720px]")}>
           <div className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-white shadow-[var(--shadow-card)]">
             <div className="flex flex-wrap gap-2 border-b border-line bg-white p-4">
-              {conciergeQuickPrompts.map((prompt) => (
+              {quickPrompts.map((prompt) => (
                 <button
                   key={prompt}
                   type="button"
@@ -166,12 +172,12 @@ export function ConciergeChatSection() {
 
             <div className="flex items-center gap-3 border-t border-line bg-white p-4">
               <input
-                aria-label="Ask anything about Dubai property"
-                placeholder="Ask anything about Dubai property..."
+                aria-label={t("inputPlaceholder")}
+                placeholder={t("inputPlaceholder")}
                 className="h-11 flex-1 rounded-[var(--radius-field)] border border-line bg-white px-4 text-body-sm text-ink outline-none placeholder:text-ink-tertiary focus:border-brand focus:ring-2 focus:ring-sapphire-100"
               />
               <Button type="button" className="shrink-0">
-                Send
+                {tc("send")}
                 <Icon name="send" className="h-4 w-4" />
               </Button>
             </div>
@@ -183,7 +189,7 @@ export function ConciergeChatSection() {
               href="/contact"
               className="inline-flex items-center gap-1 font-semibold text-brand transition-colors hover:text-brand-hover"
             >
-              Speak with a Private Advisor
+              {tc("speakWith")} {tc("nip")}
               <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
             </LocalizedLink>
           </p>

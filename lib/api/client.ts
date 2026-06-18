@@ -1,4 +1,6 @@
 import { ApiError } from "./errors";
+import type { Locale } from "@/lib/i18n/config";
+import { withLocaleParam } from "./locale-params";
 
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ??
@@ -12,6 +14,7 @@ export const DEFAULT_REVALIDATE_SECONDS = 60;
 type RequestOptions = Omit<RequestInit, "body"> & {
   params?: Record<string, string | number | undefined | null>;
   token?: string;
+  locale?: Locale;
   revalidate?: number | false;
   body?: unknown;
 };
@@ -31,13 +34,21 @@ function buildUrl(path: string, params?: RequestOptions["params"]) {
   return url.toString();
 }
 
-function buildHeaders(token?: string, contentType = true): HeadersInit {
+function buildHeaders(
+  token?: string,
+  contentType = true,
+  locale?: Locale,
+): HeadersInit {
   const headers: Record<string, string> = {
     Accept: "application/json",
   };
 
   if (contentType) {
     headers["Content-Type"] = "application/json";
+  }
+
+  if (locale) {
+    headers["Accept-Language"] = locale;
   }
 
   if (token) {
@@ -73,14 +84,15 @@ async function parseErrorResponse(response: Response): Promise<ApiError> {
 
 export async function apiRequest<T>(
   path: string,
-  { params, token, revalidate, body, headers, ...init }: RequestOptions = {},
+  { params, token, locale, revalidate, body, headers, ...init }: RequestOptions = {},
 ): Promise<T> {
   const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
+  const queryParams = locale ? withLocaleParam(params, locale) : params;
 
-  const response = await fetch(buildUrl(path, params), {
+  const response = await fetch(buildUrl(path, queryParams), {
     ...init,
     headers: {
-      ...buildHeaders(token, !isFormData && body !== undefined),
+      ...buildHeaders(token, !isFormData && body !== undefined, locale),
       ...headers,
     },
     body:

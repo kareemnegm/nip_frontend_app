@@ -11,8 +11,9 @@ type PageProps = {
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const property = await getPropertyBySlug(slug);
+  const { locale: rawLocale, slug } = await params;
+  const locale = resolveLocale(rawLocale);
+  const property = await getPropertyBySlug(slug, locale);
   if (!property) return { title: "Off-Plan | NIP Reality" };
   return buildPropertyMetadata(property);
 }

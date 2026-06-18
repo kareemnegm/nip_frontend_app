@@ -43,7 +43,15 @@ export type ApiProperty = {
   hero_title?: string | null;
   featured?: boolean;
   about_location?: string | null;
+  location_image?: string | null;
+  location_image_url?: string | null;
   master_plan_description?: string | null;
+  master_plan_image?: string | null;
+  master_plan_image_url?: string | null;
+  photo?: string | null;
+  photo_url?: string | null;
+  video?: string | null;
+  video_url?: string | null;
   handover_quarter?: string | null;
   area?: ApiAreaRef | null;
   developers?: ApiDeveloperRef[];
@@ -52,7 +60,13 @@ export type ApiProperty = {
   created_at?: string;
 };
 
+export type PropertyGalleryImage = {
+  url: string;
+  type?: string | null;
+};
+
 export type PropertyListParams = {
+  locale?: import("@/lib/i18n/config").Locale;
   page?: number;
   per_page?: number;
   keyword?: string;

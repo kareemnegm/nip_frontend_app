@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { NewsletterForm } from "@/components/forms/InquiryForms";
 import { Icon, type IconName } from "./ui/Icon";
@@ -8,63 +9,6 @@ type FooterLink = {
   label: string;
   href: string;
 };
-
-const propertiesLinks: FooterLink[] = [
-  { label: "Buy Properties", href: "/properties?listing=sale" },
-  { label: "Rent Properties", href: "/properties?listing=rent" },
-  { label: "Exclusives", href: "/properties?exclusive=1" },
-  { label: "New Launches", href: "/off-plan" },
-];
-
-const areasLinks: FooterLink[] = [
-  { label: "Palm Jumeirah", href: "/areas/palm-jumeirah" },
-  { label: "Dubai Marina", href: "/areas/dubai-marina" },
-  { label: "Downtown", href: "/areas/downtown-dubai" },
-  { label: "Business Bay", href: "/areas/business-bay" },
-  { label: "All Areas", href: "/areas" },
-];
-
-const offPlanLinks: FooterLink[] = [
-  { label: "Featured Projects", href: "/off-plan?featured=1" },
-  { label: "Upcoming", href: "/off-plan?status=launching" },
-  { label: "Payment Plans", href: "/off-plan" },
-  { label: "Developers", href: "/developers" },
-];
-
-const resourcesLinks: FooterLink[] = [
-  { label: "FAQ", href: "/faq" },
-  { label: "AI Concierge", href: "/concierge" },
-  { label: "Submit Article", href: "/contribute" },
-];
-
-const insightsLinks: FooterLink[] = [
-  { label: "Market Intelligence", href: "/insights?category=market-intelligence" },
-  { label: "Investment Guides", href: "/insights?category=investment-guides" },
-  { label: "Golden Visa", href: "/insights?category=golden-visa" },
-  { label: "Journal", href: "/insights" },
-];
-
-const aboutLinks: FooterLink[] = [
-  { label: "Our Approach", href: "/about#approach" },
-  { label: "Why NIP", href: "/about#why-nip" },
-  { label: "Team", href: "/about#team" },
-  { label: "Careers", href: "/about#careers" },
-];
-
-const socialLinks: { label: string; icon: IconName; href: string }[] = [
-  { label: "Instagram", icon: "instagram", href: "https://instagram.com" },
-  { label: "Facebook", icon: "facebook", href: "https://facebook.com" },
-  { label: "LinkedIn", icon: "linkedin", href: "https://linkedin.com" },
-  { label: "Youtube", icon: "youtube", href: "https://youtube.com" },
-];
-
-const legalLinks: FooterLink[] = [
-  { label: "Privacy", href: "/legal#overview" },
-  { label: "Terms", href: "/legal#terms" },
-  { label: "Cookies", href: "/legal#cookies" },
-  { label: "Disclaimer", href: "/legal#disclaimer" },
-  { label: "RERA Information", href: "/legal#rera" },
-];
 
 function FooterLinkGroup({
   title,
@@ -78,7 +22,7 @@ function FooterLinkGroup({
       <h3 className="text-[12px] font-semibold leading-4 text-white">{title}</h3>
       <ul className="flex flex-col gap-[9px] text-[12px] leading-4 text-basalt-300">
         {links.map((link) => (
-          <li key={link.label}>
+          <li key={link.href + link.label}>
             <LocalizedLink
               href={link.href}
               className="transition-colors hover:text-white"
@@ -117,11 +61,70 @@ export type FooterContentProps = {
   newsletterDesc: React.ReactNode;
 };
 
-export function FooterContent({
+export async function FooterContent({
   tagline,
   newsletterTitle,
   newsletterDesc,
 }: FooterContentProps) {
+  const t = await getTranslations("footer");
+
+  const propertiesLinks: FooterLink[] = [
+    { label: t("buyProperties"), href: "/properties?listing=sale" },
+    { label: t("rentProperties"), href: "/properties?listing=rent" },
+    { label: t("exclusives"), href: "/properties?exclusive=1" },
+    { label: t("newLaunches"), href: "/off-plan" },
+  ];
+
+  const areasLinks: FooterLink[] = [
+    { label: t("palmJumeirah"), href: "/areas/palm-jumeirah" },
+    { label: t("dubaiMarina"), href: "/areas/dubai-marina" },
+    { label: t("downtown"), href: "/areas/downtown-dubai" },
+    { label: t("businessBay"), href: "/areas/business-bay" },
+    { label: t("allAreas"), href: "/areas" },
+  ];
+
+  const offPlanLinks: FooterLink[] = [
+    { label: t("featuredProjects"), href: "/off-plan?featured=1" },
+    { label: t("upcoming"), href: "/off-plan?status=launching" },
+    { label: t("paymentPlans"), href: "/off-plan" },
+    { label: t("developersLink"), href: "/developers" },
+  ];
+
+  const resourcesLinks: FooterLink[] = [
+    { label: t("faq"), href: "/faq" },
+    { label: t("aiConcierge"), href: "/concierge" },
+    { label: t("submitArticle"), href: "/contribute" },
+  ];
+
+  const insightsLinks: FooterLink[] = [
+    { label: t("marketIntelligence"), href: "/insights?category=market-intelligence" },
+    { label: t("investmentGuides"), href: "/insights?category=investment-guides" },
+    { label: t("goldenVisa"), href: "/insights?category=golden-visa" },
+    { label: t("journal"), href: "/insights" },
+  ];
+
+  const aboutLinks: FooterLink[] = [
+    { label: t("ourApproach"), href: "/about#approach" },
+    { label: t("whyNip"), href: "/about#why-nip" },
+    { label: t("team"), href: "/about#team" },
+    { label: t("careers"), href: "/about#careers" },
+  ];
+
+  const socialLinks: { label: string; icon: IconName; href: string }[] = [
+    { label: "Instagram", icon: "instagram", href: "https://instagram.com" },
+    { label: "Facebook", icon: "facebook", href: "https://facebook.com" },
+    { label: "LinkedIn", icon: "linkedin", href: "https://linkedin.com" },
+    { label: "Youtube", icon: "youtube", href: "https://youtube.com" },
+  ];
+
+  const legalLinks: FooterLink[] = [
+    { label: t("privacy"), href: "/legal#overview" },
+    { label: t("terms"), href: "/legal#terms" },
+    { label: t("cookies"), href: "/legal#cookies" },
+    { label: t("disclaimer"), href: "/legal#disclaimer" },
+    { label: t("reraInfo"), href: "/legal#rera" },
+  ];
+
   return (
     <footer className="w-full bg-sapphire-800 text-white">
       <div
@@ -150,24 +153,24 @@ export function FooterContent({
           </div>
 
           <div className="flex flex-col gap-12 text-[12px] leading-4">
-            <FooterLinkGroup title="Properties" links={propertiesLinks} />
-            <FooterLinkGroup title="Areas" links={areasLinks} />
+            <FooterLinkGroup title={t("properties")} links={propertiesLinks} />
+            <FooterLinkGroup title={t("areas")} links={areasLinks} />
           </div>
 
           <div className="flex flex-col gap-12 text-[12px] leading-4">
-            <FooterLinkGroup title="Off-Plan" links={offPlanLinks} />
-            <FooterLinkGroup title="Resources" links={resourcesLinks} />
+            <FooterLinkGroup title={t("offPlan")} links={offPlanLinks} />
+            <FooterLinkGroup title={t("resources")} links={resourcesLinks} />
           </div>
 
           <div className="flex flex-col gap-12 text-[12px] leading-4">
-            <FooterLinkGroup title="Insights" links={insightsLinks} />
-            <FooterLinkGroup title="About NIP" links={aboutLinks} />
+            <FooterLinkGroup title={t("insights")} links={insightsLinks} />
+            <FooterLinkGroup title={t("aboutNip")} links={aboutLinks} />
           </div>
 
           <div className="flex flex-col gap-12">
             <div className="flex flex-col gap-3.5">
               <h3 className="text-[12px] font-semibold leading-4 text-white">
-                Contact
+                {t("contact")}
               </h3>
               <ul className="flex flex-col gap-1 text-[12px] leading-4 text-basalt-300">
                 <FooterContactRow icon="phone">+971 50 165 2441</FooterContactRow>
@@ -182,7 +185,7 @@ export function FooterContent({
 
             <div className="flex flex-col gap-3.5">
               <h3 className="text-[12px] font-semibold leading-4 text-white">
-                Follow Us
+                {t("followUs")}
               </h3>
               <ul className="flex flex-col gap-1 text-[12px] leading-4 text-basalt-300">
                 {socialLinks.map(({ label, icon, href }) => (
@@ -206,13 +209,11 @@ export function FooterContent({
         <div className="h-px w-full bg-basalt-300" />
 
         <div className="flex w-full flex-col gap-5 text-[12px] leading-4 md:flex-row md:items-center md:justify-between rtl:md:flex-row-reverse">
-          <p className="text-basalt-300">
-            &copy; 2026 NIP — Novel Insight Property. All rights reserved.
-          </p>
+          <p className="text-basalt-300">{t("copyright")}</p>
           <div className="flex flex-wrap gap-x-5 gap-y-2 text-text-inactive">
             {legalLinks.map((link) => (
               <LocalizedLink
-                key={link.label}
+                key={link.href + link.label}
                 href={link.href}
                 className="transition-colors hover:text-white"
               >
@@ -223,7 +224,7 @@ export function FooterContent({
               href="/admin/login"
               className="transition-colors hover:text-white"
             >
-              Staff login
+              {t("staffLogin")}
             </LocalizedLink>
           </div>
         </div>

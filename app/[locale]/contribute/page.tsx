@@ -4,12 +4,15 @@ import {
   ContributeFormSection,
   ContributeHeroSection,
 } from "@/components/sections/ContributeStorySections";
+import { resolveLocale } from "@/lib/i18n/helpers";
+import { localizedMetadata } from "@/lib/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "Contribute an Insight | NIP Reality",
-  description:
-    "Share market perspective with the NIP audience. Submissions are reviewed by our editorial team before publication.",
-};
+type PageProps = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  return localizedMetadata(resolveLocale(rawLocale), "contribute");
+}
 
 export default function ContributePage() {
   return (

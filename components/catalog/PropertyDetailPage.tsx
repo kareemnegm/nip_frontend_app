@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { PropertyInquiryForm } from "@/components/forms/InquiryForms";
 import { SiteShell } from "@/components/SiteShell";
 import {
@@ -19,6 +20,7 @@ import {
   sitePageGutterX,
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
+import { resolveMediaUrl } from "@/lib/api/media-url";
 import { getPropertyBySlug, getSimilarProperties } from "@/lib/api/properties";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/i18n/config";
@@ -29,7 +31,7 @@ import {
   mapPropertyToCard,
   mapPropertyToOffPlanCard,
 } from "@/lib/mappers/property";
-import type { ApiProperty } from "@/types/api";
+import type { ApiProperty, PropertyGalleryImage } from "@/types/api/property";
 
 type PropertyDetailPageProps = {
   locale: Locale;
@@ -37,23 +39,26 @@ type PropertyDetailPageProps = {
   detailBase: "properties" | "off-plan";
 };
 
-function propertyFactsFromApi(property: ApiProperty) {
+function propertyFactsFromApi(
+  property: ApiProperty,
+  labels: { bedroomLabel: string; bathroomLabel: string; areaLabel: string; typeLabel: string },
+) {
   return [
     property.bedrooms != null
-      ? { label: "Bedrooms", value: String(property.bedrooms), icon: "bed" as const }
+      ? { label: labels.bedroomLabel, value: String(property.bedrooms), icon: "bed" as const }
       : null,
     property.bathrooms != null
-      ? { label: "Bathrooms", value: String(property.bathrooms), icon: "bath" as const }
+      ? { label: labels.bathroomLabel, value: String(property.bathrooms), icon: "bath" as const }
       : null,
     property.area_sqft != null
       ? {
-          label: "Area",
+          label: labels.areaLabel,
           value: `${new Intl.NumberFormat("en-AE").format(property.area_sqft)} sq ft`,
           icon: "grid" as const,
         }
       : null,
     property.type
-      ? { label: "Type", value: property.type, icon: "building" as const }
+      ? { label: labels.typeLabel, value: property.type, icon: "building" as const }
       : null,
   ].filter(Boolean) as Array<{ label: string; value: string; icon: "bed" | "bath" | "grid" | "building" }>;
 }
@@ -63,19 +68,34 @@ export async function PropertyDetailPage({
   slug,
   detailBase,
 }: PropertyDetailPageProps) {
-  const property = await getPropertyBySlug(slug);
+  const property = await getPropertyBySlug(slug, locale);
   if (!property) notFound();
   if (detailBase === "off-plan" && !isOffPlanProperty(property)) notFound();
   if (detailBase === "properties" && isOffPlanProperty(property)) notFound();
 
-  const similar = (await getSimilarProperties(slug)).filter((item) =>
+  const similar = (await getSimilarProperties(slug, locale)).filter((item) =>
     detailBase === "off-plan" ? isOffPlanProperty(item) : !isOffPlanProperty(item),
   );
   const listHref = localizedHref(locale, `/${detailBase}`);
-  const facts = propertyFactsFromApi(property);
-  const images =
-    property.images?.map((image) => image.image_url).filter(Boolean) ??
-    (property.image_url ? [property.image_url] : []);
+  const t = await getTranslations({ locale, namespace: "catalog" });
+  const facts = propertyFactsFromApi(property, {
+    bedroomLabel: t("bedroomLabel"),
+    bathroomLabel: t("bathroomLabel"),
+    areaLabel: t("areaLabel"),
+    typeLabel: t("typeLabel"),
+  });
+  const galleryImages: PropertyGalleryImage[] = (() => {
+    if (property.images?.length) {
+      return property.images.flatMap((image) => {
+        const url = resolveMediaUrl(image.image_url);
+        return url ? [{ url, type: image.type }] : [];
+      });
+    }
+
+    const fallback = resolveMediaUrl(property.image_url);
+    return fallback ? [{ url: fallback }] : [];
+  })();
+  const locationImageUrl = resolveMediaUrl(property.location_image_url);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const pageUrl = `${siteUrl}${localizedHref(locale, `/${detailBase}/${slug}`)}`;
 
@@ -89,7 +109,13 @@ export async function PropertyDetailPage({
                 <Breadcrumbs
                   format="property"
                   items={[
-                    { label: detailBase === "off-plan" ? "Off-Plan" : "Properties", href: listHref },
+                    {
+                      label:
+                        detailBase === "off-plan"
+                          ? t("breadcrumbOffPlan")
+                          : t("breadcrumbProperties"),
+                      href: listHref,
+                    },
                     ...(property.type ? [{ label: property.type, href: listHref }] : []),
                     { label: property.location ?? property.title },
                   ]}
@@ -110,15 +136,15 @@ export async function PropertyDetailPage({
               </div>
 
               <div className="flex flex-col items-start gap-4 lg:items-end">
-                <p className="text-[11px] font-medium leading-[14px] text-basalt-300 lg:text-right">
-                  GUIDE PRICE
+                <p className="text-[11px] font-medium leading-[14px] text-basalt-300 lg:text-end">
+                  {t("guidePrice")}
                 </p>
                 <p className="flex items-center gap-2 text-[30px] font-bold leading-[38px] text-brand">
                   <Icon name="currency" className="h-6 w-6 shrink-0" />
                   {formatAedPrice(property.price ?? null)}
                 </p>
                 <Button href={localizedHref(locale, "/contact")} className="w-full sm:w-auto">
-                  Request Private Advisory
+                  {t("requestAdvisory")}
                 </Button>
               </div>
             </div>
@@ -129,7 +155,7 @@ export async function PropertyDetailPage({
       <section className="bg-white pb-8">
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
           <div className={sitePageInnerClassName}>
-            <PropertyGallery images={images} title={property.title} />
+            <PropertyGallery images={galleryImages} title={property.title} />
           </div>
         </div>
       </section>
@@ -153,11 +179,23 @@ export async function PropertyDetailPage({
             )}
           >
             <PropertyStoryContent
-              description={property.description ?? property.about_location ?? undefined}
+              description={property.description ?? undefined}
               facilities={property.facilities}
-              locationNote={property.about_location ?? property.location ?? undefined}
+              locationNote={property.about_location ?? undefined}
+              locationImageUrl={locationImageUrl}
+              labels={{
+                storyTitle: t("storyTitle"),
+                amenitiesTitle: t("amenitiesTitle"),
+                locationTitle: t("locationTitle"),
+              }}
             />
-            <PropertyViewingCard>
+            <PropertyViewingCard
+              labels={{
+                eyebrow: t("privateViewingEyebrow"),
+                title: t("privateViewingTitle"),
+                description: t("privateViewingDescription"),
+              }}
+            >
               <PropertyInquiryForm propertyId={property.id} pageUrl={pageUrl} />
             </PropertyViewingCard>
           </div>
@@ -169,7 +207,7 @@ export async function PropertyDetailPage({
           <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
             <div className={cn(sitePageInnerClassName, "space-y-7")}>
               <p className="text-center text-overline font-semibold leading-4 text-accent">
-                SIMILAR PROPERTIES
+                {t("similarProperties")}
               </p>
               <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {similar.map((item) => {

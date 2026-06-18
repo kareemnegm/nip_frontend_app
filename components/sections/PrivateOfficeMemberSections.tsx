@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { MemberAdvisorMessageDialog } from "@/components/forms/MemberAdvisorMessageForm";
 import { MemberSignOutButton } from "@/components/forms/MemberSignOutButton";
 import Link from "next/link";
@@ -40,14 +41,16 @@ export function PrivateOfficeSectionHeading({
   );
 }
 
-export function PrivateOfficeMemberHero({
+export async function PrivateOfficeMemberHero({
   user,
   locale = "en",
 }: {
   user: ApiMemberUser;
   locale?: Locale;
 }) {
-  const advisorName = user.advisor?.name ?? "Your Advisor";
+  const t = await getTranslations({ locale, namespace: "privateOffice" });
+  const advisorName = user.advisor?.name ?? t("yourAdvisor");
+  const displayName = user.displayName ?? user.name;
 
   return (
     <section
@@ -62,12 +65,12 @@ export function PrivateOfficeMemberHero({
           )}
         >
           <div className="flex max-w-[620px] flex-col gap-4">
-            <p className="text-overline font-semibold text-gold">Private Office</p>
+            <p className="text-overline font-semibold text-gold">{t("title")}</p>
             <h1 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-white sm:text-[52px] sm:leading-[50px]">
-              Welcome Back, {user.displayName ?? user.name}
+              {t("welcomeBack", { name: displayName })}
             </h1>
             <p className="text-body-sm text-sapphire-100">
-              Curated by {advisorName} | NIP Private Advisory
+              {t("curatedBy", { advisor: advisorName })}
             </p>
             <MemberSignOutButton
               className="mt-4 border-white/30 text-white hover:bg-white/10"
@@ -75,16 +78,16 @@ export function PrivateOfficeMemberHero({
             />
           </div>
           <div className="shrink-0 lg:text-right">
-            <p className="text-overline font-semibold text-platinum-400">Your Advisor</p>
+            <p className="text-overline font-semibold text-platinum-400">{t("yourAdvisor")}</p>
             <p className="mt-2 text-lg font-bold text-white">{advisorName}</p>
             <p className="mt-1 text-body-xs text-sapphire-100">
-              {user.advisor?.availability ?? "Responds within hours | Mon–Fri"}
+              {user.advisor?.availability ?? t("respondsWithinHours")}
             </p>
             <Link
               href={localizedHref(locale, "/curated")}
               className="mt-4 inline-flex items-center gap-1 text-body-sm font-semibold text-accent-on-dark hover:text-white"
             >
-              View curated selection
+              {t("viewCuratedSelection")}
               <Icon name="arrowRight" className="h-4 w-4" />
             </Link>
           </div>
@@ -94,22 +97,26 @@ export function PrivateOfficeMemberHero({
   );
 }
 
-export function PrivateOfficeMemberCuratedSection({
+export async function PrivateOfficeMemberCuratedSection({
   items = [],
+  locale = "en",
 }: {
   items?: Array<{ id?: number; title: string; excerpt: string }>;
+  locale?: Locale;
 }) {
+  const t = await getTranslations({ locale, namespace: "privateOffice" });
+
   return (
     <section className="bg-white py-16 sm:py-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className={cn(sitePageInnerClassName, "space-y-10")}>
           <PrivateOfficeSectionHeading
-            eyebrow="YOUR CURATED VIEW"
-            title="Curated for You"
-            description="A confidential selection of properties and projects aligned with your mandate. Released by your advisor as relevant."
+            eyebrow={t("curatedEyebrow")}
+            title={t("curatedForYou")}
+            description={t("curatedDescription")}
           />
           {items.length === 0 ? (
-            <CatalogEmptyState message="Your advisor has not released curated selections yet." />
+            <CatalogEmptyState message={t("noCuratedReleased")} />
           ) : (
             <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
               {items.map((item) => (
@@ -123,22 +130,26 @@ export function PrivateOfficeMemberCuratedSection({
   );
 }
 
-export function PrivateOfficeMemberSavedSection({
+export async function PrivateOfficeMemberSavedSection({
   properties = [],
+  locale = "en",
 }: {
   properties?: PropertyCardProps[];
+  locale?: Locale;
 }) {
+  const t = await getTranslations({ locale, namespace: "privateOffice" });
+
   return (
     <section className="bg-sapphire-50 py-16 sm:py-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className={cn(sitePageInnerClassName, "space-y-10")}>
           <PrivateOfficeSectionHeading
-            eyebrow="SAVED"
-            title="Saved Properties"
-            description="Properties you have marked for follow-up. Your advisor can add context or arrange a private viewing."
+            eyebrow={t("savedProperties").split(/\s+/)[0] ?? t("savedProperties")}
+            title={t("savedProperties")}
+            description={t("savedDescription")}
           />
           {properties.length === 0 ? (
-            <CatalogEmptyState message="You have not saved any properties yet." />
+            <CatalogEmptyState message={t("noSavedProperties")} />
           ) : (
             <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
               {properties.map((property) => (
@@ -156,14 +167,15 @@ export function PrivateOfficeMemberSavedSection({
   );
 }
 
-export function PrivateOfficeMemberAdvisorBar({
+export async function PrivateOfficeMemberAdvisorBar({
   advisor,
   locale = "en",
 }: {
   advisor?: ApiMemberAdvisor | null;
   locale?: Locale;
 }) {
-  const name = advisor?.name ?? "Your Advisor";
+  const t = await getTranslations({ locale, namespace: "privateOffice" });
+  const name = advisor?.name ?? t("yourAdvisor");
 
   return (
     <section className="border-t border-line bg-sapphire-50">
@@ -179,16 +191,18 @@ export function PrivateOfficeMemberAdvisorBar({
               <Icon name="user" className="h-5 w-5" />
             </span>
             <div>
-              <p className="text-body-sm font-bold text-brand">Your Advisor | {name}</p>
+              <p className="text-body-sm font-bold text-brand">
+                {t("yourAdvisor")} | {name}
+              </p>
               <p className="text-body-xs text-ink-tertiary">
-                {advisor?.availability ?? "Available Mon–Fri | Responds within hours"}
+                {advisor?.availability ?? t("availableMonFri")}
               </p>
             </div>
           </div>
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <MemberAdvisorMessageDialog advisorName={name} locale={locale} />
             <Button href="/contact" variant="accent" className="justify-center">
-              Request a private viewing
+              {t("requestPrivateViewing")}
               <Icon name="arrowRight" className="h-4 w-4" />
             </Button>
           </div>

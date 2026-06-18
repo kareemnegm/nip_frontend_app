@@ -1,3 +1,4 @@
+import { defaultLocale, type Locale } from "@/lib/i18n/config";
 import type {
   ApiAdvisorNote,
   ApiCuratedItem,
@@ -24,32 +25,39 @@ export async function logoutMember(token: string) {
   });
 }
 
-export async function getMemberProfile(token: string) {
+export async function getMemberProfile(
+  token: string,
+  locale: Locale = defaultLocale,
+) {
   const response = await apiGet<ApiMemberUser | { data: ApiMemberUser }>(
     "/auth/member/me",
-    { token, revalidate: false },
+    { token, locale, revalidate: false },
   );
   return unwrapData(response);
 }
 
 export async function getMemberCurated(
   token: string,
-  params: { page?: number; limit?: number } = {},
+  params: { page?: number; limit?: number; locale?: Locale } = {},
 ) {
+  const { locale = defaultLocale, ...query } = params;
   return apiGet<MemberPaginated<ApiCuratedItem>>("/member/curated", {
     token,
-    params,
+    params: query,
+    locale,
     revalidate: false,
   });
 }
 
 export async function getMemberSaved(
   token: string,
-  params: { page?: number; limit?: number } = {},
+  params: { page?: number; limit?: number; locale?: Locale } = {},
 ) {
+  const { locale = defaultLocale, ...query } = params;
   return apiGet<MemberPaginated<ApiSavedItem>>("/member/saved", {
     token,
-    params,
+    params: query,
+    locale,
     revalidate: false,
   });
 }
@@ -71,11 +79,13 @@ export async function unsaveMemberProperty(token: string, propertyId: number) {
 
 export async function getMemberNotes(
   token: string,
-  params: { page?: number; limit?: number } = {},
+  params: { page?: number; limit?: number; locale?: Locale } = {},
 ) {
+  const { locale = defaultLocale, ...query } = params;
   return apiGet<MemberPaginated<ApiAdvisorNote>>("/member/notes", {
     token,
-    params,
+    params: query,
+    locale,
     revalidate: false,
   });
 }

@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
 import { submitContactInquiry } from "@/lib/api/forms";
+import { getFormSubmitLocale } from "@/lib/i18n/form-locale";
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const result = await submitContactInquiry(body);
+    const locale = await getFormSubmitLocale();
+    const result = await submitContactInquiry(body, { locale });
     return NextResponse.json(result, { status: 201 });
   } catch (error) {
     const status =

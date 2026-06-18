@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import { Icon } from "./Icon";
@@ -12,38 +13,41 @@ export type PropertyResultsToolbarProps = {
 
 export function PropertyResultsToolbar({
   count = 128,
-  location = "Dubai",
+  location,
   className,
 }: PropertyResultsToolbarProps) {
+  const t = useTranslations("catalog");
+  const tc = useTranslations("common");
   const [view, setView] = useState<"grid" | "list">("grid");
+  const resolvedLocation = location ?? tc("dubai");
 
   return (
     <div className={cn("flex flex-wrap items-center gap-4", className)}>
       <p className="text-overline font-semibold leading-4 text-brand">
-        {count} properties | {location}
+        {t("propertiesCount", { count, location: resolvedLocation })}
       </p>
 
       <div className="flex items-center gap-4">
         <div className="relative">
           <select
-            aria-label="Sort properties"
+            aria-label={t("sortLabel")}
             defaultValue="newest"
-            className="h-9 appearance-none rounded-[var(--radius-field)] border border-border-default bg-white pl-3.5 pr-8 text-body-sm font-medium text-ink-secondary outline-none"
+            className="h-9 appearance-none rounded-[var(--radius-field)] border border-border-default bg-white pl-3.5 pr-8 text-body-sm font-medium text-ink-secondary outline-none rtl:pl-8 rtl:pr-3.5"
           >
-            <option value="newest">Sort: Newest</option>
-            <option value="price-asc">Sort: Price (Low)</option>
-            <option value="price-desc">Sort: Price (High)</option>
+            <option value="newest">{t("sortNewest")}</option>
+            <option value="price-asc">{t("sortPriceLow")}</option>
+            <option value="price-desc">{t("sortPriceHigh")}</option>
           </select>
           <Icon
             name="chevronDown"
-            className="pointer-events-none absolute right-3 top-1/2 h-2.5 w-2.5 -translate-y-1/2 text-ink-secondary"
+            className="pointer-events-none absolute right-3 top-1/2 h-2.5 w-2.5 -translate-y-1/2 text-ink-secondary rtl:right-auto rtl:left-3"
           />
         </div>
 
         <div className="flex overflow-hidden rounded-[var(--radius-field)] border border-[#b5c4d8]">
           <button
             type="button"
-            aria-label="Grid view"
+            aria-label={t("gridView")}
             aria-pressed={view === "grid"}
             onClick={() => setView("grid")}
             className={cn(
@@ -55,7 +59,7 @@ export function PropertyResultsToolbar({
           </button>
           <button
             type="button"
-            aria-label="List view"
+            aria-label={t("listView")}
             aria-pressed={view === "list"}
             onClick={() => setView("list")}
             className={cn(

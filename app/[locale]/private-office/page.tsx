@@ -3,14 +3,16 @@ import { SiteShell } from "@/components/SiteShell";
 import { PrivateOfficeLoginCard } from "@/components/sections/PrivateOfficeLoginCard";
 import { Container } from "@/components/ui";
 import { resolveLocale } from "@/lib/i18n/helpers";
-
-export const metadata: Metadata = {
-  title: "Private Office | NIP Reality",
-};
+import { localizedMetadata } from "@/lib/i18n/metadata";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  return localizedMetadata(resolveLocale(rawLocale), "privateOffice");
+}
 
 export default async function PrivateOfficePage({ params }: PageProps) {
   const { locale: rawLocale } = await params;

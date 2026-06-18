@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { CommunityCard } from "@/components/ui/Cards";
 import { Container } from "@/components/ui/Container";
 import { CatalogEmptyState } from "@/components/ui/ApiPagination";
-import { marketPulseStats } from "./home-data";
+import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
+import { getRequestLocale } from "@/lib/i18n/server";
 import { homeEditable } from "./home-editable";
 import { SectionHeading } from "./SectionHeading";
 import type { CommunityCardModel } from "@/lib/mappers/area";
@@ -12,13 +14,24 @@ export async function MarketPulseSection({
 }: {
   areas?: CommunityCardModel[];
 }) {
+  const locale = await getRequestLocale();
+  const t = await getTranslations({ locale, namespace: "home" });
+  const te = await getTranslations({ locale, namespace: "home.empty" });
+
+  const marketPulseStats = [
+    { context: t("marketPulse.stat1Context"), label: t("marketPulse.stat1Label"), value: "2,400", icon: true },
+    { context: t("marketPulse.stat2Context"), label: t("marketPulse.stat2Label"), value: "12" },
+    { context: t("marketPulse.stat3Context"), label: t("marketPulse.stat3Label"), value: "6.2%" },
+    { context: t("marketPulse.stat4Context"), label: t("marketPulse.stat4Label"), value: "28" },
+  ];
+
   return (
     <>
       <section className="bg-white py-16 sm:py-20">
         <Container className="max-w-[1056px] space-y-10 px-6">
           <SectionHeading
-            title="Market Pulse"
-            description="Track the Market Signals that matter before they Become Headlines"
+            title={await getCmsPlaceholder("placeholders.home.marketPulse", "title", locale)}
+            description={await getCmsPlaceholder("placeholders.home.marketPulse", "desc", locale)}
             editable={{
               relUrl: homeEditable.relUrl,
               titleKey: homeEditable.marketPulse.titleKey,
@@ -48,7 +61,7 @@ export async function MarketPulseSection({
               href="/insights"
               className="inline-flex h-9 items-center justify-center rounded-[var(--radius-field)] border border-sapphire-300 px-6 text-[13px] font-semibold leading-[18px] text-brand hover:bg-sapphire-50"
             >
-              View Market Perspective
+              {t("marketPulse.viewPerspective")}
             </Link>
           </p>
         </Container>
@@ -57,7 +70,10 @@ export async function MarketPulseSection({
       {areas.length > 0 ? (
         <section className="bg-sapphire-50 py-16 sm:py-20">
           <Container className="space-y-10">
-            <SectionHeading title="Featured Areas" description="Communities shaping long-term value across Dubai." />
+            <SectionHeading
+              title={t("featuredAreas.title")}
+              description={t("featuredAreas.description")}
+            />
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {areas.slice(0, 3).map((area) => (
                 <CommunityCard key={area.href} {...area} />
@@ -68,7 +84,7 @@ export async function MarketPulseSection({
       ) : (
         <section className="bg-sapphire-50 py-16 sm:py-20">
           <Container>
-            <CatalogEmptyState message="Area highlights will appear here once communities are published." />
+            <CatalogEmptyState message={te("areas")} />
           </Container>
         </section>
       )}

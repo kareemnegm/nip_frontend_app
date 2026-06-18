@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { SpeakWithNipButton } from "@/components/ui/Button";
 import type { IconName } from "@/components/ui/Icon";
 import {
@@ -5,6 +6,7 @@ import {
   sitePageGutterX,
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
+import { getRequestLocale } from "@/lib/i18n/server";
 import { cn } from "@/lib/cn";
 import Link from "next/link";
 import { AreaAboutSection, AreaSectionHeading } from "./AreaStorySections";
@@ -60,16 +62,19 @@ export function DeveloperHero({
   );
 }
 
-export function DeveloperAboutSection({
+export async function DeveloperAboutSection({
   body,
   strengths,
 }: {
   body: string;
   strengths: Array<{ label: string; icon: IconName }>;
 }) {
+  const locale = await getRequestLocale();
+  const t = await getTranslations({ locale, namespace: "pages.developers" });
+
   return (
     <AreaAboutSection
-      title="About the Developer"
+      title={t("aboutDeveloper")}
       body={body}
       highlights={strengths}
     />
@@ -100,19 +105,22 @@ export function DeveloperPortfolioSection({
   );
 }
 
-export function DeveloperCommunitiesSection({
+export async function DeveloperCommunitiesSection({
   developerName,
   children,
 }: {
   developerName: string;
   children: React.ReactNode;
 }) {
+  const locale = await getRequestLocale();
+  const t = await getTranslations({ locale, namespace: "pages.developers" });
+
   return (
     <section className="bg-white py-16">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className={sitePageInnerClassName}>
           <AreaSectionHeading
-            eyebrow="COMMUNITIES"
+            eyebrow={t("communities")}
             title={`Where ${developerName} builds`}
           />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">

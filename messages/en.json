@@ -1,0 +1,544 @@
+{
+  "nav": {
+    "home": "Home",
+    "properties": "Properties",
+    "offPlan": "Off-Plan",
+    "developers": "Developers",
+    "areas": "Areas",
+    "insights": "Insights",
+    "concierge": "Concierge",
+    "apartments": "Apartments",
+    "townhouses": "Townhouses",
+    "villas": "Villas",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "common": {
+    "speakWith": "Speak with",
+    "nip": "NIP",
+    "signIn": "Sign In",
+    "signOut": "Sign out",
+    "signingOut": "Signing out…",
+    "signingIn": "Signing in…",
+    "requestAccess": "Request Access",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "close": "Close",
+    "send": "Send",
+    "sending": "Sending…",
+    "loading": "Loading…",
+    "viewAll": "View all",
+    "learnMore": "Learn more",
+    "readMore": "Read more",
+    "backToHome": "Back to home",
+    "contactUs": "Contact us",
+    "detailsOnRequest": "Details on request",
+    "property": "Property",
+    "offPlanBadge": "Off-Plan",
+    "search": "Search",
+    "askConcierge": "Ask the Concierge",
+    "readLatestInsights": "Read the Latest Insights",
+    "readInsight": "Read the Insight",
+    "exploreCollection": "Explore the Collection",
+    "searchProperties": "Search Properties",
+    "viewMaker": "View Maker",
+    "latest": "Latest",
+    "projects": "{count} Projects",
+    "dubai": "Dubai"
+  },
+  "footer": {
+    "properties": "Properties",
+    "buyProperties": "Buy Properties",
+    "rentProperties": "Rent Properties",
+    "exclusives": "Exclusives",
+    "newLaunches": "New Launches",
+    "areas": "Areas",
+    "palmJumeirah": "Palm Jumeirah",
+    "dubaiMarina": "Dubai Marina",
+    "downtown": "Downtown",
+    "businessBay": "Business Bay",
+    "allAreas": "All Areas",
+    "offPlan": "Off-Plan",
+    "featuredProjects": "Featured Projects",
+    "upcoming": "Upcoming",
+    "paymentPlans": "Payment Plans",
+    "developersLink": "Developers",
+    "resources": "Resources",
+    "faq": "FAQ",
+    "aiConcierge": "AI Concierge",
+    "submitArticle": "Submit Article",
+    "insights": "Insights",
+    "marketIntelligence": "Market Intelligence",
+    "investmentGuides": "Investment Guides",
+    "goldenVisa": "Golden Visa",
+    "journal": "Journal",
+    "aboutNip": "About NIP",
+    "ourApproach": "Our Approach",
+    "whyNip": "Why NIP",
+    "team": "Team",
+    "careers": "Careers",
+    "contact": "Contact",
+    "followUs": "Follow Us",
+    "copyright": "© 2026 NIP — Novel Insight Property. All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "cookies": "Cookies",
+    "disclaimer": "Disclaimer",
+    "reraInfo": "RERA Information",
+    "staffLogin": "Staff login"
+  },
+  "home": {
+    "byIntroductionOnly": "By Introduction Only",
+    "hero": {
+      "readInsights": "Read the Latest Insights"
+    },
+    "search": {
+      "label": "Looking for something specific?",
+      "placeholder": "Search properties, areas or projects",
+      "submit": "Search",
+      "ariaLabel": "Search"
+    },
+    "empty": {
+      "insights": "Insights will appear here once articles are published.",
+      "curated": "Curated listings will appear here once areas and properties are published.",
+      "areas": "Area highlights will appear here once communities are published.",
+      "featured": "Featured properties will appear here once published on the backend."
+    },
+    "marketPulse": {
+      "viewPerspective": "View Market Perspective",
+      "stat1Context": "Prime Communities",
+      "stat1Label": "AVG Price /Sq Ft",
+      "stat2Context": "Active Launches",
+      "stat2Label": "Off-Plan Projects",
+      "stat3Context": "Investor Segment",
+      "stat3Label": "AVG Gross Yield",
+      "stat4Context": "Across Dubai",
+      "stat4Label": "Communities under Coverage"
+    },
+    "featuredAreas": {
+      "title": "Featured Areas",
+      "description": "Communities shaping long-term value across Dubai."
+    }
+  },
+  "forms": {
+    "email": "Email",
+    "password": "Password",
+    "subject": "Subject",
+    "message": "Message",
+    "name": "Name",
+    "phone": "Phone",
+    "emailPlaceholder": "you@email.com",
+    "passwordPlaceholder": "••••••••",
+    "subscribe": "Subscribe",
+    "subscribing": "Subscribing…",
+    "sendMessage": "Send Message",
+    "requestAccess": "Request access",
+    "forgotPassword": "Forgot password?",
+    "signInFailed": "Sign in failed",
+    "signInFailedRetry": "Sign in failed. Please try again.",
+    "messageSent": "Message sent",
+    "messageCouldNotBeSent": "Message could not be sent.",
+    "phoneNumber": "Phone Number",
+    "phonePlaceholder": "Phone number"
+  },
+  "privateOffice": {
+    "title": "Private Office",
+    "welcomeBack": "Welcome Back, {name}",
+    "curatedBy": "Curated by {advisor} | NIP Private Advisory",
+    "yourAdvisor": "Your Advisor",
+    "viewCuratedSelection": "View curated selection",
+    "curatedForYou": "Curated for You",
+    "savedProperties": "Saved Properties",
+    "advisorNotes": "Advisor Notes",
+    "messageAdvisor": "Message your Advisor",
+    "requestPrivateViewing": "Request a private viewing",
+    "haveQuestion": "Have a question on this selection?",
+    "messageDirectly": "Message {name} directly — typically responds within hours.",
+    "noCuratedYet": "No curated selections yet.",
+    "noSavedYet": "No saved properties yet.",
+    "noNotesYet": "No advisor notes yet.",
+    "respondsWithinHours": "Responds within hours | Mon–Fri",
+    "availableMonFri": "Available Mon–Fri | Responds within hours",
+    "curatedEyebrow": "YOUR CURATED VIEW",
+    "curatedDescription": "A confidential selection of properties and projects aligned with your mandate. Released by your advisor as relevant.",
+    "savedDescription": "Properties you have marked for follow-up. Your advisor can add context or arrange a private viewing.",
+    "noCuratedReleased": "Your advisor has not released curated selections yet.",
+    "noSavedProperties": "You have not saved any properties yet."
+  },
+  "status": {
+    "notFoundTitle": "Page not found",
+    "notFoundDescription": "The page you are looking for does not exist or has been moved.",
+    "serverErrorTitle": "Something went wrong",
+    "serverErrorDescription": "We could not load this page. Please try again shortly.",
+    "thankYouTitle": "Thank you",
+    "thankYouDescription": "Your submission has been received. We will be in touch shortly.",
+    "notFoundEyebrow": "404",
+    "serverErrorEyebrow": "500",
+    "thankYouEyebrow": "CONFIRMATION"
+  },
+  "catalog": {
+    "noResults": "No results found",
+    "noResultsDescription": "Try adjusting your filters or search terms.",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "beds": "{count, plural, one {# Bed} other {# Beds}}",
+    "baths": "{count, plural, one {# Bath} other {# Baths}}",
+    "sqft": "{count} sq ft",
+    "pagination": "Pagination",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "emptyListings": "No listings match your search yet. Check back soon or speak with an advisor.",
+    "searchPlaceholder": "Search by community, project or area",
+    "searchAria": "Search by community, project or area",
+    "location": "Location",
+    "type": "Type",
+    "price": "Price",
+    "bedsFilter": "Beds",
+    "propertiesCount": "{count} properties | {location}",
+    "sortLabel": "Sort properties",
+    "sortNewest": "Sort: Newest",
+    "sortPriceLow": "Sort: Price (Low)",
+    "sortPriceHigh": "Sort: Price (High)",
+    "gridView": "Grid view",
+    "listView": "List view",
+    "guidePrice": "GUIDE PRICE",
+    "requestAdvisory": "Request Private Advisory",
+    "similarProperties": "SIMILAR PROPERTIES",
+    "breadcrumbProperties": "Properties",
+    "breadcrumbOffPlan": "Off-Plan",
+    "bedroomLabel": "Bedrooms",
+    "bathroomLabel": "Bathrooms",
+    "areaLabel": "Area",
+    "typeLabel": "Type",
+    "apartment": "Apartment",
+    "villa": "Villa",
+    "townhouse": "Townhouse",
+    "penthouse": "Penthouse",
+    "bed1": "1 Bed",
+    "bed2": "2 Beds",
+    "bed3": "3 Beds",
+    "bed4": "4+ Beds",
+    "price1m": "AED 1M+",
+    "price2m": "AED 2M+",
+    "price5m": "AED 5M+",
+    "price10m": "AED 10M+",
+    "viewAllPhotos": "View all photos",
+    "photosCount": "{count} photos",
+    "closeGallery": "Close gallery",
+    "storyTitle": "The Story",
+    "amenitiesTitle": "Amenities",
+    "locationTitle": "Location",
+    "interior": "Interior",
+    "exterior": "Exterior",
+    "morePhotos": "+{count} more",
+    "photoOf": "{current} of {total}",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo",
+    "exploreProperty": "Explore Property",
+    "startingFrom": "Starting From",
+    "handoverLabel": "Handover",
+    "paymentPlanAvailable": "Payment Plan Available",
+    "privateViewingEyebrow": "Private Viewing",
+    "privateViewingTitle": "Arrange a Confidential Visit",
+    "privateViewingDescription": "Share your details and a NIP advisor will confirm the next step.",
+    "requestViewing": "Request Viewing"
+  },
+  "pages": {
+    "areas": {
+      "empty": "Communities will appear here once areas are published on the backend.",
+      "ctaTitle": "Considering a Move to Dubai?",
+      "exploreFallback": "Explore this community and discover properties aligned with your priorities.",
+      "noListings": "No published listings in this community yet.",
+      "availableIn": "Available in {name}"
+    },
+    "developers": {
+      "leadingTitle": "Dubai's Leading Developers",
+      "empty": "Developers will appear here once published on the backend.",
+      "ctaTitle": "Looking for the Right Developer?",
+      "aboutDeveloper": "About the Developer",
+      "communities": "COMMUNITIES",
+      "portfolioFallback": "Master developer portfolio across Dubai's prime communities.",
+      "noProjects": "No published projects for this developer yet.",
+      "listingsFor": "Projects by {name}",
+      "noListings": "No published listings for this developer yet.",
+      "portfolio": "Portfolio"
+    },
+    "insights": {
+      "empty": "Articles will appear here once published on the backend.",
+      "latest": "Latest",
+      "featuredPrefix": "Featured",
+      "ctaTitle": "Ready to discuss your next move?",
+      "relatedTitle": "Related Insights"
+    },
+    "concierge": {
+      "inputPlaceholder": "Ask about communities, pricing, off-plan, Golden Visa…",
+      "chip1": "Best areas for families",
+      "chip2": "Off-plan payment plans",
+      "chip3": "Golden Visa requirements",
+      "chip4": "Rental yields in Dubai Marina"
+    },
+    "curated": {
+      "selectionTitle": "A Considered Selection",
+      "selectionDesc": "Properties and projects released for your mandate — each with advisor context below.",
+      "notesTitle": "Context Behind the Selection",
+      "notesDesc": "Private notes from your advisor explaining why each opportunity was included — or set aside.",
+      "noCurated": "No curated selections have been released yet.",
+      "noNotes": "Advisor notes will appear here when your advisor adds context."
+    }
+  },
+  "placeholders": {
+    "home": {
+      "hero": {
+        "eyebrow": "A Private Advisory View | Dubai Real Estate",
+        "title": "For Those Who Expect More",
+        "body": "Dubai real estate has no shortage of choice. The difference lies in knowing what deserves your attention. NIP brings together market insight, editorial perspective, and private advisory for clients who want to move with judgment."
+      },
+      "featuredInsight": {
+        "title": "Featured Insight",
+        "desc": "A closer look at the signals, locations, and ownership decisions shaping Dubai's next chapter."
+      },
+      "curatedCollection": {
+        "title": "Curated Collection",
+        "desc": "A considered selection of properties, projects, and places connected by a clear point of view - not a search filter."
+      },
+      "marketPulse": {
+        "title": "Market Pulse",
+        "desc": "Track the Market Signals that matter before they Become Headlines"
+      },
+      "privateOffice": {
+        "title": "Private Office",
+        "desc": "For clients introduced to NIP, Private Office provides access to selected opportunities, advisor notes, and private property intelligence."
+      },
+      "featuredSelection": {
+        "title": "Featured Selection",
+        "desc": "A small selection from the current NIP view - Chosen for relevance, not volume"
+      },
+      "cta": {
+        "title": "Not Sure Where to Begin",
+        "desc": "Speak with NIP before you search. Our advisory team can help you understand the market, define your priorities, and identify what is worth your attention."
+      }
+    },
+    "properties": {
+      "hero": {
+        "eyebrow": "PROPERTIES | DISCOVERY",
+        "title": "Find your Place in Dubai",
+        "description": "Search and discover curated properties across Dubai with NIP Reality."
+      }
+    },
+    "offPlan": {
+      "hero": {
+        "eyebrow": "OFF-PLAN | DISCOVERY",
+        "title": "Future-Ready Projects",
+        "description": "Explore off-plan opportunities across Dubai's most compelling communities."
+      }
+    },
+    "areas": {
+      "hero": {
+        "eyebrow": "Areas | Communities",
+        "title": "Explore Dubai's Communities",
+        "description": "A considered guide to the neighbourhoods shaping long-term value across Dubai."
+      }
+    },
+    "developers": {
+      "hero": {
+        "eyebrow": "DEVELOPERS | PARTNERS",
+        "title": "Dubai's Leading Developers",
+        "description": "Master developers shaping Dubai's skyline and long-term community value."
+      }
+    },
+    "insights": {
+      "hero": {
+        "eyebrow": "INSIGHTS | EDITORIAL",
+        "title": "Market Perspective",
+        "description": "Editorial intelligence on Dubai real estate — signals, communities, and ownership decisions."
+      }
+    },
+    "about": {
+      "hero": {
+        "eyebrow": "ABOUT NIP",
+        "title": "One Source. One System. One Standard.",
+        "description": "NIP was created for clients who want more than access to property. They want context, judgment, and a single advisory standard across every step of the real estate journey."
+      }
+    },
+    "contact": {
+      "hero": {
+        "eyebrow": "NIP PRIVATE ADVISORY",
+        "title": "Speak with NIP",
+        "description": "A considered property decision begins with a conversation."
+      },
+      "intro": {
+        "overline": "PRIVATE ADVISORY | BY INVITATION",
+        "body": "Whether you are exploring Dubai for residence, investment, relocation, portfolio strategy, or a private acquisition, NIP can help you understand the market before you commit to a path."
+      }
+    },
+    "faq": {
+      "hero": {
+        "eyebrow": "HELP & FAQ",
+        "title": "Frequently Asked Questions",
+        "description": "Everything you need to know about working with NIP — buying, off-plan, the Golden Visa and our private advisory."
+      },
+      "cta": {
+        "title": "Still Have Questions?",
+        "description": "Ask the Concierge for an instant answer, or speak with a Private Advisor."
+      }
+    },
+    "concierge": {
+      "hero": {
+        "eyebrow": "AI CONCIERGE",
+        "title": "Ask the Concierge",
+        "description": "Instant answers on communities, pricing, off-plan and the Golden Visa — and a direct line to a private advisor whenever you want one."
+      }
+    },
+    "contribute": {
+      "hero": {
+        "eyebrow": "CONTRIBUTE",
+        "title": "Contribute an Insight",
+        "description": "Share market perspective with the NIP audience. Submissions are reviewed by our editorial team before publication."
+      },
+      "sidebar": {
+        "title": "What We Publish"
+      }
+    },
+    "legal": {
+      "hero": {
+        "eyebrow": "LEGAL",
+        "title": "Terms & Policies",
+        "lastUpdated": "Last updated: June 2026"
+      }
+    },
+    "curated": {
+      "hero": {
+        "eyebrow": "Private Office | Curated for You",
+        "badge": "By Introduction Only",
+        "title": "Selected for You, by Your Advisor",
+        "description": "A confidential selection of properties and projects aligned with your mandate. Curated, never catalogued. Released by your advisor as relevant."
+      },
+      "selection": {
+        "eyebrow": "YOUR CURATED VIEW",
+        "title": "Curated for You",
+        "description": "A confidential selection of properties and projects aligned with your mandate. Released by your advisor as relevant."
+      },
+      "notes": {
+        "eyebrow": "ADVISOR NOTES",
+        "title": "Context Behind the Selection",
+        "description": "Private notes from your advisor explaining why each opportunity was included — or set aside."
+      }
+    },
+    "privateOffice": {
+      "login": {
+        "title": "Your Private Space",
+        "description": "Access is by invitation. Sign in to view your curated selection, saved properties and advisor."
+      }
+    },
+    "thankYou": {
+      "eyebrow": "CONFIRMATION",
+      "title": "Request Received",
+      "description": "We've received your request. A member of the NIP advisory team will be in touch shortly."
+    },
+    "notFound": {
+      "eyebrow": "Error 404",
+      "title": "Page Not Found",
+      "description": "The page you're looking for has moved or no longer exists. Let's get you back on track."
+    },
+    "serverError": {
+      "eyebrow": "500",
+      "title": "Something Went Wrong",
+      "description": "We could not load this page. Please try again shortly."
+    },
+    "global": {
+      "footer": {
+        "tagline": "Discreet Advisory for Elevated Living",
+        "newsletterTitle": "Stay Informed",
+        "newsletterDesc": "Market signals and editorial perspective — delivered with discretion."
+      }
+    }
+  },
+  "meta": {
+    "home": {
+      "title": "NIP Reality | Dubai Real Estate Advisory",
+      "description": "Private advisory, market insight, and curated property intelligence across Dubai."
+    },
+    "properties": {
+      "title": "Properties | NIP Reality",
+      "description": "Search and discover curated properties across Dubai with NIP Reality."
+    },
+    "offPlan": {
+      "title": "Off-Plan | NIP Reality",
+      "description": "Explore off-plan opportunities across Dubai's most compelling communities."
+    },
+    "areas": {
+      "title": "Areas | NIP Reality",
+      "description": "Explore Dubai's communities and neighbourhoods with NIP Reality."
+    },
+    "developers": {
+      "title": "Developers | NIP Reality",
+      "description": "Discover Dubai's leading property developers with NIP Reality."
+    },
+    "insights": {
+      "title": "Insights | NIP Reality",
+      "description": "Editorial intelligence on Dubai real estate from NIP Reality."
+    },
+    "about": {
+      "title": "About | NIP Reality",
+      "description": "Learn about NIP — private advisory for Dubai real estate."
+    },
+    "contact": {
+      "title": "Contact | NIP Reality",
+      "description": "Speak with NIP's private advisory team."
+    },
+    "faq": {
+      "title": "FAQ | NIP Reality",
+      "description": "Frequently asked questions about working with NIP."
+    },
+    "concierge": {
+      "title": "Concierge | NIP Reality",
+      "description": "Ask the NIP Concierge about Dubai real estate."
+    },
+    "contribute": {
+      "title": "Contribute | NIP Reality",
+      "description": "Contribute market perspective to NIP Insights."
+    },
+    "legal": {
+      "title": "Legal | NIP Reality",
+      "description": "Terms, privacy, and policies for NIP Reality."
+    },
+    "curated": {
+      "title": "Curated Selection | NIP Private Office",
+      "description": "Your advisor's curated property selection."
+    },
+    "privateOffice": {
+      "title": "Private Office | NIP Reality",
+      "description": "Sign in to NIP Private Office."
+    },
+    "privateOfficeMember": {
+      "title": "Private Office | NIP Reality",
+      "description": "Your NIP Private Office dashboard."
+    },
+    "thankYou": {
+      "title": "Thank You | NIP Reality",
+      "description": "Your submission has been received."
+    },
+    "notFound": {
+      "title": "Page Not Found | NIP Reality",
+      "description": "The page you are looking for does not exist."
+    },
+    "serverError": {
+      "title": "Error | NIP Reality",
+      "description": "Something went wrong."
+    },
+    "adminLogin": {
+      "title": "Staff Login | NIP Reality",
+      "description": "CMS staff sign-in for NIP Reality."
+    }
+  },
+  "cms": {
+    "editTextBlock": "Edit this text block",
+    "editImageBlock": "Edit this image block",
+    "deleteBlockConfirm": "Delete this block? This cannot be undone.",
+    "deleteImageConfirm": "Delete this image block?",
+    "editingAs": "Editing as {name}",
+    "signOut": "Sign out"
+  }
+}

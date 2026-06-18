@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { SiteShell } from "@/components/SiteShell";
 import { CtaBand, SectionHeading } from "@/components/sections";
 import { Button, Container, InsightCard } from "@/components/ui";
 import { getBlogBySlug, getBlogs } from "@/lib/api/blogs";
-import { resolveLocale } from "@/lib/i18n/helpers";
+import { resolveBlogFeaturedImage } from "@/lib/api/media-url";
+import { localizedHref, resolveLocale } from "@/lib/i18n/helpers";
 import { mapBlogToInsightCard } from "@/lib/mappers/blog";
 
 type PageProps = {
@@ -12,8 +14,9 @@ type PageProps = {
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const blog = await getBlogBySlug(slug);
+  const { slug, locale: rawLocale } = await params;
+  const locale = resolveLocale(rawLocale);
+  const blog = await getBlogBySlug(slug, locale);
   if (!blog) return { title: "Insight | NIP Reality" };
   return {
     title: `${blog.title} | NIP Reality`,
@@ -24,16 +27,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function InsightArticlePage({ params }: PageProps) {
   const { locale: rawLocale, slug } = await params;
   const locale = resolveLocale(rawLocale);
-  const blog = await getBlogBySlug(slug);
+  const blog = await getBlogBySlug(slug, locale);
   if (!blog) notFound();
 
-  const related = await getBlogs({ per_page: 3, category: blog.category?.slug });
+  const related = await getBlogs({ per_page: 3, category: blog.category?.slug, locale });
   const relatedCards = related.data
     .filter((item) => item.slug !== slug)
     .slice(0, 3)
     .map((item) => mapBlogToInsightCard(item, locale));
 
   const body = blog.body ?? blog.source_code ?? blog.content ?? "";
+  const featuredImage = resolveBlogFeaturedImage(blog);
+  const t = await getTranslations({ locale, namespace: "pages.insights" });
+  const tc = await getTranslations({ locale, namespace: "common" });
 
   return (
     <SiteShell>
@@ -57,10 +63,10 @@ export default async function InsightArticlePage({ params }: PageProps) {
             </p>
           </div>
 
-          {blog.featured_image_url ? (
+          {featuredImage ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={blog.featured_image_url}
+              src={featuredImage}
               alt={blog.title}
               className="mx-auto mt-10 aspect-[16/8] max-w-4xl rounded-[var(--radius-card)] object-cover"
             />
@@ -76,7 +82,7 @@ export default async function InsightArticlePage({ params }: PageProps) {
       {relatedCards.length > 0 ? (
         <section className="bg-sapphire-50 py-16">
           <Container className="space-y-8">
-            <SectionHeading title="Related Insights" />
+            <SectionHeading title={t("relatedTitle")} />
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {relatedCards.map((insight) => (
                 <InsightCard key={insight.href} {...insight} />
@@ -87,8 +93,12 @@ export default async function InsightArticlePage({ params }: PageProps) {
       ) : null}
 
       <CtaBand
-        title="Ready to discuss your next move?"
-        actions={<Button href="/contact">Speak with NIP</Button>}
+        title={t("ctaTitle")}
+        actions={
+          <Button href={localizedHref(locale, "/contact")} variant="accent">
+            {tc("speakWith")} {tc("nip")}
+          </Button>
+        }
       />
     </SiteShell>
   );

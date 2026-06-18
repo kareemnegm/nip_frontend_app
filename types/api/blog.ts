@@ -12,6 +12,7 @@ export type ApiBlog = {
   content?: string | null;
   source_code?: string | null;
   body?: string | null;
+  featured_image?: string | null;
   featured_image_url?: string | null;
   author_name?: string | null;
   author_image_url?: string | null;
@@ -22,6 +23,7 @@ export type ApiBlog = {
 };
 
 export type BlogListParams = {
+  locale?: import("@/lib/i18n/config").Locale;
   page?: number;
   per_page?: number;
   category?: string;

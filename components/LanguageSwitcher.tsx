@@ -49,15 +49,15 @@ export function LanguageSwitcher({
   return (
     <div
       className={cn(
-        "hidden items-center gap-1.5 rounded-[var(--radius-field)] px-2.5 py-2 md:flex",
+        "flex items-center gap-1.5 rounded-[var(--radius-field)] px-2.5 py-2",
         className,
       )}
     >
-      <Icon name="globe" className="h-[18px] w-[18px] shrink-0 text-brand" />
+      <Icon name="globe" className="h-[18px] w-[18px] shrink-0 text-sapphire-600" />
       {locales.map((locale, index) => (
         <span key={locale} className="inline-flex items-center gap-1.5">
           {index > 0 ? (
-            <span className="h-3 w-px bg-ink-secondary" aria-hidden />
+            <span className="h-3 w-px shrink-0 bg-ink-secondary" aria-hidden />
           ) : null}
           <LocaleLink
             locale={locale}

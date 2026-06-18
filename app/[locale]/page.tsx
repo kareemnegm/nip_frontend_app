@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import { SiteShell } from "@/components/SiteShell";
+import { localizedMetadata } from "@/lib/i18n/metadata";
 import {
   CuratedCollectionSection,
   FeaturedInsightSection,
@@ -20,13 +22,18 @@ type HomePageProps = {
   params: Promise<{ locale: string }>;
 };
 
+export async function generateMetadata({ params }: HomePageProps): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  return localizedMetadata(resolveLocale(rawLocale), "home");
+}
+
 export default async function HomePage({ params }: HomePageProps) {
   const { locale: rawLocale } = await params;
   const locale = resolveLocale(rawLocale);
 
   const [home, blogs] = await Promise.all([
-    getHome(),
-    getBlogs({ per_page: 3 }),
+    getHome(locale),
+    getBlogs({ per_page: 3, locale }),
   ]);
 
   const featuredProperties = home.featured_properties.map((property) =>

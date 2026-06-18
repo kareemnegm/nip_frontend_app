@@ -8,6 +8,7 @@ import {
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
+import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { getRequestLocale } from "@/lib/i18n/server";
 
@@ -47,7 +48,7 @@ export async function AboutHeroSection() {
               relUrl={aboutBlocks.relUrl}
               blockKey={aboutBlocks.hero.eyebrow}
               locale={locale}
-              placeholderContent="ABOUT NIP"
+              placeholderContent={await getCmsPlaceholder("placeholders.about.hero", "eyebrow", locale)}
               placeholderTag="p"
               className="text-overline font-semibold text-accent"
             />
@@ -55,7 +56,7 @@ export async function AboutHeroSection() {
               relUrl={aboutBlocks.relUrl}
               blockKey={aboutBlocks.hero.title}
               locale={locale}
-              placeholderContent="One Source. One System. One Standard."
+              placeholderContent={await getCmsPlaceholder("placeholders.about.hero", "title", locale)}
               placeholderTag="h1"
               className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand"
             />
@@ -63,7 +64,7 @@ export async function AboutHeroSection() {
               relUrl={aboutBlocks.relUrl}
               blockKey={aboutBlocks.hero.description}
               locale={locale}
-              placeholderContent="NIP was created for clients who want more than access to property. They want context, judgment, and a single advisory standard across every step of the real estate journey."
+              placeholderContent={await getCmsPlaceholder("placeholders.about.hero", "description", locale)}
               placeholderTag="p"
               className="max-w-[680px] text-body-lg text-ink-secondary"
             />

@@ -26,7 +26,8 @@ export const getBlocksForPage = cache(
   async (relUrl: string, locale: Locale = defaultLocale): Promise<BlockRecord> => {
     try {
       const blocks = await apiGet<Block[]>("/blocks", {
-        params: { relUrl, locale },
+        params: { relUrl },
+        locale,
         revalidate: false,
       });
       return Object.fromEntries(

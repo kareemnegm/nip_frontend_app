@@ -1,5 +1,6 @@
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
+import { resolveMediaUrl } from "@/lib/api/media-url";
 import type { ApiProperty } from "@/types/api";
 
 export function formatAedPrice(price: number | null | undefined): string {
@@ -83,7 +84,7 @@ export function mapPropertyToCard(
     handover: property.handover_quarter ?? undefined,
     meta: propertyMeta(property),
     badges: propertyBadges(property),
-    imageUrl: property.image_url ?? undefined,
+    imageUrl: resolveMediaUrl(property.image_url),
   };
 }
 

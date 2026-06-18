@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { LocalizedLink } from "./LocalizedLink";
 import { MobileNav } from "./MobileNav";
@@ -5,66 +6,66 @@ import { SpeakWithNipButton } from "./ui/Button";
 import { Icon } from "./ui/Icon";
 import { Logo } from "./ui/Logo";
 import { siteChromeClassName } from "./ui/SiteChrome";
+import { cn } from "@/lib/cn";
+import {
+  mainNavItems,
+  offPlanDropdownItems,
+  propertiesDropdownItems,
+} from "@/lib/i18n/nav-config";
 
-const navItems = [
-  { label: "Home", href: "/" as const },
-  { label: "Sale", href: "/properties" as const },
-  { label: "Off-Plan", href: "/off-plan" as const },
-  { label: "Developers", href: "/developers" as const },
-  { label: "Areas", href: "/areas" as const },
-  { label: "Insights", href: "/insights" as const },
-  { label: "Concierge", href: "/concierge" as const },
-] as const;
+const navLinkClass =
+  "inline-flex items-center gap-1 text-[13px] font-medium leading-[18px] text-ink transition-colors hover:text-brand";
 
-const saleDropdownItems = [
-  { label: "Apartments", href: "/properties?type=Apartment" as const },
-  { label: "Townhouses", href: "/properties?type=Townhouse" as const },
-  { label: "Villas", href: "/properties?type=Villa" as const },
-] as const;
+function NavCaret() {
+  return <Icon name="chevronDown" className="h-2.5 w-2.5 shrink-0" />;
+}
 
-const offPlanDropdownItems = [
-  { label: "Apartments", href: "/off-plan?type=Apartment" as const },
-  { label: "Townhouses", href: "/off-plan?type=Townhouse" as const },
-  { label: "Villas", href: "/off-plan?type=Villa" as const },
-] as const;
+export async function Header() {
+  const t = await getTranslations("nav");
 
-export function Header() {
   return (
     <header
       id="site-header"
       className="relative z-40 w-full border border-line bg-white"
     >
       <div
-        className={`flex items-center justify-between py-5 lg:py-6 ${siteChromeClassName}`}
+        className={cn(
+          siteChromeClassName,
+          "flex items-center justify-between py-6",
+          "xl:grid xl:grid-cols-[1fr_auto_1fr] xl:items-center",
+        )}
       >
-        <LocalizedLink href="/" className="shrink-0">
+        <LocalizedLink href="/" className="shrink-0 xl:justify-self-start">
           <Logo className="shrink-0" />
         </LocalizedLink>
 
-        <nav className="hidden items-center gap-[28px] text-body-sm font-medium text-ink xl:flex">
-          {navItems.map((item) => {
-            if (item.label === "Sale" || item.label === "Off-Plan") {
+        <nav
+          className="hidden items-center gap-[28px] xl:flex xl:justify-self-center"
+          aria-label="Main"
+        >
+          {mainNavItems.map((item) => {
+            if ("dropdown" in item) {
               const dropdownItems =
-                item.label === "Sale" ? saleDropdownItems : offPlanDropdownItems;
+                item.dropdown === "properties"
+                  ? propertiesDropdownItems
+                  : offPlanDropdownItems;
+
               return (
-                <div key={item.label} className="relative group">
-                  <LocalizedLink
-                    href={item.href}
-                    className="inline-flex items-center gap-1 transition-colors hover:text-brand"
-                  >
-                    {item.label}
-                    <Icon name="chevronDown" className="h-2.5 w-2.5 shrink-0" />
+                <div key={item.key} className="group relative">
+                  <LocalizedLink href={item.href} className={navLinkClass}>
+                    {t(item.key)}
+                    <NavCaret />
                   </LocalizedLink>
-                  <div className="pointer-events-none absolute left-1/2 top-full z-30 hidden -translate-x-1/2 pt-3 group-hover:pointer-events-auto group-hover:block">
-                    <div className="min-w-[180px] rounded-[var(--radius-card)] border border-line bg-white py-3 shadow-[var(--shadow-card)]">
+                  <div className="pointer-events-none absolute start-1/2 top-full z-30 hidden -translate-x-1/2 pt-3 group-hover:pointer-events-auto group-hover:block rtl:translate-x-1/2">
+                    <div className="min-w-[180px] rounded-[var(--radius-field)] border border-line bg-white py-3 shadow-[var(--shadow-card)]">
                       <ul className="flex flex-col gap-1">
                         {dropdownItems.map((link) => (
-                          <li key={link.label}>
+                          <li key={link.key}>
                             <LocalizedLink
                               href={link.href}
                               className="block px-5 py-2 text-[13px] leading-[18px] text-ink hover:bg-sapphire-50 hover:text-brand"
                             >
-                              {link.label}
+                              {t(link.key)}
                             </LocalizedLink>
                           </li>
                         ))}
@@ -75,24 +76,25 @@ export function Header() {
               );
             }
 
+            if ("caret" in item && item.caret) {
+              return (
+                <LocalizedLink key={item.key} href={item.href} className={navLinkClass}>
+                  {t(item.key)}
+                  <NavCaret />
+                </LocalizedLink>
+              );
+            }
+
             return (
-              <LocalizedLink
-                key={item.label}
-                href={item.href}
-                className={
-                  item.label === "Home"
-                    ? "transition-colors hover:text-brand"
-                    : "inline-flex items-center gap-1 transition-colors hover:text-brand"
-                }
-              >
-                {item.label}
+              <LocalizedLink key={item.key} href={item.href} className={navLinkClass}>
+                {t(item.key)}
               </LocalizedLink>
             );
           })}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-4">
-          <LanguageSwitcher variant="header" />
+        <div className="flex shrink-0 items-center gap-4 xl:justify-self-end">
+          <LanguageSwitcher variant="header" className="hidden xl:flex" />
           <SpeakWithNipButton className="hidden sm:inline-flex" />
           <MobileNav />
         </div>

@@ -4,12 +4,15 @@ import {
   LegalContentSection,
   LegalHeroSection,
 } from "@/components/sections/LegalStorySections";
+import { resolveLocale } from "@/lib/i18n/helpers";
+import { localizedMetadata } from "@/lib/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy | NIP Reality",
-  description:
-    "How Novel Insight Property collects, uses and protects your information when you use our website and advisory services.",
-};
+type PageProps = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+  return localizedMetadata(resolveLocale(rawLocale), "legal");
+}
 
 export default function LegalPage() {
   return (

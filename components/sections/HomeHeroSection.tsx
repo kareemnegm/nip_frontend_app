@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
 import { Button } from "@/components/ui/Button";
@@ -5,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { siteHeroGutterX, siteMaxWidth } from "@/components/ui/SiteChrome";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
+import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { HOME_REL_URL } from "./home-editable";
@@ -13,6 +15,8 @@ const heroBlocks = pageBlockKeys.home.hero;
 
 export async function HomeHeroSection() {
   const locale = await getRequestLocale();
+  const t = await getTranslations({ locale, namespace: "home.hero" });
+  const tc = await getTranslations({ locale, namespace: "common" });
 
   return (
     <section
@@ -30,12 +34,12 @@ export async function HomeHeroSection() {
         className="absolute inset-0 opacity-20"
         imageClassName="object-cover"
       />
-      <Container className={cn("relative", siteMaxWidth, siteHeroGutterX)}>
+      <Container className={cn("relative text-start", siteMaxWidth, siteHeroGutterX)}>
         <EditableText
           relUrl={HOME_REL_URL}
           blockKey={heroBlocks.eyebrow}
           locale={locale}
-          placeholderContent="A Private Advisory View | Dubai Real Estate"
+          placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "eyebrow", locale)}
           placeholderTag="p"
           className="text-xs font-semibold uppercase leading-4 text-sapphire-200"
         />
@@ -43,7 +47,7 @@ export async function HomeHeroSection() {
           relUrl={HOME_REL_URL}
           blockKey={heroBlocks.title}
           locale={locale}
-          placeholderContent="For Those Who Expect More"
+          placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "title", locale)}
           placeholderTag="h1"
           className="mt-9 max-w-[620px] font-[family-name:var(--font-display)] text-5xl font-normal uppercase leading-[1.05] tracking-[-0.04em] sm:text-6xl lg:text-[64px] lg:leading-[72px]"
         />
@@ -51,21 +55,23 @@ export async function HomeHeroSection() {
           relUrl={HOME_REL_URL}
           blockKey={heroBlocks.body}
           locale={locale}
-          placeholderContent="Dubai real estate has no shortage of choice. The difference lies in knowing what deserves your attention. NIP brings together market insight, editorial perspective, and private advisory for clients who want to move with judgment."
+          placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "body", locale)}
           placeholderTag="p"
           className="mt-9 max-w-[452px] text-[13px] leading-[18px] text-white"
         />
         <div className="mt-9 flex max-w-[452px] flex-col items-stretch gap-3 sm:flex-row">
           <Button href="/insights" variant="accent" size="lg" className="w-full flex-1">
-            Read the Latest Insights <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
+            {t("readInsights")}{" "}
+            <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
           </Button>
           <Button
             href="/contact"
             variant="outlineInverse"
             size="lg"
-            className="w-full flex-1 border-platinum-400 text-[#d7dce3]"
+            className="w-full flex-1 gap-[3px] border-platinum-400 text-[#d7dce3]"
           >
-            Speak with NIP
+            <span className="font-semibold">{tc("speakWith")}</span>
+            <span className="font-[family-name:var(--font-logo)] font-medium">{tc("nip")}</span>
           </Button>
         </div>
       </Container>

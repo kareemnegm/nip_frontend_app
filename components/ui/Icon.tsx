@@ -10,6 +10,8 @@ export type IconName =
   | "calendar"
   | "check"
   | "chevronDown"
+  | "chevronLeft"
+  | "chevronRight"
   | "clock"
   | "close"
   | "currency"
@@ -64,6 +66,8 @@ const strokePaths: Record<
   ),
   check: <path d="M20 6 9 17l-5-5" />,
   chevronDown: <path d="m6 9 6 6 6-6" />,
+  chevronLeft: <path d="m15 18-6-6 6-6" />,
+  chevronRight: <path d="m9 18 6-6-6-6" />,
   clock: (
     <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 7v5l3.5 2" />
   ),

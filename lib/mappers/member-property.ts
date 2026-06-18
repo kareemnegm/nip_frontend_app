@@ -1,3 +1,4 @@
+import { resolveMediaUrl } from "@/lib/api/media-url";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
 import { formatAedPrice, type PropertyCardModel } from "@/lib/mappers/property";
@@ -49,7 +50,7 @@ export function mapMemberPropertyToCard(
     handover: undefined,
     meta: meta.length > 0 ? meta : ["Details on request"],
     badges: badges.length > 0 ? badges : ["Property"],
-    imageUrl: property.primaryImage ?? undefined,
+    imageUrl: resolveMediaUrl(property.primaryImage),
   };
 }
 
@@ -69,7 +70,7 @@ export function mapMemberProjectToCard(
     handover: project.handoverQuarter ?? undefined,
     meta: project.handoverQuarter ? [project.handoverQuarter] : ["Details on request"],
     badges,
-    imageUrl: project.primaryImage ?? undefined,
+    imageUrl: resolveMediaUrl(project.primaryImage),
   };
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 
@@ -14,6 +15,7 @@ export function MemberSignOutButton({
   redirectTo = "/private-office",
 }: MemberSignOutButtonProps) {
   const router = useRouter();
+  const t = useTranslations("common");
   const [loading, setLoading] = useState(false);
 
   async function onSignOut() {
@@ -34,7 +36,7 @@ export function MemberSignOutButton({
       disabled={loading}
       onClick={onSignOut}
     >
-      {loading ? "Signing out…" : "Sign out"}
+      {loading ? t("signingOut") : t("signOut")}
     </Button>
   );
 }

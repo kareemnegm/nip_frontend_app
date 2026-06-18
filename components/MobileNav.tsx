@@ -1,35 +1,23 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { LocalizedLink } from "./LocalizedLink";
 import { SpeakWithNipButton } from "./ui/Button";
 import { Icon } from "./ui/Icon";
 import { Logo } from "./ui/Logo";
+import {
+  mainNavItems,
+  offPlanDropdownItems,
+  propertiesDropdownItems,
+} from "@/lib/i18n/nav-config";
 
-const navItems = [
-  { label: "Home", href: "/" as const },
-  { label: "Sale", href: "/properties" as const },
-  { label: "Off-Plan", href: "/off-plan" as const },
-  { label: "Developers", href: "/developers" as const },
-  { label: "Areas", href: "/areas" as const },
-  { label: "Insights", href: "/insights" as const },
-  { label: "Concierge", href: "/concierge" as const },
-] as const;
-
-const saleDropdownItems = [
-  { label: "Apartments", href: "/properties?type=Apartment" as const },
-  { label: "Townhouses", href: "/properties?type=Townhouse" as const },
-  { label: "Villas", href: "/properties?type=Villa" as const },
-] as const;
-
-const offPlanDropdownItems = [
-  { label: "Apartments", href: "/off-plan?type=Apartment" as const },
-  { label: "Townhouses", href: "/off-plan?type=Townhouse" as const },
-  { label: "Villas", href: "/off-plan?type=Villa" as const },
-] as const;
+const navLinkClass =
+  "rounded-[var(--radius-field)] px-3 py-3 text-base font-semibold text-ink hover:bg-sapphire-50 hover:text-brand";
 
 export function MobileNav() {
+  const t = useTranslations("nav");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -40,11 +28,11 @@ export function MobileNav() {
   }, [open]);
 
   return (
-    <div className="lg:hidden">
+    <div className="xl:hidden">
       <button
         type="button"
         aria-expanded={open}
-        aria-label={open ? "Close menu" : "Open menu"}
+        aria-label={open ? t("closeMenu") : t("openMenu")}
         className="inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-field)] border border-line text-brand"
         onClick={() => setOpen((value) => !value)}
       >
@@ -60,7 +48,7 @@ export function MobileNav() {
               </LocalizedLink>
               <button
                 type="button"
-                aria-label="Close menu"
+                aria-label={t("closeMenu")}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-field)] border border-line text-brand"
                 onClick={() => setOpen(false)}
               >
@@ -69,28 +57,31 @@ export function MobileNav() {
             </div>
 
             <nav className="mt-8 flex flex-col gap-1">
-              {navItems.map((item) => {
-                if (item.label === "Sale" || item.label === "Off-Plan") {
+              {mainNavItems.map((item) => {
+                if ("dropdown" in item) {
                   const dropdownItems =
-                    item.label === "Sale" ? saleDropdownItems : offPlanDropdownItems;
+                    item.dropdown === "properties"
+                      ? propertiesDropdownItems
+                      : offPlanDropdownItems;
+
                   return (
-                    <div key={item.label} className="space-y-1">
+                    <div key={item.key} className="space-y-1">
                       <LocalizedLink
                         href={item.href}
-                        className="rounded-[var(--radius-field)] px-3 py-3 text-base font-semibold text-ink hover:bg-sapphire-50 hover:text-brand"
+                        className={navLinkClass}
                         onClick={() => setOpen(false)}
                       >
-                        {item.label}
+                        {t(item.key)}
                       </LocalizedLink>
-                      <div className="ms-3 flex flex-col gap-[2px] border-l border-sapphire-100 pl-3">
+                      <div className="ms-3 flex flex-col gap-[2px] border-s border-sapphire-100 ps-3">
                         {dropdownItems.map((link) => (
                           <LocalizedLink
-                            key={link.label}
+                            key={link.key}
                             href={link.href}
                             className="rounded-[var(--radius-field)] px-2 py-[6px] text-[13px] font-medium text-ink-secondary hover:bg-sapphire-50 hover:text-brand"
                             onClick={() => setOpen(false)}
                           >
-                            {link.label}
+                            {t(link.key)}
                           </LocalizedLink>
                         ))}
                       </div>
@@ -100,12 +91,12 @@ export function MobileNav() {
 
                 return (
                   <LocalizedLink
-                    key={item.label}
+                    key={item.key}
                     href={item.href}
-                    className="rounded-[var(--radius-field)] px-3 py-3 text-base font-semibold text-ink hover:bg-sapphire-50 hover:text-brand"
+                    className={navLinkClass}
                     onClick={() => setOpen(false)}
                   >
-                    {item.label}
+                    {t(item.key)}
                   </LocalizedLink>
                 );
               })}

@@ -2,6 +2,9 @@ import type { InsightCardProps } from "@/components/ui/Cards";
 import { InsightCard } from "@/components/ui/Cards";
 import { Container } from "@/components/ui/Container";
 import { CatalogEmptyState } from "@/components/ui/ApiPagination";
+import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
+import { getRequestLocale } from "@/lib/i18n/server";
+import { getTranslations } from "next-intl/server";
 import { homeEditable } from "./home-editable";
 import { SectionHeading } from "./SectionHeading";
 
@@ -10,12 +13,15 @@ export async function FeaturedInsightSection({
 }: {
   insights?: InsightCardProps[];
 }) {
+  const locale = await getRequestLocale();
+  const t = await getTranslations({ locale, namespace: "home.empty" });
+
   return (
     <section className="bg-white py-16 sm:py-20">
       <Container className="space-y-10">
         <SectionHeading
-          title="Featured Insight"
-          description="A closer look at the signals, locations, and ownership decisions shaping Dubai's next chapter."
+          title={await getCmsPlaceholder("placeholders.home.featuredInsight", "title", locale)}
+          description={await getCmsPlaceholder("placeholders.home.featuredInsight", "desc", locale)}
           editable={{
             relUrl: homeEditable.relUrl,
             titleKey: homeEditable.featuredInsight.titleKey,
@@ -23,7 +29,7 @@ export async function FeaturedInsightSection({
           }}
         />
         {insights.length === 0 ? (
-          <CatalogEmptyState message="Insights will appear here once articles are published." />
+          <CatalogEmptyState message={t("insights")} />
         ) : (
           <div className="grid gap-6 xl:grid-cols-3">
             {insights.map((insight, index) => (

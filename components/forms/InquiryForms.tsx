@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Checkbox, PhoneInput, Textarea, TextInput } from "@/components/ui/FormControls";
@@ -160,6 +161,9 @@ export function PropertyInquiryForm({
 }) {
   const locale = useLocale().locale;
   const router = useRouter();
+  const tForms = useTranslations("forms");
+  const tCatalog = useTranslations("catalog");
+  const tCommon = useTranslations("common");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -217,12 +221,18 @@ export function PropertyInquiryForm({
   return (
     <form className="space-y-4" onSubmit={onSubmit}>
       <input type="text" name="company" value={company} onChange={(e) => setCompany(e.target.value)} className="hidden" tabIndex={-1} autoComplete="off" aria-hidden />
-      <TextInput label="Name" value={name} onChange={(e) => setName(e.target.value)} error={errors.name} required />
-      <TextInput label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email} required />
-      <PhoneInput value={phone} onChange={(e) => setPhone(e.target.value)} error={errors.phone} />
-      <Textarea label="Message" value={message} onChange={(e) => setMessage(e.target.value)} error={errors.message} />
+      <TextInput label={tForms("name")} value={name} onChange={(e) => setName(e.target.value)} error={errors.name} required />
+      <TextInput label={tForms("email")} type="email" value={email} onChange={(e) => setEmail(e.target.value)} error={errors.email} required />
+      <PhoneInput
+        label={tForms("phoneNumber")}
+        placeholder={tForms("phonePlaceholder")}
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+        error={errors.phone}
+      />
+      <Textarea label={tForms("message")} value={message} onChange={(e) => setMessage(e.target.value)} error={errors.message} />
       <Button type="submit" className="w-full justify-center" disabled={loading}>
-        {loading ? "Sending…" : "Request Viewing"}
+        {loading ? tCommon("sending") : tCatalog("requestViewing")}
       </Button>
     </form>
   );
