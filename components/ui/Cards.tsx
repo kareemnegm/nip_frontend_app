@@ -388,13 +388,15 @@ export function CommunityCard({
   imageUrl,
   className,
 }: CommunityCardProps & { imageUrl?: string }) {
+  const t = useTranslations("catalog");
   const leftFacts = facts.slice(0, 2);
   const rightFacts = facts.slice(2, 4);
 
-  return (
+  const card = (
     <article
       className={cn(
-        "flex h-full min-h-[440px] flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)]",
+        "flex h-full min-h-[440px] flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
+        href && "cursor-pointer",
         className,
       )}
     >
@@ -440,15 +442,26 @@ export function CommunityCard({
           <span className="rounded-[2px] bg-basalt-50 px-2.5 py-1 text-[11px] font-medium leading-[14px] text-ink-secondary">
             {projectCount}
           </span>
-          <Button
-            href={href}
-            variant="link"
-            className="shrink-0 text-xs font-semibold leading-4 text-accent"
-          >
-            Explore Area <Icon name="arrowRight" className="h-4 w-4" />
-          </Button>
+          {href ? (
+            <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold leading-4 text-accent">
+              {t("exploreArea")} <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
+            </span>
+          ) : null}
         </div>
       </div>
     </article>
   );
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2"
+      >
+        {card}
+      </Link>
+    );
+  }
+
+  return card;
 }
