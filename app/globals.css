@@ -133,30 +133,41 @@ textarea {
   font: inherit;
 }
 
-/* T12 · Insight Article — CMS body typography (Figma 1525:27570) */
+/* T12 · Insight Article — CMS body typography (Figma 1525:27591) */
+/* dangerouslySetInnerHTML sits directly on .insight-article-body;
+   its direct children are the CMS content blocks. */
 .insight-article-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   color: var(--color-ink);
 }
 
-.insight-article-body > div > *:first-child,
-.insight-article-body > *:first-child {
+/* When CMS wraps everything in a single outer <div>, unwrap it
+   so the inner blocks also get the 24px flex gap. */
+.insight-article-body > div {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.insight-article-body > *:first-child,
+.insight-article-body > div > *:first-child {
   margin-top: 0;
 }
 
+/* Figma: Archivo Regular 17px / 28px / #171E2D */
 .insight-article-body p {
-  max-width: 720px;
-  margin-inline: auto;
-  margin-bottom: 24px;
+  margin-bottom: 0;
   font-size: 17px;
   line-height: 28px;
   color: var(--color-ink);
 }
 
+/* Figma: Didot 30px / 38px / -1.2px tracking / uppercase / #0B3268 */
 .insight-article-body h2 {
-  max-width: 720px;
-  margin-inline: auto;
-  margin-top: 8px;
-  margin-bottom: 16px;
+  margin-top: 0;
+  margin-bottom: 0;
   font-family: var(--font-display);
   font-size: 30px;
   font-weight: 400;
@@ -168,6 +179,8 @@ textarea {
 
 .insight-article-body h3,
 .insight-article-body h4 {
+  margin-top: 0;
+  margin-bottom: 0;
   font-family: var(--font-display);
   font-size: 22px;
   font-weight: 400;
@@ -177,10 +190,9 @@ textarea {
   color: var(--color-brand);
 }
 
+/* Figma: 3px left border #3778CE / pl-28 / py-8 / Archivo Medium 13px / #0E4286 */
 .insight-article-body blockquote {
-  max-width: 720px;
-  margin-inline: auto;
-  margin-block: 24px;
+  margin-block: 0;
   border-left: 3px solid var(--color-accent);
   padding-left: 28px;
   padding-block: 8px;
@@ -190,11 +202,10 @@ textarea {
   color: var(--color-sapphire-600);
 }
 
+/* Figma: inline image + caption, gap-8 between them */
 .insight-article-body figure {
   display: flex;
-  max-width: 720px;
-  margin-inline: auto;
-  margin-block: 24px;
+  margin-block: 0;
   flex-direction: column;
   gap: 8px;
 }
@@ -207,6 +218,11 @@ textarea {
   border-radius: var(--radius-card);
 }
 
+.insight-article-body figure img {
+  height: 380px;
+  object-fit: cover;
+}
+
 .insight-article-body figcaption {
   font-size: 12px;
   line-height: 16px;
@@ -215,7 +231,7 @@ textarea {
 
 .insight-article-body ul,
 .insight-article-body ol {
-  margin: 0 0 16px;
+  margin: 0;
   padding-left: 1.25rem;
   font-size: 15px;
   line-height: 24px;
@@ -241,7 +257,7 @@ textarea {
 /* CMS comparison tables / strategy cards */
 .insight-article-body table {
   width: 100%;
-  margin-block: 32px;
+  margin-block: 0;
   border-collapse: separate;
   border-spacing: 16px;
 }
@@ -338,13 +354,13 @@ textarea {
 .insight-article-body div[style*="display:flex"] {
   display: flex !important;
   gap: 16px;
-  margin-block: 32px;
+  margin-block: 0;
 }
 
 /* CMS centered callout blocks below card grids */
 .insight-article-body div[style*="text-align: center"],
 .insight-article-body div[style*="text-align:center"] {
-  margin-block: 32px;
+  margin-block: 0;
   padding: 32px 24px 36px;
   border-radius: var(--radius-card);
   background: var(--color-surface);
@@ -376,7 +392,7 @@ textarea {
   width: 100%;
   max-width: 720px;
   margin-inline: auto;
-  margin-block: 24px;
+  margin-block: 0;
   aspect-ratio: 16 / 9;
   border: 0;
   border-radius: var(--radius-card);

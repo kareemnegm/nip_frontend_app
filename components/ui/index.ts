@@ -38,6 +38,8 @@ export type {
 export { Icon } from "./Icon";
 export type { IconName, IconProps } from "./Icon";
 export { InsightCategoryFilters } from "./InsightCategoryFilters";
+export { FeaturedInsightCard } from "./FeaturedInsightCard";
+export type { FeaturedInsightCardProps } from "./FeaturedInsightCard";
 export { ImagePlaceholder } from "./ImagePlaceholder";
 export type { ImagePlaceholderProps } from "./ImagePlaceholder";
 export { ConsultationRequestForm, ContactRequestForm, PrivateAdvisoryForm } from "./LeadForms";

@@ -2,6 +2,7 @@ import "server-only";
 
 import Image from "next/image";
 import { getBlocksForPage } from "@/lib/api/blocks";
+import { resolveMediaUrl } from "@/lib/api/media-url";
 import type { Locale } from "@/lib/i18n/config";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { cn } from "@/lib/cn";
@@ -38,7 +39,8 @@ export async function EditableImage({
   const blocks = await getBlocksForPage(relUrl, locale);
   const block = blocks[blockKey];
   const dbUrl = block?.content?.trim() ?? "";
-  const src = dbUrl || placeholderUrl;
+  const resolved = resolveMediaUrl(dbUrl);
+  const src = resolved ?? (dbUrl || placeholderUrl);
 
   return (
     <div className={cn("relative overflow-hidden", className)}>

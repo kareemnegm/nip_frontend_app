@@ -12,7 +12,12 @@ import {
 import { getBlogBySlug, getBlogs } from "@/lib/api/blogs";
 import { resolveBlogFeaturedImage } from "@/lib/api/media-url";
 import { resolveLocale } from "@/lib/i18n/helpers";
-import { mapBlogToInsightCard } from "@/lib/mappers/blog";
+import {
+  formatBlogReadTime,
+  mapBlogToInsightCard,
+  resolveBlogAuthor,
+  resolveBlogExcerpt,
+} from "@/lib/mappers/blog";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -25,7 +30,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!blog) return { title: "Insight | NIP Reality" };
   return {
     title: `${blog.title} | NIP Reality`,
-    description: blog.excerpt ?? blog.content?.slice(0, 160),
+    description: resolveBlogExcerpt(blog) || blog.content?.slice(0, 160),
   };
 }
 
@@ -52,15 +57,16 @@ export default async function InsightArticlePage({ params }: PageProps) {
           locale={locale}
           category={blog.category?.name ?? "Insight"}
           title={blog.title}
-          excerpt={blog.excerpt}
-          author={blog.author_name}
+          excerpt={resolveBlogExcerpt(blog)}
+          author={resolveBlogAuthor(blog)}
           publishedAt={blog.created_at}
-          readTime={blog.read_time}
+          readTime={formatBlogReadTime(blog.read_time)}
         />
 
-        {featuredImage ? (
-          <InsightArticleFeaturedImage src={featuredImage} alt={blog.title} />
-        ) : null}
+        <InsightArticleFeaturedImage
+          src={featuredImage}
+          alt={blog.title}
+        />
 
         <InsightArticleBody html={body} />
         <InsightArticleAdvisoryCta locale={locale} />

@@ -26,7 +26,7 @@ const partnerLogoSlots = [
     blockKey: aboutBlocks.partners.logo1,
     placeholderUrl: "/logos/about-partner-meraas.png",
     placeholderAlt: "Meraas",
-    wrapperClassName: "flex h-[33px] w-[124px] items-center justify-center",
+    wrapperClassName: "flex h-[32.665px] w-[124px] items-center justify-center",
     width: 124,
     height: 33,
   },
@@ -34,7 +34,7 @@ const partnerLogoSlots = [
     blockKey: aboutBlocks.partners.logo2,
     placeholderUrl: "/logos/about-partner-hh.png",
     placeholderAlt: "H&H",
-    wrapperClassName: "flex h-[38px] w-[71px] items-center justify-center",
+    wrapperClassName: "flex h-[38px] w-[70.59px] items-center justify-center",
     width: 71,
     height: 38,
   },
@@ -42,7 +42,7 @@ const partnerLogoSlots = [
     blockKey: aboutBlocks.partners.logo3,
     placeholderUrl: "/logos/about-partner-emaar.png",
     placeholderAlt: "Emaar",
-    wrapperClassName: "flex h-[24px] w-[120px] items-center justify-center",
+    wrapperClassName: "flex h-[24.327px] w-[120px] items-center justify-center",
     width: 120,
     height: 24,
   },
@@ -50,7 +50,7 @@ const partnerLogoSlots = [
     blockKey: aboutBlocks.partners.logo4,
     placeholderUrl: "/logos/about-partner-aldar.png",
     placeholderAlt: "Aldar",
-    wrapperClassName: "flex h-[52px] w-[52px] items-center justify-center",
+    wrapperClassName: "flex size-[52px] items-center justify-center",
     width: 52,
     height: 52,
   },
@@ -58,7 +58,7 @@ const partnerLogoSlots = [
     blockKey: aboutBlocks.partners.logo5,
     placeholderUrl: "/logos/about-partner-omniyat.png",
     placeholderAlt: "Omniyat",
-    wrapperClassName: "flex h-[18px] w-[120px] items-center justify-center",
+    wrapperClassName: "flex h-[17.6px] w-[120px] items-center justify-center",
     width: 120,
     height: 18,
   },
@@ -255,18 +255,23 @@ export async function AboutPartnersStrip() {
         <div className="flex flex-col items-center gap-10">
           <div className="flex flex-wrap items-center justify-center gap-10">
             {partnerLogoSlots.map((slot) => (
-              <div key={slot.blockKey} className={slot.wrapperClassName}>
-                <EditableImage
-                  relUrl={aboutBlocks.relUrl}
-                  blockKey={slot.blockKey}
-                  locale={locale}
-                  placeholderUrl={slot.placeholderUrl}
-                  placeholderAlt={slot.placeholderAlt}
-                  width={slot.width}
-                  height={slot.height}
-                  className="relative h-full w-full"
-                  imageClassName="h-full w-full object-contain"
-                />
+              <div
+                key={slot.blockKey}
+                className="flex flex-col items-center justify-center p-1"
+              >
+                <div className={slot.wrapperClassName}>
+                  <EditableImage
+                    relUrl={aboutBlocks.relUrl}
+                    blockKey={slot.blockKey}
+                    locale={locale}
+                    placeholderUrl={slot.placeholderUrl}
+                    placeholderAlt={slot.placeholderAlt}
+                    width={slot.width}
+                    height={slot.height}
+                    className="relative h-full w-full"
+                    imageClassName="h-full w-full object-contain"
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -280,7 +285,7 @@ export async function AboutPartnersStrip() {
               locale,
             )}
             placeholderTag="p"
-            className="whitespace-pre-line text-center text-body-xs text-basalt-200"
+            className="whitespace-pre-line text-center text-body-xs leading-4 text-basalt-200"
           />
         </div>
       </div>

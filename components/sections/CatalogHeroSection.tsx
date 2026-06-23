@@ -22,6 +22,7 @@ type CatalogHeroSectionProps = {
   children?: React.ReactNode;
   className?: string;
   innerClassName?: string;
+  descriptionClassName?: string;
 };
 
 export async function CatalogHeroSection({
@@ -31,6 +32,7 @@ export async function CatalogHeroSection({
   children,
   className,
   innerClassName,
+  descriptionClassName,
 }: CatalogHeroSectionProps) {
   const locale = localeProp ?? (await getRequestLocale());
   const blocks = pageBlockKeys[page];
@@ -64,7 +66,10 @@ export async function CatalogHeroSection({
                 locale={locale}
                 placeholderContent={placeholders.description}
                 placeholderTag="p"
-                className="max-w-[672px] text-body-sm text-ink"
+                className={cn(
+                  "max-w-[672px] text-body-sm text-ink",
+                  descriptionClassName,
+                )}
               />
             ) : null}
           </div>

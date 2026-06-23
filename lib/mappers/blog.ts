@@ -8,24 +8,46 @@ export type InsightCardModel = {
   title: string;
   excerpt: string;
   readTime?: string;
+  author?: string;
   href: string;
   imageUrl?: string;
 };
+
+const DEFAULT_AUTHOR = "NIP Advisory";
+
+export function resolveBlogAuthor(blog: ApiBlog): string {
+  return blog.author ?? blog.author_name ?? DEFAULT_AUTHOR;
+}
+
+export function formatBlogReadTime(
+  readTime: ApiBlog["read_time"],
+): string {
+  if (readTime == null || readTime === "") return "";
+  if (typeof readTime === "number") return `${readTime} min read`;
+  if (/\bmin\b/i.test(readTime)) return readTime;
+  const parsed = Number.parseInt(String(readTime), 10);
+  if (!Number.isNaN(parsed)) return `${parsed} min read`;
+  return String(readTime);
+}
+
+export function resolveBlogExcerpt(blog: ApiBlog): string {
+  if (blog.excerpt?.trim()) return blog.excerpt.trim();
+  const raw = blog.body ?? blog.content ?? blog.source_code ?? "";
+  const text = raw.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  if (!text) return "";
+  return text.length > 200 ? `${text.slice(0, 200).trimEnd()}…` : text;
+}
 
 export function mapBlogToInsightCard(
   blog: ApiBlog,
   locale: Locale,
 ): InsightCardModel {
-  const excerpt =
-    blog.excerpt ??
-    (blog.content ? blog.content.replace(/<[^>]+>/g, "").slice(0, 160) : "") ??
-    "";
-
   return {
     category: blog.category?.name ?? "Insight",
     title: blog.title,
-    excerpt,
-    readTime: blog.read_time ?? "5 min read",
+    excerpt: resolveBlogExcerpt(blog),
+    readTime: formatBlogReadTime(blog.read_time) || "5 min read",
+    author: resolveBlogAuthor(blog),
     href: localizedHref(locale, `/insights/${blog.slug}`),
     imageUrl: resolveBlogFeaturedImage(blog),
   };

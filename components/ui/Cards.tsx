@@ -53,6 +53,7 @@ export type InsightCardProps = BaseCardProps & {
   title: string;
   excerpt: string;
   readTime?: string;
+  author?: string;
   href?: string;
   imageUrl?: string;
 };
@@ -258,7 +259,7 @@ export function OffPlanCard({
             </p>
           </div>
         </div>
-        <div className="mt-6 space-y-4">
+        <div className="mt-auto space-y-4">
           <div className="flex items-start justify-between gap-4 pt-2">
             <div>
               <p className={cardTypography.startingFrom}>{t("handoverLabel")}</p>
@@ -304,6 +305,7 @@ export function InsightCard({
   title,
   excerpt,
   readTime = "Read time not available",
+  author = "NIP Advisory",
   href,
   imageUrl,
   className,
@@ -317,7 +319,7 @@ export function InsightCard({
       data-reveal
       className={cn(
         cardTypography.shell,
-        "min-h-[440px] w-full",
+        "min-h-[438px] w-full",
         href && "cursor-pointer",
         className,
       )}
@@ -338,11 +340,11 @@ export function InsightCard({
       )}
       <div className={cardTypography.bodyInsight}>
         <p className={cardTypography.category}>{category}</p>
-        <h3 className={cn("mt-4", cardTypography.title)}>{title}</h3>
-        <p className={cn("mt-4", cardTypography.excerpt)}>{excerpt}</p>
-        <div className="mt-5 flex items-center justify-between gap-4">
+        <h3 className={cardTypography.title}>{title}</h3>
+        <p className={cardTypography.excerpt}>{excerpt}</p>
+        <div className="flex items-center justify-between gap-4 pt-1">
           <span className={cardTypography.metaMuted}>
-            {readTime} | NIP Advisory
+            {readTime} | {author}
           </span>
           {href ? (
             <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
@@ -490,7 +492,7 @@ export function CommunityCard({
             </div>
           </div>
         </div>
-        <div className="mt-6 flex items-center justify-between gap-4">
+        <div className="mt-auto flex items-center justify-between gap-4">
           <span className={cardTypography.badge}>{projectCount}</span>
           {href ? (
             <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>

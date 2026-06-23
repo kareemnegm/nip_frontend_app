@@ -56,15 +56,22 @@ export function AreaSectionHeading({
   eyebrow,
   title,
   className,
+  titleClassName,
 }: {
   eyebrow: string;
   title: string;
   className?: string;
+  titleClassName?: string;
 }) {
   return (
     <div className={cn("flex flex-col items-center gap-4 text-center", className)}>
       <p className="text-overline font-semibold text-accent">{eyebrow}</p>
-      <h2 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand">
+      <h2
+        className={cn(
+          "font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand",
+          titleClassName,
+        )}
+      >
         {title}
       </h2>
     </div>

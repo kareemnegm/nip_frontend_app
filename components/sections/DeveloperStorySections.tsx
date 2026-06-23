@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { SpeakWithNipButton } from "@/components/ui/Button";
 import type { IconName } from "@/components/ui/Icon";
@@ -11,10 +12,14 @@ import { cn } from "@/lib/cn";
 import Link from "next/link";
 import { AreaAboutSection, AreaSectionHeading } from "./AreaStorySections";
 
+const developerSectionTitleClassName =
+  "text-[32px] leading-8 tracking-[-0.02em]";
+
 export type DeveloperHeroProps = {
   eyebrow?: string;
   title: string;
   description: string;
+  logoUrl?: string;
   logoText?: string;
 };
 
@@ -22,13 +27,13 @@ export function DeveloperHero({
   eyebrow = "MASTER DEVELOPER | DUBAI",
   title,
   description,
-  logoText = "EMAAR",
+  logoUrl,
+  logoText,
 }: DeveloperHeroProps) {
+  const fallbackLogoText = logoText ?? title.split(" ")[0]?.toUpperCase() ?? title;
+
   return (
-    <section
-      data-site-hero
-      className="bg-surface-muted pt-16 pb-9"
-    >
+    <section data-site-hero className="bg-surface-muted pt-[64px] pb-9">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div
           className={cn(
@@ -41,18 +46,34 @@ export function DeveloperHero({
             <h1 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand">
               {title}
             </h1>
-            <p className="text-body-sm text-ink-tertiary">{description}</p>
+            <p className="max-w-[558px] text-[13px] leading-[18px] text-ink-tertiary">
+              {description}
+            </p>
           </div>
 
           <div className="flex flex-col items-start lg:items-end">
-            <div className="pb-10">
-              <p
-                aria-hidden
-                className="font-[family-name:var(--font-display)] text-[27px] uppercase leading-none tracking-[0.12em] text-brand"
-              >
-                {logoText}
-              </p>
-              <span className="sr-only">{logoText} logo</span>
+            <div className="flex w-full max-w-[134px] flex-col items-center pb-10">
+              {logoUrl ? (
+                <div className="relative h-[27px] w-full">
+                  <Image
+                    src={logoUrl}
+                    alt={`${title} logo`}
+                    fill
+                    className="object-contain object-left lg:object-right"
+                    sizes="134px"
+                  />
+                </div>
+              ) : (
+                <p
+                  aria-hidden
+                  className="font-[family-name:var(--font-display)] text-[27px] uppercase leading-none tracking-[0.12em] text-brand"
+                >
+                  {fallbackLogoText}
+                </p>
+              )}
+              {!logoUrl ? (
+                <span className="sr-only">{fallbackLogoText} logo</span>
+              ) : null}
             </div>
             <SpeakWithNipButton href="/contact" />
           </div>
@@ -89,12 +110,13 @@ export function DeveloperPortfolioSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="bg-white py-16">
+    <section className="bg-white pt-16 pb-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className={sitePageInnerClassName}>
           <AreaSectionHeading
             eyebrow="PORTFOLIO"
             title={`Projects by ${developerName}`}
+            titleClassName={developerSectionTitleClassName}
           />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {children}
@@ -116,12 +138,13 @@ export async function DeveloperCommunitiesSection({
   const t = await getTranslations({ locale, namespace: "pages.developers" });
 
   return (
-    <section className="bg-white py-16">
+    <section className="bg-white pt-16 pb-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className={sitePageInnerClassName}>
           <AreaSectionHeading
             eyebrow={t("communities")}
             title={`Where ${developerName} builds`}
+            titleClassName={developerSectionTitleClassName}
           />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {children}
@@ -142,7 +165,7 @@ export function DeveloperAdvisoryCta({ developerName }: { developerName: string 
             "flex flex-col items-center gap-10 text-center",
           )}
         >
-          <div className="space-y-4">
+          <div className="flex flex-col items-center gap-4">
             <p className="text-overline font-semibold text-accent-on-dark">
               ADVISORY
             </p>

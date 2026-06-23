@@ -14,10 +14,14 @@ export type ApiBlog = {
   body?: string | null;
   featured_image?: string | null;
   featured_image_url?: string | null;
+  /** Backend list/detail field (preferred). */
+  author?: string | null;
   author_name?: string | null;
+  author_image?: string | null;
   author_image_url?: string | null;
   category?: ApiBlogCategory | null;
-  read_time?: string | null;
+  /** API returns minutes as a number; legacy string values supported. */
+  read_time?: string | number | null;
   views?: number;
   created_at?: string;
 };
