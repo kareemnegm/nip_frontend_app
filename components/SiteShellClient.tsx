@@ -1,7 +1,7 @@
 "use client";
 
 import { LocalizedLink } from "./LocalizedLink";
-import { MotionRoot, ImmersiveLayer } from "./motion";
+import { MotionRoot } from "./motion";
 import { StickyCta } from "./StickyCta";
 import { Logo } from "./ui/Logo";
 import { siteChromeClassName } from "./ui/SiteChrome";
@@ -15,7 +15,6 @@ export function SiteShellClient({ children }: SiteShellClientProps) {
   return (
     <div className="flex min-h-screen flex-col bg-background text-ink">
       <MotionRoot />
-      <ImmersiveLayer />
       <StickyCta />
       <header
         id="site-header"
