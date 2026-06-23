@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
+import { HeroTitleRevealSlot } from "@/components/motion";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { siteHeroGutterX, siteMaxWidth } from "@/components/ui/SiteChrome";
@@ -23,42 +24,50 @@ export async function HomeHeroSection() {
       data-site-hero
       className="relative overflow-hidden bg-[linear-gradient(158deg,#254672_0%,#081a33_72%)] py-24 text-white sm:py-32 lg:py-[200px]"
     >
-      <EditableImage
-        relUrl={HOME_REL_URL}
-        blockKey={heroBlocks.image}
-        locale={locale}
-        placeholderUrl=""
-        placeholderAlt=""
-        fill
-        priority
-        className="absolute inset-0 opacity-20"
-        imageClassName="object-cover"
-      />
+      <div data-parallax className="absolute inset-0">
+        <EditableImage
+          relUrl={HOME_REL_URL}
+          blockKey={heroBlocks.image}
+          locale={locale}
+          placeholderUrl=""
+          placeholderAlt=""
+          fill
+          priority
+          className="absolute inset-0 opacity-20"
+          imageClassName="object-cover"
+        />
+      </div>
       <Container className={cn("relative text-start", siteMaxWidth, siteHeroGutterX)}>
-        <EditableText
-          relUrl={HOME_REL_URL}
-          blockKey={heroBlocks.eyebrow}
-          locale={locale}
-          placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "eyebrow", locale)}
-          placeholderTag="p"
-          className="text-xs font-semibold uppercase leading-4 text-sapphire-200"
-        />
-        <EditableText
-          relUrl={HOME_REL_URL}
-          blockKey={heroBlocks.title}
-          locale={locale}
-          placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "title", locale)}
-          placeholderTag="h1"
-          className="mt-9 max-w-[620px] font-[family-name:var(--font-display)] text-5xl font-normal uppercase leading-[1.05] tracking-[-0.04em] sm:text-6xl lg:text-[64px] lg:leading-[72px]"
-        />
-        <EditableText
-          relUrl={HOME_REL_URL}
-          blockKey={heroBlocks.body}
-          locale={locale}
-          placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "body", locale)}
-          placeholderTag="p"
-          className="mt-9 max-w-[452px] text-[13px] leading-[18px] text-white"
-        />
+        <div data-hero-eyebrow>
+          <EditableText
+            relUrl={HOME_REL_URL}
+            blockKey={heroBlocks.eyebrow}
+            locale={locale}
+            placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "eyebrow", locale)}
+            placeholderTag="p"
+            className="text-xs font-semibold uppercase leading-4 text-sapphire-200"
+          />
+        </div>
+        <HeroTitleRevealSlot>
+          <EditableText
+            relUrl={HOME_REL_URL}
+            blockKey={heroBlocks.title}
+            locale={locale}
+            placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "title", locale)}
+            placeholderTag="h1"
+            className="mt-9 max-w-[620px] font-[family-name:var(--font-display)] text-5xl font-normal uppercase leading-[1.05] tracking-[-0.04em] sm:text-6xl lg:text-[64px] lg:leading-[72px]"
+          />
+        </HeroTitleRevealSlot>
+        <div data-hero-sub>
+          <EditableText
+            relUrl={HOME_REL_URL}
+            blockKey={heroBlocks.body}
+            locale={locale}
+            placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "body", locale)}
+            placeholderTag="p"
+            className="mt-9 max-w-[452px] text-[13px] leading-[18px] text-white"
+          />
+        </div>
         <div className="mt-9 flex max-w-[452px] flex-col items-stretch gap-3 sm:flex-row">
           <Button href="/insights" variant="accent" size="lg" className="w-full flex-1">
             {t("readInsights")}{" "}

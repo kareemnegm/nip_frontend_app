@@ -39,7 +39,7 @@ export async function CatalogHeroSection({
   return (
     <section data-site-hero className={cn("bg-surface-muted pt-16 pb-9", className)}>
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div className={cn(sitePageInnerClassName, "space-y-6", innerClassName)}>
+        <div data-reveal className={cn(sitePageInnerClassName, "space-y-6", innerClassName)}>
           <div className="space-y-2">
             <EditableText
               relUrl={blocks.relUrl}

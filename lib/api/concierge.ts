@@ -14,10 +14,8 @@ import type {
   LeadCaptureState,
 } from "@/types/api/concierge";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://127.0.0.1:8000";
-
-const API_V1 = `${API_BASE}/api/v1`;
+/** Same-origin proxy — avoids mixed-content when the site is HTTPS. */
+const CONCIERGE_API = "/api/concierge";
 
 type FetchOptions = {
   locale?: Locale;
@@ -68,7 +66,7 @@ async function conciergeFetch<T>(
   init: RequestInit & { locale?: Locale; token?: string; accept?: string } = {},
 ): Promise<T> {
   const { locale, token, accept, ...rest } = init;
-  const response = await fetch(`${API_V1}${path}`, {
+  const response = await fetch(`${CONCIERGE_API}${path.replace(/^\/concierge/, "")}`, {
     ...rest,
     headers: {
       ...buildHeaders({ locale, token, accept }),
@@ -91,10 +89,8 @@ export async function getConciergeConfig(
   locale: Locale,
   token?: string,
 ): Promise<ConciergeConfig> {
-  const url = new URL(`${API_V1}/concierge/config`);
-  url.searchParams.set("locale", locale);
-
-  const response = await fetch(url.toString(), {
+  const params = new URLSearchParams({ locale });
+  const response = await fetch(`${CONCIERGE_API}/config?${params}`, {
     headers: buildHeaders({ locale, token }),
   });
 
@@ -151,7 +147,7 @@ export async function sendConciergeMessage(
   handlers: ConciergeSseHandlers,
   token?: string,
 ): Promise<void> {
-  const response = await fetch(`${API_V1}/concierge/messages`, {
+  const response = await fetch(`${CONCIERGE_API}/messages`, {
     method: "POST",
     headers: buildHeaders({
       locale: body.locale,

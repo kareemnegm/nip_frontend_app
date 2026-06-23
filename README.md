@@ -25,6 +25,25 @@ npm run check     # lint + typecheck
 npm run build     # production build
 ```
 
+## Production deploy
+
+On the server (e.g. `/var/www/nip_frontend_app`), **always run `npm ci` before `npm run build`** so new dependencies are installed:
+
+```bash
+git pull
+npm ci
+npm run build
+# restart your process manager (e.g. pm2 restart nip_frontend)
+```
+
+Or use the helper script:
+
+```bash
+bash scripts/deploy.sh
+```
+
+**Mixed content / concierge chat:** The AI chat calls the backend through same-origin `/api/concierge/*` routes, so the browser never needs a public HTTPS API URL. On the server, `NEXT_PUBLIC_API_URL` can point at your internal backend (e.g. `http://127.0.0.1:8000`) for server-side fetches.
+
 ## Documentation
 
 | Doc | Purpose |

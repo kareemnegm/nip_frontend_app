@@ -28,7 +28,8 @@ export async function PrivateOfficeSection() {
   return (
     <section className="bg-sapphire-800 py-16 text-white sm:py-20">
       <Container className="mx-auto max-w-[520px] text-center">
-        <OfficeCrest />
+        <div data-reveal>
+          <OfficeCrest />
         <EditableText
           relUrl={HOME_REL_URL}
           blockKey="private-office-title"
@@ -61,6 +62,7 @@ export async function PrivateOfficeSection() {
           >
             {tCommon("signIn")}
           </Button>
+        </div>
         </div>
       </Container>
     </section>

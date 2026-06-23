@@ -19,10 +19,10 @@ export async function MarketPulseSection({
   const te = await getTranslations({ locale, namespace: "home.empty" });
 
   const marketPulseStats = [
-    { context: t("marketPulse.stat1Context"), label: t("marketPulse.stat1Label"), value: "2,400", icon: true },
-    { context: t("marketPulse.stat2Context"), label: t("marketPulse.stat2Label"), value: "12" },
-    { context: t("marketPulse.stat3Context"), label: t("marketPulse.stat3Label"), value: "6.2%" },
-    { context: t("marketPulse.stat4Context"), label: t("marketPulse.stat4Label"), value: "28" },
+    { context: t("marketPulse.stat1Context"), label: t("marketPulse.stat1Label"), count: "2400", prefix: "", suffix: "", decimals: 0, icon: true },
+    { context: t("marketPulse.stat2Context"), label: t("marketPulse.stat2Label"), count: "12", prefix: "", suffix: "", decimals: 0 },
+    { context: t("marketPulse.stat3Context"), label: t("marketPulse.stat3Label"), count: "6.2", prefix: "", suffix: "%", decimals: 1 },
+    { context: t("marketPulse.stat4Context"), label: t("marketPulse.stat4Label"), count: "28", prefix: "", suffix: "", decimals: 0 },
   ];
 
   return (
@@ -42,6 +42,8 @@ export async function MarketPulseSection({
             {marketPulseStats.map((stat, index) => (
               <div
                 key={stat.label}
+                data-reveal
+                data-reveal-delay={index > 0 ? String(Math.min(index, 3)) : undefined}
                 className={[
                   "rounded-[var(--radius-card)] px-7 py-6 text-white",
                   ["bg-sapphire-400", "bg-sapphire-500", "bg-sapphire-600", "bg-sapphire-700"][index],
@@ -50,7 +52,15 @@ export async function MarketPulseSection({
                 <p className="text-xs leading-4 text-sapphire-100">{stat.context}</p>
                 <p className="mt-4 flex items-center gap-1.5 text-4xl font-bold leading-[42px]">
                   {stat.icon ? <span className="text-2xl">AED</span> : null}
-                  {stat.value}
+                  <span
+                    data-count={stat.count}
+                    data-count-prefix={stat.prefix}
+                    data-count-suffix={stat.suffix}
+                    data-count-decimals={String(stat.decimals)}
+                  >
+                    {stat.decimals > 0 ? stat.count : Number(stat.count).toLocaleString()}
+                    {stat.suffix}
+                  </span>
                 </p>
                 <p className="mt-4 text-xs font-semibold leading-4 text-white">{stat.label}</p>
               </div>

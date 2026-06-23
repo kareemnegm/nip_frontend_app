@@ -8,7 +8,7 @@ export async function HomeSearchSection() {
   const t = await getTranslations({ locale, namespace: "home.search" });
 
   return (
-    <section className="bg-surface-muted py-7">
+    <section data-reveal className="bg-surface-muted py-7">
       <Container>
         <HomeSearchForm
           label={t("label")}

@@ -41,46 +41,48 @@ export function PageHero({
           align === "center" && "flex flex-col items-center text-center",
         )}
       >
-        {top ? <div className="mb-5">{top}</div> : null}
-        {eyebrow ? (
-          <p
+        <div data-reveal>
+          {top ? <div className="mb-5">{top}</div> : null}
+          {eyebrow ? (
+            <p
+              className={cn(
+                "text-[11px] font-semibold uppercase tracking-[0.18em]",
+                isDark ? "text-gold" : "text-brand",
+              )}
+            >
+              {eyebrow}
+            </p>
+          ) : null}
+          <h1
             className={cn(
-              "text-[11px] font-semibold uppercase tracking-[0.18em]",
-              isDark ? "text-gold" : "text-brand",
+              "mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl",
+              isDark ? "text-white" : "text-brand",
             )}
           >
-            {eyebrow}
-          </p>
-        ) : null}
-        <h1
-          className={cn(
-            "mt-3 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl",
-            isDark ? "text-white" : "text-brand",
-          )}
-        >
-          {title}
-        </h1>
-        {description ? (
-          <p
-            className={cn(
-              "mt-4 max-w-2xl text-sm leading-7 sm:text-base",
-              align === "center" && "mx-auto",
-              isDark ? "text-white/75" : "text-ink-secondary",
-            )}
-          >
-            {description}
-          </p>
-        ) : null}
-        {actions ? (
-          <div
-            className={cn(
-              "mt-8 flex flex-col gap-4 sm:flex-row",
-              align === "center" && "justify-center",
-            )}
-          >
-            {actions}
-          </div>
-        ) : null}
+            {title}
+          </h1>
+          {description ? (
+            <p
+              className={cn(
+                "mt-4 max-w-2xl text-sm leading-7 sm:text-base",
+                align === "center" && "mx-auto",
+                isDark ? "text-white/75" : "text-ink-secondary",
+              )}
+            >
+              {description}
+            </p>
+          ) : null}
+          {actions ? (
+            <div
+              className={cn(
+                "mt-8 flex flex-col gap-4 sm:flex-row",
+                align === "center" && "justify-center",
+              )}
+            >
+              {actions}
+            </div>
+          ) : null}
+        </div>
       </Container>
     </section>
   );

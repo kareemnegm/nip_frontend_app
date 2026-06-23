@@ -108,7 +108,7 @@ function CardImage({
           src={imageUrl}
           alt={alt}
           fill
-          className="object-cover"
+          className="motion-card-image object-cover"
           sizes="(max-width: 768px) 100vw, 33vw"
         />
       </div>
@@ -142,6 +142,7 @@ export function PropertyCard({
 
   const card = (
     <article
+      data-reveal
       className={cn(
         cardTypography.shell,
         "min-h-[480px]",
@@ -195,7 +196,7 @@ export function PropertyCard({
               ))}
             </div>
             {href ? (
-              <span className={cardTypography.cta}>
+              <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
                 {t("exploreProperty")}{" "}
                 <Icon name="arrowRight" className={cardTypography.ctaIcon} />
               </span>
@@ -234,6 +235,7 @@ export function OffPlanCard({
 
   const card = (
     <article
+      data-reveal
       className={cn(
         cardTypography.shell,
         "min-h-[480px]",
@@ -275,7 +277,7 @@ export function OffPlanCard({
           <div className="flex items-center justify-between gap-4">
             <span className={cardTypography.badge}>{t("paymentPlanAvailable")}</span>
             {href ? (
-              <span className={cardTypography.cta}>
+              <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
                 {t("exploreProperty")}{" "}
                 <Icon name="arrowRight" className={cardTypography.ctaIcon} />
               </span>
@@ -312,6 +314,7 @@ export function InsightCard({
 
   const card = (
     <article
+      data-reveal
       className={cn(
         cardTypography.shell,
         "min-h-[440px] w-full",
@@ -325,7 +328,7 @@ export function InsightCard({
             src={imageUrl!}
             alt={title}
             fill
-            className="object-cover"
+            className="motion-card-image object-cover"
             sizes="(max-width: 768px) 100vw, 33vw"
             onError={() => setImageError(true)}
           />
@@ -342,7 +345,7 @@ export function InsightCard({
             {readTime} | NIP Advisory
           </span>
           {href ? (
-            <span className={cardTypography.cta}>
+            <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
               {t("readInsight")}{" "}
               <Icon name="arrowRight" className={cardTypography.ctaIcon} />
             </span>
@@ -441,6 +444,7 @@ export function CommunityCard({
 
   const card = (
     <article
+      data-reveal
       className={cn(
         cardTypography.shell,
         "min-h-[440px]",
@@ -489,7 +493,7 @@ export function CommunityCard({
         <div className="mt-6 flex items-center justify-between gap-4">
           <span className={cardTypography.badge}>{projectCount}</span>
           {href ? (
-            <span className={cardTypography.cta}>
+            <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
               {t("exploreArea")}{" "}
               <Icon name="arrowRight" className={cn(cardTypography.ctaIcon, "rtl:rotate-180")} />
             </span>
