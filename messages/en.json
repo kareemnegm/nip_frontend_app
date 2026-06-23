@@ -157,7 +157,7 @@
   },
   "privateOffice": {
     "title": "Private Office",
-    "welcomeBack": "Welcome Back, {name}",
+    "welcomeBack": "Welcome back, {name}",
     "curatedBy": "Curated by {advisor} | NIP Private Advisory",
     "yourAdvisor": "Your Advisor",
     "viewCuratedSelection": "View curated selection",
@@ -225,6 +225,13 @@
     "bathroomLabel": "Bathrooms",
     "areaLabel": "Area",
     "typeLabel": "Type",
+    "furnishingLabel": "Furnishing",
+    "referenceLabel": "Reference",
+    "arrangeViewing": "ARRANGE A VIEWING",
+    "advisoryDescription": "Speak with the advisor handling this residence.",
+    "advisoryName": "NIP Private Advisory",
+    "advisoryResponds": "Responds within 1 business day",
+    "requestDetails": "Request Details",
     "apartment": "Apartment",
     "villa": "Villa",
     "townhouse": "Townhouse",
@@ -257,7 +264,43 @@
     "privateViewingEyebrow": "Private Viewing",
     "privateViewingTitle": "Arrange a Confidential Visit",
     "privateViewingDescription": "Share your details and a NIP advisor will confirm the next step.",
-    "requestViewing": "Request Viewing"
+    "requestViewing": "Request Viewing",
+    "breadcrumbFeaturedProjects": "Featured Projects",
+    "paymentPlanTitle": "Payment Plan",
+    "availableUnitsTitle": "Available Units",
+    "masterplanTitle": "Masterplan & Location",
+    "unitType": "Unit Type",
+    "sizeSqft": "Size (sqft)",
+    "startingPrice": "Starting Price",
+    "registerInterestEyebrow": "Register Interest",
+    "registerInterestTitle": "Speak with a NIP advisor about this project",
+    "registerInterest": "Register Interest",
+    "moreOffPlanProjects": "More Off-Plan Projects",
+    "developerFactLabel": "Developer",
+    "handoverFactLabel": "Handover",
+    "unitTypesLabel": "Unit Types",
+    "startingFromFactLabel": "Starting From",
+    "paymentLabel": "Payment",
+    "statusLabel": "Status",
+    "statusOffPlan": "Off-Plan",
+    "paymentStep1Caption": "On booking",
+    "paymentStep1Label": "Down payment",
+    "paymentStep2Caption": "During construction",
+    "paymentStep2Label": "1st installment",
+    "paymentStep3Caption": "During construction",
+    "paymentStep3Label": "2nd installment",
+    "paymentStep4Caption": "On handover",
+    "paymentStep4Label": "Final payment",
+    "defaultUnit1Type": "1 Bed",
+    "defaultUnit1Size": "750–850",
+    "defaultUnit2Type": "2 Bed",
+    "defaultUnit2Size": "1,100–1,250",
+    "defaultUnit3Type": "3 Bed",
+    "defaultUnit3Size": "1,550–1,750",
+    "defaultUnit4Type": "4 Bed",
+    "defaultUnit4Size": "2,100–2,400",
+    "offPlanListingCtaTitle": "Early Access to Units and Payment Plans",
+    "speakWithNipCta": "Speak with NIP"
   },
   "pages": {
     "areas": {
@@ -265,7 +308,35 @@
       "ctaTitle": "Considering a Move to Dubai?",
       "exploreFallback": "Explore this community and discover properties aligned with your priorities.",
       "noListings": "No published listings in this community yet.",
-      "availableIn": "Available in {name}"
+      "availableIn": "Available in {name}",
+      "areaEyebrow": "AREA | DUBAI",
+      "aboutAreaTitle": "About {name}",
+      "offPlanInArea": "OFF-PLAN IN {name}",
+      "projectsInArea": "Projects in This Area",
+      "forSaleInArea": "FOR SALE IN {name}",
+      "availableProperties": "Available Properties",
+      "connectivityTitle": "Connectivity & Location",
+      "avgPriceSqftLabel": "AVG Price/Sq Ft",
+      "communitiesLabel": "Communities",
+      "offPlanProjectsLabel": "Off-Plan",
+      "avgYieldLabel": "AVG Yield",
+      "lifestyleLabel": "Lifestyle",
+      "toDowntownLabel": "To Downtown",
+      "projectsCount": "Projects",
+      "defaultLifestyle": "Waterfront",
+      "defaultDistanceDowntown": "20 min",
+      "highlight1": "Private Beaches",
+      "highlight2": "Branded Residences",
+      "highlight3": "Fine Dining",
+      "highlight4": "Marina Berths",
+      "highlight5": "Five-Star Resorts",
+      "highlight6": "Family Villas",
+      "connectivity1": "Airport · 25 min",
+      "connectivity2": "Downtown · 20 min",
+      "connectivity3": "Marina · 10 min",
+      "connectivity4": "Metro link · 8 min",
+      "exploreEyebrow": "EXPLORE WITH NIP",
+      "exploreTitle": "Considering {name}?"
     },
     "developers": {
       "leadingTitle": "Dubai's Leading Developers",
@@ -284,14 +355,44 @@
       "latest": "Latest",
       "featuredPrefix": "Featured",
       "ctaTitle": "Ready to discuss your next move?",
-      "relatedTitle": "Related Insights"
+      "relatedTitle": "Related Insights",
+      "article": {
+        "advisoryEyebrow": "NIP Private Advisory",
+        "advisoryTitle": "Considering a position in this market?",
+        "byAuthor": "By {author}",
+        "defaultAuthor": "NIP Advisory"
+      }
     },
     "concierge": {
-      "inputPlaceholder": "Ask about communities, pricing, off-plan, Golden Visa…",
-      "chip1": "Best areas for families",
-      "chip2": "Off-plan payment plans",
-      "chip3": "Golden Visa requirements",
-      "chip4": "Rental yields in Dubai Marina"
+      "inputPlaceholder": "Ask anything about Dubai property…",
+      "defaultGreeting": "Hello — I'm the NIP Concierge. Ask me about communities, pricing, off-plan or the Golden Visa. I can also connect you with a private advisor.",
+      "preferPerson": "Prefer a Person?",
+      "speakWithPrivateAdvisor": "Speak with a Private Advisor",
+      "chip1": "Best areas for investment?",
+      "chip2": "Golden Visa & property",
+      "chip3": "Off-plan vs ready",
+      "chip4": "Payment plans explained",
+      "launcherLabel": "Ask the Concierge",
+      "closePanel": "Close concierge",
+      "contactFab": "Contact us",
+      "typing": "Concierge is typing…",
+      "errorGeneric": "Something went wrong. Please try again or contact an advisor.",
+      "errorDisabled": "The Concierge is temporarily unavailable.",
+      "errorRateLimited": "Please wait before sending another message.",
+      "sessionExpired": "Your session has expired. Starting a new conversation.",
+      "leadConsent": "May we contact you about this inquiry?",
+      "leadSubmitted": "Thank you. An advisor will be in touch shortly.",
+      "leadTitle": "Connect with an advisor",
+      "leadName": "Full name",
+      "leadEmail": "Email address",
+      "leadPhone": "Phone (optional)",
+      "leadSubmit": "Submit details",
+      "speakToAdvisor": "Prefer a person? Speak with NIP",
+      "hero": {
+        "eyebrow": "AI CONCIERGE",
+        "title": "Ask the Concierge",
+        "description": "Instant answers on communities, pricing, off-plan and the Golden Visa — and a direct line to a private advisor whenever you want one."
+      }
     },
     "curated": {
       "selectionTitle": "A Considered Selection",
@@ -300,6 +401,70 @@
       "notesDesc": "Private notes from your advisor explaining why each opportunity was included — or set aside.",
       "noCurated": "No curated selections have been released yet.",
       "noNotes": "Advisor notes will appear here when your advisor adds context."
+    },
+    "legal": {
+      "hero": {
+        "eyebrow": "LEGAL",
+        "title": "Privacy Policy",
+        "lastUpdated": "Last Updated | May 2026"
+      },
+      "sidebar": {
+        "title": "ON THIS PAGE"
+      },
+      "sections": {
+        "overview": {
+          "title": "Overview",
+          "body": "This policy explains how Novel Insight Property L.L.C (“NIP”) collects, uses and protects your information when you use our website and advisory services. It applies to all visitors and clients."
+        },
+        "information-we-collect": {
+          "title": "Information we Collect",
+          "body": "We collect details you provide directly — such as your name, contact details and property preferences — and limited technical data needed to operate the site securely and improve your experience."
+        },
+        "how-we-use-it": {
+          "title": "How we Use it",
+          "body": "Your information is used to respond to enquiries, provide advisory services, and share curated opportunities where you have consented. We do not sell your data."
+        },
+        "sharing-disclosure": {
+          "title": "Sharing & Disclosure",
+          "body": "We share information only with vetted partners necessary to deliver a service you requested (for example, legal advisers for a Golden Visa), and where required by law."
+        },
+        "data-retention": {
+          "title": "Data Retention",
+          "body": "We retain personal data only for as long as necessary to provide our services and meet legal obligations."
+        },
+        "your-rights": {
+          "title": "Your Rights",
+          "body": "You may request access to, correction of, or deletion of your personal data at any time by contacting us using the details below."
+        },
+        "contact": {
+          "title": "Contact",
+          "body": "Questions about this policy can be directed to info@niprealty.com or to our office at One Central, Dubai, UAE."
+        }
+      }
+    },
+    "faq": {
+      "items": {
+        "advisory": {
+          "question": "How does NIP's Private Advisory work?",
+          "answer": "We start with your mandate, then privately source and shortlist residences and projects that fit — grounded in market data and developer track record. There are no public shortlists; everything is handled discreetly with a dedicated advisor."
+        },
+        "fees": {
+          "question": "Do you Charge buyers a Fee?",
+          "answer": "Our advisory is aligned with your interests. We are transparent about how we are compensated on any transaction before you commit."
+        },
+        "goldenVisa": {
+          "question": "Can you help with the Golden Visa?",
+          "answer": "Yes. We guide qualifying clients through property-linked Golden Visa requirements and connect you with vetted legal partners where needed."
+        },
+        "offPlanReady": {
+          "question": "Do you handle Off-Plan and Ready properties?",
+          "answer": "Both. We advise across ready residences, exclusive resales, and off-plan launches with payment plans from leading developers."
+        },
+        "responseTime": {
+          "question": "How Quickly will an Advisor Respond?",
+          "answer": "A private advisor typically responds within one business day, often sooner during business hours."
+        }
+      }
     }
   },
   "placeholders": {
@@ -374,6 +539,22 @@
         "eyebrow": "ABOUT NIP",
         "title": "One Source. One System. One Standard.",
         "description": "NIP was created for clients who want more than access to property. They want context, judgment, and a single advisory standard across every step of the real estate journey."
+      },
+      "market": {
+        "title": "Dubai's Property Market moves Quickly",
+        "body": "New launches, private resales, waterfront residences, branded developments, and selected off-market opportunities appear every day. For private clients, the challenge is not finding options. The challenge is knowing which options deserve attention."
+      },
+      "role": {
+        "eyebrow": "OUR ROLE",
+        "title": "We do not Begin with Inventory",
+        "body": "We begin with the client's context: purpose, timing, risk, lifestyle, capital strategy, and long-term view. From there, we help identify the areas, developers, projects, and properties that align with the brief."
+      },
+      "partners": {
+        "caption": "Trusted Partnership\nwith Dubai's Leading Developers"
+      },
+      "standard": {
+        "title": "NIP is Built around a Simple Standard:",
+        "quote": "\"One source for insight. One system for decision-making. One standard for every client journey.\""
       }
     },
     "contact": {
@@ -394,7 +575,7 @@
         "description": "Everything you need to know about working with NIP — buying, off-plan, the Golden Visa and our private advisory."
       },
       "cta": {
-        "title": "Still Have Questions?",
+        "title": "Still have questions?",
         "description": "Ask the Concierge for an instant answer, or speak with a Private Advisor."
       }
     },
@@ -418,8 +599,8 @@
     "legal": {
       "hero": {
         "eyebrow": "LEGAL",
-        "title": "Terms & Policies",
-        "lastUpdated": "Last updated: June 2026"
+        "title": "Privacy Policy",
+        "lastUpdated": "Last Updated | May 2026"
       }
     },
     "curated": {

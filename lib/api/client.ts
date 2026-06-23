@@ -11,6 +11,21 @@ export const API_V1_ROOT = `${API_BASE_URL.replace(/\/$/, "")}/api/v1`;
 
 export const DEFAULT_REVALIDATE_SECONDS = 60;
 
+function resolveFetchCacheOptions(
+  revalidate?: number | false,
+): Pick<RequestInit, "cache"> | { next: { revalidate: number } } | undefined {
+  // Always hit the backend in dev — avoids stale empty pages after a failed request.
+  if (process.env.NODE_ENV === "development") {
+    return { cache: "no-store" };
+  }
+
+  if (revalidate === false) {
+    return undefined;
+  }
+
+  return { next: { revalidate: revalidate ?? DEFAULT_REVALIDATE_SECONDS } };
+}
+
 type RequestOptions = Omit<RequestInit, "body"> & {
   params?: Record<string, string | number | undefined | null>;
   token?: string;
@@ -101,10 +116,7 @@ export async function apiRequest<T>(
         : isFormData
           ? (body as FormData)
           : JSON.stringify(body),
-    next:
-      revalidate === false
-        ? undefined
-        : { revalidate: revalidate ?? DEFAULT_REVALIDATE_SECONDS },
+    ...resolveFetchCacheOptions(revalidate),
   });
 
   if (!response.ok) {

@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import {
-  PropertyDetailPage,
-  buildPropertyMetadata,
-} from "@/components/catalog/PropertyDetailPage";
+import { buildPropertyMetadata } from "@/components/catalog/PropertyDetailPage";
+import { OffPlanDetailPage } from "@/components/catalog/OffPlanDetailPage";
 import { getPropertyBySlug } from "@/lib/api/properties";
 import { resolveLocale } from "@/lib/i18n/helpers";
 
@@ -18,9 +16,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return buildPropertyMetadata(property);
 }
 
-export default async function OffPlanDetailPage({ params }: PageProps) {
+export default async function OffPlanProjectPage({ params }: PageProps) {
   const { locale: rawLocale, slug } = await params;
   const locale = resolveLocale(rawLocale);
 
-  return <PropertyDetailPage locale={locale} slug={slug} detailBase="off-plan" />;
+  return <OffPlanDetailPage locale={locale} slug={slug} />;
 }

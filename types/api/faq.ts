@@ -1,7 +1,12 @@
 export type ApiFaq = {
-  id: number;
+  id: string;
   question: string;
   answer: string;
-  order_no?: number | null;
+  sortOrder?: number | null;
   category?: string | null;
+};
+
+export type ApiFaqsResponse = {
+  items: ApiFaq[];
+  total: number;
 };

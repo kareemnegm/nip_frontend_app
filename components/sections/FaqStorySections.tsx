@@ -3,54 +3,45 @@ import { LocalizedLink } from "@/components/LocalizedLink";
 import { EditableText } from "@/components/EditableText";
 import { FaqAccordion, type FaqItem } from "@/components/FaqAccordion";
 import { SpeakWithNipButton } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
 import { getFaqs } from "@/lib/api/faqs";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
+import type { Locale } from "@/lib/i18n/config";
 import {
   siteMaxWidth,
   sitePageGutterX,
 } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
 
-const fallbackFaqItems: FaqItem[] = [
-  {
-    question: "How does NIP's Private Advisory work?",
-    answer:
-      "We start with your mandate, then privately source and shortlist residences and projects that fit — grounded in market data and developer track record. There are no public shortlists; everything is handled discreetly with a dedicated advisor.",
-  },
-  {
-    question: "Do you Charge buyers a Fee?",
-    answer:
-      "Our advisory is aligned with your interests. We are transparent about how we are compensated on any transaction before you commit.",
-  },
-  {
-    question: "Can you help with the Golden Visa?",
-    answer:
-      "Yes. We guide qualifying clients through property-linked Golden Visa requirements and connect you with vetted legal partners where needed.",
-  },
-  {
-    question: "Do you handle Off-Plan and Ready properties?",
-    answer:
-      "Both. We advise across ready residences, exclusive resales, and off-plan launches with payment plans from leading developers.",
-  },
-  {
-    question: "How Quickly will an Advisor Respond?",
-    answer:
-      "A private advisor typically responds within one business day, often sooner during business hours.",
-  },
-];
+export const faqItemIds = [
+  "advisory",
+  "fees",
+  "goldenVisa",
+  "offPlanReady",
+  "responseTime",
+] as const;
+
+export type FaqItemId = (typeof faqItemIds)[number];
 
 const faqBlocks = pageBlockKeys.faq;
+
+async function localizedFaqFallback(locale: Locale): Promise<FaqItem[]> {
+  const t = await getTranslations({ locale, namespace: "pages.faq" });
+  return faqItemIds.map((id) => ({
+    id,
+    question: t(`items.${id}.question`),
+    answer: t(`items.${id}.answer`),
+  }));
+}
 
 export async function FaqHeroSection() {
   const locale = await getRequestLocale();
 
   return (
-    <section data-site-hero className="bg-white pt-[72px] pb-10">
+    <section data-site-hero className="bg-white pb-10 pt-[72px]">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div className="mx-auto flex w-full max-w-[846px] flex-col items-center gap-4 text-center">
+        <div className="mx-auto flex w-full max-w-[820px] flex-col items-center gap-6 text-center">
           <EditableText
             relUrl={faqBlocks.relUrl}
             blockKey={faqBlocks.hero.eyebrow}
@@ -65,7 +56,7 @@ export async function FaqHeroSection() {
             locale={locale}
             placeholderContent={await getCmsPlaceholder("placeholders.faq.hero", "title", locale)}
             placeholderTag="h1"
-            className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
+            className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand"
           />
           <EditableText
             relUrl={faqBlocks.relUrl}
@@ -73,7 +64,7 @@ export async function FaqHeroSection() {
             locale={locale}
             placeholderContent={await getCmsPlaceholder("placeholders.faq.hero", "description", locale)}
             placeholderTag="p"
-            className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary"
+            className="max-w-[640px] text-body-lg leading-7 text-ink-secondary"
           />
         </div>
       </div>
@@ -90,12 +81,12 @@ export async function FaqAccordionSection() {
           question: item.question,
           answer: item.answer,
         }))
-      : fallbackFaqItems;
+      : await localizedFaqFallback(locale);
 
   return (
-    <section className="bg-white pb-16 sm:pb-20">
+    <section className="bg-white pb-14">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div className="mx-auto w-full max-w-[726px]">
+        <div className="mx-auto w-full max-w-[820px]">
           <FaqAccordion items={faqItems} />
         </div>
       </div>
@@ -108,36 +99,33 @@ export async function FaqCtaSection() {
   const tc = await getTranslations({ locale, namespace: "common" });
 
   return (
-    <section className="bg-sapphire-50 py-16 sm:py-20">
+    <section className="bg-surface-muted pb-[72px] pt-14">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div className="mx-auto flex w-full max-w-[846px] flex-col items-center gap-10 text-center">
-          <div className="flex flex-col items-center gap-4">
-            <EditableText
-              relUrl={faqBlocks.relUrl}
-              blockKey={faqBlocks.cta.title}
-              locale={locale}
-              placeholderContent={await getCmsPlaceholder("placeholders.faq.cta", "title", locale)}
-              placeholderTag="h2"
-              className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand sm:text-[36px] sm:leading-[40px]"
-            />
-            <EditableText
-              relUrl={faqBlocks.relUrl}
-              blockKey={faqBlocks.cta.description}
-              locale={locale}
-              placeholderContent={await getCmsPlaceholder("placeholders.faq.cta", "description", locale)}
-              placeholderTag="p"
-              className="max-w-[464px] text-body-md leading-[22px] text-ink-secondary"
-            />
-          </div>
-          <div className="flex w-full max-w-[400px] flex-col gap-3 sm:flex-row">
+        <div className="mx-auto flex w-full max-w-[820px] flex-col items-center gap-6 text-center">
+          <EditableText
+            relUrl={faqBlocks.relUrl}
+            blockKey={faqBlocks.cta.title}
+            locale={locale}
+            placeholderContent={await getCmsPlaceholder("placeholders.faq.cta", "title", locale)}
+            placeholderTag="h2"
+            className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand"
+          />
+          <EditableText
+            relUrl={faqBlocks.relUrl}
+            blockKey={faqBlocks.cta.description}
+            locale={locale}
+            placeholderContent={await getCmsPlaceholder("placeholders.faq.cta", "description", locale)}
+            placeholderTag="p"
+            className="max-w-[520px] text-body-sm leading-[18px] text-ink-tertiary"
+          />
+          <div className="flex w-full max-w-[295px] gap-3">
             <LocalizedLink
               href="/concierge"
-              className="inline-flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-field)] bg-accent px-6 py-[9px] text-[13px] font-semibold leading-[18px] text-white transition-colors hover:bg-accent-hover active:bg-accent-pressed"
+              className="inline-flex flex-1 items-center justify-center rounded-[var(--radius-field)] bg-accent px-6 py-[9px] text-xs font-semibold leading-4 text-white transition-colors hover:bg-accent-hover active:bg-accent-pressed"
             >
               {tc("askConcierge")}
-              <Icon name="arrowRight" className="h-4 w-4 shrink-0 rtl:rotate-180" />
             </LocalizedLink>
-            <SpeakWithNipButton href="/contact" className="flex-1 justify-center" />
+            <SpeakWithNipButton href="/contact" className="flex-1" />
           </div>
         </div>
       </div>

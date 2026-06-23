@@ -1,3 +1,4 @@
+export * from "./concierge";
 export * from "./area";
 export * from "./blog";
 export * from "./developer";

@@ -25,7 +25,7 @@ export default async function OffPlanPage({ params, searchParams }: PageProps) {
       searchParams={sp}
       mode="offplan"
       catalogPage="offPlan"
-      afterContent={<ProjectRegisterCta />}
+      afterContent={<ProjectRegisterCta locale={locale} />}
     />
   );
 }

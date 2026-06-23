@@ -7,7 +7,7 @@ import type {
   LaravelPaginated,
 } from "@/types/api";
 import { ApiError } from "./errors";
-import { emptyPaginated, isOfflineError } from "./fallbacks";
+import { emptyPaginated, isOfflineError, logApiFallback } from "./fallbacks";
 import { apiGet, unwrapData } from "./client";
 
 export async function getBlogCategories(locale: Locale = defaultLocale) {
@@ -17,7 +17,8 @@ export async function getBlogCategories(locale: Locale = defaultLocale) {
       { locale },
     );
     return Array.isArray(response) ? response : unwrapData(response);
-  } catch {
+  } catch (error) {
+    logApiFallback("GET /blog-categories", error);
     return [];
   }
 }
@@ -33,7 +34,8 @@ export async function getBlogs(params: BlogListParams = {}) {
       },
       locale,
     });
-  } catch {
+  } catch (error) {
+    logApiFallback("GET /blogs", error);
     return emptyPaginated<ApiBlog>(query.per_page ?? 9);
   }
 }

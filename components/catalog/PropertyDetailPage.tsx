@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { PropertyInquiryForm } from "@/components/forms/InquiryForms";
 import { SiteShell } from "@/components/SiteShell";
 import {
+  PropertyAdvisoryCard,
   PropertyGallery,
   PropertyStoryContent,
   PropertyViewingCard,
@@ -39,9 +40,23 @@ type PropertyDetailPageProps = {
   detailBase: "properties" | "off-plan";
 };
 
+function formatFurnishing(value: string): string {
+  return value
+    .split(/[-_]/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
 function propertyFactsFromApi(
   property: ApiProperty,
-  labels: { bedroomLabel: string; bathroomLabel: string; areaLabel: string; typeLabel: string },
+  labels: {
+    bedroomLabel: string;
+    bathroomLabel: string;
+    areaLabel: string;
+    typeLabel: string;
+    furnishingLabel: string;
+    referenceLabel: string;
+  },
 ) {
   return [
     property.bedrooms != null
@@ -60,7 +75,25 @@ function propertyFactsFromApi(
     property.type
       ? { label: labels.typeLabel, value: property.type, icon: "building" as const }
       : null,
-  ].filter(Boolean) as Array<{ label: string; value: string; icon: "bed" | "bath" | "grid" | "building" }>;
+    property.furnishing
+      ? {
+          label: labels.furnishingLabel,
+          value: formatFurnishing(property.furnishing),
+          icon: "sofa" as const,
+        }
+      : null,
+    property.reference_no
+      ? {
+          label: labels.referenceLabel,
+          value: property.reference_no,
+          icon: "building" as const,
+        }
+      : null,
+  ].filter(Boolean) as Array<{
+    label: string;
+    value: string;
+    icon: "bed" | "bath" | "grid" | "building" | "sofa";
+  }>;
 }
 
 export async function PropertyDetailPage({
@@ -83,6 +116,8 @@ export async function PropertyDetailPage({
     bathroomLabel: t("bathroomLabel"),
     areaLabel: t("areaLabel"),
     typeLabel: t("typeLabel"),
+    furnishingLabel: t("furnishingLabel"),
+    referenceLabel: t("referenceLabel"),
   });
   const galleryImages: PropertyGalleryImage[] = (() => {
     if (property.images?.length) {
@@ -189,21 +224,41 @@ export async function PropertyDetailPage({
                 locationTitle: t("locationTitle"),
               }}
             />
-            <PropertyViewingCard
-              labels={{
-                eyebrow: t("privateViewingEyebrow"),
-                title: t("privateViewingTitle"),
-                description: t("privateViewingDescription"),
-              }}
-            >
-              <PropertyInquiryForm propertyId={property.id} pageUrl={pageUrl} />
-            </PropertyViewingCard>
+            {detailBase === "properties" ? (
+              <PropertyAdvisoryCard
+                propertyId={property.id}
+                pageUrl={pageUrl}
+                labels={{
+                  eyebrow: t("arrangeViewing"),
+                  description: t("advisoryDescription"),
+                  advisoryName: t("advisoryName"),
+                  advisoryResponds: t("advisoryResponds"),
+                  requestDetails: t("requestDetails"),
+                  modalTitle: t("privateViewingTitle"),
+                }}
+              />
+            ) : (
+              <PropertyViewingCard
+                labels={{
+                  eyebrow: t("privateViewingEyebrow"),
+                  title: t("privateViewingTitle"),
+                  description: t("privateViewingDescription"),
+                }}
+              >
+                <PropertyInquiryForm propertyId={property.id} pageUrl={pageUrl} />
+              </PropertyViewingCard>
+            )}
           </div>
         </div>
       </section>
 
       {similar.length > 0 ? (
-        <section className="bg-surface-muted pb-20 pt-16">
+        <section
+          className={cn(
+            "pb-20 pt-16",
+            detailBase === "properties" ? "bg-sapphire-50" : "bg-surface-muted",
+          )}
+        >
           <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
             <div className={cn(sitePageInnerClassName, "space-y-7")}>
               <p className="text-center text-overline font-semibold leading-4 text-accent">

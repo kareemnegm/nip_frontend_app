@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { SiteShell } from "@/components/SiteShell";
-import { EditableCtaBand } from "@/components/sections/EditableCtaBand";
-import { SectionHeading } from "@/components/sections";
-import { Button, Container, InsightCard } from "@/components/ui";
+import {
+  InsightArticleAdvisoryCta,
+  InsightArticleBody,
+  InsightArticleFeaturedImage,
+  InsightArticleHero,
+  RelatedInsightsSection,
+} from "@/components/sections/InsightArticleSections";
 import { getBlogBySlug, getBlogs } from "@/lib/api/blogs";
 import { resolveBlogFeaturedImage } from "@/lib/api/media-url";
-import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
-import { pageBlockKeys } from "@/lib/i18n/block-keys";
-import { localizedHref, resolveLocale } from "@/lib/i18n/helpers";
+import { resolveLocale } from "@/lib/i18n/helpers";
 import { mapBlogToInsightCard } from "@/lib/mappers/blog";
 
 type PageProps = {
@@ -42,71 +44,31 @@ export default async function InsightArticlePage({ params }: PageProps) {
   const body = blog.body ?? blog.source_code ?? blog.content ?? "";
   const featuredImage = resolveBlogFeaturedImage(blog);
   const t = await getTranslations({ locale, namespace: "pages.insights" });
-  const tc = await getTranslations({ locale, namespace: "common" });
-  const insightBlocks = pageBlockKeys.insights;
 
   return (
     <SiteShell>
-      <article className="w-full bg-surface">
-        <Container className="py-12 sm:py-16">
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand">
-              {blog.category?.name ?? "Insight"}
-            </p>
-            <h1 className="mt-4 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-brand sm:text-4xl lg:text-5xl">
-              {blog.title}
-            </h1>
-            {blog.excerpt ? (
-              <p className="mt-4 text-sm leading-7 text-ink-secondary">{blog.excerpt}</p>
-            ) : null}
-            <p className="mt-5 text-xs text-ink-tertiary">
-              {blog.author_name ? `By ${blog.author_name}` : "NIP Advisory"}
-              {blog.created_at
-                ? ` | ${new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric" }).format(new Date(blog.created_at))}`
-                : ""}
-            </p>
-          </div>
+      <article className="w-full bg-white">
+        <InsightArticleHero
+          locale={locale}
+          category={blog.category?.name ?? "Insight"}
+          title={blog.title}
+          excerpt={blog.excerpt}
+          author={blog.author_name}
+          publishedAt={blog.created_at}
+          readTime={blog.read_time}
+        />
 
-          {featuredImage ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={featuredImage}
-              alt={blog.title}
-              className="mx-auto mt-10 aspect-[16/8] max-w-4xl rounded-[var(--radius-card)] object-cover"
-            />
-          ) : null}
+        {featuredImage ? (
+          <InsightArticleFeaturedImage src={featuredImage} alt={blog.title} />
+        ) : null}
 
-          <div
-            className="prose prose-sm mx-auto mt-10 max-w-3xl text-ink-secondary"
-            dangerouslySetInnerHTML={{ __html: body }}
-          />
-        </Container>
+        <InsightArticleBody html={body} />
+        <InsightArticleAdvisoryCta locale={locale} />
       </article>
 
       {relatedCards.length > 0 ? (
-        <section className="bg-sapphire-50 py-16">
-          <Container className="space-y-8">
-            <SectionHeading title={t("relatedTitle")} />
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {relatedCards.map((insight) => (
-                <InsightCard key={insight.href} {...insight} />
-              ))}
-            </div>
-          </Container>
-        </section>
+        <RelatedInsightsSection title={t("relatedTitle")} cards={relatedCards} />
       ) : null}
-
-      <EditableCtaBand
-        relUrl={insightBlocks.relUrl}
-        blockKey={insightBlocks.cta.title}
-        locale={locale}
-        placeholderContent={await getCmsPlaceholder("pages.insights", "ctaTitle", locale)}
-        actions={
-          <Button href={localizedHref(locale, "/contact")} variant="accent">
-            {tc("speakWith")} {tc("nip")}
-          </Button>
-        }
-      />
     </SiteShell>
   );
 }

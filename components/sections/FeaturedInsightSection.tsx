@@ -1,5 +1,6 @@
 import type { InsightCardProps } from "@/components/ui/Cards";
 import { InsightCard } from "@/components/ui/Cards";
+import { CardCarousel } from "@/components/ui/CardCarousel";
 import { Container } from "@/components/ui/Container";
 import { CatalogEmptyState } from "@/components/ui/ApiPagination";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
@@ -17,8 +18,8 @@ export async function FeaturedInsightSection({
   const t = await getTranslations({ locale, namespace: "home.empty" });
 
   return (
-    <section className="bg-white py-16 sm:py-20">
-      <Container className="space-y-10">
+    <section className="overflow-hidden bg-white py-16 sm:py-20">
+      <Container>
         <SectionHeading
           title={await getCmsPlaceholder("placeholders.home.featuredInsight", "title", locale)}
           description={await getCmsPlaceholder("placeholders.home.featuredInsight", "desc", locale)}
@@ -28,20 +29,27 @@ export async function FeaturedInsightSection({
             descKey: homeEditable.featuredInsight.descKey,
           }}
         />
-        {insights.length === 0 ? (
-          <CatalogEmptyState message={t("insights")} />
-        ) : (
-          <div className="grid gap-6 xl:grid-cols-3">
-            {insights.map((insight, index) => (
-              <InsightCard
-                key={insight.href ?? `${insight.title}-${index}`}
-                className="min-h-[440px]"
-                {...insight}
-              />
-            ))}
-          </div>
-        )}
       </Container>
+      {insights.length === 0 ? (
+        <Container className="mt-10">
+          <CatalogEmptyState message={t("insights")} />
+        </Container>
+      ) : (
+        <CardCarousel
+          className="mt-10"
+          fullBleed
+          slideWidth={480}
+          gap={24}
+          snapAlign="center"
+        >
+          {insights.map((insight, index) => (
+            <InsightCard
+              key={insight.href ?? `${insight.title}-${index}`}
+              {...insight}
+            />
+          ))}
+        </CardCarousel>
+      )}
     </section>
   );
 }

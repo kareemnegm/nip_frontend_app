@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { SiteShell } from "@/components/SiteShell";
-import {
-  ConciergeChatSection,
-  ConciergeHeroSection,
-} from "@/components/sections/ConciergeStorySections";
+import { ConciergePageSection } from "@/components/sections/ConciergeStorySections";
 import { resolveLocale } from "@/lib/i18n/helpers";
 import { localizedMetadata } from "@/lib/i18n/metadata";
 
@@ -17,8 +14,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default function ConciergePage() {
   return (
     <SiteShell>
-      <ConciergeHeroSection />
-      <ConciergeChatSection />
+      <ConciergePageSection />
     </SiteShell>
   );
 }

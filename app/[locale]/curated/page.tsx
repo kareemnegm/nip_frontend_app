@@ -37,7 +37,7 @@ export default async function CuratedPage({ params }: PageProps) {
   return (
     <SiteShell>
       <CuratedHeroSection user={user} />
-      <CuratedSelectionSection items={curatedToAdvisorCards(curatedResponse.items)} />
+      <CuratedSelectionSection items={curatedToAdvisorCards(curatedResponse.items, locale)} />
       <CuratedNotesSection notes={notesResponse.items} />
       <CuratedAdvisorBarSection advisor={user.advisor} locale={locale} />
     </SiteShell>

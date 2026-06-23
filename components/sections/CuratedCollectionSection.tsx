@@ -2,6 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/Button";
 import type { PropertyCardProps } from "@/components/ui/Cards";
 import { PropertyCard } from "@/components/ui/Cards";
+import { CardCarousel } from "@/components/ui/CardCarousel";
 import { Container } from "@/components/ui/Container";
 import { CatalogEmptyState } from "@/components/ui/ApiPagination";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
@@ -33,11 +34,11 @@ export async function CuratedCollectionSection({
         {properties.length === 0 ? (
           <CatalogEmptyState message={t("curated")} />
         ) : (
-          <div className="grid gap-6 xl:grid-cols-3">
+          <CardCarousel slideWidth={408} gap={24}>
             {properties.map((property, index) => (
-              <PropertyCard key={property.href ?? `curated-${index}`} className="min-h-[480px]" {...property} />
+              <PropertyCard key={property.href ?? `curated-${index}`} {...property} />
             ))}
-          </div>
+          </CardCarousel>
         )}
         <div className="flex justify-center">
           <Button href="/properties" size="lg" className="h-9">

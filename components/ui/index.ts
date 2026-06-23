@@ -11,8 +11,11 @@ export {
   OffPlanCard,
   PropertyCard,
 } from "./Cards";
+export { CardCarousel } from "./CardCarousel";
 export { Container } from "./Container";
 export type { ContainerProps } from "./Container";
+export { Modal } from "./Modal";
+export type { ModalProps } from "./Modal";
 export { Pagination } from "./Pagination";
 export type { PaginationProps } from "./Pagination";
 export { ApiPagination, CatalogEmptyState } from "./ApiPagination";

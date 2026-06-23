@@ -1,8 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { MemberAdvisorMessageDialog } from "@/components/forms/MemberAdvisorMessageForm";
 import { MemberSignOutButton } from "@/components/forms/MemberSignOutButton";
-import Link from "next/link";
-import { AdvisorCard, Button, Icon, PropertyCard } from "@/components/ui";
+import { AdvisorCard, Icon, PropertyCard } from "@/components/ui";
 import type { PropertyCardProps } from "@/components/ui/Cards";
 import { CatalogEmptyState } from "@/components/ui/ApiPagination";
 import {
@@ -15,31 +14,29 @@ import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
 import { cn } from "@/lib/cn";
 
-export function PrivateOfficeSectionHeading({
-  eyebrow,
-  title,
-  description,
+/** Figma T08 · Private Office member — section title (node 1525:27684). */
+function PrivateOfficeMemberSectionTitle({
+  children,
   className,
 }: {
-  eyebrow: string;
-  title: string;
-  description?: string;
+  children: React.ReactNode;
   className?: string;
 }) {
   return (
-    <div className={cn("flex max-w-3xl flex-col gap-4", className)}>
-      <p className="text-overline font-semibold text-accent">{eyebrow}</p>
-      <h2 className="font-[family-name:var(--font-display)] text-[36px] uppercase leading-[38px] tracking-[-0.02em] text-brand sm:text-[44px] sm:leading-[42px]">
-        {title}
-      </h2>
-      {description ? (
-        <p className="max-w-[464px] text-body-md leading-[22px] text-ink-secondary">
-          {description}
-        </p>
-      ) : null}
-    </div>
+    <h2
+      className={cn(
+        "font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand",
+        className,
+      )}
+    >
+      {children}
+    </h2>
   );
 }
+
+/** Figma T08 — 3-up card row: 344px cards, 24px gap, 480px row height. */
+const memberCardGridClassName =
+  "grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-6";
 
 export async function PrivateOfficeMemberHero({
   user,
@@ -55,42 +52,23 @@ export async function PrivateOfficeMemberHero({
   return (
     <section
       data-site-hero
-      className="bg-[linear-gradient(166.53deg,#254672_0%,#081a33_71.43%)] py-14 text-white sm:py-16 lg:py-20"
+      className="bg-sapphire-800 pt-16 pb-9 text-white"
     >
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div
-          className={cn(
-            sitePageInnerClassName,
-            "flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between",
-          )}
-        >
-          <div className="flex max-w-[620px] flex-col gap-4">
-            <p className="text-overline font-semibold text-gold">{t("title")}</p>
-            <h1 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-white sm:text-[52px] sm:leading-[50px]">
-              {t("welcomeBack", { name: displayName })}
-            </h1>
-            <p className="text-body-sm text-sapphire-100">
-              {t("curatedBy", { advisor: advisorName })}
-            </p>
-            <MemberSignOutButton
-              className="mt-4 border-white/30 text-white hover:bg-white/10"
-              redirectTo={localizedHref(locale, "/private-office")}
-            />
-          </div>
-          <div className="shrink-0 lg:text-right">
-            <p className="text-overline font-semibold text-platinum-400">{t("yourAdvisor")}</p>
-            <p className="mt-2 text-lg font-bold text-white">{advisorName}</p>
-            <p className="mt-1 text-body-xs text-sapphire-100">
-              {user.advisor?.availability ?? t("respondsWithinHours")}
-            </p>
-            <Link
-              href={localizedHref(locale, "/curated")}
-              className="mt-4 inline-flex items-center gap-1 text-body-sm font-semibold text-accent-on-dark hover:text-white"
-            >
-              {t("viewCuratedSelection")}
-              <Icon name="arrowRight" className="h-4 w-4" />
-            </Link>
-          </div>
+        <div className={cn(sitePageInnerClassName, "flex flex-col gap-4")}>
+          <p className="text-xs font-semibold leading-4 text-[#8fb0dc]">
+            {t("title").toUpperCase()}
+          </p>
+          <h1 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-white">
+            {t("welcomeBack", { name: displayName })}
+          </h1>
+          <p className="text-[13px] leading-[18px] text-[#bbcadd]">
+            {t("curatedBy", { advisor: advisorName })}
+          </p>
+          <MemberSignOutButton
+            className="mt-2 w-fit border-transparent bg-transparent px-0 py-0 text-[13px] font-normal text-[#8fb0dc] hover:bg-transparent hover:text-white"
+            redirectTo={localizedHref(locale, "/private-office")}
+          />
         </div>
       </div>
     </section>
@@ -101,26 +79,35 @@ export async function PrivateOfficeMemberCuratedSection({
   items = [],
   locale = "en",
 }: {
-  items?: Array<{ id?: number; title: string; excerpt: string }>;
+  items?: Array<{
+    id?: number;
+    title: string;
+    excerpt: string;
+    href?: string;
+    imageUrl?: string;
+  }>;
   locale?: Locale;
 }) {
   const t = await getTranslations({ locale, namespace: "privateOffice" });
 
   return (
-    <section className="bg-white py-16 sm:py-20">
+    <section className="bg-white py-14">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div className={cn(sitePageInnerClassName, "space-y-10")}>
-          <PrivateOfficeSectionHeading
-            eyebrow={t("curatedEyebrow")}
-            title={t("curatedForYou")}
-            description={t("curatedDescription")}
-          />
+        <div className={cn(sitePageInnerClassName, "flex flex-col gap-6")}>
+          <PrivateOfficeMemberSectionTitle>{t("curatedForYou")}</PrivateOfficeMemberSectionTitle>
           {items.length === 0 ? (
             <CatalogEmptyState message={t("noCuratedReleased")} />
           ) : (
-            <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+            <div className={memberCardGridClassName}>
               {items.map((item) => (
-                <AdvisorCard key={item.id ?? item.title} title={item.title} excerpt={item.excerpt} />
+                <AdvisorCard
+                  key={item.id ?? item.title}
+                  title={item.title}
+                  excerpt={item.excerpt}
+                  href={item.href}
+                  imageUrl={item.imageUrl}
+                  className="min-h-[480px] w-full xl:max-w-[344px]"
+                />
               ))}
             </div>
           )}
@@ -140,22 +127,18 @@ export async function PrivateOfficeMemberSavedSection({
   const t = await getTranslations({ locale, namespace: "privateOffice" });
 
   return (
-    <section className="bg-sapphire-50 py-16 sm:py-20">
+    <section className="bg-white pb-14 pt-6">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div className={cn(sitePageInnerClassName, "space-y-10")}>
-          <PrivateOfficeSectionHeading
-            eyebrow={t("savedProperties").split(/\s+/)[0] ?? t("savedProperties")}
-            title={t("savedProperties")}
-            description={t("savedDescription")}
-          />
+        <div className={cn(sitePageInnerClassName, "flex flex-col gap-6")}>
+          <PrivateOfficeMemberSectionTitle>{t("savedProperties")}</PrivateOfficeMemberSectionTitle>
           {properties.length === 0 ? (
             <CatalogEmptyState message={t("noSavedProperties")} />
           ) : (
-            <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+            <div className={memberCardGridClassName}>
               {properties.map((property) => (
                 <PropertyCard
                   key={property.href ?? property.title}
-                  className="min-h-[480px]"
+                  className="min-h-[480px] w-full xl:max-w-[344px]"
                   {...property}
                 />
               ))}
@@ -178,7 +161,7 @@ export async function PrivateOfficeMemberAdvisorBar({
   const name = advisor?.name ?? t("yourAdvisor");
 
   return (
-    <section className="border-t border-line bg-sapphire-50">
+    <section className="bg-sapphire-50">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div
           className={cn(
@@ -186,26 +169,20 @@ export async function PrivateOfficeMemberAdvisorBar({
             "flex flex-col items-start justify-between gap-6 py-8 sm:flex-row sm:items-center",
           )}
         >
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-white">
-              <Icon name="user" className="h-5 w-5" />
+          <div className="flex items-center gap-3.5">
+            <span className="flex h-[52px] w-[52px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand text-white">
+              <Icon name="user" className="h-6 w-6" />
             </span>
-            <div>
-              <p className="text-body-sm font-bold text-brand">
+            <div className="flex flex-col gap-2">
+              <p className="text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
                 {t("yourAdvisor")} | {name}
               </p>
-              <p className="text-body-xs text-ink-tertiary">
+              <p className="text-[13px] leading-[18px] text-ink-tertiary">
                 {advisor?.availability ?? t("availableMonFri")}
               </p>
             </div>
           </div>
-          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <MemberAdvisorMessageDialog advisorName={name} locale={locale} />
-            <Button href="/contact" variant="accent" className="justify-center">
-              {t("requestPrivateViewing")}
-              <Icon name="arrowRight" className="h-4 w-4" />
-            </Button>
-          </div>
+          <MemberAdvisorMessageDialog advisorName={name} locale={locale} />
         </div>
       </div>
     </section>

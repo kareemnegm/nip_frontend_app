@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import type { PropertyCardProps } from "@/components/ui/Cards";
 import { PropertyCard } from "@/components/ui/Cards";
+import { CardCarousel } from "@/components/ui/CardCarousel";
 import { Container } from "@/components/ui/Container";
 import { CatalogEmptyState } from "@/components/ui/ApiPagination";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
@@ -31,11 +32,11 @@ export async function FeaturedSelectionSection({
         {properties.length === 0 ? (
           <CatalogEmptyState message={t("featured")} />
         ) : (
-          <div className="grid gap-2 xl:grid-cols-3">
+          <CardCarousel slideWidth={408} gap={8}>
             {properties.map((property, index) => (
-              <PropertyCard key={property.href ?? `featured-${index}`} className="min-h-[480px]" {...property} />
+              <PropertyCard key={property.href ?? `featured-${index}`} {...property} />
             ))}
-          </div>
+          </CardCarousel>
         )}
       </Container>
     </section>

@@ -76,15 +76,6 @@ export async function Header() {
               );
             }
 
-            if ("caret" in item && item.caret) {
-              return (
-                <LocalizedLink key={item.key} href={item.href} className={navLinkClass}>
-                  {t(item.key)}
-                  <NavCaret />
-                </LocalizedLink>
-              );
-            }
-
             return (
               <LocalizedLink key={item.key} href={item.href} className={navLinkClass}>
                 {t(item.key)}

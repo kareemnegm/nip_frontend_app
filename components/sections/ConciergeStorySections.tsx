@@ -1,195 +1,75 @@
 import { getTranslations } from "next-intl/server";
+import { ConciergeChat } from "@/components/concierge/ConciergeChat";
 import { EditableText } from "@/components/EditableText";
 import { LocalizedLink } from "@/components/LocalizedLink";
-import { Button, Icon, ImagePlaceholder } from "@/components/ui";
+import { Icon } from "@/components/ui";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
-import {
-  siteMaxWidth,
-  sitePageGutterX,
-  sitePageInnerClassName,
-} from "@/components/ui/SiteChrome";
+import { siteMaxWidth, sitePageGutterX } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
-
-export const conciergeQuickPrompts = [
-  "Best areas for investment?",
-  "Golden Visa & property",
-  "Off-plan vs ready",
-  "Payment plans explained",
-];
-
-export const conciergeSampleMessages = {
-  greeting:
-    "Hello — I'm the NIP Concierge. Ask me about communities, pricing, off-plan or the Golden Visa. I can also connect you with a private advisor.",
-  userQuestion: "Which areas offer the best long-term value right now?",
-  reply:
-    "A few stand out for scarcity and infrastructure — Palm Jumeirah, Downtown and the Creek corridor. Here's one that fits a long-hold profile:",
-};
-
-export const conciergeSampleProperty = {
-  title: "Property Name",
-  location: "Sheikh Zayed Road, Dubai",
-  meta: ["2 Beds", "3 Baths", "2,315 sq ft"],
-  price: "AED 2,658,000",
-  href: "/properties/sample",
-};
-
-function ConciergePropertyCard() {
-  const property = conciergeSampleProperty;
-
-  return (
-    <div className="max-w-[320px] overflow-hidden rounded-[var(--radius-card)] border border-line bg-white shadow-[var(--shadow-card)]">
-      <ImagePlaceholder
-        rounded={false}
-        className="aspect-[1.7] min-h-[160px] w-full"
-      />
-      <div className="space-y-3 p-4">
-        <h3 className="text-h3 font-bold text-brand">{property.title}</h3>
-        <p className="flex items-center gap-1 text-body-sm text-ink-secondary">
-          <Icon name="mapPin" className="h-3.5 w-3.5 shrink-0 text-brand" />
-          {property.location}
-        </p>
-        <div className="flex flex-wrap gap-3.5">
-          {property.meta.map((item) => (
-            <span
-              key={item}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold leading-4 text-ink"
-            >
-              <span className="inline-flex h-[22px] w-[22px] items-center justify-center rounded-[2px] bg-basalt-50 p-1">
-                <Icon
-                  name={
-                    item.toLowerCase().includes("bed")
-                      ? "bed"
-                      : item.toLowerCase().includes("bath")
-                        ? "bath"
-                        : "grid"
-                  }
-                  className="h-3.5 w-3.5 text-ink-secondary"
-                />
-              </span>
-              {item}
-            </span>
-          ))}
-        </div>
-        <div className="flex items-end justify-between gap-4 pt-1">
-          <div>
-            <p className="text-xs leading-4 text-ink-tertiary">Starting From</p>
-            <p className="mt-1 flex items-center gap-2 text-xl font-bold leading-[26px] text-brand">
-              <Icon name="currency" className="h-[18px] w-[18px] shrink-0" />
-              {property.price.replace(/^AED\s*/i, "")}
-            </p>
-          </div>
-          <Button
-            href={property.href}
-            variant="link"
-            className="shrink-0 text-body-sm leading-[18px]"
-          >
-            Explore Property
-            <Icon name="arrowRight" className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 const conciergeBlocks = pageBlockKeys.concierge;
 
-export async function ConciergeHeroSection() {
-  const locale = await getRequestLocale();
-
-  return (
-    <section data-site-hero className="bg-white pt-[72px] pb-10">
-      <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div className="mx-auto flex w-full max-w-[846px] flex-col items-center gap-4 text-center">
-          <EditableText
-            relUrl={conciergeBlocks.relUrl}
-            blockKey={conciergeBlocks.hero.eyebrow}
-            locale={locale}
-            placeholderContent={await getCmsPlaceholder("placeholders.concierge.hero", "eyebrow", locale)}
-            placeholderTag="p"
-            className="text-overline font-semibold text-accent"
-          />
-          <EditableText
-            relUrl={conciergeBlocks.relUrl}
-            blockKey={conciergeBlocks.hero.title}
-            locale={locale}
-            placeholderContent={await getCmsPlaceholder("placeholders.concierge.hero", "title", locale)}
-            placeholderTag="h1"
-            className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
-          />
-          <EditableText
-            relUrl={conciergeBlocks.relUrl}
-            blockKey={conciergeBlocks.hero.description}
-            locale={locale}
-            placeholderContent={await getCmsPlaceholder("placeholders.concierge.hero", "description", locale)}
-            placeholderTag="p"
-            className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary"
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export async function ConciergeChatSection() {
+export async function ConciergePageSection() {
   const locale = await getRequestLocale();
   const t = await getTranslations({ locale, namespace: "pages.concierge" });
-  const tc = await getTranslations({ locale, namespace: "common" });
-  const { greeting, userQuestion, reply } = conciergeSampleMessages;
-  const quickPrompts = [t("chip1"), t("chip2"), t("chip3"), t("chip4")];
 
   return (
-    <section className="bg-surface-muted pb-[72px] pt-2">
+    <section
+      data-site-hero
+      className="bg-surface-muted pb-20 pt-16"
+    >
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div className={cn(sitePageInnerClassName, "mx-auto max-w-[720px]")}>
-          <div className="overflow-hidden rounded-[var(--radius-card)] border border-line bg-white shadow-[var(--shadow-card)]">
-            <div className="flex flex-wrap gap-2 border-b border-line bg-white p-4">
-              {quickPrompts.map((prompt) => (
-                <button
-                  key={prompt}
-                  type="button"
-                  className="rounded-full border border-line bg-white px-4 py-2 text-body-xs font-medium leading-4 text-ink-secondary transition-colors hover:border-brand hover:text-brand"
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
-
-            <div className="space-y-4 bg-white p-5 sm:p-6">
-              <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-sapphire-50 px-4 py-3 text-body-sm leading-[18px] text-ink-secondary">
-                {greeting}
-              </div>
-              <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm bg-brand px-4 py-3 text-body-sm leading-[18px] text-white">
-                {userQuestion}
-              </div>
-              <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-sapphire-50 px-4 py-3 text-body-sm leading-[18px] text-ink-secondary">
-                {reply}
-              </div>
-              <ConciergePropertyCard />
-            </div>
-
-            <div className="flex items-center gap-3 border-t border-line bg-white p-4">
-              <input
-                aria-label={t("inputPlaceholder")}
-                placeholder={t("inputPlaceholder")}
-                className="h-11 flex-1 rounded-[var(--radius-field)] border border-line bg-white px-4 text-body-sm text-ink outline-none placeholder:text-ink-tertiary focus:border-brand focus:ring-2 focus:ring-sapphire-100"
-              />
-              <Button type="button" className="shrink-0">
-                {tc("send")}
-                <Icon name="send" className="h-4 w-4" />
-              </Button>
-            </div>
+        <div className="mx-auto flex w-full max-w-[860px] flex-col items-center gap-7">
+          <div className="flex w-full flex-col items-center gap-3 text-center">
+            <EditableText
+              relUrl={conciergeBlocks.relUrl}
+              blockKey={conciergeBlocks.hero.eyebrow}
+              locale={locale}
+              placeholderContent={await getCmsPlaceholder(
+                "placeholders.concierge.hero",
+                "eyebrow",
+                locale,
+              )}
+              placeholderTag="p"
+              className="text-overline font-semibold text-accent"
+            />
+            <EditableText
+              relUrl={conciergeBlocks.relUrl}
+              blockKey={conciergeBlocks.hero.title}
+              locale={locale}
+              placeholderContent={await getCmsPlaceholder(
+                "placeholders.concierge.hero",
+                "title",
+                locale,
+              )}
+              placeholderTag="h1"
+              className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
+            />
+            <EditableText
+              relUrl={conciergeBlocks.relUrl}
+              blockKey={conciergeBlocks.hero.description}
+              locale={locale}
+              placeholderContent={await getCmsPlaceholder(
+                "placeholders.concierge.hero",
+                "description",
+                locale,
+              )}
+              placeholderTag="p"
+              className="max-w-[620px] text-body-sm leading-[18px] text-ink-secondary"
+            />
           </div>
 
-          <p className="mt-6 text-center text-body-sm leading-[18px] text-ink-secondary">
-            Prefer a Person?{" "}
+          <ConciergeChat variant="page" autoStartSession className="w-full" />
+
+          <p className="text-center text-body-sm leading-[18px] text-brand">
+            {t("preferPerson")}{" "}
             <LocalizedLink
               href="/contact"
-              className="inline-flex items-center gap-1 font-semibold text-brand transition-colors hover:text-brand-hover"
+              className="inline-flex items-center gap-1 font-semibold text-accent transition-colors hover:text-brand-hover"
             >
-              {tc("speakWith")} {tc("nip")}
+              {t("speakWithPrivateAdvisor")}
               <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
             </LocalizedLink>
           </p>

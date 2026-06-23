@@ -24,6 +24,18 @@ export type ApiPropertyImage = {
   image_url: string;
 };
 
+export type ApiPaymentStep = {
+  caption?: string | null;
+  percentage: string;
+  label: string;
+};
+
+export type ApiUnit = {
+  unit_type: string;
+  size_sqft: string;
+  starting_price: string;
+};
+
 export type ApiProperty = {
   id: number;
   title: string;
@@ -53,6 +65,12 @@ export type ApiProperty = {
   video?: string | null;
   video_url?: string | null;
   handover_quarter?: string | null;
+  furnishing?: string | null;
+  reference_no?: string | null;
+  unit_types?: string | null;
+  payment_split?: string | null;
+  payment_plan?: ApiPaymentStep[] | null;
+  units?: ApiUnit[] | null;
   area?: ApiAreaRef | null;
   developers?: ApiDeveloperRef[];
   facilities?: ApiFacility[];

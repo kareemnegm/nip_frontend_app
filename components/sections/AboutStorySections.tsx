@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
 import { SpeakWithNipButton } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -7,21 +8,65 @@ import {
   sitePageGutterX,
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
+import { getBlocksForPage } from "@/lib/api/blocks";
 import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { getRequestLocale } from "@/lib/i18n/server";
 
-const partners = ["MERAAS", "H&H", "EMAAR", "ALDAR", "OMNIYAT"];
+const aboutBlocks = pageBlockKeys.about;
+
+const aboutHeadingClassName =
+  "font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-1.2px] text-brand";
+
+const aboutBodyClassName = "text-[17px] leading-[28px] text-ink-secondary";
+
+const partnerLogoSlots = [
+  {
+    blockKey: aboutBlocks.partners.logo1,
+    placeholderUrl: "/logos/about-partner-meraas.png",
+    placeholderAlt: "Meraas",
+    wrapperClassName: "flex h-[33px] w-[124px] items-center justify-center",
+    width: 124,
+    height: 33,
+  },
+  {
+    blockKey: aboutBlocks.partners.logo2,
+    placeholderUrl: "/logos/about-partner-hh.png",
+    placeholderAlt: "H&H",
+    wrapperClassName: "flex h-[38px] w-[71px] items-center justify-center",
+    width: 71,
+    height: 38,
+  },
+  {
+    blockKey: aboutBlocks.partners.logo3,
+    placeholderUrl: "/logos/about-partner-emaar.png",
+    placeholderAlt: "Emaar",
+    wrapperClassName: "flex h-[24px] w-[120px] items-center justify-center",
+    width: 120,
+    height: 24,
+  },
+  {
+    blockKey: aboutBlocks.partners.logo4,
+    placeholderUrl: "/logos/about-partner-aldar.png",
+    placeholderAlt: "Aldar",
+    wrapperClassName: "flex h-[52px] w-[52px] items-center justify-center",
+    width: 52,
+    height: 52,
+  },
+  {
+    blockKey: aboutBlocks.partners.logo5,
+    placeholderUrl: "/logos/about-partner-omniyat.png",
+    placeholderAlt: "Omniyat",
+    wrapperClassName: "flex h-[18px] w-[120px] items-center justify-center",
+    width: 120,
+    height: 18,
+  },
+] as const;
 
 export function AboutCtaRow({ className }: { className?: string }) {
   return (
-    <div
-      className={cn(
-        "flex w-full max-w-[400px] gap-3",
-        className,
-      )}
-    >
+    <div className={cn("flex w-full max-w-[400px] gap-3", className)}>
       <SpeakWithNipButton href="/contact" className="flex-1 justify-center" />
       <Link
         href="/insights"
@@ -34,13 +79,11 @@ export function AboutCtaRow({ className }: { className?: string }) {
   );
 }
 
-const aboutBlocks = pageBlockKeys.about;
-
 export async function AboutHeroSection() {
   const locale = await getRequestLocale();
 
   return (
-    <section data-site-hero className="bg-white pt-[72px] pb-12">
+    <section id="team" data-site-hero className="bg-white pt-[72px] pb-12">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className="mx-auto flex w-full max-w-[846px] flex-col items-center gap-10 text-center">
           <div className="flex flex-col items-center gap-4">
@@ -48,7 +91,11 @@ export async function AboutHeroSection() {
               relUrl={aboutBlocks.relUrl}
               blockKey={aboutBlocks.hero.eyebrow}
               locale={locale}
-              placeholderContent={await getCmsPlaceholder("placeholders.about.hero", "eyebrow", locale)}
+              placeholderContent={await getCmsPlaceholder(
+                "placeholders.about.hero",
+                "eyebrow",
+                locale,
+              )}
               placeholderTag="p"
               className="text-overline font-semibold text-accent"
             />
@@ -56,17 +103,25 @@ export async function AboutHeroSection() {
               relUrl={aboutBlocks.relUrl}
               blockKey={aboutBlocks.hero.title}
               locale={locale}
-              placeholderContent={await getCmsPlaceholder("placeholders.about.hero", "title", locale)}
+              placeholderContent={await getCmsPlaceholder(
+                "placeholders.about.hero",
+                "title",
+                locale,
+              )}
               placeholderTag="h1"
-              className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand"
+              className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.88px] text-brand"
             />
             <EditableText
               relUrl={aboutBlocks.relUrl}
               blockKey={aboutBlocks.hero.description}
               locale={locale}
-              placeholderContent={await getCmsPlaceholder("placeholders.about.hero", "description", locale)}
+              placeholderContent={await getCmsPlaceholder(
+                "placeholders.about.hero",
+                "description",
+                locale,
+              )}
               placeholderTag="p"
-              className="max-w-[680px] text-body-lg text-ink-secondary"
+              className={cn("max-w-[680px]", aboutBodyClassName)}
             />
           </div>
           <AboutCtaRow />
@@ -76,29 +131,50 @@ export async function AboutHeroSection() {
   );
 }
 
-export function AboutMarketSection() {
+export async function AboutMarketSection() {
+  const locale = await getRequestLocale();
+
   return (
     <section className="bg-white py-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className="mx-auto flex max-w-[726px] flex-col items-center gap-4 text-center">
-          <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
-            Dubai&apos;s Property Market moves Quickly
-          </h2>
-          <p className="text-body-lg text-ink-secondary">
-            New launches, private resales, waterfront residences, branded
-            developments, and selected off-market opportunities appear every day.
-            For private clients, the challenge is not finding options. The
-            challenge is knowing which options deserve attention.
-          </p>
+          <EditableText
+            relUrl={aboutBlocks.relUrl}
+            blockKey={aboutBlocks.market.title}
+            locale={locale}
+            placeholderContent={await getCmsPlaceholder(
+              "placeholders.about.market",
+              "title",
+              locale,
+            )}
+            placeholderTag="h2"
+            className={aboutHeadingClassName}
+          />
+          <EditableText
+            relUrl={aboutBlocks.relUrl}
+            blockKey={aboutBlocks.market.body}
+            locale={locale}
+            placeholderContent={await getCmsPlaceholder(
+              "placeholders.about.market",
+              "body",
+              locale,
+            )}
+            placeholderTag="p"
+            className={aboutBodyClassName}
+          />
         </div>
       </div>
     </section>
   );
 }
 
-export function AboutRoleSection() {
+export async function AboutRoleSection() {
+  const locale = await getRequestLocale();
+  const blocks = await getBlocksForPage(aboutBlocks.relUrl, locale);
+  const hasRoleImage = Boolean(blocks[aboutBlocks.role.image]?.content?.trim());
+
   return (
-    <section className="bg-white pb-20">
+    <section id="approach" className="bg-white pb-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div
           className={cn(
@@ -106,20 +182,63 @@ export function AboutRoleSection() {
             "flex flex-col items-center gap-12 lg:flex-row lg:items-center",
           )}
         >
-          <div className="flex h-[280px] w-full max-w-[520px] shrink-0 items-center justify-center rounded-[var(--radius-card)] bg-basalt-100 sm:h-[400px]">
-            <Icon name="home" className="h-[70px] w-[70px] text-white" />
+          <div className="relative h-[280px] w-full max-w-[520px] shrink-0 sm:h-[400px]">
+            <EditableImage
+              relUrl={aboutBlocks.relUrl}
+              blockKey={aboutBlocks.role.image}
+              locale={locale}
+              placeholderUrl=""
+              placeholderAlt="Our role"
+              fill
+              className="rounded-[var(--radius-card)] bg-basalt-100"
+              imageClassName="object-cover"
+            />
+            {!hasRoleImage ? (
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[var(--radius-card)]"
+              >
+                <Icon name="home" className="h-[70px] w-[70px] text-white/80" />
+              </div>
+            ) : null}
           </div>
           <div className="flex max-w-[512px] flex-col gap-4">
-            <p className="text-overline font-semibold text-accent">OUR ROLE</p>
-            <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
-              We do not Begin with Inventory
-            </h2>
-            <p className="text-body-lg text-ink-secondary">
-              We begin with the client&apos;s context: purpose, timing, risk,
-              lifestyle, capital strategy, and long-term view. From there, we
-              help identify the areas, developers, projects, and properties that
-              align with the brief.
-            </p>
+            <EditableText
+              relUrl={aboutBlocks.relUrl}
+              blockKey={aboutBlocks.role.eyebrow}
+              locale={locale}
+              placeholderContent={await getCmsPlaceholder(
+                "placeholders.about.role",
+                "eyebrow",
+                locale,
+              )}
+              placeholderTag="p"
+              className="text-overline font-semibold text-accent"
+            />
+            <EditableText
+              relUrl={aboutBlocks.relUrl}
+              blockKey={aboutBlocks.role.title}
+              locale={locale}
+              placeholderContent={await getCmsPlaceholder(
+                "placeholders.about.role",
+                "title",
+                locale,
+              )}
+              placeholderTag="h2"
+              className={aboutHeadingClassName}
+            />
+            <EditableText
+              relUrl={aboutBlocks.relUrl}
+              blockKey={aboutBlocks.role.body}
+              locale={locale}
+              placeholderContent={await getCmsPlaceholder(
+                "placeholders.about.role",
+                "body",
+                locale,
+              )}
+              placeholderTag="p"
+              className={aboutBodyClassName}
+            />
           </div>
         </div>
       </div>
@@ -127,44 +246,80 @@ export function AboutRoleSection() {
   );
 }
 
-export function AboutPartnersStrip() {
+export async function AboutPartnersStrip() {
+  const locale = await getRequestLocale();
+
   return (
     <section className="bg-sapphire-800 py-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className="flex flex-col items-center gap-10">
           <div className="flex flex-wrap items-center justify-center gap-10">
-            {partners.map((partner) => (
-              <span
-                key={partner}
-                className="font-[family-name:var(--font-display)] text-xl uppercase tracking-[0.12em] text-white/90 sm:text-2xl"
-              >
-                {partner}
-              </span>
+            {partnerLogoSlots.map((slot) => (
+              <div key={slot.blockKey} className={slot.wrapperClassName}>
+                <EditableImage
+                  relUrl={aboutBlocks.relUrl}
+                  blockKey={slot.blockKey}
+                  locale={locale}
+                  placeholderUrl={slot.placeholderUrl}
+                  placeholderAlt={slot.placeholderAlt}
+                  width={slot.width}
+                  height={slot.height}
+                  className="relative h-full w-full"
+                  imageClassName="h-full w-full object-contain"
+                />
+              </div>
             ))}
           </div>
-          <div className="text-center text-body-xs text-basalt-200">
-            <p>Trusted Partnership</p>
-            <p>with Dubai&apos;s Leading Developers</p>
-          </div>
+          <EditableText
+            relUrl={aboutBlocks.relUrl}
+            blockKey={aboutBlocks.partners.caption}
+            locale={locale}
+            placeholderContent={await getCmsPlaceholder(
+              "placeholders.about.partners",
+              "caption",
+              locale,
+            )}
+            placeholderTag="p"
+            className="whitespace-pre-line text-center text-body-xs text-basalt-200"
+          />
         </div>
       </div>
     </section>
   );
 }
 
-export function AboutStandardSection() {
+export async function AboutStandardSection() {
+  const locale = await getRequestLocale();
+
   return (
-    <section className="bg-white py-[72px]">
+    <section id="why-nip" className="bg-white py-[72px]">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className="mx-auto flex max-w-[846px] flex-col items-center gap-10 text-center">
           <div className="flex flex-col items-center gap-2">
-            <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
-              NIP is Built around a Simple Standard:
-            </h2>
-            <p className="text-[13px] font-semibold italic leading-[18px] text-ink-secondary">
-              &ldquo;One source for insight. One system for decision-making. One
-              standard for every client journey.&rdquo;
-            </p>
+            <EditableText
+              relUrl={aboutBlocks.relUrl}
+              blockKey={aboutBlocks.standard.title}
+              locale={locale}
+              placeholderContent={await getCmsPlaceholder(
+                "placeholders.about.standard",
+                "title",
+                locale,
+              )}
+              placeholderTag="h2"
+              className={aboutHeadingClassName}
+            />
+            <EditableText
+              relUrl={aboutBlocks.relUrl}
+              blockKey={aboutBlocks.standard.quote}
+              locale={locale}
+              placeholderContent={await getCmsPlaceholder(
+                "placeholders.about.standard",
+                "quote",
+                locale,
+              )}
+              placeholderTag="p"
+              className="text-[13px] font-semibold italic leading-[18px] text-ink-secondary"
+            />
           </div>
           <AboutCtaRow />
         </div>

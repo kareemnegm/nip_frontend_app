@@ -7,6 +7,23 @@ import {
   PropertyGalleryClient,
 } from "./PropertyGalleryClient";
 
+export { PropertyAdvisoryCard } from "./PropertyAdvisoryCard";
+export type { PropertyAdvisoryCardLabels } from "./PropertyAdvisoryCard";
+
+function FacilityIcon({ icon }: { icon?: string | null }) {
+  if (icon?.trim()) {
+    return (
+      <span
+        className="flex h-6 w-6 shrink-0 items-center justify-center [&_svg]:h-6 [&_svg]:w-6 [&_svg]:text-brand"
+        dangerouslySetInnerHTML={{ __html: icon }}
+        aria-hidden
+      />
+    );
+  }
+
+  return <Icon name="home" className="h-6 w-6 shrink-0 text-brand" />;
+}
+
 export type PropertyStoryLabels = {
   storyTitle: string;
   amenitiesTitle: string;
@@ -36,11 +53,7 @@ export function PropertyStoryContent({
   locationImageUrl?: string;
   labels: PropertyStoryLabels;
 }) {
-  const amenityItems =
-    facilities?.map((item) => ({
-      label: item.facility,
-      icon: "home" as const,
-    })) ?? [];
+  const amenityItems = facilities ?? [];
 
   const showLocationSection = Boolean(locationNote || locationImageUrl);
 
@@ -61,13 +74,13 @@ export function PropertyStoryContent({
             {labels.amenitiesTitle}
           </h2>
           <div className="flex flex-wrap gap-2.5">
-            {amenityItems.map(({ label, icon }) => (
+            {amenityItems.map((item) => (
               <span
-                key={label}
+                key={item.id}
                 className="inline-flex items-center gap-2 rounded-[var(--radius-field)] bg-basalt-50 py-2 pl-3 pr-4 text-[11px] font-medium leading-[14px] text-ink-secondary"
               >
-                <Icon name={icon} className="h-6 w-6 shrink-0 text-brand" />
-                {label}
+                <FacilityIcon icon={item.facility_icon} />
+                {item.facility}
               </span>
             ))}
           </div>

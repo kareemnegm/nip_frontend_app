@@ -58,7 +58,7 @@ export function MemberDashboardView({
   data: MemberDashboardData;
   locale: Locale;
 }) {
-  const curatedCards = curatedToAdvisorCards(data.curated);
+  const curatedCards = curatedToAdvisorCards(data.curated, locale);
 
   return (
     <SiteShell>
@@ -70,21 +70,27 @@ export function MemberDashboardView({
   );
 }
 
-export function curatedToAdvisorCards(items: ApiCuratedItem[]) {
+export function curatedToAdvisorCards(items: ApiCuratedItem[], locale: Locale = "en") {
   return items.map((item) => {
     const listingTitle =
       item.type === "project" ? item.project?.name : item.property?.title;
     const slug =
       item.type === "project" ? item.project?.slug : item.property?.slug;
+    const imageUrl =
+      item.type === "project"
+        ? item.project?.primaryImage ?? undefined
+        : item.property?.primaryImage ?? undefined;
 
     return {
       id: item.id,
       title: item.title,
       excerpt: item.note ?? listingTitle ?? "",
+      imageUrl: imageUrl ?? undefined,
       href: slug
-        ? item.type === "project"
-          ? `/off-plan/${slug}`
-          : `/properties/${slug}`
+        ? localizedHref(
+            locale,
+            item.type === "project" ? `/off-plan/${slug}` : `/properties/${slug}`,
+          )
         : undefined,
       isAvailable:
         item.type === "project"

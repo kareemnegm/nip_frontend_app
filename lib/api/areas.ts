@@ -2,7 +2,7 @@ import { cache } from "react";
 import { defaultLocale, type Locale } from "@/lib/i18n/config";
 import type { ApiArea, LaravelPaginated } from "@/types/api";
 import { ApiError } from "./errors";
-import { emptyPaginated, isOfflineError } from "./fallbacks";
+import { emptyPaginated, isOfflineError, logApiFallback } from "./fallbacks";
 import { apiGet, unwrapData } from "./client";
 
 export async function getAreas(
@@ -14,7 +14,8 @@ export async function getAreas(
       params: query,
       locale,
     });
-  } catch {
+  } catch (error) {
+    logApiFallback("GET /areas", error);
     return emptyPaginated<ApiArea>(query.per_page ?? 9);
   }
 }

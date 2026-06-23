@@ -14,11 +14,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return localizedMetadata(resolveLocale(rawLocale), "legal");
 }
 
-export default function LegalPage() {
+export default async function LegalPage({ params }: PageProps) {
+  const { locale: rawLocale } = await params;
+  const locale = resolveLocale(rawLocale);
+
   return (
     <SiteShell>
-      <LegalHeroSection />
-      <LegalContentSection />
+      <LegalHeroSection locale={locale} />
+      <LegalContentSection locale={locale} />
     </SiteShell>
   );
 }

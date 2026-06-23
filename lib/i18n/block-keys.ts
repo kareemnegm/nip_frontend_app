@@ -41,6 +41,22 @@ export const pageBlockKeys = {
   about: {
     relUrl: "/about",
     hero: { eyebrow: "hero-eyebrow", title: "hero-title", description: "hero-description" },
+    market: { title: "market-title", body: "market-body" },
+    role: {
+      eyebrow: "role-eyebrow",
+      title: "role-title",
+      body: "role-body",
+      image: "role-image",
+    },
+    partners: {
+      caption: "partners-caption",
+      logo1: "partner-logo-1",
+      logo2: "partner-logo-2",
+      logo3: "partner-logo-3",
+      logo4: "partner-logo-4",
+      logo5: "partner-logo-5",
+    },
+    standard: { title: "standard-title", quote: "standard-quote" },
   },
   properties: {
     relUrl: "/properties",
@@ -83,6 +99,23 @@ export const pageBlockKeys = {
   legal: {
     relUrl: "/legal",
     hero: { eyebrow: "hero-eyebrow", title: "hero-title", lastUpdated: "hero-last-updated" },
+    sidebar: { title: "sidebar-title" },
+    complianceImage: "compliance-image",
+    sections: {
+      overview: { title: "section-overview-title", body: "section-overview-body" },
+      "information-we-collect": {
+        title: "section-information-we-collect-title",
+        body: "section-information-we-collect-body",
+      },
+      "how-we-use-it": { title: "section-how-we-use-it-title", body: "section-how-we-use-it-body" },
+      "sharing-disclosure": {
+        title: "section-sharing-disclosure-title",
+        body: "section-sharing-disclosure-body",
+      },
+      "data-retention": { title: "section-data-retention-title", body: "section-data-retention-body" },
+      "your-rights": { title: "section-your-rights-title", body: "section-your-rights-body" },
+      contact: { title: "section-contact-title", body: "section-contact-body" },
+    },
   },
   concierge: {
     relUrl: "/concierge",

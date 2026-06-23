@@ -33,7 +33,7 @@ export default async function HomePage({ params }: HomePageProps) {
 
   const [home, blogs] = await Promise.all([
     getHome(locale),
-    getBlogs({ per_page: 3, locale }),
+    getBlogs({ per_page: 5, locale }),
   ]);
 
   const featuredProperties = home.featured_properties.map((property) =>

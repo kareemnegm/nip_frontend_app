@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Textarea, TextInput } from "@/components/ui/FormControls";
@@ -133,11 +134,18 @@ export function MemberAdvisorMessageDialog({
   locale?: "en" | "ar";
 }) {
   const [open, setOpen] = useState(false);
+  const t = useTranslations("privateOffice");
 
   return (
     <>
-      <Button type="button" className="justify-center" onClick={() => setOpen(true)}>
-        Message your Advisor
+      <Button
+        type="button"
+        variant="primary"
+        size="md"
+        className="w-full shrink-0 justify-center sm:w-auto"
+        onClick={() => setOpen(true)}
+      >
+        {t("messageAdvisor")}
       </Button>
       {open ? (
         <div

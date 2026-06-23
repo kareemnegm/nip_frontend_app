@@ -24,7 +24,7 @@ export function buildPropertyListParams(
     listing_type: defaults.listing_type ?? sp.listing_type ?? sp.listing,
     keyword: sp.keyword ?? sp.q,
     type: sp.type,
-    area: sp.area,
+    area: sp.area ?? sp.location ?? sp.community,
     developer: sp.developer,
     bedrooms: sp.bedrooms ?? sp.beds,
     bathrooms: sp.bathrooms ?? sp.baths,

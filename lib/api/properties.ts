@@ -6,7 +6,7 @@ import type {
   PropertyListParams,
 } from "@/types/api";
 import { ApiError } from "./errors";
-import { emptyPaginated, isOfflineError } from "./fallbacks";
+import { emptyPaginated, isOfflineError, logApiFallback } from "./fallbacks";
 import { apiGet, unwrapData } from "./client";
 
 function toQueryParams(params: PropertyListParams = {}) {
@@ -27,7 +27,8 @@ export async function getProperties(params: PropertyListParams = {}) {
       params: toQueryParams(rest),
       locale,
     });
-  } catch {
+  } catch (error) {
+    logApiFallback("GET /properties", error);
     return emptyPaginated<ApiProperty>(Number(rest.per_page) || 9);
   }
 }
@@ -62,7 +63,8 @@ export async function getSimilarProperties(
       { locale },
     );
     return Array.isArray(response) ? response : unwrapData(response);
-  } catch {
+  } catch (error) {
+    logApiFallback(`GET /properties/${slug}/similar`, error);
     return [];
   }
 }

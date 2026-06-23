@@ -37,3 +37,16 @@ export function isOfflineError(error: unknown): boolean {
   }
   return false;
 }
+
+/** Log in dev when an API call fails and the UI falls back to empty data. */
+export function logApiFallback(endpoint: string, error: unknown): void {
+  if (process.env.NODE_ENV !== "development") return;
+
+  const offline = isOfflineError(error);
+  const message =
+    error instanceof Error ? error.message : String(error ?? "Unknown error");
+
+  console.warn(
+    `[NIP API] ${endpoint} failed${offline ? " (backend unreachable)" : ""}: ${message}. Showing empty fallback — check Laragon/backend is running and NEXT_PUBLIC_API_URL is correct.`,
+  );
+}

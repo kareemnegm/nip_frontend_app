@@ -132,3 +132,273 @@ select,
 textarea {
   font: inherit;
 }
+
+/* T12 · Insight Article — CMS body typography (Figma 1525:27570) */
+.insight-article-body {
+  color: var(--color-ink);
+}
+
+.insight-article-body > div > *:first-child,
+.insight-article-body > *:first-child {
+  margin-top: 0;
+}
+
+.insight-article-body p {
+  max-width: 720px;
+  margin-inline: auto;
+  margin-bottom: 24px;
+  font-size: 17px;
+  line-height: 28px;
+  color: var(--color-ink);
+}
+
+.insight-article-body h2 {
+  max-width: 720px;
+  margin-inline: auto;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 38px;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.insight-article-body h3,
+.insight-article-body h4 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 28px;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.insight-article-body blockquote {
+  max-width: 720px;
+  margin-inline: auto;
+  margin-block: 24px;
+  border-left: 3px solid var(--color-accent);
+  padding-left: 28px;
+  padding-block: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--color-sapphire-600);
+}
+
+.insight-article-body figure {
+  display: flex;
+  max-width: 720px;
+  margin-inline: auto;
+  margin-block: 24px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.insight-article-body figure img,
+.insight-article-body img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-card);
+}
+
+.insight-article-body figcaption {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-basalt-300);
+}
+
+.insight-article-body ul,
+.insight-article-body ol {
+  margin: 0 0 16px;
+  padding-left: 1.25rem;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--color-ink-secondary);
+}
+
+.insight-article-body li + li {
+  margin-top: 8px;
+}
+
+.insight-article-body a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.insight-article-body strong,
+.insight-article-body b {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+/* CMS comparison tables / strategy cards */
+.insight-article-body table {
+  width: 100%;
+  margin-block: 32px;
+  border-collapse: separate;
+  border-spacing: 16px;
+}
+
+.insight-article-body td,
+.insight-article-body th {
+  width: 33.333%;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  vertical-align: top;
+  background: var(--color-surface);
+  font-size: 14px;
+  line-height: 22px;
+  color: var(--color-ink-secondary);
+}
+
+.insight-article-body td h2,
+.insight-article-body td h3,
+.insight-article-body td h4,
+.insight-article-body th h2,
+.insight-article-body th h3,
+.insight-article-body th h4 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.02em;
+}
+
+.insight-article-body td p,
+.insight-article-body th p {
+  max-width: none;
+  margin-inline: 0;
+  margin-bottom: 12px;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.insight-article-body td ul,
+.insight-article-body th ul,
+.insight-article-body td ol,
+.insight-article-body th ol {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+/* CMS inline callout / CTA blocks inside article HTML */
+.insight-article-body div[style*="box-shadow"],
+.insight-article-body div[style*="border"] {
+  overflow: visible;
+}
+
+.insight-article-body table tr:last-child td[colspan],
+.insight-article-body table tr:last-child th[colspan] {
+  text-align: center;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.insight-article-body table tr:last-child td[colspan] h2,
+.insight-article-body table tr:last-child td[colspan] h3,
+.insight-article-body table tr:last-child th[colspan] h2,
+.insight-article-body table tr:last-child th[colspan] h3 {
+  max-width: 720px;
+  margin-inline: auto;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.insight-article-body table tr:last-child td[colspan] p,
+.insight-article-body table tr:last-child th[colspan] p {
+  max-width: 720px;
+  margin-inline: auto;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--color-ink-secondary);
+}
+
+.insight-article-body h2 + p {
+  color: var(--color-ink-secondary);
+}
+
+/* CMS flex-row strategy card grids */
+.insight-article-body div[style*="display: flex"] > div,
+.insight-article-body div[style*="display:flex"] > div {
+  flex: 1;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  background: var(--color-surface);
+}
+
+.insight-article-body div[style*="display: flex"],
+.insight-article-body div[style*="display:flex"] {
+  display: flex !important;
+  gap: 16px;
+  margin-block: 32px;
+}
+
+/* CMS centered callout blocks below card grids */
+.insight-article-body div[style*="text-align: center"],
+.insight-article-body div[style*="text-align:center"] {
+  margin-block: 32px;
+  padding: 32px 24px 36px;
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  overflow: visible;
+}
+
+.insight-article-body div[style*="text-align: center"] h2,
+.insight-article-body div[style*="text-align: center"] h3,
+.insight-article-body div[style*="text-align:center"] h2,
+.insight-article-body div[style*="text-align:center"] h3 {
+  max-width: 720px;
+  margin-inline: auto;
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.insight-article-body div[style*="text-align: center"] p,
+.insight-article-body div[style*="text-align:center"] p {
+  max-width: 720px;
+  margin-inline: auto;
+  font-size: 15px;
+  line-height: 24px;
+  color: var(--color-ink-secondary);
+}
+
+.insight-article-body iframe {
+  display: block;
+  width: 100%;
+  max-width: 720px;
+  margin-inline: auto;
+  margin-block: 24px;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: var(--radius-card);
+}
+
+@media (max-width: 767px) {
+  .insight-article-body table,
+  .insight-article-body tbody,
+  .insight-article-body tr {
+    display: block;
+    width: 100%;
+  }
+
+  .insight-article-body td,
+  .insight-article-body th {
+    display: block;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .insight-article-body h2 {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}

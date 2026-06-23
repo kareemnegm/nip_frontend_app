@@ -9,7 +9,7 @@ export const mainNavItems = [
   { key: "offPlan", href: "/off-plan" as const, dropdown: "offPlan" as const },
   { key: "areas", href: "/areas" as const },
   { key: "developers", href: "/developers" as const },
-  { key: "concierge", href: "/concierge" as const, caret: true },
+  { key: "concierge", href: "/concierge" as const },
 ] as const;
 
 export const propertiesDropdownItems = [

@@ -1,149 +1,166 @@
+import Image from "next/image";
 import Link from "next/link";
-import { Icon, type IconName } from "@/components/ui/Icon";
+import { getTranslations } from "next-intl/server";
+import { Icon } from "@/components/ui";
 import {
   siteMaxWidth,
   sitePageGutterX,
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
+import { localizedHref } from "@/lib/i18n/helpers";
+import type { Locale } from "@/lib/i18n/config";
+import { paymentPlanCardColors } from "@/lib/off-plan/detail";
+import type { ApiFacility, ApiPaymentStep } from "@/types/api/property";
 
-const paymentStages = [
-  {
-    subtitle: "Reservation & SPA",
-    percent: "10%",
-    label: "On Booking",
-    className: "bg-sapphire-400",
-    subtitleClassName: "text-sapphire-100",
-  },
-  {
-    subtitle: "Linked to Milestones",
-    percent: "20%",
-    label: "During Construction",
-    className: "bg-sapphire-500",
-    subtitleClassName: "text-sapphire-200",
-  },
-  {
-    subtitle: "Across Build Phases",
-    percent: "30%",
-    label: "Construction",
-    className: "bg-sapphire-600",
-    subtitleClassName: "text-sapphire-200",
-  },
-  {
-    subtitle: "Keys & Completion",
-    percent: "40%",
-    label: "On Handover",
-    className: "bg-brand",
-    subtitleClassName: "text-sapphire-200",
-  },
-];
+function FacilityIcon({ icon }: { icon?: string | null }) {
+  if (icon?.trim()) {
+    return (
+      <span
+        className="flex h-6 w-6 shrink-0 items-center justify-center [&_svg]:h-6 [&_svg]:w-6 [&_svg]:text-brand"
+        dangerouslySetInnerHTML={{ __html: icon }}
+        aria-hidden
+      />
+    );
+  }
 
-const units = [
-  { type: "1 Bedroom", size: "720 – 840", price: "AED 1,200,000" },
-  { type: "2 Bedroom", size: "1,150 – 1,320", price: "AED 2,100,000" },
-  { type: "3 Bedroom", size: "1,900 – 2,150", price: "AED 3,450,000" },
-  { type: "4 Bed Penthouse", size: "3,200+", price: "AED 4,710,000" },
-];
-
-const masterplanAmenities: Array<{ label: string; icon: IconName }> = [
-  { label: "Private Beach", icon: "mapPin" },
-  { label: "Infinity Pools", icon: "home" },
-  { label: "Signature Spa", icon: "building" },
-  { label: "Residents' Lounge", icon: "sofa" },
-  { label: "Concierge", icon: "user" },
-  { label: "Marina Access", icon: "mapPin" },
-];
-
-export function OffPlanHeroImage() {
-  return (
-    <div className="flex h-[280px] w-full items-center justify-center rounded-[var(--radius-card)] bg-basalt-100 sm:h-[460px]">
-      <Icon name="building" className="h-[70px] w-[70px] text-white" />
-    </div>
-  );
+  return <Icon name="home" className="h-6 w-6 shrink-0 text-brand" />;
 }
 
-export function PaymentPlanSection() {
+export function PaymentPlanSection({
+  title,
+  steps,
+  className,
+}: {
+  title: string;
+  steps: ApiPaymentStep[];
+  className?: string;
+}) {
   return (
-    <div className="space-y-6">
+    <section className={cn("space-y-7", className)}>
       <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
-        Payment Plan
+        {title}
       </h2>
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {paymentStages.map((stage) => (
-          <div
-            key={stage.label}
+        {steps.map((step, index) => (
+          <article
+            key={`${step.percentage}-${step.label}-${index}`}
             className={cn(
-              "flex flex-col gap-4 rounded-[var(--radius-card)] px-7 py-6 text-white",
-              stage.className,
+              "flex min-h-[160px] flex-col justify-between rounded-[var(--radius-card)] p-6 text-white",
+              paymentPlanCardColors[index % paymentPlanCardColors.length],
             )}
           >
-            <p className={cn("text-xs leading-4", stage.subtitleClassName)}>
-              {stage.subtitle}
+            {step.caption ? (
+              <p className="text-xs leading-4 text-white/80">{step.caption}</p>
+            ) : (
+              <span aria-hidden />
+            )}
+            <p className="text-[36px] font-bold leading-[44px] tracking-[-0.02em]">
+              {step.percentage}
             </p>
-            <p className="text-[36px] font-bold leading-[42px]">{stage.percent}</p>
-            <p className="text-xs font-semibold leading-4">{stage.label}</p>
-          </div>
+            <p className="text-sm font-medium leading-5">{step.label}</p>
+          </article>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
-export function AvailableUnitsSection() {
+export function AvailableUnitsTable({
+  title,
+  unitTypeLabel,
+  sizeLabel,
+  startingPriceLabel,
+  units,
+  className,
+}: {
+  title: string;
+  unitTypeLabel: string;
+  sizeLabel: string;
+  startingPriceLabel: string;
+  units: Array<{ unit_type: string; size_sqft: string; starting_price: string }>;
+  className?: string;
+}) {
   return (
-    <div className="space-y-6">
+    <section className={cn("space-y-7", className)}>
       <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
-        Available Units
+        {title}
       </h2>
-      <div className="overflow-hidden rounded-[var(--radius-card)] border border-[#dbe0ec]">
-        <div className="grid grid-cols-[1fr_0.7fr_0.7fr] bg-brand px-6 py-4 text-overline font-semibold text-white sm:grid-cols-[430px_300px_1fr]">
-          <span>Unit Type</span>
-          <span>Size (sqft)</span>
-          <span>Starting Price</span>
+      <div className="overflow-hidden rounded-[var(--radius-card)] border border-line">
+        <div className="grid grid-cols-[1.2fr_1fr_1fr] bg-brand px-6 py-4 text-xs font-semibold uppercase leading-4 tracking-[0.04em] text-white">
+          <span>{unitTypeLabel}</span>
+          <span>{sizeLabel}</span>
+          <span className="text-end">{startingPriceLabel}</span>
         </div>
         {units.map((unit, index) => (
           <div
-            key={unit.type}
-            className={cn(
-              "grid grid-cols-[1fr_0.7fr_0.7fr] bg-white px-6 py-4 text-body-sm sm:grid-cols-[430px_300px_1fr]",
-              index < units.length - 1 && "border-b border-[#edf0f4]",
-            )}
+            key={`${unit.unit_type}-${index}`}
+            className="grid grid-cols-[1.2fr_1fr_1fr] border-b border-line px-6 py-4 text-sm leading-5 text-ink-secondary last:border-b-0"
           >
-            <span className="font-medium text-ink-secondary">{unit.type}</span>
-            <span className="text-ink-secondary">{unit.size}</span>
-            <span className="font-medium text-brand">{unit.price}</span>
+            <span className="font-medium text-brand">{unit.unit_type}</span>
+            <span>{unit.size_sqft}</span>
+            <span className="text-end font-semibold text-brand">{unit.starting_price}</span>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
-export function MasterplanSection() {
+export function MasterplanLocationSection({
+  title,
+  imageUrl,
+  facilities,
+  className,
+}: {
+  title: string;
+  imageUrl?: string;
+  facilities?: ApiFacility[] | null;
+  className?: string;
+}) {
+  const items = facilities?.filter((item) => item.facility?.trim()) ?? [];
+
   return (
-    <div className="space-y-6">
+    <section className={cn("space-y-7", className)}>
       <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
-        Masterplan &amp; Location
+        {title}
       </h2>
-      <div className="flex h-[280px] items-center justify-center rounded-[var(--radius-card)] bg-basalt-100 sm:h-[340px]">
-        <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
+      <div className="relative h-[340px] overflow-hidden rounded-[var(--radius-card)]">
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1080px) 100vw, 1080px"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-basalt-100">
+            <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
+          </div>
+        )}
       </div>
-      <div className="flex flex-wrap gap-2.5">
-        {masterplanAmenities.map(({ label, icon }) => (
-          <span
-            key={label}
-            className="inline-flex items-center gap-2 rounded-[var(--radius-field)] bg-basalt-50 py-2 pl-3 pr-4 text-[11px] font-medium leading-[14px] text-ink-secondary"
-          >
-            <Icon name={icon} className="h-6 w-6 shrink-0 text-brand" />
-            {label}
-          </span>
-        ))}
-      </div>
-    </div>
+      {items.length > 0 ? (
+        <div className="flex flex-wrap gap-3">
+          {items.map((item) => (
+            <span
+              key={item.id}
+              className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-sm leading-5 text-ink-secondary"
+            >
+              <FacilityIcon icon={item.facility_icon} />
+              {item.facility}
+            </span>
+          ))}
+        </div>
+      ) : null}
+    </section>
   );
 }
 
-export function ProjectRegisterCta() {
+export async function ProjectRegisterCta({ locale = "en" }: { locale?: Locale }) {
+  const t = await getTranslations({ locale, namespace: "catalog" });
+  const contactHref = localizedHref(locale, "/contact");
+
   return (
     <section className="bg-brand py-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
@@ -154,18 +171,18 @@ export function ProjectRegisterCta() {
           )}
         >
           <div className="max-w-[608px] space-y-4">
-            <p className="text-overline font-semibold text-accent-on-dark">
-              REGISTER YOUR INTEREST
+            <p className="text-overline font-semibold text-[#8fb0dc]">
+              {t("registerInterestEyebrow")}
             </p>
             <h2 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-white">
-              Early Access to Units and Payment Plans
+              {t("offPlanListingCtaTitle")}
             </h2>
           </div>
           <Link
-            href="/contact"
+            href={contactHref}
             className="inline-flex items-center justify-center rounded-[var(--radius-field)] bg-white px-6 py-[9px] text-xs font-semibold leading-4 text-brand transition-colors hover:bg-sapphire-50"
           >
-            Speak with NIP
+            {t("speakWithNipCta")}
           </Link>
         </div>
       </div>

@@ -2,15 +2,17 @@
 
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Icon } from "./Icon";
 
 const filterSelectClassName =
   "h-[38px] w-full min-w-0 appearance-none rounded-[var(--radius-field)] border border-line bg-white bg-[length:10px] bg-[right_12px_center] bg-no-repeat pl-3.5 pr-8 text-body-sm font-medium text-ink-secondary outline-none lg:w-[110px] lg:shrink-0";
 
+const KEYWORD_DEBOUNCE_MS = 400;
+
 export type PropertyFilterValues = {
   keyword?: string;
-  location?: string;
+  area?: string;
   type?: string;
   bedrooms?: string;
   min_price?: string;
@@ -54,16 +56,48 @@ function FilterSelect({
   );
 }
 
+function buildQueryString(values: PropertyFilterValues) {
+  const params = new URLSearchParams();
+  if (values.keyword?.trim()) params.set("keyword", values.keyword.trim());
+  if (values.area) params.set("area", values.area);
+  if (values.type) params.set("type", values.type);
+  if (values.bedrooms) params.set("bedrooms", values.bedrooms);
+  if (values.min_price) params.set("min_price", values.min_price);
+  return params.toString();
+}
+
 export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarProps) {
   const t = useTranslations("catalog");
   const tc = useTranslations("common");
   const tf = useTranslations("footer");
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const [keyword, setKeyword] = useState(values.keyword ?? "");
-  const [location, setLocation] = useState(values.location ?? "");
+  const [area, setArea] = useState(values.area ?? "");
   const [type, setType] = useState(values.type ?? "");
   const [bedrooms, setBedrooms] = useState(values.bedrooms ?? "");
   const [minPrice, setMinPrice] = useState(values.min_price ?? "");
+
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const skipKeywordDebounceRef = useRef(false);
+
+  useEffect(() => {
+    queueMicrotask(() => {
+      skipKeywordDebounceRef.current = true;
+      setKeyword(values.keyword ?? "");
+      setArea(values.area ?? "");
+      setType(values.type ?? "");
+      setBedrooms(values.bedrooms ?? "");
+      setMinPrice(values.min_price ?? "");
+    });
+  }, [
+    values.keyword,
+    values.area,
+    values.type,
+    values.bedrooms,
+    values.min_price,
+  ]);
 
   const filterOptions = useMemo(
     () => [
@@ -109,16 +143,61 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
     [t],
   );
 
+  const navigate = useCallback(
+    (next: PropertyFilterValues) => {
+      const query = buildQueryString(next);
+      const href = query ? `${basePath}?${query}` : basePath;
+      startTransition(() => {
+        router.push(href, { scroll: false });
+      });
+    },
+    [basePath, router],
+  );
+
+  const pushFilters = useCallback(
+    (overrides: Partial<PropertyFilterValues> = {}) => {
+      navigate({
+        keyword: overrides.keyword ?? keyword,
+        area: overrides.area ?? area,
+        type: overrides.type ?? type,
+        bedrooms: overrides.bedrooms ?? bedrooms,
+        min_price: overrides.min_price ?? minPrice,
+      });
+    },
+    [area, bedrooms, keyword, minPrice, navigate, type],
+  );
+
+  function onKeywordChange(value: string) {
+    setKeyword(value);
+
+    if (skipKeywordDebounceRef.current) {
+      skipKeywordDebounceRef.current = false;
+      return;
+    }
+
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    debounceRef.current = setTimeout(() => {
+      pushFilters({ keyword: value });
+    }, KEYWORD_DEBOUNCE_MS);
+  }
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
+
   function onSubmit(event: React.FormEvent) {
     event.preventDefault();
-    const params = new URLSearchParams();
-    if (keyword.trim()) params.set("keyword", keyword.trim());
-    if (location) params.set("location", location);
-    if (type) params.set("type", type);
-    if (bedrooms) params.set("bedrooms", bedrooms);
-    if (minPrice) params.set("min_price", minPrice);
-    const query = params.toString();
-    router.push(query ? `${basePath}?${query}` : basePath);
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    pushFilters();
   }
 
   return (
@@ -131,33 +210,51 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
         aria-label={t("searchAria")}
         placeholder={t("searchPlaceholder")}
         value={keyword}
-        onChange={(event) => setKeyword(event.target.value)}
+        onChange={(event) => onKeywordChange(event.target.value)}
         className="h-[38px] w-full min-w-[200px] rounded-[var(--radius-field)] bg-sapphire-50 px-3.5 text-body-sm text-ink outline-none placeholder:text-text-inactive lg:w-[470px] lg:shrink-0"
       />
       <FilterSelect
         aria-label={t("location")}
         options={filterOptions}
-        value={location}
-        onChange={setLocation}
+        value={area}
+        onChange={(value) => {
+          setArea(value);
+          pushFilters({ area: value });
+        }}
       />
-      <FilterSelect aria-label={t("type")} options={typeOptions} value={type} onChange={setType} />
+      <FilterSelect
+        aria-label={t("type")}
+        options={typeOptions}
+        value={type}
+        onChange={(value) => {
+          setType(value);
+          pushFilters({ type: value });
+        }}
+      />
       <FilterSelect
         aria-label={t("price")}
         options={priceOptions}
         value={minPrice}
-        onChange={setMinPrice}
+        onChange={(value) => {
+          setMinPrice(value);
+          pushFilters({ min_price: value });
+        }}
       />
       <FilterSelect
         aria-label={t("bedsFilter")}
         options={bedsOptions}
         value={bedrooms}
-        onChange={setBedrooms}
+        onChange={(value) => {
+          setBedrooms(value);
+          pushFilters({ bedrooms: value });
+        }}
       />
       <button
         type="submit"
-        className="inline-flex h-[38px] w-full shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-brand px-[22px] text-overline font-semibold text-white transition-colors hover:bg-brand-hover lg:w-[96px]"
+        disabled={isPending}
+        className="inline-flex h-[38px] w-full shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-brand px-[22px] text-overline font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-60 lg:w-[96px]"
       >
-        {tc("search")}
+        {isPending ? tc("loading") : tc("search")}
       </button>
     </form>
   );

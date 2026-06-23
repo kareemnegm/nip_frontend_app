@@ -22,7 +22,6 @@ import type { Locale } from "@/lib/i18n/config";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getProperties } from "@/lib/api/properties";
 import {
-  isOffPlanProperty,
   mapPropertyToCard,
   mapPropertyToOffPlanCard,
 } from "@/lib/mappers/property";
@@ -57,7 +56,7 @@ export async function PropertyListingPage({
   afterContent,
 }: PropertyListingPageProps) {
   const params = buildPropertyListParams(searchParams, {
-    listing_type: mode === "offplan" ? "offplan" : undefined,
+    listing_type: mode === "offplan" ? "offplan" : "sale",
     per_page: 9,
     locale,
   });
@@ -80,7 +79,10 @@ export async function PropertyListingPage({
             basePath={basePath}
             values={{
               keyword: filterValues.keyword ?? filterValues.q,
-              location: filterValues.location ?? filterValues.community,
+              area:
+                filterValues.area ??
+                filterValues.location ??
+                filterValues.community,
               type: filterValues.type,
               bedrooms: filterValues.bedrooms ?? filterValues.beds,
               min_price: filterValues.min_price ?? filterValues.price_min,
@@ -102,7 +104,7 @@ export async function PropertyListingPage({
               <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {data.map((property) => {
                   const card =
-                    mode === "offplan" || isOffPlanProperty(property)
+                    mode === "offplan"
                       ? mapPropertyToOffPlanCard(property, locale)
                       : mapPropertyToCard(property, locale);
                   const Card = mode === "offplan" ? OffPlanCard : PropertyCard;
