@@ -1,0 +1,25 @@
+{
+  "syncedAt": "2026-06-29T15:56:19.550Z",
+  "fileKey": "7X3YcUQj70rvhvLx4pwD9h",
+  "fileName": "NIP Website",
+  "summary": {
+    "typography": 0,
+    "colors": 0,
+    "effects": 0,
+    "variables": 0
+  },
+  "typography": [],
+  "colors": [],
+  "effects": [],
+  "variables": {
+    "error": "Figma API 403 for /files/7X3YcUQj70rvhvLx4pwD9h/variables/local: {\"status\":403,\"error\":true,\"message\":\"Invalid scope(s): current_user:read, file_comments:read, file_content:read, file_metadata:read, file_versions:read, library_assets:read, library_content:read, team_library_content:read, file_dev_resources:read, projects:read, webhooks:read. This endpoint requires the file_variables:read scope\"}",
+    "hint": "Variables API may need file_variables:read scope on your token"
+  },
+  "tailwindTypography": [],
+  "nextSteps": [
+    "Compare typography px values with docs/FIGMA-AUDIT.md and .cursor/skills/figma-to-react-components/nip-typography-map.md",
+    "Update app/globals.css @theme tokens if Figma changed",
+    "Map Figma style names to Heading/Text variants in components/ui/",
+    "Run npm run check after any globals.css edits"
+  ]
+}

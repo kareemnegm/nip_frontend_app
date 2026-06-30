@@ -4,7 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { cardTypography } from "@/components/ui/Cards";
+import { CurrencyIcon } from "@/components/ui/CurrencyIcon";
 import { Icon } from "@/components/ui/Icon";
+import { stripCurrencyPrefix } from "@/lib/i18n/currency-icon";
 import { cn } from "@/lib/cn";
 import type { PropertyCardModel } from "@/lib/mappers/property";
 
@@ -51,7 +53,7 @@ export function ConciergePropertyCard({
   className,
 }: ConciergePropertyCardProps) {
   const t = useTranslations("catalog");
-  const displayPrice = price.replace(/^AED\s*/i, "");
+  const displayPrice = stripCurrencyPrefix(price, "AED");
 
   const card = (
     <article
@@ -94,7 +96,7 @@ export function ConciergePropertyCard({
           <div className="flex items-center justify-between gap-4 pt-6">
             <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
             <p className={cardTypography.price}>
-              <Icon name="currency" className={cardTypography.priceIcon} />
+              <CurrencyIcon currency="AED" className={cardTypography.priceIcon} />
               {displayPrice}
             </p>
           </div>

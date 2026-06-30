@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Checkbox, PhoneInput, Textarea, TextInput } from "@/components/ui/FormControls";
+import { Icon } from "@/components/ui/Icon";
 import { getFieldError, isApiError } from "@/lib/api/errors";
 import { useLocale } from "@/lib/i18n/context";
 import { localizedHref } from "@/lib/i18n/helpers";
@@ -249,6 +250,7 @@ export function PropertyInquiryForm({
 }
 
 export function NewsletterForm() {
+  const tFooter = useTranslations("footer.newsletter");
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -267,7 +269,7 @@ export function NewsletterForm() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.errors?.email?.[0] ?? data.message ?? "Subscription failed.");
+        setError(data.errors?.email?.[0] ?? data.message ?? tFooter("subscriptionFailed"));
         return;
       }
       setSuccess(true);
@@ -276,7 +278,7 @@ export function NewsletterForm() {
       if (isApiError(err)) {
         setError(getFieldError(err.errors, "email") ?? err.message);
       } else {
-        setError("Subscription failed.");
+        setError(tFooter("subscriptionFailed"));
       }
     } finally {
       setLoading(false);
@@ -285,7 +287,7 @@ export function NewsletterForm() {
 
   if (success) {
     return (
-      <p className="text-[12px] leading-4 text-basalt-300">Thank you for subscribing.</p>
+      <p className="text-[12px] leading-4 text-basalt-300">{tFooter("subscriptionSuccess")}</p>
     );
   }
 
@@ -293,8 +295,8 @@ export function NewsletterForm() {
     <form className="flex w-full max-w-[240px] flex-col gap-2" onSubmit={onSubmit}>
       <div className="flex w-full items-center justify-between overflow-hidden rounded-[var(--radius-field)] bg-sapphire-50 py-1 pl-3.5 pr-1 rtl:flex-row-reverse">
         <input
-          aria-label="Your email"
-          placeholder="Your email"
+          aria-label={tFooter("emailPlaceholder")}
+          placeholder={tFooter("emailPlaceholder")}
           type="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
@@ -303,11 +305,11 @@ export function NewsletterForm() {
         />
         <button
           type="submit"
-          aria-label="Subscribe"
+          aria-label={tFooter("subscribeLabel")}
           disabled={loading}
           className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-sapphire-600 px-1.5 py-[5px] text-white transition-colors hover:bg-accent-hover disabled:opacity-60"
         >
-          →
+          <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
         </button>
       </div>
       {error ? <span className="text-[11px] text-error">{error}</span> : null}

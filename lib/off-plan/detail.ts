@@ -158,7 +158,7 @@ export function offPlanFactsFromApi(
     facts.push({
       label: labels.developerFactLabel,
       value: developer,
-      icon: "building",
+      icon: "developer",
     });
   }
 
@@ -166,34 +166,34 @@ export function offPlanFactsFromApi(
     facts.push({
       label: labels.handoverFactLabel,
       value: property.handover_quarter,
-      icon: "calendar",
+      icon: "handover",
     });
   }
 
   facts.push({
     label: labels.unitTypesLabel,
     value: resolveUnitTypes(property),
-    icon: "grid",
+    icon: "floorplan",
   });
 
   if (property.price != null) {
     facts.push({
       label: labels.startingFromFactLabel,
       value: formatCompactAedPrice(property.price),
-      icon: "currency",
+      icon: "dirham-circle",
     });
   }
 
   facts.push({
     label: labels.paymentLabel,
     value: resolvePaymentSplit(property),
-    icon: "percent",
+    icon: "mortgage",
   });
 
   facts.push({
     label: labels.statusLabel,
     value: labels.statusOffPlan,
-    icon: "building",
+    icon: "crane",
   });
 
   return facts;

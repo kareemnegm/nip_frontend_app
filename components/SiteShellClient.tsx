@@ -20,7 +20,7 @@ export function SiteShellClient({ children }: SiteShellClientProps) {
         id="site-header"
         className="relative z-40 w-full border border-line bg-white"
       >
-        <div className={`flex items-center justify-between py-5 lg:py-6 ${siteChromeClassName}`}>
+        <div dir="ltr" className={`flex items-center justify-between py-5 lg:py-6 ${siteChromeClassName}`}>
           <LocalizedLink href="/" className="shrink-0">
             <Logo className="shrink-0" />
           </LocalizedLink>

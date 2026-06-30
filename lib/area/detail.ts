@@ -57,7 +57,7 @@ export function areaFactsFromApi(
     {
       label: labels.avgPriceSqftLabel,
       value: formatAvgPriceSqft(avgPrice),
-      icon: "currency",
+      icon: "dirham-circle",
     },
     {
       label: labels.communitiesLabel,
@@ -67,7 +67,7 @@ export function areaFactsFromApi(
     {
       label: labels.offPlanProjectsLabel,
       value: formatOffPlanCount(offPlanTotal, labels.projectsCount),
-      icon: "building",
+      icon: "crane",
     },
     {
       label: labels.avgYieldLabel,
@@ -82,7 +82,7 @@ export function areaFactsFromApi(
     {
       label: labels.toDowntownLabel,
       value: downtown,
-      icon: "clock",
+      icon: "metro",
     },
   ];
 }

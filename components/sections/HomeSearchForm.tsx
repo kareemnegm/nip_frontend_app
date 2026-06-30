@@ -36,11 +36,11 @@ export function HomeSearchForm({
   }
 
   return (
-    <form className="mx-auto max-w-[640px]" onSubmit={onSubmit}>
-      <p className="mb-3 text-center text-xs font-semibold uppercase leading-4 text-ink-tertiary">
+    <form className="mx-auto flex max-w-[640px] flex-col gap-3" onSubmit={onSubmit}>
+      <p className="text-overline text-center font-semibold uppercase text-ink-tertiary">
         {label}
       </p>
-      <div className="flex flex-col gap-3 rounded-[8px] border border-line bg-white py-1.5 pl-[18px] pr-1.5 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-line bg-white py-1.5 pl-[18px] pr-1.5 sm:flex-row sm:items-center">
         <input
           type="search"
           value={keyword}
@@ -49,7 +49,13 @@ export function HomeSearchForm({
           placeholder={placeholder}
           className="min-h-9 flex-1 text-[13px] leading-[18px] text-ink placeholder:text-text-inactive outline-none"
         />
-        <Button type="submit" size="md" className="w-full sm:w-auto" disabled={isPending}>
+        <Button
+          type="submit"
+          variant="primary"
+          size="md"
+          className="w-full sm:w-auto"
+          disabled={isPending}
+        >
           {isPending ? "…" : submitLabel}
         </Button>
       </div>

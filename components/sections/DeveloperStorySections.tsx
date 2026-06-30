@@ -42,39 +42,39 @@ export function DeveloperHero({
           )}
         >
           <div className="flex max-w-[558px] flex-col gap-2">
-            <p className="text-overline font-semibold text-accent">{eyebrow}</p>
-            <h1 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand">
+            <p className="font-sans text-overline font-semibold uppercase text-accent">
+              {eyebrow}
+            </p>
+            <h1 className="font-[family-name:var(--font-display)] font-normal text-display-lg uppercase text-brand">
               {title}
             </h1>
-            <p className="max-w-[558px] text-[13px] leading-[18px] text-ink-tertiary">
+            <p className="font-sans font-normal text-body-sm text-ink-tertiary">
               {description}
             </p>
           </div>
 
-          <div className="flex flex-col items-start lg:items-end">
-            <div className="flex w-full max-w-[134px] flex-col items-center pb-10">
-              {logoUrl ? (
-                <div className="relative h-[27px] w-full">
-                  <Image
-                    src={logoUrl}
-                    alt={`${title} logo`}
-                    fill
-                    className="object-contain object-left lg:object-right"
-                    sizes="134px"
-                  />
-                </div>
-              ) : (
-                <p
-                  aria-hidden
-                  className="font-[family-name:var(--font-display)] text-[27px] uppercase leading-none tracking-[0.12em] text-brand"
-                >
-                  {fallbackLogoText}
-                </p>
-              )}
-              {!logoUrl ? (
-                <span className="sr-only">{fallbackLogoText} logo</span>
-              ) : null}
-            </div>
+          <div className="flex flex-col items-center gap-2 self-stretch pb-10 lg:ltr:items-end lg:rtl:items-start">
+            {logoUrl ? (
+              <div className="relative h-[120px] w-full max-w-[280px]">
+                <Image
+                  src={logoUrl}
+                  alt={`${title} logo`}
+                  fill
+                  className="object-contain object-center lg:ltr:object-right lg:rtl:object-left"
+                  sizes="280px"
+                />
+              </div>
+            ) : (
+              <p
+                aria-hidden
+                className="font-[family-name:var(--font-display)] text-[40px] uppercase leading-none tracking-[0.12em] text-brand"
+              >
+                {fallbackLogoText}
+              </p>
+            )}
+            {!logoUrl ? (
+              <span className="sr-only">{fallbackLogoText} logo</span>
+            ) : null}
             <SpeakWithNipButton href="/contact" />
           </div>
         </div>
@@ -110,7 +110,7 @@ export function DeveloperPortfolioSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="bg-white pt-16 pb-20">
+    <section className="bg-surface-muted pt-16 pb-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className={sitePageInnerClassName}>
           <AreaSectionHeading

@@ -35,6 +35,12 @@ export type {
   TextareaProps,
   TextInputProps,
 } from "./FormControls";
+export { CurrencyIcon } from "./CurrencyIcon";
+export type { CurrencyIconProps } from "./CurrencyIcon";
+export { AmenityIcon } from "./AmenityIcon";
+export type { AmenityIconProps } from "./AmenityIcon";
+export { FooterIcon, FooterSocialIcon } from "./FooterIcon";
+export type { FooterIconProps, FooterSocialIconName } from "./FooterIcon";
 export { Icon } from "./Icon";
 export type { IconName, IconProps } from "./Icon";
 export { InsightCategoryFilters } from "./InsightCategoryFilters";
@@ -47,6 +53,7 @@ export { Logo } from "./Logo";
 export type { LogoProps } from "./Logo";
 export { PropertyFilterBar } from "./PropertyFilterBar";
 export type { PropertyFilterValues } from "./PropertyFilterBar";
+export { PropertyMap } from "./PropertyMap";
 export { GenericSearchBar } from "./SearchBars";
 export { PropertyResultsToolbar } from "./PropertyResultsToolbar";
 export type { PropertyResultsToolbarProps } from "./PropertyResultsToolbar";

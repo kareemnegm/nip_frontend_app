@@ -12,6 +12,7 @@ import {
   Badge,
   Breadcrumbs,
   Button,
+  CurrencyIcon,
   FactsStrip,
   Icon,
   PropertyCard,
@@ -69,7 +70,7 @@ function propertyFactsFromApi(
       ? {
           label: labels.areaLabel,
           value: `${new Intl.NumberFormat("en-AE").format(property.area_sqft)} sq ft`,
-          icon: "grid" as const,
+          icon: "area" as const,
         }
       : null,
     property.type
@@ -86,13 +87,13 @@ function propertyFactsFromApi(
       ? {
           label: labels.referenceLabel,
           value: property.reference_no,
-          icon: "building" as const,
+          icon: "reference" as const,
         }
       : null,
   ].filter(Boolean) as Array<{
     label: string;
     value: string;
-    icon: "bed" | "bath" | "grid" | "building" | "sofa";
+    icon: "bed" | "bath" | "area" | "building" | "sofa" | "reference";
   }>;
 }
 
@@ -114,8 +115,10 @@ export async function PropertyDetailPage({
   const facts = propertyFactsFromApi(property, {
     bedroomLabel: t("bedroomLabel"),
     bathroomLabel: t("bathroomLabel"),
-    areaLabel: t("areaLabel"),
-    typeLabel: t("typeLabel"),
+    areaLabel:
+      detailBase === "properties" ? t("totalAreaLabel") : t("areaLabel"),
+    typeLabel:
+      detailBase === "properties" ? t("propertyTypeLabel") : t("typeLabel"),
     furnishingLabel: t("furnishingLabel"),
     referenceLabel: t("referenceLabel"),
   });
@@ -159,12 +162,10 @@ export async function PropertyDetailPage({
                   {property.type ? <Badge tone="property">{property.type}</Badge> : null}
                   {property.purpose ? <Badge tone="property">{property.purpose}</Badge> : null}
                 </div>
-                <h1 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
-                  {property.title}
-                </h1>
+                <h1 className="text-property-h1">{property.title}</h1>
                 {property.location ? (
                   <p className="flex items-center gap-1.5 text-body-sm text-ink-tertiary">
-                    <Icon name="mapPin" className="h-3.5 w-3.5 shrink-0 text-brand" />
+                    <Icon name="mapPin" className="h-3.5 w-3.5 shrink-0 text-accent" />
                     {property.location}
                   </p>
                 ) : null}
@@ -175,7 +176,7 @@ export async function PropertyDetailPage({
                   {t("guidePrice")}
                 </p>
                 <p className="flex items-center gap-2 text-[30px] font-bold leading-[38px] text-brand">
-                  <Icon name="currency" className="h-6 w-6 shrink-0" />
+                  <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
                   {formatAedPrice(property.price ?? null)}
                 </p>
                 <Button href={localizedHref(locale, "/contact")} className="w-full sm:w-auto">
@@ -199,7 +200,10 @@ export async function PropertyDetailPage({
         <section className="bg-white pb-10">
           <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
             <div className={sitePageInnerClassName}>
-              <FactsStrip items={facts} variant="property" />
+              <FactsStrip
+                items={facts}
+                variant={detailBase === "properties" ? "property-detail" : "property"}
+              />
             </div>
           </div>
         </section>
@@ -218,10 +222,14 @@ export async function PropertyDetailPage({
               facilities={property.facilities}
               locationNote={property.about_location ?? undefined}
               locationImageUrl={locationImageUrl}
+              latitude={property.latitude}
+              longitude={property.longitude}
+              locationName={property.location ?? undefined}
               labels={{
                 storyTitle: t("storyTitle"),
                 amenitiesTitle: t("amenitiesTitle"),
                 locationTitle: t("locationTitle"),
+                openInGoogleMaps: t("openInGoogleMaps"),
               }}
             />
             {detailBase === "properties" ? (

@@ -21,7 +21,11 @@ function resolveHref(href: string | undefined, locale: string | undefined) {
 export type ButtonVariant =
   | "primary"
   | "secondary"
+  | "tertiary"
   | "accent"
+  | "primaryArrow"
+  | "primaryPlatinum"
+  | "text"
   | "light"
   | "muted"
   | "outline"
@@ -43,21 +47,26 @@ export type ButtonProps = BaseButtonProps &
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary: "bg-sapphire-600 text-white hover:bg-brand-hover active:bg-brand-pressed",
-  secondary: "bg-sapphire-500 text-white hover:bg-sapphire-600",
+  secondary:
+    "border border-brand bg-transparent text-brand hover:bg-sapphire-50 active:bg-sapphire-100",
+  tertiary: "bg-sapphire-50 text-brand hover:bg-sapphire-100 active:bg-sapphire-200",
   accent: "bg-accent text-white hover:bg-accent-hover active:bg-accent-pressed",
-  light: "bg-sapphire-100 text-brand hover:bg-sapphire-200",
-  muted: "bg-ink-tertiary text-white hover:bg-ink-secondary",
+  primaryArrow: "bg-sapphire-600 text-white hover:bg-brand-hover active:bg-brand-pressed",
+  primaryPlatinum: "bg-platinum-400 text-white hover:bg-platinum-600 active:bg-basalt-400",
+  text: "bg-transparent px-0 text-brand hover:text-brand-hover active:text-brand-pressed",
+  light: "bg-sapphire-50 text-brand hover:bg-sapphire-100 active:bg-sapphire-200",
+  muted: "bg-platinum-400 text-white hover:bg-platinum-600 active:bg-basalt-400",
   outline:
-    "border border-brand bg-transparent text-brand hover:bg-sapphire-50",
+    "border border-brand bg-transparent text-brand hover:bg-sapphire-50 active:bg-sapphire-100",
   outlineInverse:
-    "border border-white bg-transparent text-white hover:bg-white/10",
-  link: "bg-transparent px-0 text-brand hover:text-brand-hover",
+    "border border-white bg-transparent text-white hover:bg-white/10 active:bg-white/20",
+  link: "bg-transparent px-0 text-brand hover:text-brand-hover active:text-brand-pressed",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
   sm: "h-8 px-4 text-xs leading-4",
   md: "px-6 py-[9px] text-xs leading-4",
-  lg: "px-6 py-[9px] text-xs leading-4",
+  lg: "px-6 py-[9px] text-[13px] leading-[18px]",
 };
 
 export function SpeakWithNipButton({

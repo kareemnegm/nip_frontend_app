@@ -14,6 +14,7 @@ import { PropertyGallery } from "@/components/sections/PropertyStorySections";
 import {
   Badge,
   Breadcrumbs,
+  CurrencyIcon,
   FactsStrip,
   Icon,
   OffPlanCard,
@@ -131,7 +132,7 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
                   {property.title}
                 </h1>
                 <p className="flex items-center gap-1.5 text-body-sm text-ink-tertiary">
-                  <Icon name="mapPin" className="h-3.5 w-3.5 shrink-0 text-brand" />
+                  <Icon name="mapPin" className="h-3.5 w-3.5 shrink-0 text-accent" />
                   {offPlanLocationLine(property)}
                 </p>
               </div>
@@ -141,7 +142,7 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
                   {t("startingFrom")}
                 </p>
                 <p className="flex items-center gap-2 text-[30px] font-bold leading-[38px] text-brand">
-                  <Icon name="currency" className="h-6 w-6 shrink-0" />
+                  <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
                   {formatAedPrice(property.price ?? null)}
                 </p>
                 <OffPlanRegisterInterestButton
@@ -188,6 +189,10 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
             <MasterplanLocationSection
               title={t("masterplanTitle")}
               imageUrl={masterPlanImageUrl}
+              latitude={property.latitude}
+              longitude={property.longitude}
+              locationName={property.location ?? property.area?.name ?? undefined}
+              mapsLinkLabel={t("openInGoogleMaps")}
               facilities={property.facilities}
             />
           </div>

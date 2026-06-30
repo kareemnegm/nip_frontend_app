@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
+import { stripCurrencyPrefix } from "@/lib/i18n/currency-icon";
+import { CurrencyIcon } from "./CurrencyIcon";
 import { Icon } from "./Icon";
 
 type BaseCardProps = {
@@ -17,13 +19,13 @@ export const cardTypography = {
     "flex h-full flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
   body: "flex flex-1 flex-col justify-between px-6 pb-4 pt-6",
   bodyInsight: "flex flex-1 flex-col justify-between px-6 pb-2 pt-6",
-  title: "text-xl font-bold leading-[26px] text-brand",
+  title: "text-h3 font-bold text-brand",
   location: "flex items-center gap-1 text-body-sm text-ink-tertiary",
-  locationIcon: "h-3.5 w-3.5 shrink-0 text-brand",
+  locationIcon: "h-3.5 w-3.5 shrink-0 text-accent",
   meta: "inline-flex items-center gap-1.5 text-xs font-semibold leading-4 text-ink",
   metaIconWrap:
     "inline-flex h-[22px] w-[22px] items-center justify-center rounded-[2px] bg-basalt-50 p-1",
-  metaIcon: "h-3.5 w-3.5 text-ink-secondary",
+  metaIcon: "h-3.5 w-3.5 text-ink",
   startingFrom: "text-xs leading-4 text-ink-tertiary",
   price: "flex items-center gap-2 text-xl font-bold leading-[26px] text-brand",
   priceIcon: "h-[18px] w-[18px] shrink-0",
@@ -40,12 +42,14 @@ export type PropertyCardProps = BaseCardProps & {
   title: string;
   location: string;
   price: string;
+  currency?: string;
   href?: string;
   handover?: string;
   imageLabel?: string;
   imageUrl?: string;
   meta?: string[];
   badges?: string[];
+  layout?: "grid" | "list";
 };
 
 export type InsightCardProps = BaseCardProps & {
@@ -81,25 +85,33 @@ function ImagePlaceholder({ dark = false }: { dark?: boolean }) {
       )}
     >
       <Icon
-        name="home"
+        name="image"
         className={cn(
-          "h-[70px] w-[70px]",
-          dark ? "text-white/70" : "text-white",
+          "h-[88px] w-[88px]",
+          dark ? "text-white/70" : "text-white/60",
         )}
       />
     </div>
   );
 }
 
+function metaIconForLabel(item: string) {
+  const lower = item.toLowerCase();
+  if (lower.includes("bed")) return "bed" as const;
+  if (lower.includes("bath")) return "bath" as const;
+  if (lower.includes("sq")) return "area" as const;
+  return "grid" as const;
+}
+
 function CardImage({
   imageUrl,
   alt,
-  icon = "home",
+  icon = "image",
   className,
 }: {
   imageUrl?: string;
   alt: string;
-  icon?: "home" | "building" | "mapPin";
+  icon?: "image" | "building" | "mapPin";
   className?: string;
 }) {
   if (imageUrl) {
@@ -123,7 +135,7 @@ function CardImage({
         className,
       )}
     >
-      <Icon name={icon} className="h-[70px] w-[70px] text-white" />
+      <Icon name={icon} className="h-[88px] w-[88px] text-white/60" />
     </div>
   );
 }
@@ -132,21 +144,95 @@ export function PropertyCard({
   title,
   location,
   price,
+  currency = "AED",
   href,
   imageLabel,
   imageUrl,
   meta = [],
   badges = [],
+  layout = "grid",
   className,
 }: PropertyCardProps) {
   const t = useTranslations("catalog");
 
-  const card = (
+  const isList = layout === "list";
+
+  const card = isList ? (
     <article
       data-reveal
       className={cn(
         cardTypography.shell,
-        "min-h-[480px]",
+        "flex-row overflow-hidden",
+        href && "cursor-pointer",
+        className,
+      )}
+    >
+      <div className="relative h-auto w-[220px] shrink-0 overflow-hidden rounded-[4px]">
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={imageLabel ?? title}
+            fill
+            className="object-cover"
+            sizes="220px"
+          />
+        ) : (
+          <div className="flex h-full min-h-[160px] w-full items-center justify-center bg-basalt-100">
+            <Icon name="image" className="h-14 w-14 text-white/60" />
+          </div>
+        )}
+      </div>
+      {imageLabel ? <span className="sr-only">{imageLabel}</span> : null}
+      <div className="flex flex-1 flex-col justify-between px-6 py-5">
+        <div className="space-y-2">
+          <h3 className={cardTypography.title}>{title}</h3>
+          <p className={cardTypography.location}>
+            <Icon name="mapPin" className={cardTypography.locationIcon} />
+            {location}
+          </p>
+          <div className="flex flex-wrap gap-3 pt-1">
+            {meta.map((item) => (
+              <span key={item} className={cardTypography.meta}>
+                <span className={cardTypography.metaIconWrap}>
+                  <Icon name={metaIconForLabel(item)} className={cardTypography.metaIcon} />
+                </span>
+                {item}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="mt-4 flex items-center justify-between gap-4">
+          <div>
+            <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
+            <p className={cardTypography.price}>
+              <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
+              {stripCurrencyPrefix(price, currency)}
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex flex-wrap gap-2">
+              {badges.map((badge) => (
+                <span key={badge} className={cardTypography.badge}>
+                  {badge}
+                </span>
+              ))}
+            </div>
+            {href ? (
+              <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex shrink-0")}>
+                {t("exploreProperty")}{" "}
+                <Icon name="arrowRight" className={cardTypography.ctaIcon} />
+              </span>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </article>
+  ) : (
+    <article
+      data-reveal
+      className={cn(
+        cardTypography.shell,
+        "h-[480px] overflow-hidden",
         href && "cursor-pointer",
         className,
       )}
@@ -160,18 +246,12 @@ export function PropertyCard({
             <Icon name="mapPin" className={cardTypography.locationIcon} />
             {location}
           </p>
-          <div className="flex flex-wrap gap-3.5 pt-1">
+          <div className="flex flex-wrap gap-[14px] pt-1">
             {meta.map((item) => (
               <span key={item} className={cardTypography.meta}>
                 <span className={cardTypography.metaIconWrap}>
                   <Icon
-                    name={
-                      item.toLowerCase().includes("bed")
-                        ? "bed"
-                        : item.toLowerCase().includes("bath")
-                          ? "bath"
-                          : "grid"
-                    }
+                    name={metaIconForLabel(item)}
                     className={cardTypography.metaIcon}
                   />
                 </span>
@@ -184,8 +264,8 @@ export function PropertyCard({
           <div className="flex items-center justify-between gap-4 pt-6">
             <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
             <p className={cardTypography.price}>
-              <Icon name="currency" className={cardTypography.priceIcon} />
-              {price.replace(/^AED\s*/i, "")}
+              <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
+              {stripCurrencyPrefix(price, currency)}
             </p>
           </div>
           <div className="flex items-center justify-between gap-4">
@@ -210,7 +290,7 @@ export function PropertyCard({
 
   if (href) {
     return (
-      <Link href={href} className="block h-full w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2">
+      <Link href={href} className={cn("block text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2", isList ? "w-full" : "h-full w-full")}>
         {card}
       </Link>
     );
@@ -223,34 +303,39 @@ export function OffPlanCard({
   title,
   location,
   price,
+  currency = "AED",
   handover = "On Request",
   href,
   imageUrl,
   className,
 }: Pick<
   PropertyCardProps,
-  "title" | "location" | "price" | "handover" | "href" | "imageUrl" | "className"
+  "title" | "location" | "price" | "currency" | "handover" | "href" | "imageUrl" | "className"
 >) {
   const t = useTranslations("catalog");
-  const displayPrice = price.replace(/^AED\s*/i, "");
+  const displayPrice = stripCurrencyPrefix(price, currency);
 
   const card = (
     <article
       data-reveal
       className={cn(
         cardTypography.shell,
-        "min-h-[480px]",
+        "h-[480px] overflow-hidden",
         href && "cursor-pointer",
         className,
       )}
     >
-      <CardImage imageUrl={imageUrl} alt={title} icon="building" />
+      <div className="relative">
+        <CardImage imageUrl={imageUrl} alt={title} icon="building" />
+        <span className={cn(cardTypography.badge, "absolute start-3 top-3 z-10")}>
+          {t("breadcrumbOffPlan")}
+        </span>
+        <span className="absolute end-3 top-3 z-10 inline-flex h-8 w-8 items-center justify-center rounded-[2px] bg-white/90 p-1 shadow-sm">
+          <Icon name="building" className="h-5 w-5 text-brand" />
+        </span>
+      </div>
       <div className={cardTypography.body}>
         <div className="space-y-4">
-          <div className="flex items-start justify-between gap-3">
-            <span className={cardTypography.badge}>{t("breadcrumbOffPlan")}</span>
-            <Icon name="building" className="h-6 w-6 shrink-0 text-brand" />
-          </div>
           <div>
             <h3 className={cardTypography.title}>{title}</h3>
             <p className={cn("mt-3", cardTypography.location)}>
@@ -270,7 +355,7 @@ export function OffPlanCard({
             <div className="text-right">
               <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
               <p className={cn("mt-2 justify-end", cardTypography.price)}>
-                <Icon name="currency" className={cardTypography.priceIcon} />
+                <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
                 {displayPrice}
               </p>
             </div>
@@ -291,7 +376,7 @@ export function OffPlanCard({
 
   if (href) {
     return (
-      <Link href={href} className="block h-full w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2">
+      <Link href={href} className="block h-full w-full text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2">
         {card}
       </Link>
     );
@@ -319,7 +404,7 @@ export function InsightCard({
       data-reveal
       className={cn(
         cardTypography.shell,
-        "min-h-[438px] w-full",
+        "h-[440px] overflow-hidden",
         href && "cursor-pointer",
         className,
       )}
@@ -359,7 +444,7 @@ export function InsightCard({
 
   if (href) {
     return (
-      <Link href={href} className="block h-full w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2">
+      <Link href={href} className="block h-full w-full text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2">
         {card}
       </Link>
     );
@@ -430,7 +515,7 @@ export function AdvisorCard({
   );
 }
 
-const communityFactIcons = ["user", "mapPin", "grid", "building"] as const;
+const communityFactIcons = ["family", "park", "metro", "building"] as const;
 
 export function CommunityCard({
   title,

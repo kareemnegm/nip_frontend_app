@@ -33,8 +33,9 @@ elementTag   string?  HTML tag for TEXT blocks (h1, p, span, …)
 | `components/EditableTextClient.tsx` | Client — edit modal, save/delete, `router.refresh()` |
 | `components/EditableImage.tsx` | Server — `next/image` from block URL or placeholder |
 | `components/EditableImageClient.tsx` | Client — media picker, save |
-| `components/useIsAdmin.ts` | Client — true when `admin=1` cookie present |
-| `components/EditableBlock.module.css` | Edit overlay styles |
+| `components/useIsAdmin.ts` | Client — wraps `useCanEditCms()` from `CmsAuthProvider` |
+| `components/cms/CmsAuthProvider.tsx` | Client — fetches `/api/cms/me`, exposes `canEdit` |
+| `components/cms/CmsStaffBar.tsx` | Client — floating “Editing as … / Sign out” bar |
 
 ## EditableText flow (reference)
 
@@ -55,9 +56,9 @@ sequenceDiagram
     ET->>ET: render placeholderContent + placeholderTag
   end
   ET->>Client: mount editor overlay
-  Note over Client: admin=1 cookie only
-  Client->>API: POST relUrl key content blockType TEXT
-  API->>DB: upsert block
+  Note over Client: canEditCms via CmsAuthProvider
+  Client->>API: POST /api/blocks relUrl key content blockType TEXT
+  API->>DB: upsert block with Bearer token
   Client->>Page: router.refresh
 ```
 
@@ -71,13 +72,13 @@ sequenceDiagram
 
 ### Client edit logic (`EditableTextClient.tsx`)
 
-1. `useIsAdmin()` — show edit affordance only when admin cookie set.
+1. `useCanEditCms()` — show edit affordance only when staff is logged in with `canEditCms`.
 2. Open modal → edit text + tag selector.
-3. **Save:** `POST` body:
+3. **Save:** `POST /api/blocks` body:
    ```json
    { "relUrl": "/", "key": "hero-title", "content": "...", "blockType": "TEXT", "elementTag": "h1" }
    ```
-4. **Delete:** `DELETE` body:
+4. **Delete:** `DELETE /api/blocks` body:
    ```json
    { "relUrl": "/", "key": "hero-title" }
    ```
@@ -87,7 +88,7 @@ sequenceDiagram
 
 1. Server loads block; `content` = image URL.
 2. Renders `next/image` with URL or `placeholderUrl`.
-3. Admin opens media library → select image → `POST` with `blockType: "IMAGE"`.
+3. Admin uploads image via `POST /api/cms/media` or pastes URL → `POST /api/blocks` with `blockType: "IMAGE"`.
 4. `router.refresh()`.
 
 Reference media: UploadThing → `utfs.io` URLs stored in block `content`.
@@ -129,63 +130,37 @@ Validated with Zod in `lib/validators.ts`. After write: `revalidateTag(tag.block
 
 Cached read: `getBlocksForPageCached(relUrl)` → `Record<blockKey, { content, blockType, elementTag }>`.
 
-## NIP Reality mapping (backend API)
+## NIP Reality mapping (live Laravel API + BFF)
 
-Replace Prisma calls with backend endpoints (contract TBD with backend team):
+See [CMS-BLOCKS-SYNC.md](./CMS-BLOCKS-SYNC.md) for the full endpoint map and allowlist sync.
 
-| Operation | Suggested backend endpoint |
-|-----------|---------------------------|
-| List blocks for page | `GET /api/v1/blocks?relUrl=/about` |
-| Upsert block | `POST /api/v1/blocks` |
-| Delete block | `DELETE /api/v1/blocks` |
-| Upload media | `POST /api/v1/media` → returns `{ url }` |
+| Operation | Frontend path |
+|-----------|---------------|
+| List blocks (public SSR) | `lib/api/blocks.ts` → `GET /api/v1/blocks?relUrl=&locale=` |
+| Upsert block (staff) | Browser → `POST /api/blocks` BFF → Laravel with `cms_token` Bearer |
+| Delete block (staff) | Browser → `DELETE /api/blocks` BFF → Laravel with Bearer |
+| Staff login | `POST /api/cms/login` → sets `cms_token` httpOnly cookie |
+| Staff profile | `GET /api/cms/me` → `canEditCms` |
+| Upload media (staff) | `POST /api/cms/media` BFF → `POST /api/v1/media` |
 
-Frontend helpers (to implement in `lib/api/blocks.ts`):
+**Staff login URL:** `/[locale]/admin/login` (footer link: “Staff login”)
 
-```typescript
-import { apiFetch } from "@/lib/api/client";
+**Demo credentials:** `admin@niprealty.com` / `Admin123!`
 
-export type Block = {
-  key: string;
-  content: string;
-  blockType: "TEXT" | "IMAGE" | "VIDEO" | "HTML";
-  elementTag?: string | null;
-};
-
-export async function getBlocksForPage(relUrl: string) {
-  const blocks = await apiFetch<Block[]>(`/api/v1/blocks`, {
-    params: { relUrl },
-  });
-  return Object.fromEntries(blocks.map((b) => [b.key, b]));
-}
-
-export async function saveBlock(payload: {
-  relUrl: string;
-  key: string;
-  content: string;
-  blockType: string;
-  elementTag?: string;
-}) {
-  return apiFetch("/api/v1/blocks", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
-}
-```
+Block key registry: `lib/i18n/block-keys.ts` (must match Laravel `config/cms-blocks.php`).
 
 ## Admin-only blocks
 
-Reference supports `adminOnly` prop on `EditableText` — hidden from public unless `admin=1` cookie. Use for draft notes or internal labels.
+Reference supports `adminOnly` prop on `EditableText` — hidden from public unless the `cms_token` staff cookie is present. Use for draft notes or internal labels.
 
 ## Implementation checklist for NIP
 
-- [ ] Backend: blocks CRUD + media upload endpoints
-- [ ] `lib/api/blocks.ts` helpers
-- [ ] Port `EditableText`, `EditableTextClient`, `EditableImage`, `EditableImageClient`
-- [ ] Port `useIsAdmin` (cookie name per backend auth)
-- [ ] Add `EditableBlock.module.css` or Tailwind equivalents
-- [ ] Per-page: define `relUrl`, wrap sections with stable `blockKey`s
-- [ ] Admin login flow from backend (sets auth + admin cookies)
+- [x] Backend: blocks CRUD + media upload endpoints (Laravel, June 2026)
+- [x] `lib/api/blocks.ts` helpers
+- [x] `EditableText`, `EditableTextClient`, `EditableImage`, `EditableImageClient`
+- [x] `CmsAuthProvider` + staff login at `/admin/login`
+- [x] BFF routes: `/api/blocks`, `/api/cms/login|logout|me|media`
+- [x] Block keys wired on static pages (see `lib/i18n/block-keys.ts`)
 
 ## blockKey naming conventions
 

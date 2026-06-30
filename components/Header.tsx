@@ -8,16 +8,21 @@ import { Logo } from "./ui/Logo";
 import { siteChromeClassName } from "./ui/SiteChrome";
 import { cn } from "@/lib/cn";
 import {
+  getNavDropdownItems,
   mainNavItems,
-  offPlanDropdownItems,
-  propertiesDropdownItems,
+  type NavDropdownKey,
 } from "@/lib/i18n/nav-config";
 
 const navLinkClass =
-  "inline-flex items-center gap-1 text-[13px] font-medium leading-[18px] text-ink transition-colors hover:text-brand";
+  "nav-link inline-flex items-center gap-1 text-[13px] font-medium leading-[18px] text-ink transition-colors duration-200 hover:text-brand";
 
 function NavCaret() {
-  return <Icon name="chevronDown" className="h-2.5 w-2.5 shrink-0" />;
+  return (
+    <Icon
+      name="chevronDown"
+      className="nav-caret h-2.5 w-2.5 shrink-0 transition-transform duration-300 ease-[var(--motion-ease-lux)]"
+    />
+  );
 }
 
 export async function Header() {
@@ -29,9 +34,10 @@ export async function Header() {
       className="relative z-40 w-full border border-line bg-white"
     >
       <div
+        dir="ltr"
         className={cn(
           siteChromeClassName,
-          "flex items-center justify-between py-6",
+          "flex h-[82px] items-center justify-between",
           "xl:grid xl:grid-cols-[1fr_auto_1fr] xl:items-center",
         )}
       >
@@ -45,27 +51,26 @@ export async function Header() {
         >
           {mainNavItems.map((item) => {
             if ("dropdown" in item) {
-              const dropdownItems =
-                item.dropdown === "properties"
-                  ? propertiesDropdownItems
-                  : offPlanDropdownItems;
+              const dropdownItems = getNavDropdownItems(
+                item.dropdown as NavDropdownKey,
+              );
 
               return (
-                <div key={item.key} className="group relative">
+                <div key={item.key} className="nav-dropdown group relative">
                   <LocalizedLink href={item.href} className={navLinkClass}>
                     {t(item.key)}
                     <NavCaret />
                   </LocalizedLink>
-                  <div className="pointer-events-none absolute start-1/2 top-full z-30 hidden -translate-x-1/2 pt-3 group-hover:pointer-events-auto group-hover:block rtl:translate-x-1/2">
-                    <div className="min-w-[180px] rounded-[var(--radius-field)] border border-line bg-white py-3 shadow-[var(--shadow-card)]">
+                  <div className="nav-dropdown-panel pointer-events-none absolute start-1/2 top-full z-30 -translate-x-1/2 pt-3 opacity-0 transition-[opacity,transform] duration-300 ease-[var(--motion-ease-lux)] group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100 rtl:translate-x-1/2">
+                    <div className="min-w-[180px] translate-y-1 rounded-[var(--radius-field)] border border-line bg-white py-3 shadow-[var(--shadow-card)] transition-transform duration-300 ease-[var(--motion-ease-lux)] group-hover:translate-y-0 group-focus-within:translate-y-0">
                       <ul className="flex flex-col gap-1">
                         {dropdownItems.map((link) => (
                           <li key={link.key}>
                             <LocalizedLink
                               href={link.href}
-                              className="block px-5 py-2 text-[13px] leading-[18px] text-ink hover:bg-sapphire-50 hover:text-brand"
+                              className="block px-5 py-2 text-[13px] leading-[18px] text-ink transition-colors duration-200 hover:bg-sapphire-50 hover:text-brand"
                             >
-                              {t(link.key)}
+                              {t(link.key as never)}
                             </LocalizedLink>
                           </li>
                         ))}

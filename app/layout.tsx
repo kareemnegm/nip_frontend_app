@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
-import { Archivo, Cairo, Cormorant_Garamond, Geist_Mono, Kalnia } from "next/font/google";
+import { Archivo, Bodoni_Moda, Cairo, Cormorant_Garamond, Geist_Mono, Kalnia } from "next/font/google";
 import { defaultLocale, getDirection, isLocale, LOCALE_COOKIE } from "@/lib/i18n/config";
 import "./globals.css";
 
@@ -13,6 +13,13 @@ const archivo = Archivo({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const bodoni = Bodoni_Moda({
+  variable: "--font-didone",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
 const cormorant = Cormorant_Garamond({
@@ -55,7 +62,7 @@ export default async function RootLayout({
       lang={locale}
       dir={direction}
       suppressHydrationWarning
-      className={`${archivo.variable} ${geistMono.variable} ${cormorant.variable} ${kalnia.variable} ${cairo.variable} h-full antialiased`}
+      className={`${archivo.variable} ${geistMono.variable} ${bodoni.variable} ${cormorant.variable} ${kalnia.variable} ${cairo.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">{children}</body>
     </html>

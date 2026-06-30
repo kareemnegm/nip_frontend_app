@@ -44,6 +44,8 @@ export type ApiProperty = {
   type?: string | null;
   purpose?: string | null;
   location?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
   listing_type?: string | null;
   bedrooms?: number | null;
   bathrooms?: number | null;
@@ -105,4 +107,5 @@ export type PropertyListParams = {
   price_min?: string;
   price_max?: string;
   price_range?: string;
+  sort?: string;
 };

@@ -23,6 +23,7 @@ export async function FeaturedInsightSection({
         <SectionHeading
           title={await getCmsPlaceholder("placeholders.home.featuredInsight", "title", locale)}
           description={await getCmsPlaceholder("placeholders.home.featuredInsight", "desc", locale)}
+          descriptionMaxWidth="max-w-[400px]"
           editable={{
             relUrl: homeEditable.relUrl,
             titleKey: homeEditable.featuredInsight.titleKey,
@@ -41,6 +42,7 @@ export async function FeaturedInsightSection({
           slideWidth={480}
           gap={24}
           snapAlign="center"
+          trackHeight={440}
         >
           {insights.map((insight, index) => (
             <InsightCard

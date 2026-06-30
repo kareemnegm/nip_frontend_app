@@ -79,14 +79,21 @@
     "team": "الفريق",
     "careers": "الوظائف",
     "contact": "تواصل",
+    "address": "١١٣، ذا أوفيسز ٣،\nوان سنترال، دبي، الإمارات",
     "followUs": "تابعنا",
-    "copyright": "© 2026 NIP — Novel Insight Property. جميع الحقوق محفوظة.",
+    "copyright": "© 2026 NIP — ذا نوفل إنسايت بروبرتي. جميع الحقوق محفوظة.",
     "privacy": "الخصوصية",
     "terms": "الشروط",
     "cookies": "ملفات تعريف الارتباط",
     "disclaimer": "إخلاء المسؤولية",
-    "reraInfo": "معلومات RERA",
-    "staffLogin": "دخول الموظفين"
+    "reraInfo": "معلومات ريرا",
+    "staffLogin": "دخول الموظفين",
+    "newsletter": {
+      "emailPlaceholder": "بريدك الإلكتروني",
+      "subscribeLabel": "اشترك",
+      "subscriptionFailed": "فشل الاشتراك. حاول مجدداً.",
+      "subscriptionSuccess": "شكراً لاشتراكك."
+    }
   },
   "home": {
     "byIntroductionOnly": "بالتعارف فقط",
@@ -224,7 +231,9 @@
     "bedroomLabel": "غرف النوم",
     "bathroomLabel": "الحمامات",
     "areaLabel": "المساحة",
+    "totalAreaLabel": "المساحة الإجمالية",
     "typeLabel": "النوع",
+    "propertyTypeLabel": "نوع العقار",
     "furnishingLabel": "التأثيث",
     "referenceLabel": "المرجع",
     "arrangeViewing": "رتّب معاينة",
@@ -250,6 +259,7 @@
     "storyTitle": "القصة",
     "amenitiesTitle": "المرافق",
     "locationTitle": "الموقع",
+    "openInGoogleMaps": "افتح في خريطة جوجل",
     "interior": "داخلي",
     "exterior": "خارجي",
     "morePhotos": "+{count} أخرى",

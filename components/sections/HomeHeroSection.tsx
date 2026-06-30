@@ -3,9 +3,8 @@ import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
 import { HeroTitleRevealSlot } from "@/components/motion";
 import { Button } from "@/components/ui/Button";
-import { Container } from "@/components/ui/Container";
-import { siteHeroGutterX, siteMaxWidth } from "@/components/ui/SiteChrome";
 import { Icon } from "@/components/ui/Icon";
+import { siteHeroLayoutClassName } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
@@ -22,22 +21,30 @@ export async function HomeHeroSection() {
   return (
     <section
       data-site-hero
-      className="relative overflow-hidden bg-[linear-gradient(158deg,#254672_0%,#081a33_72%)] py-24 text-white sm:py-32 lg:py-[200px]"
+      className="relative self-stretch overflow-hidden bg-sapphire-800 text-white"
     >
-      <div data-parallax className="absolute inset-0">
+      {/* Figma: background 50% / cover no-repeat */}
+      <div data-parallax className="absolute inset-0 bg-sapphire-800">
         <EditableImage
           relUrl={HOME_REL_URL}
           blockKey={heroBlocks.image}
           locale={locale}
-          placeholderUrl=""
-          placeholderAlt=""
+          placeholderUrl="/images/hero-bg.jpg"
+          placeholderAlt="Dubai aerial view"
           fill
           priority
-          className="absolute inset-0 opacity-20"
-          imageClassName="object-cover"
+          className="absolute inset-0"
+          imageClassName="object-cover object-center"
         />
       </div>
-      <Container className={cn("relative text-start", siteMaxWidth, siteHeroGutterX)}>
+      {/* Figma gradient overlay — dark navy left→transparent right, ensures text legibility against any hero image */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-sapphire-800/85 via-sapphire-800/50 to-transparent"
+      />
+
+      {/* Figma 1525:28266 — display:flex; flex-direction:column; align-items:flex-start; gap:36px; padding:200px 180px */}
+      <div className={siteHeroLayoutClassName}>
         <div data-hero-eyebrow>
           <EditableText
             relUrl={HOME_REL_URL}
@@ -45,9 +52,10 @@ export async function HomeHeroSection() {
             locale={locale}
             placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "eyebrow", locale)}
             placeholderTag="p"
-            className="text-xs font-semibold uppercase leading-4 text-sapphire-200"
+            className="text-overline font-semibold uppercase text-sapphire-200"
           />
         </div>
+
         <HeroTitleRevealSlot>
           <EditableText
             relUrl={HOME_REL_URL}
@@ -55,9 +63,16 @@ export async function HomeHeroSection() {
             locale={locale}
             placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "title", locale)}
             placeholderTag="h1"
-            className="mt-9 max-w-[620px] font-[family-name:var(--font-display)] text-5xl font-normal uppercase leading-[1.05] tracking-[-0.04em] sm:text-6xl lg:text-[64px] lg:leading-[72px]"
+            className={cn(
+              "whitespace-pre-line font-display font-normal uppercase text-white",
+              "max-w-[620px]",
+              "text-[3rem] leading-[3.25rem] tracking-[-0.04em]",
+              "sm:text-display-hero-sm sm:leading-[4rem]",
+              "lg:text-display-hero lg:leading-[4.5rem] lg:tracking-[-0.04em]",
+            )}
           />
         </HeroTitleRevealSlot>
+
         <div data-hero-sub>
           <EditableText
             relUrl={HOME_REL_URL}
@@ -65,11 +80,17 @@ export async function HomeHeroSection() {
             locale={locale}
             placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "body", locale)}
             placeholderTag="p"
-            className="mt-9 max-w-[452px] text-[13px] leading-[18px] text-white"
+            className="max-w-[452px] text-body-sm font-normal text-white"
           />
         </div>
-        <div className="mt-9 flex max-w-[452px] flex-col items-stretch gap-3 sm:flex-row">
-          <Button href="/insights" variant="accent" size="lg" className="w-full flex-1">
+
+        <div className="flex w-full max-w-[452px] flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+          <Button
+            href="/insights"
+            variant="accent"
+            size="lg"
+            className="w-full flex-1 gap-1"
+          >
             {t("readInsights")}{" "}
             <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
           </Button>
@@ -77,13 +98,13 @@ export async function HomeHeroSection() {
             href="/contact"
             variant="outlineInverse"
             size="lg"
-            className="w-full flex-1 gap-[3px] border-platinum-400 text-[#d7dce3]"
+            className="w-full flex-1 gap-[3px]"
           >
             <span className="font-semibold">{tc("speakWith")}</span>
             <span className="font-[family-name:var(--font-logo)] font-medium">{tc("nip")}</span>
           </Button>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }

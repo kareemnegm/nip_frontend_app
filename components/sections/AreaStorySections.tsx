@@ -112,7 +112,7 @@ export function AreaAboutSection({
 }) {
   return (
     <div className={cn(sitePageInnerClassName, "space-y-6")}>
-      <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
+      <h2 className="font-display text-heading-h1 uppercase text-brand">
         {title}
       </h2>
       <p className="max-w-[900px] text-body-lg text-ink">{body}</p>
@@ -136,7 +136,7 @@ export function AreaMapSection({
 }) {
   return (
     <div className={cn(sitePageInnerClassName, "space-y-6")}>
-      <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
+      <h2 className="font-display text-heading-h1 uppercase text-brand">
         {title}
       </h2>
       <div className="relative h-[280px] overflow-hidden rounded-[var(--radius-card)] sm:h-[320px]">

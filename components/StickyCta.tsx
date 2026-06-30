@@ -84,6 +84,7 @@ export function StickyCta() {
       ].join(" ")}
     >
       <div
+        dir="ltr"
         className={`flex items-center justify-between gap-4 py-5 lg:py-6 ${siteChromeClassName}`}
       >
         <Logo inverted className="shrink-0" />

@@ -55,6 +55,10 @@ export async function PropertyListingPage({
   catalogPage,
   afterContent,
 }: PropertyListingPageProps) {
+  const sp = searchParamsToObject(searchParams);
+  const currentView: "grid" | "list" = sp.view === "list" ? "list" : "grid";
+  const currentSort = sp.sort ?? sp.order_by ?? "newest";
+
   const params = buildPropertyListParams(searchParams, {
     listing_type: mode === "offplan" ? "offplan" : "sale",
     per_page: 9,
@@ -63,7 +67,7 @@ export async function PropertyListingPage({
   const { data, meta } = await getProperties(params);
   const basePath = listingBasePath(locale, mode === "offplan" ? "offplan" : undefined);
   const query = searchParamsToQuery(searchParams, mode);
-  const filterValues = searchParamsToObject(searchParams);
+  const filterValues = sp;
   const heroPlaceholders = await getHeroPlaceholders(catalogPage, locale);
   const t = await getTranslations({ locale, namespace: "catalog" });
 
@@ -95,11 +99,28 @@ export async function PropertyListingPage({
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
           <div className={cn(sitePageInnerClassName, "space-y-6")}>
             {mode === "sale" ? (
-              <PropertyResultsToolbar count={meta.total} />
+              <PropertyResultsToolbar
+                count={meta.total}
+                currentSort={currentSort}
+                currentView={currentView}
+              />
             ) : null}
 
             {data.length === 0 ? (
               <CatalogEmptyState message={t("emptyListings")} />
+            ) : currentView === "list" ? (
+              <div className="flex flex-col gap-4">
+                {data.map((property) => {
+                  const card = mapPropertyToCard(property, locale);
+                  return (
+                    <PropertyCard
+                      key={property.id}
+                      layout="list"
+                      {...card}
+                    />
+                  );
+                })}
+              </div>
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 {data.map((property) => {

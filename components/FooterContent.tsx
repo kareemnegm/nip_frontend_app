@@ -1,7 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { LocalizedLink } from "@/components/LocalizedLink";
 import { NewsletterForm } from "@/components/forms/InquiryForms";
-import { Icon, type IconName } from "./ui/Icon";
+import { cn } from "@/lib/cn";
+import { FooterIcon, FooterSocialIcon, type FooterSocialIconName } from "./ui/FooterIcon";
 import { Logo } from "./ui/Logo";
 import { siteChromeClassName } from "./ui/SiteChrome";
 
@@ -18,14 +19,14 @@ function FooterLinkGroup({
   links: FooterLink[];
 }) {
   return (
-    <div className="flex w-[103px] flex-col gap-3.5">
+    <div className="flex w-[103px] flex-col gap-[14px]">
       <h3 className="text-[12px] font-semibold leading-4 text-white">{title}</h3>
       <ul className="flex flex-col gap-[9px] text-[12px] leading-4 text-basalt-300">
         {links.map((link) => (
           <li key={link.href + link.label}>
             <LocalizedLink
               href={link.href}
-              className="transition-colors hover:text-white"
+              className="transition-colors duration-200 hover:text-white"
             >
               {link.label}
             </LocalizedLink>
@@ -39,13 +40,20 @@ function FooterLinkGroup({
 function FooterContactRow({
   icon,
   children,
+  align = "center",
 }: {
-  icon: IconName;
+  icon: "phone" | "mail" | "location";
   children: React.ReactNode;
+  align?: "center" | "start";
 }) {
   return (
-    <li className="flex items-start gap-2 p-1">
-      <Icon name={icon} className="mt-0.5 h-3.5 w-3.5 shrink-0 text-basalt-300" />
+    <li
+      className={cn(
+        "flex gap-2 p-1",
+        align === "start" ? "items-start" : "items-center",
+      )}
+    >
+      <FooterIcon name={icon} className="shrink-0 text-basalt-300" />
       <span>{children}</span>
     </li>
   );
@@ -112,7 +120,7 @@ export async function FooterContent({
     { label: t("careers"), href: "/about#careers" },
   ];
 
-  const socialLinks: { label: string; icon: IconName; href: string }[] = [
+  const socialLinks: { label: string; icon: FooterSocialIconName; href: string }[] = [
     { label: "Instagram", icon: "instagram", href: "https://instagram.com" },
     { label: "Facebook", icon: "facebook", href: "https://facebook.com" },
     { label: "LinkedIn", icon: "linkedin", href: "https://linkedin.com" },
@@ -132,13 +140,16 @@ export async function FooterContent({
       <div
         className={`flex flex-col items-center gap-12 pb-10 pt-16 lg:pt-20 ${siteChromeClassName}`}
       >
-        <div className="flex w-full flex-wrap items-start justify-center gap-x-[142px] gap-y-12 rtl:flex-row-reverse">
+        <div dir="ltr" className="flex w-full flex-wrap items-start justify-center gap-x-[142px] gap-y-12">
           <div className="flex w-full max-w-[240px] flex-col gap-12">
             <div className="flex flex-col gap-4">
               <LocalizedLink href="/">
                 <Logo inverted />
               </LocalizedLink>
-              <div className="max-w-[240px] text-[12px] leading-4 text-basalt-300">
+              <div
+                dir="auto"
+                className="max-w-[240px] text-[12px] leading-4 text-basalt-300"
+              >
                 {tagline}
               </div>
             </div>
@@ -170,22 +181,22 @@ export async function FooterContent({
           </div>
 
           <div className="flex flex-col gap-12">
-            <div className="flex flex-col gap-3.5">
+            <div className="flex flex-col gap-[14px]">
               <h3 className="text-[12px] font-semibold leading-4 text-white">
                 {t("contact")}
               </h3>
               <ul className="flex flex-col gap-1 text-[12px] leading-4 text-basalt-300">
                 <FooterContactRow icon="phone">+971 50 165 2441</FooterContactRow>
                 <FooterContactRow icon="mail">info@niprealty.com</FooterContactRow>
-                <FooterContactRow icon="mapPin">
-                  113, The Offices 3,
-                  <br />
-                  One Central, Dubai, UAE
+                <FooterContactRow icon="location" align="start">
+                  {t("address").split("\n").map((line, i, arr) => (
+                    <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                  ))}
                 </FooterContactRow>
               </ul>
             </div>
 
-            <div className="flex flex-col gap-3.5">
+            <div className="flex flex-col gap-[14px]">
               <h3 className="text-[12px] font-semibold leading-4 text-white">
                 {t("followUs")}
               </h3>
@@ -198,7 +209,7 @@ export async function FooterContent({
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 p-1 transition-colors hover:text-white"
                     >
-                      <Icon name={icon} className="h-3.5 w-3.5 shrink-0" />
+                      <FooterSocialIcon name={icon} />
                       {label}
                     </a>
                   </li>
@@ -210,7 +221,7 @@ export async function FooterContent({
 
         <div className="h-px w-full bg-basalt-300" />
 
-        <div className="flex w-full flex-col gap-5 text-[12px] leading-4 md:flex-row md:items-center md:justify-between rtl:md:flex-row-reverse">
+        <div dir="ltr" className="flex w-full flex-col gap-5 text-[12px] leading-4 md:flex-row md:items-center md:justify-between">
           <div className="text-basalt-300">{copyright}</div>
           <div className="flex flex-wrap gap-x-5 gap-y-2 text-text-inactive">
             {legalLinks.map((link) => (

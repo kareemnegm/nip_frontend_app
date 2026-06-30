@@ -18,6 +18,8 @@ type CardCarouselProps = {
   /** Slide width in px — matches Figma card widths (408 property, 480 insight). */
   slideWidth?: number;
   gap?: number;
+  /** Fixed track height — Figma property row h=480px; omit for auto height. */
+  trackHeight?: number;
   /** Extend carousel to full viewport width (Figma bleed layout). */
   fullBleed?: boolean;
   /** Snap alignment — center matches Figma insight carousel peek effect. */
@@ -80,6 +82,7 @@ export function CardCarousel({
   slideClassName,
   slideWidth = 408,
   gap = 24,
+  trackHeight,
   fullBleed = false,
   snapAlign = "start",
 }: CardCarouselProps) {
@@ -116,6 +119,25 @@ export function CardCarousel({
     };
   }, [updateScrollState]);
 
+  /** Map vertical wheel/trackpad to horizontal scroll — no vertical drift on cards. */
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (!element) return;
+
+    const onWheel = (event: WheelEvent) => {
+      if (element.scrollWidth <= element.clientWidth) return;
+      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+
+      event.preventDefault();
+      const isRtl = document.documentElement.dir === "rtl";
+      const delta = isRtl ? -event.deltaY : event.deltaY;
+      element.scrollLeft += delta;
+    };
+
+    element.addEventListener("wheel", onWheel, { passive: false });
+    return () => element.removeEventListener("wheel", onWheel);
+  }, []);
+
   const scroll = (direction: "prev" | "next") => {
     const element = scrollRef.current;
     if (!element) return;
@@ -147,7 +169,7 @@ export function CardCarousel({
   return (
     <div
       className={cn(
-        "relative",
+        "relative overflow-hidden",
         fullBleed && "left-1/2 w-screen max-w-[100vw] -translate-x-1/2",
         className,
       )}
@@ -181,10 +203,15 @@ export function CardCarousel({
       <div
         ref={scrollRef}
         className={cn(
-          "flex snap-x snap-mandatory scroll-smooth items-stretch overflow-x-auto overscroll-x-contain pb-1 touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          "flex snap-x snap-mandatory scroll-smooth items-start overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-none",
+          "touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          trackHeight !== undefined && "h-[var(--carousel-track-height)]",
         )}
         style={{
           gap: `${gap}px`,
+          ...(trackHeight !== undefined
+            ? ({ ["--carousel-track-height" as string]: `${trackHeight}px` } as React.CSSProperties)
+            : {}),
           scrollPaddingInline:
             snapAlign === "center"
               ? `max(1.25rem, calc((100vw - ${slideWidth}px) / 2))`
@@ -201,9 +228,12 @@ export function CardCarousel({
             style={{
               width: `clamp(280px, 85vw, ${slideWidth}px)`,
               minWidth: `clamp(280px, 85vw, ${slideWidth}px)`,
+              ...(trackHeight !== undefined ? { height: `${trackHeight}px` } : {}),
             }}
           >
-            <div className="flex h-full w-full [&>*]:h-full [&>*]:w-full">{child}</div>
+            <div className="flex h-full w-full overflow-hidden [&>*]:h-full [&>*]:w-full">
+              {child}
+            </div>
           </div>
         ))}
       </div>

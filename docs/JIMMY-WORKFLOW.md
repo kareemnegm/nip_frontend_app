@@ -53,16 +53,26 @@ Use defaults from [ARCHITECTURE.md](./ARCHITECTURE.md) and skills. If unsure, pi
 - Note typography scale, colors, spacing, breakpoints.
 - Mark which text/images must be **admin-editable** → plan `blockKey`s.
 
-### Step 2 — Setup tokens
+### Step 2 — Setup tokens (before any UI code)
 
-Add design tokens to `app/globals.css` `@theme` or Tailwind config as needed:
+**Design tokens** = the single source of truth for colors, fonts, spacing, typography, radii, and shadows. They live in `app/globals.css` under `@theme inline` — not in random component files.
+
+Add or verify tokens **before** building components:
 
 ```css
 @theme inline {
-  --color-brand: #...;
-  --font-display: var(--font-geist-sans);
+  --color-brand: #0b3268;
+  --text-display-lg: 2.75rem;
+  --text-display-lg--line-height: 2.625rem;
+  --text-display-lg--letter-spacing: -0.02em;
 }
 ```
+
+Maps: `.cursor/skills/figma-to-react-components/nip-typography-map.md`, `docs/FIGMA-AUDIT.md`.
+
+Optional sync: `node scripts/sync-figma-tokens.mjs` (needs Figma API token with `file_variables:read`).
+
+**Never** use `text-xl`, `text-2xl`, or `text-[Npx]` — use named tokens or `Heading` / `Text` components.
 
 ### Step 3 — Build layout shell
 
@@ -97,14 +107,17 @@ Add `"use client"` only for:
 - Forms with client validation
 - Editable block admin UI (`EditableTextClient`)
 
-### Step 7 — Verify
+### Step 7 — Verify (pixel-perfect gate)
 
 ```bash
 npm run check
 npm run dev
 ```
 
-Compare against Figma at mobile + desktop breakpoints.
+1. Open Figma **Dev Mode** — for each text layer confirm font, weight, size, line-height, letter-spacing, text-align.
+2. Compare browser at **390px**, **768px**, **1280px** against Figma frames.
+3. Run every applicable row in `docs/FIGMA-AUDIT.md` Design QA Checklist — section is not done until all pass.
+4. **Overlay audit** (optional but powerful): export Figma frame as PNG, overlay on localhost with PerfectPixel or PixelParallel, fix any 2–4px drift (usually line-height or padding).
 
 ## File placement guide
 

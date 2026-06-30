@@ -52,45 +52,71 @@
   --color-platinum-400: #aeb6c2;
   --color-platinum-600: #7c8694;
 
-  --font-display: Didot, "Bodoni 72", var(--font-cormorant), serif;
+  --font-display: "Didot", "Bodoni 72", var(--font-didone), var(--font-cormorant), serif;
   --font-logo: var(--font-kalnia);
 
   --radius-card: 8px;
   --radius-field: 4px;
   --shadow-card: 0 2px 4px rgb(18 51 94 / 6%);
 
-  /* Typography — Figma foundations (1300:10840) */
-  --text-display-lg: 3.5rem;
-  --text-display-lg--line-height: 4rem;
+  /* Typography — Figma foundations (1300:10840) — all px values from Dev Mode */
+
+  /* Display — Didot/Cormorant, uppercase section titles */
+  --text-display-hero: 4rem;            /* 64px / home hero h1 desktop */
+  --text-display-hero--line-height: 4.5rem;   /* 72px */
+  --text-display-hero--letter-spacing: -0.04em;
+  --text-display-hero-sm: 3.5rem;       /* 56px / hero h1 tablet derived */
+  --text-display-hero-sm--line-height: 4rem;
+  --text-display-hero-sm--letter-spacing: -0.04em;
+  --text-display-lg: 2.75rem;           /* 44px / section titles, page h1 */
+  --text-display-lg--line-height: 2.625rem;   /* 42px */
   --text-display-lg--letter-spacing: -0.02em;
-  --text-display-md: 2.25rem;
-  --text-display-md--line-height: 2.625rem;
-  --text-display-md--letter-spacing: -0.02em;
-  --text-h1: 1.75rem;
+  --text-display-sm: 2.25rem;           /* 36px / section titles mobile derived */
+  --text-display-sm--line-height: 2.375rem;   /* 38px */
+  --text-display-sm--letter-spacing: -0.02em;
+
+  /* 02 Heading/H1 — Didot property page title (Figma exact) */
+  --text-heading-h1: 30px;
+  --text-heading-h1--line-height: 38px;
+  --text-heading-h1--letter-spacing: -1.2px;
+
+  /* Stat value — Archivo Bold, market pulse cards */
+  --text-stat-value: 2.25rem;           /* 36px */
+  --text-stat-value--line-height: 2.625rem;   /* 42px */
+
+  /* Headings — Archivo */
+  --text-h1: 1.75rem;                   /* 28px */
   --text-h1--line-height: 2rem;
   --text-h1--letter-spacing: -0.01em;
-  --text-h2: 1.375rem;
+  --text-h2: 1.375rem;                  /* 22px */
   --text-h2--line-height: 1.625rem;
-  --text-h3: 1.0625rem;
-  --text-h3--line-height: 1.375rem;
-  --text-h3--letter-spacing: -0.01em;
-  --text-h4: 0.9375rem;
+  --text-h3: 1.25rem;                   /* 20px / card titles */
+  --text-h3--line-height: 1.625rem;
+  --text-h4: 0.9375rem;                 /* 15px */
   --text-h4--line-height: 1.375rem;
   --text-h4--letter-spacing: -0.01em;
-  --text-body-lg: 1.0625rem;
-  --text-body-lg--line-height: 1.625rem;
-  --text-body-md: 0.9375rem;
-  --text-body-md--line-height: 1.5rem;
-  --text-body-sm: 0.8125rem;
-  --text-body-sm--line-height: 1.125rem;
-  --text-body-xs: 0.75rem;
-  --text-body-xs--line-height: 1rem;
-  --text-overline: 0.75rem;
+
+  /* Body — Archivo */
+  --text-body-lg: 1.0625rem;            /* 17px */
+  --text-body-lg--line-height: 1.75rem; /* 28px */
+  --text-body-regular: 0.9375rem;       /* 15px */
+  --text-body-regular--line-height: 1.375rem; /* 22px */
+  --text-body-md: 0.9375rem;            /* 15px — alias for body-regular */
+  --text-body-md--line-height: 1.375rem;
+  --text-body-sm: 0.8125rem;            /* 13px */
+  --text-body-sm--line-height: 1.125rem; /* 18px */
+  --text-body-xs: 0.75rem;              /* 12px */
+  --text-body-xs--line-height: 1rem;    /* 16px */
+
+  /* Labels & overlines — Archivo */
+  --text-overline: 0.75rem;             /* 12px */
   --text-overline--line-height: 1rem;
-  --text-label: 0.8125rem;
+  --text-label: 0.8125rem;              /* 13px */
   --text-label--line-height: 1.125rem;
-  --text-label-sm: 0.6875rem;
-  --text-label-sm--line-height: 0.875rem;
+  --text-label-semibold: 0.75rem;       /* 12px */
+  --text-label-semibold--line-height: 1rem;
+  --text-label-muted: 0.6875rem;        /* 11px */
+  --text-label-muted--line-height: 0.875rem;
 }
 
 html {
@@ -112,7 +138,7 @@ html[dir="rtl"] body {
 html[dir="rtl"] [data-site-hero] h1,
 html[dir="rtl"] [data-site-hero] h2,
 html[dir="rtl"] .font-\[family-name\:var\(--font-display\)\] {
-  font-family: var(--font-cairo), Didot, var(--font-cormorant), serif;
+  font-family: var(--font-cairo), var(--font-archivo);
 }
 
 html[dir="rtl"] input,
@@ -164,6 +190,18 @@ textarea {
   color: var(--color-ink);
 }
 
+/* Figma 02 Heading/H1 — property detail page title */
+.text-property-h1 {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 38px;
+  letter-spacing: -1.2px;
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
 /* Figma: Didot 30px / 38px / -1.2px tracking / uppercase / #0B3268 */
 .insight-article-body h2 {
   margin-top: 0;
@@ -172,7 +210,7 @@ textarea {
   font-size: 30px;
   font-weight: 400;
   line-height: 38px;
-  letter-spacing: -0.04em;
+  letter-spacing: -1.2px;
   text-transform: uppercase;
   color: var(--color-brand);
 }
@@ -543,7 +581,26 @@ article:focus-within .motion-card-image {
   gap: 0.625rem;
 }
 
+.group:hover .nav-caret,
+.group:focus-within .nav-caret {
+  transform: rotate(180deg);
+}
+
+.nav-link {
+  position: relative;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .nav-caret,
+  .nav-dropdown-panel {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .nav-dropdown-panel {
+    opacity: 1 !important;
+  }
+
   [data-reveal],
   [data-hero-eyebrow],
   [data-hero-sub],
@@ -557,5 +614,103 @@ article:focus-within .motion-card-image {
   .motion-card-image {
     transition: none !important;
     transform: none !important;
+  }
+}
+
+/* Property location map (Leaflet) */
+.nip-property-map-frame::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  z-index: 450;
+  box-shadow: inset 0 0 40px rgb(11 50 104 / 6%);
+}
+
+.nip-property-map .leaflet-container {
+  background: var(--color-basalt-50);
+  font-family: var(--font-sans);
+}
+
+.nip-property-map-pin {
+  background: transparent;
+  border: none;
+}
+
+.nip-map-pin-wrap {
+  position: relative;
+  width: 36px;
+  height: 46px;
+}
+
+.nip-map-pin-pulse {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  z-index: 0;
+  width: 28px;
+  height: 28px;
+  margin-left: -14px;
+  border-radius: 9999px;
+  background: var(--pin-pulse-color, rgb(220 53 69 / 45%));
+  animation: nip-map-pin-pulse 2.4s ease-out infinite;
+}
+
+@keyframes nip-map-pin-pulse {
+  0% {
+    opacity: 0.75;
+    transform: scale(0.35);
+  }
+
+  70% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+.nip-property-map .leaflet-control-zoom {
+  z-index: 500;
+  margin: 0 12px 12px 0 !important;
+  border: 1px solid var(--color-line, #d9e0ea);
+  border-radius: var(--radius-field);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.nip-property-map .leaflet-control-zoom a {
+  color: var(--color-brand);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-line, #d9e0ea);
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  font-size: 16px;
+}
+
+.nip-property-map .leaflet-control-zoom a:hover {
+  background: var(--color-basalt-50);
+  color: var(--color-brand-hover);
+}
+
+.nip-property-map .leaflet-control-zoom a:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 639px) {
+  .nip-property-map .leaflet-control-zoom {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nip-map-pin-pulse {
+    animation: none;
+    opacity: 0.35;
+    transform: scale(1);
   }
 }

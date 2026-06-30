@@ -79,6 +79,7 @@
     "team": "Team",
     "careers": "Careers",
     "contact": "Contact",
+    "address": "113, The Offices 3,\nOne Central, Dubai, UAE",
     "followUs": "Follow Us",
     "copyright": "© 2026 NIP — Novel Insight Property. All rights reserved.",
     "privacy": "Privacy",
@@ -86,7 +87,13 @@
     "cookies": "Cookies",
     "disclaimer": "Disclaimer",
     "reraInfo": "RERA Information",
-    "staffLogin": "Staff login"
+    "staffLogin": "Staff login",
+    "newsletter": {
+      "emailPlaceholder": "Your email",
+      "subscribeLabel": "Subscribe",
+      "subscriptionFailed": "Subscription failed. Please try again.",
+      "subscriptionSuccess": "Thank you for subscribing."
+    }
   },
   "home": {
     "byIntroductionOnly": "By Introduction Only",
@@ -224,7 +231,9 @@
     "bedroomLabel": "Bedrooms",
     "bathroomLabel": "Bathrooms",
     "areaLabel": "Area",
+    "totalAreaLabel": "Total Area",
     "typeLabel": "Type",
+    "propertyTypeLabel": "Property Type",
     "furnishingLabel": "Furnishing",
     "referenceLabel": "Reference",
     "arrangeViewing": "ARRANGE A VIEWING",
@@ -250,6 +259,7 @@
     "storyTitle": "The Story",
     "amenitiesTitle": "Amenities",
     "locationTitle": "Location",
+    "openInGoogleMaps": "Open in Google Maps",
     "interior": "Interior",
     "exterior": "Exterior",
     "morePhotos": "+{count} more",
@@ -490,7 +500,7 @@
     "home": {
       "hero": {
         "eyebrow": "A Private Advisory View | Dubai Real Estate",
-        "title": "For Those Who Expect More",
+        "title": "For Those Who\nExpect More",
         "body": "Dubai real estate has no shortage of choice. The difference lies in knowing what deserves your attention. NIP brings together market insight, editorial perspective, and private advisory for clients who want to move with judgment."
       },
       "featuredInsight": {

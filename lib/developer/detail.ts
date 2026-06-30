@@ -54,21 +54,21 @@ export function developerFactsFromApi(
   const presence = developer.presence?.trim() || labels.defaultPresence;
 
   return [
-    { label: labels.establishedLabel, value: established, icon: "calendar" },
-    { label: labels.deliveredLabel, value: delivered, icon: "check" },
-    { label: labels.underDevLabel, value: underDev, icon: "building" },
-    { label: labels.communitiesFactLabel, value: communities, icon: "grid" },
-    { label: labels.unitsLabel, value: units, icon: "home" },
+    { label: labels.establishedLabel, value: established, icon: "established" },
+    { label: labels.deliveredLabel, value: delivered, icon: "delivered" },
+    { label: labels.underDevLabel, value: underDev, icon: "crane" },
+    { label: labels.communitiesFactLabel, value: communities, icon: "communities" },
+    { label: labels.unitsLabel, value: units, icon: "floorplan" },
     { label: labels.presenceLabel, value: presence, icon: "globe" },
   ];
 }
 
 const defaultStrengthIcons: IconName[] = [
-  "building",
-  "calendar",
+  "skyline",
+  "handover",
   "percent",
-  "home",
-  "sofa",
+  "star",
+  "concierge",
   "globe",
 ];
 

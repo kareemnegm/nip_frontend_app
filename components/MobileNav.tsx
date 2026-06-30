@@ -9,9 +9,9 @@ import { Logo } from "./ui/Logo";
 import { clientT } from "@/lib/i18n/client-messages";
 import { useOptionalLocale } from "@/lib/i18n/context";
 import {
+  getNavDropdownItems,
   mainNavItems,
-  offPlanDropdownItems,
-  propertiesDropdownItems,
+  type NavDropdownKey,
 } from "@/lib/i18n/nav-config";
 
 const navLinkClass =
@@ -20,6 +20,7 @@ const navLinkClass =
 export function MobileNav() {
   const localeContext = useOptionalLocale();
   const navT = (key: string) => clientT(localeContext?.locale, "nav", key);
+  const footerT = (key: string) => clientT(localeContext?.locale, "footer", key);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -44,7 +45,7 @@ export function MobileNav() {
       {open ? (
         <div className="fixed inset-0 z-50 bg-black/40">
           <div className="ms-auto flex h-full w-full max-w-sm flex-col bg-white p-6 shadow-xl rtl:ms-0 rtl:me-auto">
-            <div className="flex items-center justify-between">
+            <div dir="ltr" className="flex items-center justify-between">
               <LocalizedLink href="/" onClick={() => setOpen(false)}>
                 <Logo />
               </LocalizedLink>
@@ -61,10 +62,9 @@ export function MobileNav() {
             <nav className="mt-8 flex flex-col gap-1">
               {mainNavItems.map((item) => {
                 if ("dropdown" in item) {
-                  const dropdownItems =
-                    item.dropdown === "properties"
-                      ? propertiesDropdownItems
-                      : offPlanDropdownItems;
+                  const dropdownItems = getNavDropdownItems(
+                    item.dropdown as NavDropdownKey,
+                  );
 
                   return (
                     <div key={item.key} className="space-y-1">
@@ -83,7 +83,7 @@ export function MobileNav() {
                             className="rounded-[var(--radius-field)] px-2 py-[6px] text-[13px] font-medium text-ink-secondary hover:bg-sapphire-50 hover:text-brand"
                             onClick={() => setOpen(false)}
                           >
-                            {navT(link.key)}
+                            {footerT(link.key)}
                           </LocalizedLink>
                         ))}
                       </div>

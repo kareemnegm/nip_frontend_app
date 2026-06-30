@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { CommunityCard } from "@/components/ui/Cards";
+import { CurrencyIcon } from "@/components/ui/CurrencyIcon";
 import { Container } from "@/components/ui/Container";
 import { CatalogEmptyState } from "@/components/ui/ApiPagination";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
@@ -8,6 +9,16 @@ import { getRequestLocale } from "@/lib/i18n/server";
 import { homeEditable } from "./home-editable";
 import { SectionHeading } from "./SectionHeading";
 import type { CommunityCardModel } from "@/lib/mappers/area";
+
+/**
+ * Figma 1525:28300 — 4 stat cards, gap-16, px-28 py-24
+ * Card backgrounds: sapphire-400, 500, 600, 700
+ * Context color: sapphire-100 on card-1 (lighter bg), sapphire-200 on cards 2-4
+ * Stat value: Archivo Bold 36/42 white → text-stat-value font-bold
+ * Label: Archivo SemiBold 12/16 white → text-overline font-semibold
+ */
+const cardBg = ["bg-sapphire-400", "bg-sapphire-500", "bg-sapphire-600", "bg-sapphire-700"] as const;
+const cardContext = ["text-sapphire-100", "text-sapphire-200", "text-sapphire-200", "text-sapphire-200"] as const;
 
 export async function MarketPulseSection({
   areas = [],
@@ -27,17 +38,21 @@ export async function MarketPulseSection({
 
   return (
     <>
+      {/* Figma 1525:28295 — bg white, py-80, max-w-1056, gap-40 */}
       <section className="bg-white py-16 sm:py-20">
         <Container className="max-w-[1056px] space-y-10 px-6">
           <SectionHeading
             title={await getCmsPlaceholder("placeholders.home.marketPulse", "title", locale)}
             description={await getCmsPlaceholder("placeholders.home.marketPulse", "desc", locale)}
+            descriptionMaxWidth="max-w-[464px]"
             editable={{
               relUrl: homeEditable.relUrl,
               titleKey: homeEditable.marketPulse.titleKey,
               descKey: homeEditable.marketPulse.descKey,
             }}
           />
+
+          {/* Figma: 4-col grid at desktop, gap-16, px-28 py-24 per card */}
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {marketPulseStats.map((stat, index) => (
               <div
@@ -45,13 +60,18 @@ export async function MarketPulseSection({
                 data-reveal
                 data-reveal-delay={index > 0 ? String(Math.min(index, 3)) : undefined}
                 className={[
-                  "rounded-[var(--radius-card)] px-7 py-6 text-white",
-                  ["bg-sapphire-400", "bg-sapphire-500", "bg-sapphire-600", "bg-sapphire-700"][index],
+                  "flex flex-col gap-4 rounded-[var(--radius-card)] px-7 py-6 text-white",
+                  cardBg[index],
                 ].join(" ")}
               >
-                <p className="text-xs leading-4 text-sapphire-100">{stat.context}</p>
-                <p className="mt-4 flex items-center gap-1.5 text-4xl font-bold leading-[42px]">
-                  {stat.icon ? <span className="text-2xl">AED</span> : null}
+                {/* Context — Figma: Archivo Regular 12/16 */}
+                <p className={["text-body-xs font-normal", cardContext[index]].join(" ")}>
+                  {stat.context}
+                </p>
+
+                {/* Stat value — Figma: Archivo Bold 36/42 white */}
+                <p className="flex items-center gap-1.5 text-stat-value font-bold leading-[2.625rem]">
+                  {stat.icon ? <CurrencyIcon currency="AED" className="h-7 w-7 shrink-0" /> : null}
                   <span
                     data-count={stat.count}
                     data-count-prefix={stat.prefix}
@@ -62,14 +82,17 @@ export async function MarketPulseSection({
                     {stat.suffix}
                   </span>
                 </p>
-                <p className="mt-4 text-xs font-semibold leading-4 text-white">{stat.label}</p>
+
+                {/* Label — Figma: Archivo SemiBold 12/16 white */}
+                <p className="text-overline font-semibold text-white">{stat.label}</p>
               </div>
             ))}
           </div>
+
           <p className="text-center">
             <Link
               href="/insights"
-              className="inline-flex h-9 items-center justify-center rounded-[var(--radius-field)] border border-sapphire-300 px-6 text-[13px] font-semibold leading-[18px] text-brand hover:bg-sapphire-50"
+              className="inline-flex h-9 items-center justify-center rounded-[var(--radius-field)] border border-sapphire-300 px-6 text-body-sm font-semibold text-brand hover:bg-sapphire-50"
             >
               {t("marketPulse.viewPerspective")}
             </Link>

@@ -1,7 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { Icon } from "@/components/ui";
+import { AmenityIcon } from "@/components/ui/AmenityIcon";
+import { Icon } from "@/components/ui/Icon";
+import { PropertyMap } from "@/components/ui/PropertyMap";
+import { hasValidCoordinates } from "@/lib/maps/coordinates";
 import {
   siteMaxWidth,
   sitePageGutterX,
@@ -12,20 +15,6 @@ import { localizedHref } from "@/lib/i18n/helpers";
 import type { Locale } from "@/lib/i18n/config";
 import { paymentPlanCardColors } from "@/lib/off-plan/detail";
 import type { ApiFacility, ApiPaymentStep } from "@/types/api/property";
-
-function FacilityIcon({ icon }: { icon?: string | null }) {
-  if (icon?.trim()) {
-    return (
-      <span
-        className="flex h-6 w-6 shrink-0 items-center justify-center [&_svg]:h-6 [&_svg]:w-6 [&_svg]:text-brand"
-        dangerouslySetInnerHTML={{ __html: icon }}
-        aria-hidden
-      />
-    );
-  }
-
-  return <Icon name="home" className="h-6 w-6 shrink-0 text-brand" />;
-}
 
 export function PaymentPlanSection({
   title,
@@ -110,44 +99,64 @@ export function AvailableUnitsTable({
 export function MasterplanLocationSection({
   title,
   imageUrl,
+  latitude,
+  longitude,
+  locationName,
+  mapsLinkLabel,
   facilities,
   className,
 }: {
   title: string;
   imageUrl?: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  locationName?: string;
+  mapsLinkLabel?: string;
   facilities?: ApiFacility[] | null;
   className?: string;
 }) {
   const items = facilities?.filter((item) => item.facility?.trim()) ?? [];
+  const hasMapCoordinates = hasValidCoordinates(latitude, longitude);
 
   return (
     <section className={cn("space-y-7", className)}>
       <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
         {title}
       </h2>
-      <div className="relative h-[340px] overflow-hidden rounded-[var(--radius-card)]">
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 1080px) 100vw, 1080px"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center bg-basalt-100">
-            <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
-          </div>
-        )}
-      </div>
+      {hasMapCoordinates ? (
+        <PropertyMap
+          latitude={latitude}
+          longitude={longitude}
+          label={title}
+          locationName={locationName}
+          mapsLinkLabel={mapsLinkLabel}
+          className="h-[420px]"
+        />
+      ) : (
+        <div className="relative h-[420px] overflow-hidden rounded-[var(--radius-card)] border border-line shadow-[var(--shadow-card)]">
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 1080px) 100vw, 1080px"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center bg-basalt-100">
+              <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
+            </div>
+          )}
+        </div>
+      )}
       {items.length > 0 ? (
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-[10px]">
           {items.map((item) => (
             <span
               key={item.id}
-              className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-sm leading-5 text-ink-secondary"
+              className="inline-flex items-center gap-2 rounded bg-basalt-50 py-2 pl-3 pr-4 text-[11px] font-medium leading-[14px] text-ink-secondary"
             >
-              <FacilityIcon icon={item.facility_icon} />
+              <AmenityIcon facility={item.facility} />
               {item.facility}
             </span>
           ))}

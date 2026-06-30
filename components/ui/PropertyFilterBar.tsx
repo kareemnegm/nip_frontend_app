@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from
 import { Icon } from "./Icon";
 
 const filterSelectClassName =
-  "h-[38px] w-full min-w-0 appearance-none rounded-[var(--radius-field)] border border-line bg-white bg-[length:10px] bg-[right_12px_center] bg-no-repeat pl-3.5 pr-8 text-body-sm font-medium text-ink-secondary outline-none lg:w-[110px] lg:shrink-0";
+  "h-[38px] w-full min-w-0 flex-1 appearance-none rounded-[var(--radius-field)] border border-line bg-white bg-[length:10px] bg-[right_12px_center] bg-no-repeat px-3.5 pe-8 text-body-sm font-medium text-ink-secondary outline-none sm:max-w-[140px] lg:max-w-[110px]";
 
 const KEYWORD_DEBOUNCE_MS = 400;
 
@@ -35,7 +35,7 @@ function FilterSelect({
   onChange: (value: string) => void;
 }) {
   return (
-    <div className="relative lg:w-[110px] lg:shrink-0">
+    <div className="relative min-w-0 flex-1 sm:max-w-[140px] lg:max-w-[110px]">
       <select
         aria-label={ariaLabel}
         className={filterSelectClassName}
@@ -202,7 +202,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
 
   return (
     <form
-      className="flex flex-wrap items-center gap-2.5 rounded-[var(--radius-card)] border border-line bg-white p-3 shadow-[var(--shadow-card)] lg:flex-nowrap"
+      className="flex w-full flex-wrap items-center gap-2.5 overflow-hidden rounded-[var(--radius-card)] border border-line bg-white p-3 shadow-[var(--shadow-card)] lg:flex-nowrap"
       onSubmit={onSubmit}
     >
       <input
@@ -211,7 +211,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
         placeholder={t("searchPlaceholder")}
         value={keyword}
         onChange={(event) => onKeywordChange(event.target.value)}
-        className="h-[38px] w-full min-w-[200px] rounded-[var(--radius-field)] bg-sapphire-50 px-3.5 text-body-sm text-ink outline-none placeholder:text-text-inactive lg:w-[470px] lg:shrink-0"
+        className="h-[38px] min-w-0 flex-[1_1_200px] rounded-[var(--radius-field)] bg-sapphire-50 px-3.5 text-body-sm text-ink outline-none placeholder:text-text-inactive lg:flex-[1.4_1_0%]"
       />
       <FilterSelect
         aria-label={t("location")}
@@ -252,7 +252,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
       <button
         type="submit"
         disabled={isPending}
-        className="inline-flex h-[38px] w-full shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-brand px-[22px] text-overline font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-60 lg:w-[96px]"
+        className="inline-flex h-[38px] w-full shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-sapphire-600 px-[22px] text-overline font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-60 sm:w-auto sm:min-w-[96px] lg:shrink-0"
       >
         {isPending ? tc("loading") : tc("search")}
       </button>

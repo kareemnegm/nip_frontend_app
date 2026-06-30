@@ -1,6 +1,9 @@
 import Image from "next/image";
 import { SpeakWithNipButton } from "@/components/ui/Button";
+import { AmenityIcon } from "@/components/ui/AmenityIcon";
 import { Icon } from "@/components/ui/Icon";
+import { PropertyMap } from "@/components/ui/PropertyMap";
+import { hasValidCoordinates } from "@/lib/maps/coordinates";
 import type { ApiFacility } from "@/types/api";
 import type { PropertyGalleryImage } from "@/types/api/property";
 import {
@@ -10,24 +13,11 @@ import {
 export { PropertyAdvisoryCard } from "./PropertyAdvisoryCard";
 export type { PropertyAdvisoryCardLabels } from "./PropertyAdvisoryCard";
 
-function FacilityIcon({ icon }: { icon?: string | null }) {
-  if (icon?.trim()) {
-    return (
-      <span
-        className="flex h-6 w-6 shrink-0 items-center justify-center [&_svg]:h-6 [&_svg]:w-6 [&_svg]:text-brand"
-        dangerouslySetInnerHTML={{ __html: icon }}
-        aria-hidden
-      />
-    );
-  }
-
-  return <Icon name="home" className="h-6 w-6 shrink-0 text-brand" />;
-}
-
 export type PropertyStoryLabels = {
   storyTitle: string;
   amenitiesTitle: string;
   locationTitle: string;
+  openInGoogleMaps: string;
 };
 
 export function PropertyGallery({
@@ -45,17 +35,26 @@ export function PropertyStoryContent({
   facilities,
   locationNote,
   locationImageUrl,
+  latitude,
+  longitude,
+  locationName,
   labels,
 }: {
   description?: string;
   facilities?: ApiFacility[];
   locationNote?: string;
   locationImageUrl?: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  locationName?: string;
   labels: PropertyStoryLabels;
 }) {
   const amenityItems = facilities ?? [];
+  const hasMapCoordinates = hasValidCoordinates(latitude, longitude);
 
-  const showLocationSection = Boolean(locationNote || locationImageUrl);
+  const showLocationSection = Boolean(
+    locationNote || locationImageUrl || hasMapCoordinates,
+  );
 
   return (
     <div className="flex w-full max-w-[672px] flex-col gap-7">
@@ -79,7 +78,7 @@ export function PropertyStoryContent({
                 key={item.id}
                 className="inline-flex items-center gap-2 rounded-[var(--radius-field)] bg-basalt-50 py-2 pl-3 pr-4 text-[11px] font-medium leading-[14px] text-ink-secondary"
               >
-                <FacilityIcon icon={item.facility_icon} />
+                <AmenityIcon facility={item.facility} />
                 {item.facility}
               </span>
             ))}
@@ -95,8 +94,17 @@ export function PropertyStoryContent({
           {locationNote ? (
             <p className="text-body-sm text-ink-secondary">{locationNote}</p>
           ) : null}
-          {locationImageUrl ? (
-            <div className="relative h-[300px] overflow-hidden rounded-[var(--radius-card)]">
+          {hasMapCoordinates ? (
+            <PropertyMap
+              latitude={latitude}
+              longitude={longitude}
+              label={labels.locationTitle}
+              locationName={locationName}
+              mapsLinkLabel={labels.openInGoogleMaps}
+              className="h-[400px]"
+            />
+          ) : locationImageUrl ? (
+            <div className="relative h-[400px] overflow-hidden rounded-[var(--radius-card)] border border-line shadow-[var(--shadow-card)]">
               <Image
                 src={locationImageUrl}
                 alt={labels.locationTitle}
@@ -106,7 +114,7 @@ export function PropertyStoryContent({
               />
             </div>
           ) : (
-            <div className="flex h-[300px] items-center justify-center rounded-[var(--radius-card)] bg-basalt-100">
+            <div className="flex h-[400px] items-center justify-center rounded-[var(--radius-card)] border border-line bg-basalt-100 shadow-[var(--shadow-card)]">
               <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
             </div>
           )}

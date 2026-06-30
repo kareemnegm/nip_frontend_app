@@ -41,13 +41,21 @@ Do **not** put skills in `~/.cursor/skills-cursor/` — that is reserved for Cur
 
 ```
 .cursor/skills/
-├── figma-to-frontend/     # Figma → reusable components + pages
+├── figma-to-frontend/          # Figma → reusable components + pages
 │   ├── SKILL.md
 │   ├── component-library.md
 │   └── examples.md
-├── react-patterns/          # React reuse, ui/, sections/
-├── nextjs-app-router/         # Routes, SSR, API
-└── nip-architecture/          # Structure, backend API, editable blocks
+├── figma-to-react-components/  # Exact typography + token mapping from Figma MCP
+│   ├── SKILL.md
+│   ├── nip-typography-map.md   # Figma px ↔ code variant table
+│   ├── references/
+│   └── rules/
+├── figma-developer/              # Figma REST API token sync (npm run figma:sync-tokens)
+│   ├── SKILL.md
+│   └── references/
+├── react-patterns/               # React reuse, ui/, sections/
+├── nextjs-app-router/            # Routes, SSR, API
+└── nip-architecture/             # Structure, backend API, editable blocks
 ```
 
 Plus **rules** in `.cursor/rules/` (always auto-attached) and **AGENTS.md** at the project root.

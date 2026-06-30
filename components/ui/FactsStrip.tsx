@@ -1,5 +1,6 @@
 import { cn } from "@/lib/cn";
 import { Icon, type IconName } from "./Icon";
+import { isPropertyFactIconName, PropertyFactIcon } from "./PropertyFactIcon";
 
 export type FactItem = {
   label: string;
@@ -9,7 +10,7 @@ export type FactItem = {
 
 export type FactsStripProps = {
   items: FactItem[];
-  variant?: "default" | "property";
+  variant?: "default" | "property" | "property-detail";
   className?: string;
 };
 
@@ -18,7 +19,7 @@ export function FactsStrip({
   variant = "default",
   className,
 }: FactsStripProps) {
-  if (variant === "property") {
+  if (variant === "property" || variant === "property-detail") {
     return (
       <div
         className={cn(
@@ -34,13 +35,29 @@ export function FactsStrip({
                 className="hidden h-9 w-px shrink-0 bg-border-default sm:block"
               />
             ) : null}
-            <div className="flex min-w-[140px] flex-1 items-center justify-center gap-1.5 px-3 py-2 sm:min-w-0 sm:py-0">
-              <Icon name={item.icon} className="h-9 w-9 shrink-0 text-brand" />
+            <div className="flex min-w-[140px] flex-1 items-center justify-center gap-2 px-3 py-2 sm:min-w-0 sm:px-4 sm:py-0">
+              {variant === "property-detail" && isPropertyFactIconName(item.icon) ? (
+                <PropertyFactIcon name={item.icon} />
+              ) : (
+                <Icon name={item.icon} className="h-9 w-9 shrink-0 text-sapphire-600" />
+              )}
               <div className="min-w-0 text-left">
-                <p className="text-[11px] font-medium leading-[14px] text-text-inactive">
+                <p
+                  className={cn(
+                    variant === "property-detail"
+                      ? "text-label-muted font-medium text-basalt-300"
+                      : "text-[11px] font-medium leading-[14px] text-text-inactive",
+                  )}
+                >
                   {item.label}
                 </p>
-                <p className="text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
+                <p
+                  className={cn(
+                    variant === "property-detail"
+                      ? "text-[15px] font-bold leading-[22px] tracking-[-0.15px] text-brand"
+                      : "text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand",
+                  )}
+                >
                   {item.value}
                 </p>
               </div>

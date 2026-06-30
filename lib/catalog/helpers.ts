@@ -33,6 +33,7 @@ export function buildPropertyListParams(
     price_range: sp.price_range,
     location: sp.location ?? sp.community,
     purpose: sp.purpose,
+    sort: sp.sort ?? sp.order_by,
     locale: defaults.locale,
   };
 }
