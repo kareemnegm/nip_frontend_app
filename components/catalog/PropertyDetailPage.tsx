@@ -291,10 +291,59 @@ export async function PropertyDetailPage({
 }
 
 export function buildPropertyMetadata(property: ApiProperty) {
+  const title = `${property.title} | NIP Reality`;
+  const description =
+    property.description?.slice(0, 160) ??
+    `Property details for ${property.title} in Dubai.`;
+
+  // Collect OG images: primary thumbnail first, then first gallery image
+  const ogImageUrls: string[] = [];
+  const primary = resolveMediaUrl(property.image_url ?? property.photo_url);
+  if (primary) ogImageUrls.push(primary);
+  if (property.images?.length) {
+    for (const img of property.images) {
+      const url = resolveMediaUrl(img.image_url);
+      if (url && !ogImageUrls.includes(url)) {
+        ogImageUrls.push(url);
+        break;
+      }
+    }
+  }
+
+  const ogImages = ogImageUrls.map((url) => ({
+    url,
+    width: 1200,
+    height: 630,
+    alt: property.title,
+  }));
+
+  const keywords = [
+    "Dubai real estate",
+    "property for sale Dubai",
+    property.type,
+    property.location,
+    property.area?.name,
+    property.bedrooms ? `${property.bedrooms} bedroom` : null,
+    "NIP Reality",
+  ]
+    .filter(Boolean)
+    .join(", ");
+
   return {
-    title: `${property.title} | NIP Reality`,
-    description:
-      property.description?.slice(0, 160) ??
-      `Property details for ${property.title} in Dubai.`,
+    title,
+    description,
+    keywords,
+    openGraph: {
+      title,
+      description,
+      type: "website" as const,
+      ...(ogImages.length > 0 && { images: ogImages }),
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title,
+      description,
+      ...(ogImageUrls[0] && { images: [ogImageUrls[0]] }),
+    },
   };
 }

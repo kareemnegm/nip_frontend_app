@@ -50,8 +50,21 @@ export async function localizedMetadata(
   page: MetaPage,
 ): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: metaNamespaces[page] });
+  const title = t("title");
+  const description = t("description");
   return {
-    title: t("title"),
-    description: t("description"),
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      locale: locale === "ar" ? "ar_AE" : "en_AE",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }

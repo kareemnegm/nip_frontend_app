@@ -177,6 +177,13 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
 
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
+      debounceRef.current = null;
+    }
+
+    // Cleared entirely — navigate immediately without debounce
+    if (value === "") {
+      pushFilters({ keyword: "" });
+      return;
     }
 
     debounceRef.current = setTimeout(() => {
@@ -211,6 +218,23 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
         placeholder={t("searchPlaceholder")}
         value={keyword}
         onChange={(event) => onKeywordChange(event.target.value)}
+        onKeyDown={(event) => {
+          // Ctrl/Cmd + A then Delete/Backspace clears the field in one keystroke;
+          // the onChange fires normally, but ESC in some browsers also clears.
+          if (event.key === "Escape" && keyword !== "") {
+            onKeywordChange("");
+          }
+        }}
+        ref={(el) => {
+          // Catch the native "search" event that fires when the × clear button
+          // is clicked — this event is not forwarded by React's onChange.
+          if (!el) return;
+          const handler = () => {
+            if (el.value === "") onKeywordChange("");
+          };
+          el.addEventListener("search", handler);
+          return () => el.removeEventListener("search", handler);
+        }}
         className="h-[38px] min-w-0 flex-[1_1_200px] rounded-[var(--radius-field)] bg-sapphire-50 px-3.5 text-body-sm text-ink outline-none placeholder:text-text-inactive lg:flex-[1.4_1_0%]"
       />
       <FilterSelect

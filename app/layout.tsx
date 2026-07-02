@@ -41,9 +41,30 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  title: "NIP Reality | Novel Insight Property",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://nipreality.com",
+  ),
+  title: {
+    default: "NIP Reality | Novel Insight Property",
+    template: "%s | NIP Reality",
+  },
   description:
     "Prudent, knowledge-first global real estate advisory for elevated living in Dubai.",
+  openGraph: {
+    siteName: "NIP Reality",
+    type: "website",
+    images: [
+      {
+        url: "/images/hero-bg.jpg",
+        width: 1200,
+        height: 630,
+        alt: "NIP Reality — Novel Insight Property",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default async function RootLayout({

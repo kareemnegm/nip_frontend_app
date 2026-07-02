@@ -54,7 +54,7 @@ function FooterContactRow({
       )}
     >
       <FooterIcon name={icon} className="shrink-0 text-basalt-300" />
-      <span>{children}</span>
+      <span dir="auto">{children}</span>
     </li>
   );
 }

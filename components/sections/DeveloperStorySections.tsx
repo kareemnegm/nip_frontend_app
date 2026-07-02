@@ -102,20 +102,23 @@ export async function DeveloperAboutSection({
   );
 }
 
-export function DeveloperPortfolioSection({
+export async function DeveloperPortfolioSection({
   developerName,
   children,
 }: {
   developerName: string;
   children: React.ReactNode;
 }) {
+  const locale = await getRequestLocale();
+  const t = await getTranslations({ locale, namespace: "pages.developers" });
+
   return (
     <section className="bg-surface-muted pt-16 pb-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className={sitePageInnerClassName}>
           <AreaSectionHeading
-            eyebrow="PORTFOLIO"
-            title={`Projects by ${developerName}`}
+            eyebrow={t("portfolio")}
+            title={t("listingsFor", { name: developerName })}
             titleClassName={developerSectionTitleClassName}
           />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -143,7 +146,7 @@ export async function DeveloperCommunitiesSection({
         <div className={sitePageInnerClassName}>
           <AreaSectionHeading
             eyebrow={t("communities")}
-            title={`Where ${developerName} builds`}
+            title={t("whereBuilds", { name: developerName })}
             titleClassName={developerSectionTitleClassName}
           />
           <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -155,7 +158,11 @@ export async function DeveloperCommunitiesSection({
   );
 }
 
-export function DeveloperAdvisoryCta({ developerName }: { developerName: string }) {
+export async function DeveloperAdvisoryCta({ developerName }: { developerName: string }) {
+  const locale = await getRequestLocale();
+  const tDev = await getTranslations({ locale, namespace: "pages.developers" });
+  const tCommon = await getTranslations({ locale, namespace: "common" });
+
   return (
     <section className="bg-brand py-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
@@ -167,19 +174,19 @@ export function DeveloperAdvisoryCta({ developerName }: { developerName: string 
         >
           <div className="flex flex-col items-center gap-4">
             <p className="text-overline font-semibold text-accent-on-dark">
-              ADVISORY
+              {tDev("advisory")}
             </p>
             <h2 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-white">
-              Interested in an {developerName} Address?
+              {tDev("interestedInAddress", { name: developerName })}
             </h2>
           </div>
           <Link
             href="/contact"
             className="inline-flex items-center justify-center gap-[3px] rounded-[var(--radius-field)] bg-white px-6 py-[9px] text-xs leading-4 text-brand transition-colors hover:bg-sapphire-50"
           >
-            <span className="font-semibold">Speak with</span>
+            <span className="font-semibold">{tCommon("speakWith")}</span>
             <span className="font-[family-name:var(--font-logo)] font-medium">
-              NIP
+              {tCommon("nip")}
             </span>
           </Link>
         </div>

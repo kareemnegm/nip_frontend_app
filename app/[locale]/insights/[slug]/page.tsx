@@ -28,9 +28,38 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const locale = resolveLocale(rawLocale);
   const blog = await getBlogBySlug(slug, locale);
   if (!blog) return { title: "Insight | NIP Reality" };
+
+  const title = `${blog.title} | NIP Reality`;
+  const description = resolveBlogExcerpt(blog) || blog.content?.slice(0, 160);
+  const keywords = [
+    blog.title,
+    blog.category?.name,
+    "Dubai real estate",
+    "NIP Reality",
+  ]
+    .filter(Boolean)
+    .join(", ");
+  const ogImageUrl = resolveBlogFeaturedImage(blog);
+  const ogImages = ogImageUrl
+    ? [{ url: ogImageUrl, width: 1200, height: 630, alt: blog.title }]
+    : undefined;
+
   return {
-    title: `${blog.title} | NIP Reality`,
-    description: resolveBlogExcerpt(blog) || blog.content?.slice(0, 160),
+    title,
+    description,
+    keywords,
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      ...(ogImages && { images: ogImages }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      ...(ogImageUrl && { images: [ogImageUrl] }),
+    },
   };
 }
 

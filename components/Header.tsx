@@ -34,7 +34,6 @@ export async function Header() {
       className="relative z-40 w-full border border-line bg-white"
     >
       <div
-        dir="ltr"
         className={cn(
           siteChromeClassName,
           "flex h-[82px] items-center justify-between",
