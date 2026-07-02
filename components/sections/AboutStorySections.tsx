@@ -8,7 +8,6 @@ import {
   sitePageGutterX,
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
-import { getBlocksForPage } from "@/lib/api/blocks";
 import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
@@ -170,8 +169,6 @@ export async function AboutMarketSection() {
 
 export async function AboutRoleSection() {
   const locale = await getRequestLocale();
-  const blocks = await getBlocksForPage(aboutBlocks.relUrl, locale);
-  const hasRoleImage = Boolean(blocks[aboutBlocks.role.image]?.content?.trim());
 
   return (
     <section id="approach" className="bg-white pb-20">
@@ -187,20 +184,12 @@ export async function AboutRoleSection() {
               relUrl={aboutBlocks.relUrl}
               blockKey={aboutBlocks.role.image}
               locale={locale}
-              placeholderUrl=""
+              placeholderUrl="/images/about-role.jpg"
               placeholderAlt="Our role"
               fill
-              className="rounded-[var(--radius-card)] bg-basalt-100"
+              className="absolute inset-0 rounded-[var(--radius-card)] bg-basalt-100"
               imageClassName="object-cover"
             />
-            {!hasRoleImage ? (
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[var(--radius-card)]"
-              >
-                <Icon name="home" className="h-[70px] w-[70px] text-white/80" />
-              </div>
-            ) : null}
           </div>
           <div className="flex max-w-[512px] flex-col gap-4">
             <EditableText

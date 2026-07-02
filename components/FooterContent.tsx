@@ -114,10 +114,7 @@ export async function FooterContent({
   ];
 
   const aboutLinks: FooterLink[] = [
-    { label: t("ourApproach"), href: "/about#approach" },
-    { label: t("whyNip"), href: "/about#why-nip" },
-    { label: t("team"), href: "/about#team" },
-    { label: t("careers"), href: "/about#careers" },
+    { label: t("aboutUs"), href: "/about" },
   ];
 
   const socialLinks: { label: string; icon: FooterSocialIconName; href: string }[] = [

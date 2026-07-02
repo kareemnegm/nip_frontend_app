@@ -28,10 +28,14 @@ export default async function AreasPage({ params, searchParams }: PageProps) {
   const locale = resolveLocale(rawLocale);
   const sp = await searchParams;
   const page = sp.page ? Number(Array.isArray(sp.page) ? sp.page[0] : sp.page) : 1;
-  const { data, meta } = await getAreas({ page, per_page: 9, locale });
-  const areas = data.map((area) => mapAreaToCommunityCard(area, locale));
-  const t = await getTranslations({ locale, namespace: "pages.areas" });
-  const tc = await getTranslations({ locale, namespace: "common" });
+  const [{ data, meta }, t, tc] = await Promise.all([
+    getAreas({ page, per_page: 9, locale }),
+    getTranslations({ locale, namespace: "pages.areas" }),
+    getTranslations({ locale, namespace: "common" }),
+  ]);
+  const areas = data.map((area) =>
+    mapAreaToCommunityCard(area, locale, { descriptionFallback: t("exploreFallback") }),
+  );
   const areaBlocks = pageBlockKeys.areas;
 
   return (

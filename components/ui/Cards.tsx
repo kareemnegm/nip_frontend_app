@@ -71,6 +71,7 @@ type AdvisorCardProps = BaseCardProps & {
 
 type CommunityCardProps = BaseCardProps & {
   title: string;
+  description?: string;
   facts: string[];
   projectCount?: string;
   href?: string;
@@ -519,6 +520,7 @@ const communityFactIcons = ["family", "park", "metro", "building"] as const;
 
 export function CommunityCard({
   title,
+  description,
   facts,
   projectCount = "Projects Available",
   href,
@@ -528,6 +530,8 @@ export function CommunityCard({
   const t = useTranslations("catalog");
   const leftFacts = facts.slice(0, 2);
   const rightFacts = facts.slice(2, 4);
+  const showDescription = Boolean(description?.trim());
+  const showFacts = !showDescription && facts.length > 0;
 
   const card = (
     <article
@@ -541,41 +545,46 @@ export function CommunityCard({
     >
       <CardImage imageUrl={imageUrl} alt={title} icon="mapPin" />
       <div className={cardTypography.body}>
-        <div className="space-y-5">
+        <div className="space-y-3">
           <h3 className={cn(cardTypography.title, "flex items-center gap-1.5")}>
             <Icon name="mapPin" className={cardTypography.priceIcon} />
             {title}
           </h3>
-          <div className="flex gap-6 py-2.5">
-            <div className="flex flex-col gap-2">
-              {leftFacts.map((fact, index) => (
-                <span
-                  key={fact}
-                  className="inline-flex items-center gap-2 text-body-xs text-ink"
-                >
-                  <Icon
-                    name={communityFactIcons[index] ?? "mapPin"}
-                    className={cn(cardTypography.priceIcon, "text-brand")}
-                  />
-                  {fact}
-                </span>
-              ))}
+          {showDescription ? (
+            <p className={cn(cardTypography.excerpt, "line-clamp-3")}>{description}</p>
+          ) : null}
+          {showFacts ? (
+            <div className="flex gap-6 py-2.5">
+              <div className="flex flex-col gap-2">
+                {leftFacts.map((fact, index) => (
+                  <span
+                    key={fact}
+                    className="inline-flex items-center gap-2 text-body-xs text-ink"
+                  >
+                    <Icon
+                      name={communityFactIcons[index] ?? "mapPin"}
+                      className={cn(cardTypography.priceIcon, "text-brand")}
+                    />
+                    {fact}
+                  </span>
+                ))}
+              </div>
+              <div className="flex flex-col gap-2">
+                {rightFacts.map((fact, index) => (
+                  <span
+                    key={fact}
+                    className="inline-flex items-center gap-2 text-body-xs text-ink"
+                  >
+                    <Icon
+                      name={communityFactIcons[index + 2] ?? "building"}
+                      className={cn(cardTypography.priceIcon, "text-brand")}
+                    />
+                    {fact}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-col gap-2">
-              {rightFacts.map((fact, index) => (
-                <span
-                  key={fact}
-                  className="inline-flex items-center gap-2 text-body-xs text-ink"
-                >
-                  <Icon
-                    name={communityFactIcons[index + 2] ?? "building"}
-                    className={cn(cardTypography.priceIcon, "text-brand")}
-                  />
-                  {fact}
-                </span>
-              ))}
-            </div>
-          </div>
+          ) : null}
         </div>
         <div className="mt-auto flex items-center justify-between gap-4">
           <span className={cardTypography.badge}>{projectCount}</span>

@@ -5,15 +5,24 @@ import type { ApiArea } from "@/types/api";
 
 export type CommunityCardModel = {
   title: string;
+  description: string;
   facts: string[];
   projectCount: string;
   href: string;
   imageUrl?: string;
 };
 
+function resolveAreaCardDescription(area: ApiArea): string {
+  const raw = area.description?.trim();
+  if (!raw) return "";
+  const text = raw.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return text;
+}
+
 export function mapAreaToCommunityCard(
   area: ApiArea,
   locale: Locale,
+  options?: { descriptionFallback?: string },
 ): CommunityCardModel {
   const facts: string[] = [];
   if (area.avg_price_sqft != null) {
@@ -30,6 +39,8 @@ export function mapAreaToCommunityCard(
 
   return {
     title: area.name,
+    description:
+      resolveAreaCardDescription(area) || options?.descriptionFallback?.trim() || "",
     facts: facts.slice(0, 4),
     projectCount: `${count} Project${count === 1 ? "" : "s"} Available`,
     href: localizedHref(locale, `/areas/${area.slug}`),
