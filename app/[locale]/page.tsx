@@ -13,7 +13,6 @@ import {
 } from "@/components/sections";
 import { getBlogs } from "@/lib/api/blogs";
 import { getHome } from "@/lib/api/home";
-import { mapAreaToCommunityCard } from "@/lib/mappers/area";
 import { mapBlogToInsightCard } from "@/lib/mappers/blog";
 import { mapPropertyToCard } from "@/lib/mappers/property";
 import { resolveLocale } from "@/lib/i18n/helpers";
@@ -39,13 +38,6 @@ export default async function HomePage({ params }: HomePageProps) {
   const featuredProperties = home.featured_properties.map((property) =>
     mapPropertyToCard(property, locale),
   );
-  const curatedProperties =
-    featuredProperties.length > 0
-      ? featuredProperties
-      : home.areas.length > 0
-        ? []
-        : [];
-  const areaCards = home.areas.map((area) => mapAreaToCommunityCard(area, locale));
   const insightCards = blogs.data.map((blog) => mapBlogToInsightCard(blog, locale));
 
   return (
@@ -53,8 +45,8 @@ export default async function HomePage({ params }: HomePageProps) {
       <HomeHeroSection />
       <HomeSearchSection />
       <FeaturedInsightSection insights={insightCards} />
-      <CuratedCollectionSection properties={curatedProperties} />
-      <MarketPulseSection areas={areaCards} />
+      <CuratedCollectionSection properties={featuredProperties} />
+      <MarketPulseSection />
       <PrivateOfficeSection />
       <FeaturedSelectionSection properties={featuredProperties} />
       <HomeCtaSection />

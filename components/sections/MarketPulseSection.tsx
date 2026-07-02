@@ -1,14 +1,11 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { CommunityCard } from "@/components/ui/Cards";
 import { CurrencyIcon } from "@/components/ui/CurrencyIcon";
 import { Container } from "@/components/ui/Container";
-import { CatalogEmptyState } from "@/components/ui/ApiPagination";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { homeEditable } from "./home-editable";
 import { SectionHeading } from "./SectionHeading";
-import type { CommunityCardModel } from "@/lib/mappers/area";
 
 /**
  * Figma 1525:28300 — 4 stat cards, gap-16, px-28 py-24
@@ -20,14 +17,9 @@ import type { CommunityCardModel } from "@/lib/mappers/area";
 const cardBg = ["bg-sapphire-400", "bg-sapphire-500", "bg-sapphire-600", "bg-sapphire-700"] as const;
 const cardContext = ["text-sapphire-100", "text-sapphire-200", "text-sapphire-200", "text-sapphire-200"] as const;
 
-export async function MarketPulseSection({
-  areas = [],
-}: {
-  areas?: CommunityCardModel[];
-}) {
+export async function MarketPulseSection() {
   const locale = await getRequestLocale();
   const t = await getTranslations({ locale, namespace: "home" });
-  const te = await getTranslations({ locale, namespace: "home.empty" });
 
   const marketPulseStats = [
     { context: t("marketPulse.stat1Context"), label: t("marketPulse.stat1Label"), count: "2400", prefix: "", suffix: "", decimals: 0, icon: true },
@@ -37,90 +29,61 @@ export async function MarketPulseSection({
   ];
 
   return (
-    <>
-      {/* Figma 1525:28295 — bg white, py-80, max-w-1056, gap-40 */}
-      <section className="bg-white py-16 sm:py-20">
-        <Container className="max-w-[1056px] space-y-10 px-6">
-          <SectionHeading
-            title={await getCmsPlaceholder("placeholders.home.marketPulse", "title", locale)}
-            description={await getCmsPlaceholder("placeholders.home.marketPulse", "desc", locale)}
-            descriptionMaxWidth="max-w-[464px]"
-            editable={{
-              relUrl: homeEditable.relUrl,
-              titleKey: homeEditable.marketPulse.titleKey,
-              descKey: homeEditable.marketPulse.descKey,
-            }}
-          />
+    <section className="bg-white py-16 sm:py-20">
+      <Container className="max-w-[1056px] space-y-10 px-6">
+        <SectionHeading
+          title={await getCmsPlaceholder("placeholders.home.marketPulse", "title", locale)}
+          description={await getCmsPlaceholder("placeholders.home.marketPulse", "desc", locale)}
+          descriptionMaxWidth="max-w-[464px]"
+          editable={{
+            relUrl: homeEditable.relUrl,
+            titleKey: homeEditable.marketPulse.titleKey,
+            descKey: homeEditable.marketPulse.descKey,
+          }}
+        />
 
-          {/* Figma: 4-col grid at desktop, gap-16, px-28 py-24 per card */}
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {marketPulseStats.map((stat, index) => (
-              <div
-                key={stat.label}
-                data-reveal
-                data-reveal-delay={index > 0 ? String(Math.min(index, 3)) : undefined}
-                className={[
-                  "flex flex-col gap-4 rounded-[var(--radius-card)] px-7 py-6 text-white",
-                  cardBg[index],
-                ].join(" ")}
-              >
-                {/* Context — Figma: Archivo Regular 12/16 */}
-                <p className={["text-body-xs font-normal", cardContext[index]].join(" ")}>
-                  {stat.context}
-                </p>
-
-                {/* Stat value — Figma: Archivo Bold 36/42 white */}
-                <p className="flex items-center gap-1.5 text-stat-value font-bold leading-[2.625rem]">
-                  {stat.icon ? <CurrencyIcon currency="AED" className="h-7 w-7 shrink-0" /> : null}
-                  <span
-                    data-count={stat.count}
-                    data-count-prefix={stat.prefix}
-                    data-count-suffix={stat.suffix}
-                    data-count-decimals={String(stat.decimals)}
-                  >
-                    {stat.decimals > 0 ? stat.count : Number(stat.count).toLocaleString()}
-                    {stat.suffix}
-                  </span>
-                </p>
-
-                {/* Label — Figma: Archivo SemiBold 12/16 white */}
-                <p className="text-overline font-semibold text-white">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-
-          <p className="text-center">
-            <Link
-              href="/insights"
-              className="inline-flex h-9 items-center justify-center rounded-[var(--radius-field)] border border-sapphire-300 px-6 text-body-sm font-semibold text-brand hover:bg-sapphire-50"
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {marketPulseStats.map((stat, index) => (
+            <div
+              key={stat.label}
+              data-reveal
+              data-reveal-delay={index > 0 ? String(Math.min(index, 3)) : undefined}
+              className={[
+                "flex flex-col gap-4 rounded-[var(--radius-card)] px-7 py-6 text-white",
+                cardBg[index],
+              ].join(" ")}
             >
-              {t("marketPulse.viewPerspective")}
-            </Link>
-          </p>
-        </Container>
-      </section>
+              <p className={["text-body-xs font-normal", cardContext[index]].join(" ")}>
+                {stat.context}
+              </p>
 
-      {areas.length > 0 ? (
-        <section className="bg-sapphire-50 py-16 sm:py-20">
-          <Container className="space-y-10">
-            <SectionHeading
-              title={t("featuredAreas.title")}
-              description={t("featuredAreas.description")}
-            />
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {areas.slice(0, 3).map((area) => (
-                <CommunityCard key={area.href} {...area} />
-              ))}
+              <p className="flex items-center gap-1.5 text-stat-value font-bold leading-[2.625rem]">
+                {stat.icon ? <CurrencyIcon currency="AED" className="h-7 w-7 shrink-0" /> : null}
+                <span
+                  data-count={stat.count}
+                  data-count-prefix={stat.prefix}
+                  data-count-suffix={stat.suffix}
+                  data-count-decimals={String(stat.decimals)}
+                >
+                  {stat.decimals > 0 ? stat.count : Number(stat.count).toLocaleString()}
+                  {stat.suffix}
+                </span>
+              </p>
+
+              <p className="text-overline font-semibold text-white">{stat.label}</p>
             </div>
-          </Container>
-        </section>
-      ) : (
-        <section className="bg-sapphire-50 py-16 sm:py-20">
-          <Container>
-            <CatalogEmptyState message={te("areas")} />
-          </Container>
-        </section>
-      )}
-    </>
+          ))}
+        </div>
+
+        <p className="text-center">
+          <Link
+            href="/insights"
+            className="inline-flex h-9 items-center justify-center rounded-[var(--radius-field)] border border-sapphire-300 px-6 text-body-sm font-semibold text-brand hover:bg-sapphire-50"
+          >
+            {t("marketPulse.viewPerspective")}
+          </Link>
+        </p>
+      </Container>
+    </section>
   );
 }

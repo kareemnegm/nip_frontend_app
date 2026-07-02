@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { clientTPath } from "@/lib/i18n/client-messages";
 import { useOptionalLocale } from "@/lib/i18n/context";
+import { LocalizedLink } from "./LocalizedLink";
 import { SpeakWithNipButton } from "./ui/Button";
 import { Logo } from "./ui/Logo";
 import { siteChromeClassName } from "./ui/SiteChrome";
@@ -87,7 +88,13 @@ export function StickyCta() {
         dir="ltr"
         className={`flex items-center justify-between gap-4 py-5 lg:py-6 ${siteChromeClassName}`}
       >
-        <Logo inverted className="shrink-0" />
+        <LocalizedLink
+          href="/"
+          className="shrink-0 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-sapphire-800"
+          aria-label="NIP Reality — Home"
+        >
+          <Logo inverted className="shrink-0" />
+        </LocalizedLink>
 
         <div className="flex items-center gap-5">
           <p className="hidden text-body-sm text-basalt-200 sm:block">{tagline}</p>
