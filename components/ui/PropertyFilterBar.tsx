@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { Icon } from "./Icon";
 
@@ -56,13 +56,24 @@ function FilterSelect({
   );
 }
 
-function buildQueryString(values: PropertyFilterValues) {
+function buildQueryString(
+  values: PropertyFilterValues,
+  preserve?: URLSearchParams,
+) {
   const params = new URLSearchParams();
   if (values.keyword?.trim()) params.set("keyword", values.keyword.trim());
   if (values.area) params.set("area", values.area);
   if (values.type) params.set("type", values.type);
   if (values.bedrooms) params.set("bedrooms", values.bedrooms);
   if (values.min_price) params.set("min_price", values.min_price);
+
+  if (preserve) {
+    for (const key of ["view", "sort"] as const) {
+      const value = preserve.get(key);
+      if (value) params.set(key, value);
+    }
+  }
+
   return params.toString();
 }
 
@@ -71,6 +82,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
   const tc = useTranslations("common");
   const tf = useTranslations("footer");
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
   const [keyword, setKeyword] = useState(values.keyword ?? "");
@@ -145,13 +157,13 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
 
   const navigate = useCallback(
     (next: PropertyFilterValues) => {
-      const query = buildQueryString(next);
+      const query = buildQueryString(next, searchParams);
       const href = query ? `${basePath}?${query}` : basePath;
       startTransition(() => {
         router.push(href, { scroll: false });
       });
     },
-    [basePath, router],
+    [basePath, router, searchParams],
   );
 
   const pushFilters = useCallback(

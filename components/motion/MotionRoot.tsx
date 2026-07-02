@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 const REVEAL_SELECTOR = "[data-reveal]";
@@ -256,6 +256,8 @@ function initMotion() {
 
 export function MotionRoot() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const searchKey = searchParams.toString();
 
   useEffect(() => {
     let cleanup = initMotion();
@@ -268,7 +270,7 @@ export function MotionRoot() {
       window.clearTimeout(retry);
       cleanup();
     };
-  }, [pathname]);
+  }, [pathname, searchKey]);
 
   return null;
 }

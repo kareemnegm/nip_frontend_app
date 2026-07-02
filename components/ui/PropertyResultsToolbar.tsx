@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useTransition } from "react";
 import { cn } from "@/lib/cn";
 import { Icon } from "./Icon";
 
@@ -26,6 +26,7 @@ export function PropertyResultsToolbar({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
   const resolvedLocation = location ?? tc("dubai");
 
   const navigate = useCallback(
@@ -41,7 +42,9 @@ export function PropertyResultsToolbar({
         }
       }
       const qs = params.toString();
-      router.push(qs ? `${pathname}?${qs}` : pathname);
+      startTransition(() => {
+        router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+      });
     },
     [router, pathname, searchParams],
   );

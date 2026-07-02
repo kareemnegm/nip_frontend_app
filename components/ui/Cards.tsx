@@ -162,12 +162,12 @@ export function PropertyCard({
       data-reveal
       className={cn(
         cardTypography.shell,
-        "flex-row overflow-hidden",
+        "h-auto flex-row items-stretch overflow-hidden",
         href && "cursor-pointer",
         className,
       )}
     >
-      <div className="relative h-auto w-[220px] shrink-0 overflow-hidden rounded-[4px]">
+      <div className="relative h-[200px] w-[220px] shrink-0 self-stretch overflow-hidden rounded-[4px] sm:min-h-[200px]">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -177,7 +177,7 @@ export function PropertyCard({
             sizes="220px"
           />
         ) : (
-          <div className="flex h-full min-h-[160px] w-full items-center justify-center bg-basalt-100">
+          <div className="flex h-full w-full items-center justify-center bg-basalt-100">
             <Icon name="image" className="h-14 w-14 text-white/60" />
           </div>
         )}

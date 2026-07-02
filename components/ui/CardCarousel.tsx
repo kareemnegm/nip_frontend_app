@@ -119,25 +119,6 @@ export function CardCarousel({
     };
   }, [updateScrollState]);
 
-  /** Map vertical wheel/trackpad to horizontal scroll — no vertical drift on cards. */
-  useEffect(() => {
-    const element = scrollRef.current;
-    if (!element) return;
-
-    const onWheel = (event: WheelEvent) => {
-      if (element.scrollWidth <= element.clientWidth) return;
-      if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
-
-      event.preventDefault();
-      const isRtl = document.documentElement.dir === "rtl";
-      const delta = isRtl ? -event.deltaY : event.deltaY;
-      element.scrollLeft += delta;
-    };
-
-    element.addEventListener("wheel", onWheel, { passive: false });
-    return () => element.removeEventListener("wheel", onWheel);
-  }, []);
-
   const scroll = (direction: "prev" | "next") => {
     const element = scrollRef.current;
     if (!element) return;
@@ -203,7 +184,7 @@ export function CardCarousel({
       <div
         ref={scrollRef}
         className={cn(
-          "flex snap-x snap-mandatory scroll-smooth items-start overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-none",
+          "flex snap-x snap-mandatory scroll-smooth items-start overflow-x-auto overflow-y-hidden overscroll-x-contain",
           "touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           trackHeight !== undefined && "h-[var(--carousel-track-height)]",
         )}
