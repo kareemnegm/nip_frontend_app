@@ -225,6 +225,8 @@ export async function PropertyDetailPage({
               latitude={property.latitude}
               longitude={property.longitude}
               locationName={property.location ?? undefined}
+              propertyTitle={property.title}
+              locale={locale}
               labels={{
                 storyTitle: t("storyTitle"),
                 amenitiesTitle: t("amenitiesTitle"),

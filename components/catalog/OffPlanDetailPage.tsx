@@ -192,7 +192,8 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
               latitude={property.latitude}
               longitude={property.longitude}
               locationName={property.location ?? property.area?.name ?? undefined}
-              mapsLinkLabel={t("openInGoogleMaps")}
+              propertyTitle={property.title}
+              locale={locale}
               facilities={property.facilities}
             />
           </div>

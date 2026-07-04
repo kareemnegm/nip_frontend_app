@@ -38,6 +38,8 @@ export function PropertyStoryContent({
   latitude,
   longitude,
   locationName,
+  propertyTitle,
+  locale = "en",
   labels,
 }: {
   description?: string;
@@ -47,6 +49,8 @@ export function PropertyStoryContent({
   latitude?: number | null;
   longitude?: number | null;
   locationName?: string;
+  propertyTitle?: string;
+  locale?: string;
   labels: PropertyStoryLabels;
 }) {
   const amenityItems = facilities ?? [];
@@ -100,7 +104,8 @@ export function PropertyStoryContent({
               longitude={longitude}
               label={labels.locationTitle}
               locationName={locationName}
-              mapsLinkLabel={labels.openInGoogleMaps}
+              propertyTitle={propertyTitle}
+              locale={locale}
               className="h-[400px]"
             />
           ) : locationImageUrl ? (

@@ -102,7 +102,8 @@ export function MasterplanLocationSection({
   latitude,
   longitude,
   locationName,
-  mapsLinkLabel,
+  propertyTitle,
+  locale = "en",
   facilities,
   className,
 }: {
@@ -111,7 +112,8 @@ export function MasterplanLocationSection({
   latitude?: number | null;
   longitude?: number | null;
   locationName?: string;
-  mapsLinkLabel?: string;
+  propertyTitle?: string;
+  locale?: string;
   facilities?: ApiFacility[] | null;
   className?: string;
 }) {
@@ -129,7 +131,8 @@ export function MasterplanLocationSection({
           longitude={longitude}
           label={title}
           locationName={locationName}
-          mapsLinkLabel={mapsLinkLabel}
+          propertyTitle={propertyTitle}
+          locale={locale}
           className="h-[420px]"
         />
       ) : (
