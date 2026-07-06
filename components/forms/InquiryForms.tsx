@@ -249,8 +249,14 @@ export function PropertyInquiryForm({
   );
 }
 
-export function NewsletterForm() {
-  const tFooter = useTranslations("footer.newsletter");
+export type NewsletterFormLabels = {
+  emailPlaceholder: string;
+  subscribeLabel: string;
+  subscriptionFailed: string;
+  subscriptionSuccess: string;
+};
+
+export function NewsletterForm({ labels }: { labels: NewsletterFormLabels }) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -269,7 +275,7 @@ export function NewsletterForm() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.errors?.email?.[0] ?? data.message ?? tFooter("subscriptionFailed"));
+        setError(data.errors?.email?.[0] ?? data.message ?? labels.subscriptionFailed);
         return;
       }
       setSuccess(true);
@@ -278,7 +284,7 @@ export function NewsletterForm() {
       if (isApiError(err)) {
         setError(getFieldError(err.errors, "email") ?? err.message);
       } else {
-        setError(tFooter("subscriptionFailed"));
+        setError(labels.subscriptionFailed);
       }
     } finally {
       setLoading(false);
@@ -287,7 +293,7 @@ export function NewsletterForm() {
 
   if (success) {
     return (
-      <p className="text-[12px] leading-4 text-basalt-300">{tFooter("subscriptionSuccess")}</p>
+      <p className="text-[12px] leading-4 text-basalt-300">{labels.subscriptionSuccess}</p>
     );
   }
 
@@ -295,8 +301,8 @@ export function NewsletterForm() {
     <form className="flex w-full max-w-[240px] flex-col gap-2" onSubmit={onSubmit}>
       <div className="flex w-full items-center justify-between overflow-hidden rounded-[var(--radius-field)] bg-sapphire-50 py-1 pl-3.5 pr-1 rtl:flex-row-reverse">
         <input
-          aria-label={tFooter("emailPlaceholder")}
-          placeholder={tFooter("emailPlaceholder")}
+          aria-label={labels.emailPlaceholder}
+          placeholder={labels.emailPlaceholder}
           type="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
@@ -305,7 +311,7 @@ export function NewsletterForm() {
         />
         <button
           type="submit"
-          aria-label={tFooter("subscribeLabel")}
+          aria-label={labels.subscribeLabel}
           disabled={loading}
           className="inline-flex shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-sapphire-600 px-1.5 py-[5px] text-white transition-colors hover:bg-accent-hover disabled:opacity-60"
         >

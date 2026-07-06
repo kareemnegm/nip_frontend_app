@@ -31,7 +31,7 @@ export default async function LocaleLayout({
 
   return (
     <LocaleProvider locale={locale}>
-      <NextIntlClientProvider messages={messages}>
+      <NextIntlClientProvider locale={locale} messages={messages}>
         <CmsLayoutProviders>{children}</CmsLayoutProviders>
       </NextIntlClientProvider>
     </LocaleProvider>

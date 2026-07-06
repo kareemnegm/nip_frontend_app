@@ -7,5 +7,5 @@ type PageProps = {
 
 export default async function AdminIndexPage({ params }: PageProps) {
   const { locale: rawLocale } = await params;
-  redirect(localizedHref(resolveLocale(rawLocale), "/admin/login"));
+  redirect(localizedHref(resolveLocale(rawLocale), "/admin/site"));
 }

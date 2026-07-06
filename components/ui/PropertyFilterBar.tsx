@@ -182,19 +182,20 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
   function onKeywordChange(value: string) {
     setKeyword(value);
 
-    if (skipKeywordDebounceRef.current) {
-      skipKeywordDebounceRef.current = false;
-      return;
-    }
-
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
       debounceRef.current = null;
     }
 
-    // Cleared entirely — navigate immediately without debounce
+    // Always reset results when keyword is cleared — bypass skip guard
     if (value === "") {
+      skipKeywordDebounceRef.current = false;
       pushFilters({ keyword: "" });
+      return;
+    }
+
+    if (skipKeywordDebounceRef.current) {
+      skipKeywordDebounceRef.current = false;
       return;
     }
 
@@ -241,9 +242,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
           // Catch the native "search" event that fires when the × clear button
           // is clicked — this event is not forwarded by React's onChange.
           if (!el) return;
-          const handler = () => {
-            if (el.value === "") onKeywordChange("");
-          };
+          const handler = () => onKeywordChange("");
           el.addEventListener("search", handler);
           return () => el.removeEventListener("search", handler);
         }}

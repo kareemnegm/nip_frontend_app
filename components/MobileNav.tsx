@@ -20,7 +20,6 @@ const navLinkClass =
 export function MobileNav() {
   const localeContext = useOptionalLocale();
   const navT = (key: string) => clientT(localeContext?.locale, "nav", key);
-  const footerT = (key: string) => clientT(localeContext?.locale, "footer", key);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -83,7 +82,7 @@ export function MobileNav() {
                             className="rounded-[var(--radius-field)] px-2 py-[6px] text-[13px] font-medium text-ink-secondary hover:bg-sapphire-50 hover:text-brand"
                             onClick={() => setOpen(false)}
                           >
-                            {footerT(link.key)}
+                            {navT(link.key)}
                           </LocalizedLink>
                         ))}
                       </div>

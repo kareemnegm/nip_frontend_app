@@ -1,6 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import { LocalizedLink } from "@/components/LocalizedLink";
-import { NewsletterForm } from "@/components/forms/InquiryForms";
+import {
+  NewsletterForm,
+  type NewsletterFormLabels,
+} from "@/components/forms/InquiryForms";
 import { cn } from "@/lib/cn";
 import { FooterIcon, FooterSocialIcon, type FooterSocialIconName } from "./ui/FooterIcon";
 import { Logo } from "./ui/Logo";
@@ -59,8 +62,8 @@ function FooterContactRow({
   );
 }
 
-function NewsletterFormSlot() {
-  return <NewsletterForm />;
+function NewsletterFormSlot({ labels }: { labels: NewsletterFormLabels }) {
+  return <NewsletterForm labels={labels} />;
 }
 
 export type FooterContentProps = {
@@ -77,6 +80,14 @@ export async function FooterContent({
   copyright,
 }: FooterContentProps) {
   const t = await getTranslations("footer");
+  const tNewsletter = await getTranslations("footer.newsletter");
+
+  const newsletterLabels: NewsletterFormLabels = {
+    emailPlaceholder: tNewsletter("emailPlaceholder"),
+    subscribeLabel: tNewsletter("subscribeLabel"),
+    subscriptionFailed: tNewsletter("subscriptionFailed"),
+    subscriptionSuccess: tNewsletter("subscriptionSuccess"),
+  };
 
   const propertiesLinks: FooterLink[] = [
     { label: t("buyProperties"), href: "/properties?listing=sale" },
@@ -113,9 +124,7 @@ export async function FooterContent({
     { label: t("journal"), href: "/insights" },
   ];
 
-  const aboutLinks: FooterLink[] = [
-    { label: t("aboutUs"), href: "/about" },
-  ];
+  const aboutLinks: FooterLink[] = [{ label: t("aboutUs"), href: "/about" }];
 
   const socialLinks: { label: string; icon: FooterSocialIconName; href: string }[] = [
     { label: "Instagram", icon: "instagram", href: "https://instagram.com" },
@@ -158,7 +167,7 @@ export async function FooterContent({
               <div className="max-w-[240px] text-[12px] leading-4 text-basalt-300">
                 {newsletterDesc}
               </div>
-              <NewsletterFormSlot />
+              <NewsletterFormSlot labels={newsletterLabels} />
             </div>
           </div>
 
@@ -187,7 +196,10 @@ export async function FooterContent({
                 <FooterContactRow icon="mail">info@niprealty.com</FooterContactRow>
                 <FooterContactRow icon="location" align="start">
                   {t("address").split("\n").map((line, i, arr) => (
-                    <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                    <span key={i}>
+                      {line}
+                      {i < arr.length - 1 && <br />}
+                    </span>
                   ))}
                 </FooterContactRow>
               </ul>
