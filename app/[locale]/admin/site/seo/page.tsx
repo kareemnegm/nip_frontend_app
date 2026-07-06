@@ -110,6 +110,7 @@ export default function AdminSeoLibraryPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[var(--radius-card)] bg-white p-6 shadow-[var(--shadow-card)]">
             <SeoEditorForm
+              key={`${editing.path}-${locale}`}
               path={editing.path}
               locale={locale}
               initial={editing}

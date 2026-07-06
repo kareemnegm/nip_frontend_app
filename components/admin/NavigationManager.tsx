@@ -35,6 +35,7 @@ export function NavigationManager({
   const [error, setError] = useState<string | null>(null);
   const [seoPath, setSeoPath] = useState<string | null>(null);
   const [seoInitial, setSeoInitial] = useState<PageSeo | null>(null);
+  const [seoLoading, setSeoLoading] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -199,15 +200,22 @@ export function NavigationManager({
 
   async function openSeoEditor(path: string) {
     setSeoPath(path);
+    setSeoInitial(null);
+    setSeoLoading(true);
     try {
       const res = await fetch(
         `/api/page-seo?path=${encodeURIComponent(path)}&locale=${locale}`,
         { cache: "no-store" },
       );
       const data = (await res.json()) as PageSeo | null;
+      if (!res.ok) {
+        throw new Error((data as { error?: string } | null)?.error ?? "Failed to load SEO");
+      }
       setSeoInitial(data);
     } catch {
       setSeoInitial(null);
+    } finally {
+      setSeoLoading(false);
     }
   }
 
@@ -354,19 +362,26 @@ export function NavigationManager({
       {seoPath ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[var(--radius-card)] bg-white p-6 shadow-[var(--shadow-card)]">
-            <SeoEditorForm
-              path={seoPath}
-              locale={locale}
-              initial={seoInitial ?? undefined}
-              onSaved={() => {
-                setSeoPath(null);
-                setSeoInitial(null);
-              }}
-              onCancel={() => {
-                setSeoPath(null);
-                setSeoInitial(null);
-              }}
-            />
+            {seoLoading ? (
+              <p className="text-body-sm text-ink-secondary">Loading SEO…</p>
+            ) : (
+              <SeoEditorForm
+                key={`${seoPath}-${locale}`}
+                path={seoPath}
+                locale={locale}
+                initial={seoInitial ?? undefined}
+                onSaved={() => {
+                  setSeoPath(null);
+                  setSeoInitial(null);
+                  setSeoLoading(false);
+                }}
+                onCancel={() => {
+                  setSeoPath(null);
+                  setSeoInitial(null);
+                  setSeoLoading(false);
+                }}
+              />
+            )}
           </div>
         </div>
       ) : null}
