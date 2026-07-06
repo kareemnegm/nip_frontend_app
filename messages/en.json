@@ -82,6 +82,10 @@
     "contact": "Contact",
     "address": "113, The Offices 3,\nOne Central, Dubai, UAE",
     "followUs": "Follow Us",
+    "instagram": "Instagram",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "youtube": "YouTube",
     "copyright": "© 2026 NIP — Novel Insight Property. All rights reserved.",
     "privacy": "Privacy",
     "terms": "Terms",
@@ -677,9 +681,10 @@
     },
     "global": {
       "footer": {
-        "tagline": "Discreet Advisory for Elevated Living",
-        "newsletterTitle": "Stay Informed",
-        "newsletterDesc": "Market signals and editorial perspective — delivered with discretion."
+        "tagline": "Curated real estate advisory focused on exceptional residences and long-term market insight across Dubai.",
+        "newsletterTitle": "Stay Ahead of the Market",
+        "newsletterDesc": "Curated market updates from Dubai's leading communities.",
+        "copyright": "© 2026 NIP — Novel Insight Property. All rights reserved."
       }
     }
   },

@@ -127,10 +127,10 @@ export async function FooterContent({
   const aboutLinks: FooterLink[] = [{ label: t("aboutUs"), href: "/about" }];
 
   const socialLinks: { label: string; icon: FooterSocialIconName; href: string }[] = [
-    { label: "Instagram", icon: "instagram", href: "https://instagram.com" },
-    { label: "Facebook", icon: "facebook", href: "https://facebook.com" },
-    { label: "LinkedIn", icon: "linkedin", href: "https://linkedin.com" },
-    { label: "Youtube", icon: "youtube", href: "https://youtube.com" },
+    { label: t("instagram"), icon: "instagram", href: "https://instagram.com" },
+    { label: t("facebook"), icon: "facebook", href: "https://facebook.com" },
+    { label: t("linkedin"), icon: "linkedin", href: "https://linkedin.com" },
+    { label: t("youtube"), icon: "youtube", href: "https://youtube.com" },
   ];
 
   const legalLinks: FooterLink[] = [
@@ -211,7 +211,7 @@ export async function FooterContent({
               </h3>
               <ul className="flex flex-col gap-1 text-[12px] leading-4 text-basalt-300">
                 {socialLinks.map(({ label, icon, href }) => (
-                  <li key={label}>
+                  <li key={icon}>
                     <a
                       href={href}
                       target="_blank"
