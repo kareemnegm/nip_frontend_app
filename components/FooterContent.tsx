@@ -5,6 +5,7 @@ import {
   type NewsletterFormLabels,
 } from "@/components/forms/InquiryForms";
 import { cn } from "@/lib/cn";
+import { getRequestLocale } from "@/lib/i18n/server";
 import { FooterIcon, FooterSocialIcon, type FooterSocialIconName } from "./ui/FooterIcon";
 import { Logo } from "./ui/Logo";
 import { siteChromeClassName } from "./ui/SiteChrome";
@@ -79,6 +80,8 @@ export async function FooterContent({
   newsletterDesc,
   copyright,
 }: FooterContentProps) {
+  const locale = await getRequestLocale();
+  const isRtl = locale === "ar";
   const t = await getTranslations("footer");
   const tNewsletter = await getTranslations("footer.newsletter");
 
@@ -186,14 +189,18 @@ export async function FooterContent({
             <FooterLinkGroup title={t("aboutNip")} links={aboutLinks} />
           </div>
 
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-12" dir={isRtl ? "rtl" : "ltr"}>
             <div className="flex flex-col gap-[14px]">
-              <h3 className="text-[12px] font-semibold leading-4 text-white">
+              <h3 className="text-start text-[12px] font-semibold leading-4 text-white">
                 {t("contact")}
               </h3>
               <ul className="flex flex-col gap-1 text-[12px] leading-4 text-basalt-300">
-                <FooterContactRow icon="phone">+971 50 165 2441</FooterContactRow>
-                <FooterContactRow icon="mail">info@niprealty.com</FooterContactRow>
+                <FooterContactRow icon="phone">
+                  <span dir="ltr">+971 50 165 2441</span>
+                </FooterContactRow>
+                <FooterContactRow icon="mail">
+                  <span dir="ltr">info@niprealty.com</span>
+                </FooterContactRow>
                 <FooterContactRow icon="location" align="start">
                   {t("address").split("\n").map((line, i, arr) => (
                     <span key={i}>
@@ -206,7 +213,7 @@ export async function FooterContent({
             </div>
 
             <div className="flex flex-col gap-[14px]">
-              <h3 className="text-[12px] font-semibold leading-4 text-white">
+              <h3 className="text-start text-[12px] font-semibold leading-4 text-white">
                 {t("followUs")}
               </h3>
               <ul className="flex flex-col gap-1 text-[12px] leading-4 text-basalt-300">
