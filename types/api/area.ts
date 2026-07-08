@@ -17,6 +17,8 @@ export type ApiArea = {
   communities_count?: number | null;
   distance_downtown?: string | null;
   map_image_url?: string | null;
+  latitude?: number;
+  longitude?: number;
   highlights?: ApiAreaHighlight[] | null;
   connectivity?: ApiAreaHighlight[] | null;
   properties?: unknown[];

@@ -24,16 +24,32 @@ export type ApiPropertyImage = {
   image_url: string;
 };
 
+/** Legacy payment step shape (snake_case from older API) */
 export type ApiPaymentStep = {
   caption?: string | null;
   percentage: string;
   label: string;
 };
 
+/** New payment plan item shape from backend */
+export type ApiPaymentPlanItem = {
+  stage: string;
+  percentage: number;
+  description?: string;
+};
+
+/** Legacy unit shape (snake_case from older API) */
 export type ApiUnit = {
   unit_type: string;
   size_sqft: string;
   starting_price: string;
+};
+
+/** New available unit shape from backend */
+export type ApiAvailableUnit = {
+  unit_type: string;
+  size_sqft?: string;
+  starting_price?: number;
 };
 
 export type ApiProperty = {
@@ -66,13 +82,21 @@ export type ApiProperty = {
   photo_url?: string | null;
   video?: string | null;
   video_url?: string | null;
+  handover_date?: string | null;
+  handoverDate?: string | null;
   handover_quarter?: string | null;
+  handoverQuarter?: string | null;
   furnishing?: string | null;
   reference_no?: string | null;
   unit_types?: string | null;
   payment_split?: string | null;
+  payment_plan_summary?: string | null;
+  paymentPlanSummary?: string | null;
   payment_plan?: ApiPaymentStep[] | null;
+  paymentPlan?: ApiPaymentPlanItem[] | null;
   units?: ApiUnit[] | null;
+  available_units?: ApiAvailableUnit[] | null;
+  availableUnits?: ApiAvailableUnit[] | null;
   area?: ApiAreaRef | null;
   developers?: ApiDeveloperRef[];
   facilities?: ApiFacility[];

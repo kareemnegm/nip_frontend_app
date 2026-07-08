@@ -59,7 +59,7 @@ export function developerFactsFromApi(
     { label: labels.underDevLabel, value: underDev, icon: "crane" },
     { label: labels.communitiesFactLabel, value: communities, icon: "communities" },
     { label: labels.unitsLabel, value: units, icon: "floorplan" },
-    { label: labels.presenceLabel, value: presence, icon: "globe" },
+    { label: labels.presenceLabel, value: presence, icon: "globe-presence" },
   ];
 }
 
@@ -69,7 +69,7 @@ const defaultStrengthIcons: IconName[] = [
   "percent",
   "star",
   "concierge",
-  "globe",
+  "globe-presence",
 ];
 
 export function defaultDeveloperStrengths(

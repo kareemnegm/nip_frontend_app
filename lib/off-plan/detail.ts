@@ -1,6 +1,20 @@
 import type { FactItem } from "@/components/ui/FactsStrip";
 import { formatAedPrice } from "@/lib/mappers/property";
-import type { ApiPaymentStep, ApiProperty, ApiUnit } from "@/types/api/property";
+import type { ApiProperty } from "@/types/api/property";
+
+/** Normalized payment step for UI rendering */
+export type PaymentPlanStep = {
+  caption?: string | null;
+  percentage: string;
+  label: string;
+};
+
+/** Normalized unit for UI rendering */
+export type AvailableUnitRow = {
+  unit_type: string;
+  size_sqft: string;
+  starting_price: string;
+};
 
 export type OffPlanDetailLabels = {
   developerFactLabel: string;
@@ -50,7 +64,7 @@ export function formatUnitPrice(price: number | null | undefined): string {
   return `AED ${formatAedPrice(price)}`;
 }
 
-export function defaultPaymentPlan(labels: OffPlanDetailLabels): ApiPaymentStep[] {
+export function defaultPaymentPlan(labels: OffPlanDetailLabels): PaymentPlanStep[] {
   return [
     {
       caption: labels.paymentStep1Caption,
@@ -78,7 +92,16 @@ export function defaultPaymentPlan(labels: OffPlanDetailLabels): ApiPaymentStep[
 export function resolvePaymentPlan(
   property: ApiProperty,
   labels: OffPlanDetailLabels,
-): ApiPaymentStep[] {
+): PaymentPlanStep[] {
+  // Prefer new camelCase shape from backend
+  if (property.paymentPlan?.length) {
+    return property.paymentPlan.map((item) => ({
+      caption: item.stage,
+      percentage: `${item.percentage}%`,
+      label: item.description ?? "",
+    }));
+  }
+  // Fallback to snake_case shape
   if (property.payment_plan?.length) {
     return property.payment_plan;
   }
@@ -88,7 +111,7 @@ export function resolvePaymentPlan(
 export function defaultUnits(
   property: ApiProperty,
   labels: OffPlanDetailLabels,
-): ApiUnit[] {
+): AvailableUnitRow[] {
   const base = property.price ?? 4_710_000;
   return [
     {
@@ -117,7 +140,24 @@ export function defaultUnits(
 export function resolveUnits(
   property: ApiProperty,
   labels: OffPlanDetailLabels,
-): ApiUnit[] {
+): AvailableUnitRow[] {
+  // Prefer new camelCase shape from backend
+  if (property.availableUnits?.length) {
+    return property.availableUnits.map((unit) => ({
+      unit_type: unit.unit_type,
+      size_sqft: unit.size_sqft ?? "—",
+      starting_price: formatUnitPrice(unit.starting_price),
+    }));
+  }
+  // Fallback to snake_case shape
+  if (property.available_units?.length) {
+    return property.available_units.map((unit) => ({
+      unit_type: unit.unit_type,
+      size_sqft: unit.size_sqft ?? "—",
+      starting_price: formatUnitPrice(unit.starting_price),
+    }));
+  }
+  // Legacy units field
   if (property.units?.length) {
     return property.units;
   }
@@ -135,7 +175,47 @@ export function resolveUnitTypes(property: ApiProperty): string {
 }
 
 export function resolvePaymentSplit(property: ApiProperty): string {
+  // Prefer new camelCase shape from backend
+  if (property.paymentPlanSummary?.trim()) {
+    return property.paymentPlanSummary;
+  }
+  // Fallback to snake_case shape
+  if (property.payment_plan_summary?.trim()) {
+    return property.payment_plan_summary;
+  }
+  // Legacy payment_split field
   return property.payment_split?.trim() || "60 / 40";
+}
+
+function formatHandoverDate(dateStr: string): string {
+  try {
+    const date = new Date(dateStr);
+    if (Number.isNaN(date.getTime())) return dateStr;
+    const quarter = Math.ceil((date.getMonth() + 1) / 3);
+    return `Q${quarter} ${date.getFullYear()}`;
+  } catch {
+    return dateStr;
+  }
+}
+
+export function resolveHandover(property: ApiProperty): string | null {
+  // Prefer camelCase handoverQuarter
+  if (property.handoverQuarter?.trim()) {
+    return property.handoverQuarter;
+  }
+  // Fallback to snake_case handover_quarter
+  if (property.handover_quarter?.trim()) {
+    return property.handover_quarter;
+  }
+  // Format from camelCase handoverDate
+  if (property.handoverDate?.trim()) {
+    return formatHandoverDate(property.handoverDate);
+  }
+  // Format from snake_case handover_date
+  if (property.handover_date?.trim()) {
+    return formatHandoverDate(property.handover_date);
+  }
+  return null;
 }
 
 export function offPlanLocationLine(property: ApiProperty): string {
@@ -162,10 +242,11 @@ export function offPlanFactsFromApi(
     });
   }
 
-  if (property.handover_quarter) {
+  const handover = resolveHandover(property);
+  if (handover) {
     facts.push({
       label: labels.handoverFactLabel,
-      value: property.handover_quarter,
+      value: handover,
       icon: "handover",
     });
   }

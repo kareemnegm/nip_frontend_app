@@ -326,36 +326,34 @@ export function OffPlanCard({
         className,
       )}
     >
-      <div className="relative">
-        <CardImage imageUrl={imageUrl} alt={title} icon="building" />
-        <span className={cn(cardTypography.badge, "absolute start-3 top-3 z-10")}>
-          {t("breadcrumbOffPlan")}
-        </span>
-        <span className="absolute end-3 top-3 z-10 inline-flex h-8 w-8 items-center justify-center rounded-[2px] bg-white/90 p-1 shadow-sm">
-          <Icon name="building" className="h-5 w-5 text-brand" />
-        </span>
-      </div>
+      <CardImage imageUrl={imageUrl} alt={title} icon="building" />
       <div className={cardTypography.body}>
-        <div className="space-y-4">
-          <div>
-            <h3 className={cardTypography.title}>{title}</h3>
-            <p className={cn("mt-3", cardTypography.location)}>
-              <Icon name="mapPin" className={cardTypography.locationIcon} />
-              {location}
-            </p>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className={cardTypography.badge}>
+              {t("breadcrumbOffPlan")}
+            </span>
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-[2px] bg-basalt-50 p-1">
+              <Icon name="crane" className="h-5 w-5 text-sapphire-500" />
+            </span>
           </div>
+          <h3 className={cardTypography.title}>{title}</h3>
+          <p className={cardTypography.location}>
+            <Icon name="mapPin" className={cardTypography.locationIcon} />
+            {location}
+          </p>
         </div>
-        <div className="mt-auto space-y-4">
-          <div className="flex items-start justify-between gap-4 pt-2">
+        <div className="mt-auto space-y-3">
+          <div className="flex items-start justify-between gap-4">
             <div>
               <p className={cardTypography.startingFrom}>{t("handoverLabel")}</p>
-              <p className="mt-2 text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
+              <p className="mt-1.5 text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
                 {handover}
               </p>
             </div>
             <div className="text-right">
               <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
-              <p className={cn("mt-2 justify-end", cardTypography.price)}>
+              <p className={cn("mt-1.5 justify-end", cardTypography.price)}>
                 <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
                 {displayPrice}
               </p>

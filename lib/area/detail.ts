@@ -1,6 +1,7 @@
 import type { FactItem } from "@/components/ui/FactsStrip";
 import type { IconName } from "@/components/ui/Icon";
 import type { ApiArea } from "@/types/api/area";
+import { resolveHighlightIcon } from "./resolve-highlight-icon";
 
 export type AreaFeatureItem = {
   label: string;
@@ -62,7 +63,7 @@ export function areaFactsFromApi(
     {
       label: labels.communitiesLabel,
       value: String(communities),
-      icon: "grid",
+      icon: "communities",
     },
     {
       label: labels.offPlanProjectsLabel,
@@ -72,70 +73,65 @@ export function areaFactsFromApi(
     {
       label: labels.avgYieldLabel,
       value: `${avgYield}%`,
-      icon: "percent",
+      icon: "grow",
     },
     {
       label: labels.lifestyleLabel,
       value: lifestyle,
-      icon: "globe",
+      icon: "waterfront",
     },
     {
       label: labels.toDowntownLabel,
       value: downtown,
-      icon: "metro",
+      icon: "skyline",
     },
   ];
 }
-
-const defaultHighlightIcons: IconName[] = [
-  "mapPin",
-  "building",
-  "home",
-  "mapPin",
-  "building",
-  "home",
-];
 
 export function resolveAreaHighlights(
   area: ApiArea,
   labels: AreaDetailLabels,
 ): AreaFeatureItem[] {
   if (area.highlights?.length) {
-    return area.highlights.map((item, index) => ({
-      label: item.label,
-      icon: defaultHighlightIcons[index % defaultHighlightIcons.length] ?? "home",
-      iconSvg: item.icon,
-    }));
+    return area.highlights.map((item) => {
+      const resolved = resolveHighlightIcon(item.label);
+      return {
+        label: item.label,
+        icon: resolved.icon,
+        iconSvg: item.icon ?? resolved.iconSvg,
+      };
+    });
   }
 
   return [
-    { label: labels.highlight1, icon: "mapPin" },
-    { label: labels.highlight2, icon: "building" },
-    { label: labels.highlight3, icon: "home" },
-    { label: labels.highlight4, icon: "mapPin" },
-    { label: labels.highlight5, icon: "building" },
-    { label: labels.highlight6, icon: "home" },
+    { label: labels.highlight1, ...resolveHighlightIcon(labels.highlight1) },
+    { label: labels.highlight2, ...resolveHighlightIcon(labels.highlight2) },
+    { label: labels.highlight3, ...resolveHighlightIcon(labels.highlight3) },
+    { label: labels.highlight4, ...resolveHighlightIcon(labels.highlight4) },
+    { label: labels.highlight5, ...resolveHighlightIcon(labels.highlight5) },
+    { label: labels.highlight6, ...resolveHighlightIcon(labels.highlight6) },
   ];
 }
-
-const defaultConnectivityIcons: IconName[] = ["mapPin", "building", "mapPin", "grid"];
 
 export function resolveAreaConnectivity(
   area: ApiArea,
   labels: AreaDetailLabels,
 ): AreaFeatureItem[] {
   if (area.connectivity?.length) {
-    return area.connectivity.map((item, index) => ({
-      label: item.label,
-      icon: defaultConnectivityIcons[index % defaultConnectivityIcons.length] ?? "mapPin",
-      iconSvg: item.icon,
-    }));
+    return area.connectivity.map((item) => {
+      const resolved = resolveHighlightIcon(item.label);
+      return {
+        label: item.label,
+        icon: resolved.icon,
+        iconSvg: item.icon ?? resolved.iconSvg,
+      };
+    });
   }
 
   return [
-    { label: labels.connectivity1, icon: "mapPin" },
-    { label: labels.connectivity2, icon: "building" },
-    { label: labels.connectivity3, icon: "mapPin" },
-    { label: labels.connectivity4, icon: "grid" },
+    { label: labels.connectivity1, ...resolveHighlightIcon(labels.connectivity1) },
+    { label: labels.connectivity2, ...resolveHighlightIcon(labels.connectivity2) },
+    { label: labels.connectivity3, ...resolveHighlightIcon(labels.connectivity3) },
+    { label: labels.connectivity4, ...resolveHighlightIcon(labels.connectivity4) },
   ];
 }

@@ -6,6 +6,7 @@ import {
 
 export type IconName =
   | FigmaIconName
+  | "airport"
   | "dirham"
   | "dirham-circle"
   | "currency"
@@ -23,12 +24,15 @@ export type IconName =
   | "close"
   | "crane"
   | "developer"
+  | "downtown"
   | "facebook"
   | "family"
   | "floorplan"
   | "frown"
   | "globe"
+  | "globe-presence"
   | "grid"
+  | "grow"
   | "handover"
   | "home"
   | "image"

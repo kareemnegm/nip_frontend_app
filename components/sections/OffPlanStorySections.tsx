@@ -13,8 +13,12 @@ import {
 import { cn } from "@/lib/cn";
 import { localizedHref } from "@/lib/i18n/helpers";
 import type { Locale } from "@/lib/i18n/config";
-import { paymentPlanCardColors } from "@/lib/off-plan/detail";
-import type { ApiFacility, ApiPaymentStep } from "@/types/api/property";
+import {
+  paymentPlanCardColors,
+  type AvailableUnitRow,
+  type PaymentPlanStep,
+} from "@/lib/off-plan/detail";
+import type { ApiFacility } from "@/types/api/property";
 
 export function PaymentPlanSection({
   title,
@@ -22,7 +26,7 @@ export function PaymentPlanSection({
   className,
 }: {
   title: string;
-  steps: ApiPaymentStep[];
+  steps: PaymentPlanStep[];
   className?: string;
 }) {
   return (
@@ -67,7 +71,7 @@ export function AvailableUnitsTable({
   unitTypeLabel: string;
   sizeLabel: string;
   startingPriceLabel: string;
-  units: Array<{ unit_type: string; size_sqft: string; starting_price: string }>;
+  units: AvailableUnitRow[];
   className?: string;
 }) {
   return (

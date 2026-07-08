@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Icon, type IconName } from "@/components/ui/Icon";
+import { PropertyMap } from "@/components/ui/PropertyMap";
 import {
   siteMaxWidth,
   sitePageGutterX,
@@ -127,20 +128,38 @@ export function AreaAboutSection({
 
 export function AreaMapSection({
   title,
+  latitude,
+  longitude,
+  locationName,
+  locale,
   imageUrl,
   connectivity,
 }: {
   title: string;
+  latitude?: number;
+  longitude?: number;
+  locationName?: string;
+  locale?: string;
   imageUrl?: string;
   connectivity: AreaFeatureItem[];
 }) {
+  const hasCoordinates = latitude != null && longitude != null;
+
   return (
     <div className={cn(sitePageInnerClassName, "space-y-6")}>
       <h2 className="font-display text-heading-h1 uppercase text-brand">
         {title}
       </h2>
-      <div className="relative h-[280px] overflow-hidden rounded-[var(--radius-card)] sm:h-[320px]">
-        {imageUrl ? (
+      {hasCoordinates ? (
+        <PropertyMap
+          latitude={latitude}
+          longitude={longitude}
+          locationName={locationName}
+          locale={locale}
+          className="h-[280px] sm:h-[320px]"
+        />
+      ) : imageUrl ? (
+        <div className="relative h-[280px] overflow-hidden rounded-[var(--radius-card)] sm:h-[320px]">
           <Image
             src={imageUrl}
             alt={title}
@@ -148,12 +167,12 @@ export function AreaMapSection({
             className="object-cover"
             sizes="(max-width: 1080px) 100vw, 1080px"
           />
-        ) : (
-          <div className="flex h-full items-center justify-center bg-basalt-100">
-            <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
-          </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="flex h-[280px] items-center justify-center rounded-[var(--radius-card)] bg-basalt-100 sm:h-[320px]">
+          <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
+        </div>
+      )}
       <div className="flex flex-wrap gap-2.5">
         {connectivity.map((item) => (
           <AreaFeaturePill key={item.label} {...item} />

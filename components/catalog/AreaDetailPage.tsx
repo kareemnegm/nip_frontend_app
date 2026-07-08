@@ -143,6 +143,10 @@ export async function AreaDetailPage({ locale, slug }: AreaDetailPageProps) {
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
           <AreaMapSection
             title={tAreas("connectivityTitle")}
+            latitude={area.latitude}
+            longitude={area.longitude}
+            locationName={area.name}
+            locale={locale}
             imageUrl={mapImageUrl}
             connectivity={connectivity}
           />
