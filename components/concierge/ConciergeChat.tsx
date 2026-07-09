@@ -38,7 +38,8 @@ export function ConciergeChat({
   const [leadPhone, setLeadPhone] = useState("");
   const [leadConsent, setLeadConsent] = useState(false);
   const [leadSubmitting, setLeadSubmitting] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const userHasMessagedRef = useRef(false);
 
   const chat = useConciergeChat({
     autoStartSession,
@@ -65,8 +66,16 @@ export function ConciergeChat({
   } = chat;
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, leadCapture.status]);
+    if (!userHasMessagedRef.current) return;
+
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: isSending ? "auto" : "smooth",
+    });
+  }, [messages, leadCapture.status, isSending]);
 
   useEffect(() => {
     if (chat.sessionId && onSessionStart) {
@@ -82,11 +91,13 @@ export function ConciergeChat({
     if (!input.trim() || isSending || isFallback) return;
     const value = input;
     setInput("");
+    userHasMessagedRef.current = true;
     await send(value);
   }
 
   async function handleChipClick(prompt: string) {
     if (isSending || isFallback) return;
+    userHasMessagedRef.current = true;
     if (!chat.sessionId) {
       await beginSession();
     }
@@ -191,8 +202,9 @@ export function ConciergeChat({
       </div>
 
       <div
+        ref={messagesContainerRef}
         className={cn(
-          "flex flex-1 flex-col gap-4 overflow-y-auto",
+          "flex flex-1 flex-col gap-4 overflow-y-auto overscroll-y-contain",
           variant === "page" && "min-h-[320px]",
           variant === "panel" && "min-h-[280px] p-5 sm:p-6",
         )}
@@ -303,8 +315,6 @@ export function ConciergeChat({
                 : errorMessage || t("errorGeneric")}
           </p>
         ) : null}
-
-        <div ref={messagesEndRef} />
       </div>
 
       <form
