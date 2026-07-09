@@ -19,7 +19,7 @@ export const cardTypography = {
     "flex h-full flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
   body: "flex flex-1 flex-col justify-between px-6 pb-4 pt-6",
   bodySale:
-    "flex flex-1 flex-col px-6 pb-4 pt-6",
+    "flex flex-1 flex-col justify-between px-6 pb-4 pt-6",
   bodyAligned:
     "grid flex-1 grid-rows-[auto_3.25rem_1.125rem_1fr_auto_auto] gap-3 px-6 pb-4 pt-6",
   bodyInsight: "flex flex-1 flex-col justify-between px-6 pb-2 pt-6",
@@ -29,7 +29,7 @@ export const cardTypography = {
   locationOneLine: "line-clamp-1 min-h-[1.125rem]",
   locationIcon: "h-3.5 w-3.5 shrink-0 text-accent",
   meta: "inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold leading-4 text-ink",
-  metaRow: "flex min-h-[22px] flex-nowrap gap-[14px] overflow-hidden pt-1",
+  metaRow: "flex min-h-[22px] flex-nowrap gap-[14px] overflow-hidden",
   metaIconWrap:
     "inline-flex h-[22px] w-[22px] items-center justify-center rounded-[2px] bg-basalt-50 p-1",
   metaIcon: "h-3.5 w-3.5 text-ink",
@@ -240,7 +240,7 @@ export function PropertyCard({
       data-reveal
       className={cn(
         cardTypography.shell,
-        "h-[480px] overflow-hidden",
+        "h-full min-h-[480px] overflow-hidden",
         href && "cursor-pointer",
         className,
       )}
@@ -248,51 +248,46 @@ export function PropertyCard({
       <CardImage imageUrl={imageUrl} alt={imageLabel ?? title} />
       {imageLabel ? <span className="sr-only">{imageLabel}</span> : null}
       <div className={cardTypography.bodySale}>
-        <div className="space-y-3">
-          <h3 className={cn(cardTypography.title, cardTypography.titleTwoLine)}>{title}</h3>
-          <p className={cardTypography.location}>
-            <Icon name="mapPin" className={cardTypography.locationIcon} />
-            <span className={cn(cardTypography.locationOneLine, "min-w-0")}>{location}</span>
+        <h3 className={cn(cardTypography.title, cardTypography.titleTwoLine)}>{title}</h3>
+        <p className={cardTypography.location}>
+          <Icon name="mapPin" className={cardTypography.locationIcon} />
+          <span className={cn(cardTypography.locationOneLine, "min-w-0")}>{location}</span>
+        </p>
+        <div className={cardTypography.metaRow}>
+          {meta.map((item) => (
+            <span key={item} className={cardTypography.meta}>
+              <span className={cardTypography.metaIconWrap}>
+                <Icon
+                  name={metaIconForLabel(item)}
+                  className={cardTypography.metaIcon}
+                />
+              </span>
+              {item}
+            </span>
+          ))}
+        </div>
+        <div className="flex items-center justify-between gap-4 pt-6">
+          <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
+          <p className={cardTypography.price}>
+            <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
+            {stripCurrencyPrefix(price, currency)}
           </p>
-          <div className={cardTypography.metaRow}>
-            {meta.map((item) => (
-              <span key={item} className={cardTypography.meta}>
-                <span className={cardTypography.metaIconWrap}>
-                  <Icon
-                    name={metaIconForLabel(item)}
-                    className={cardTypography.metaIcon}
-                  />
-                </span>
-                {item}
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-wrap gap-2">
+            {badges.map((badge) => (
+              <span key={badge} className={cardTypography.badge}>
+                {badge}
               </span>
             ))}
           </div>
+          {href ? (
+            <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
+              {t("exploreProperty")}{" "}
+              <Icon name="arrowRight" className={cardTypography.ctaIcon} />
+            </span>
+          ) : null}
         </div>
-        <div className="mt-6 space-y-4">
-          <div className="flex items-end justify-between gap-4">
-            <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
-            <p className={cardTypography.price}>
-              <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
-              {stripCurrencyPrefix(price, currency)}
-            </p>
-          </div>
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-wrap gap-2">
-              {badges.map((badge) => (
-                <span key={badge} className={cardTypography.badge}>
-                  {badge}
-                </span>
-              ))}
-            </div>
-            {href ? (
-              <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
-                {t("exploreProperty")}{" "}
-                <Icon name="arrowRight" className={cardTypography.ctaIcon} />
-              </span>
-            ) : null}
-          </div>
-        </div>
-        <div aria-hidden className="min-h-0 flex-1" />
       </div>
     </article>
   );
