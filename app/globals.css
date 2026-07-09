@@ -132,14 +132,14 @@ body {
 }
 
 html[dir="rtl"] body {
-  font-family: var(--font-cairo), var(--font-archivo), Arial, Helvetica, sans-serif;
+  font-family: var(--font-almarai), Arial, Helvetica, sans-serif;
 }
 
 html[dir="rtl"] [data-site-hero] h1,
 html[dir="rtl"] [data-site-hero] h2,
 html[dir="rtl"] .font-display,
 html[dir="rtl"] .font-\[family-name\:var\(--font-display\)\] {
-  font-family: var(--font-amiri), var(--font-cairo), serif;
+  font-family: var(--font-almarai), Arial, Helvetica, sans-serif;
   letter-spacing: normal;
 }
 
