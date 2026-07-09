@@ -88,25 +88,5 @@ export function Checkbox({ label, className, ...props }: CheckboxProps) {
   );
 }
 
-export function PhoneInput({
-  label = "Phone Number",
-  placeholder = "Phone number",
-  error,
-  ...props
-}: {
-  label?: string;
-  placeholder?: string;
-  error?: string;
-} & React.InputHTMLAttributes<HTMLInputElement>) {
-  return (
-    <FieldShell label={label}>
-      <div className="flex gap-3 rtl:flex-row-reverse">
-        <select className={cn(fieldClasses, "w-[88px] shrink-0 px-2")} defaultValue="+971">
-          <option value="+971">AE +971</option>
-        </select>
-        <input className={cn(fieldClasses, "min-w-0 flex-1", error && "border-error")} placeholder={placeholder} {...props} />
-      </div>
-      {error ? <span className="text-xs font-normal text-error">{error}</span> : null}
-    </FieldShell>
-  );
-}
+export { PhoneInput } from "./PhoneInput";
+export type { PhoneInputProps } from "./PhoneInput";

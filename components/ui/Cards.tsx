@@ -81,7 +81,7 @@ function ImagePlaceholder({ dark = false }: { dark?: boolean }) {
   return (
     <div
       className={cn(
-        "flex h-[220px] items-center justify-center rounded-[4px]",
+        "flex h-[220px] shrink-0 items-center justify-center rounded-[4px]",
         dark ? "bg-sapphire-200/30" : "bg-basalt-100",
       )}
     >
@@ -117,12 +117,12 @@ function CardImage({
 }) {
   if (imageUrl) {
     return (
-      <div className={cn("relative h-[236px] w-full overflow-hidden rounded-[4px]", className)}>
+      <div className={cn("relative h-[236px] w-full shrink-0 overflow-hidden rounded-[4px]", className)}>
         <Image
           src={imageUrl}
           alt={alt}
           fill
-          className="motion-card-image object-cover"
+          className="motion-card-image object-cover object-center"
           sizes="(max-width: 768px) 100vw, 33vw"
         />
       </div>
@@ -132,7 +132,7 @@ function CardImage({
   return (
     <div
       className={cn(
-        "flex h-[236px] w-full items-center justify-center rounded-[4px] bg-basalt-100",
+        "flex h-[236px] w-full shrink-0 items-center justify-center rounded-[4px] bg-basalt-100",
         className,
       )}
     >
@@ -409,12 +409,12 @@ export function InsightCard({
       )}
     >
       {showImage ? (
-        <div className="relative h-[220px] overflow-hidden rounded-[4px]">
+        <div className="relative h-[220px] shrink-0 overflow-hidden rounded-[4px]">
           <Image
             src={imageUrl!}
             alt={title}
             fill
-            className="motion-card-image object-cover"
+            className="motion-card-image object-cover object-center"
             sizes="(max-width: 768px) 100vw, 33vw"
             onError={() => setImageError(true)}
           />
@@ -474,17 +474,17 @@ export function AdvisorCard({
       )}
     >
       {imageUrl ? (
-        <div className="relative h-[220px] w-full overflow-hidden rounded-[4px] bg-[#d9e0ea]">
+        <div className="relative h-[220px] w-full shrink-0 overflow-hidden rounded-[4px] bg-[#d9e0ea]">
           <Image
             src={imageUrl}
             alt=""
             fill
-            className="object-cover"
+            className="object-cover object-center"
             sizes="(max-width: 768px) 100vw, 344px"
           />
         </div>
       ) : (
-        <div className="flex h-[220px] w-full items-center justify-center rounded-[4px] bg-[#d9e0ea]">
+        <div className="flex h-[220px] w-full shrink-0 items-center justify-center rounded-[4px] bg-[#d9e0ea]">
           <Icon name="home" className="h-[70px] w-[70px] text-white/80" />
         </div>
       )}

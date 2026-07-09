@@ -23,12 +23,12 @@ function ConciergeCardImage({
 }) {
   if (imageUrl) {
     return (
-      <div className="relative h-[236px] w-full overflow-hidden rounded-[4px]">
+      <div className="relative h-[236px] w-full shrink-0 overflow-hidden rounded-[4px]">
         <Image
           src={imageUrl}
           alt={alt}
           fill
-          className="object-cover"
+          className="object-cover object-center"
           sizes="408px"
         />
       </div>
@@ -36,7 +36,7 @@ function ConciergeCardImage({
   }
 
   return (
-    <div className="flex h-[236px] w-full items-center justify-center rounded-[4px] bg-basalt-100">
+    <div className="flex h-[236px] w-full shrink-0 items-center justify-center rounded-[4px] bg-basalt-100">
       <Icon name="home" className="h-[70px] w-[70px] text-white" />
     </div>
   );

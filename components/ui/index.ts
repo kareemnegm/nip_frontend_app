@@ -31,6 +31,7 @@ export {
 } from "./FormControls";
 export type {
   CheckboxProps,
+  PhoneInputProps,
   SelectProps,
   TextareaProps,
   TextInputProps,

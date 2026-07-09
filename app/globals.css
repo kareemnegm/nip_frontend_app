@@ -137,8 +137,10 @@ html[dir="rtl"] body {
 
 html[dir="rtl"] [data-site-hero] h1,
 html[dir="rtl"] [data-site-hero] h2,
+html[dir="rtl"] .font-display,
 html[dir="rtl"] .font-\[family-name\:var\(--font-display\)\] {
-  font-family: var(--font-cairo), var(--font-archivo);
+  font-family: var(--font-amiri), var(--font-cairo), serif;
+  letter-spacing: normal;
 }
 
 html[dir="rtl"] input,

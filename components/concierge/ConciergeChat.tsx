@@ -165,6 +165,7 @@ export function ConciergeChat({
     <div
       className={cn(
         "flex flex-col overflow-hidden",
+        variant === "page" && "max-h-[min(720px,calc(100vh-12rem))]",
         variant === "panel" && "h-full max-h-[min(640px,calc(100vh-8rem))]",
         shellClass,
         className,
@@ -192,6 +193,7 @@ export function ConciergeChat({
       <div
         className={cn(
           "flex flex-1 flex-col gap-4 overflow-y-auto",
+          variant === "page" && "min-h-[320px]",
           variant === "panel" && "min-h-[280px] p-5 sm:p-6",
         )}
       >

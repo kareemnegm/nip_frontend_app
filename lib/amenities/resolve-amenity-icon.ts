@@ -18,9 +18,10 @@ const AMENITY_MATCH_RULES: AmenityMatchRule[] = [
   { icon: "beach", keywords: ["beach", "private beach"] },
   { icon: "spa", keywords: ["spa", "wellness", "sauna", "steam"] },
   {
-    icon: "valet",
-    keywords: ["parking", "valet", "car park", "garage"],
+    icon: "parking",
+    keywords: ["parking", "car park", "garage", "car space"],
   },
+  { icon: "valet", keywords: ["valet", "chauffeur"] },
   { icon: "lounge", keywords: ["lounge", "lobby", "residents"] },
   { icon: "concierge", keywords: ["concierge", "butler", "24/7 service"] },
   { icon: "pool", keywords: ["pool", "swim", "infinity pool"] },
