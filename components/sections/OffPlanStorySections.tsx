@@ -163,7 +163,7 @@ export function MasterplanLocationSection({
               key={item.id}
               className="inline-flex items-center gap-2 rounded bg-basalt-50 py-2 pl-3 pr-4 text-[11px] font-medium leading-[14px] text-ink-secondary"
             >
-              <AmenityIcon facility={item.facility} />
+              <AmenityIcon iconKey={item.icon_key} facility={item.facility} />
               {item.facility}
             </span>
           ))}

@@ -1,12 +1,14 @@
 import { cn } from "@/lib/cn";
-import { resolveAmenityIcon } from "@/lib/amenities/resolve-amenity-icon";
+import { resolveAmenityIconFromFacility } from "@/lib/amenities/resolve-amenity-icon";
 import {
   amenityIconSvgs,
   type AmenityIconName,
 } from "./amenity-icon-registry";
 
 export type AmenityIconProps = {
-  /** Facility label from API — resolved to the matching Figma amenity glyph. */
+  /** Backend `icon_key` — preferred source of truth. */
+  iconKey?: string | null;
+  /** Facility label — used only when `iconKey` is missing. */
   facility?: string;
   /** Optional explicit icon override. */
   name?: AmenityIconName;
@@ -15,12 +17,15 @@ export type AmenityIconProps = {
 };
 
 export function AmenityIcon({
+  iconKey,
   facility,
   name,
   className,
   title,
 }: AmenityIconProps) {
-  const iconName = name ?? resolveAmenityIcon(facility ?? "");
+  const iconName =
+    name ??
+    resolveAmenityIconFromFacility({ iconKey, facility: facility ?? "" });
   const svgMarkup = amenityIconSvgs[iconName] ?? amenityIconSvgs.star;
 
   return (

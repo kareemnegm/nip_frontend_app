@@ -15,6 +15,9 @@ export type ApiDeveloperRef = {
 export type ApiFacility = {
   id: number;
   facility: string;
+  /** Canonical Figma amenity key, e.g. `"security"`, `"pool"`. */
+  icon_key?: string | null;
+  /** @deprecated Prefer `icon_key`. Raw SVG is ignored by the UI. */
   facility_icon?: string | null;
 };
 
