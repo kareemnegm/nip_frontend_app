@@ -18,9 +18,13 @@ export const cardTypography = {
   shell:
     "flex h-full flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
   body: "flex flex-1 flex-col justify-between px-6 pb-4 pt-6",
+  bodyAligned:
+    "grid flex-1 grid-rows-[auto_3.25rem_1.125rem_1fr_auto_auto] gap-3 px-6 pb-4 pt-6",
   bodyInsight: "flex flex-1 flex-col justify-between px-6 pb-2 pt-6",
   title: "text-h3 font-bold text-brand",
+  titleTwoLine: "line-clamp-2 min-h-[3.25rem]",
   location: "flex items-center gap-1 text-body-sm text-ink-tertiary",
+  locationOneLine: "line-clamp-1 min-h-[1.125rem]",
   locationIcon: "h-3.5 w-3.5 shrink-0 text-accent",
   meta: "inline-flex items-center gap-1.5 text-xs font-semibold leading-4 text-ink",
   metaIconWrap:
@@ -327,47 +331,44 @@ export function OffPlanCard({
       )}
     >
       <CardImage imageUrl={imageUrl} alt={title} icon="building" />
-      <div className={cardTypography.body}>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className={cardTypography.badge}>
-              {t("breadcrumbOffPlan")}
-            </span>
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-[2px] bg-basalt-50 p-1">
-              <Icon name="crane" className="h-5 w-5 text-sapphire-500" />
-            </span>
-          </div>
-          <h3 className={cardTypography.title}>{title}</h3>
-          <p className={cardTypography.location}>
-            <Icon name="mapPin" className={cardTypography.locationIcon} />
-            {location}
-          </p>
+      <div className={cardTypography.bodyAligned}>
+        <div className="flex items-center justify-between">
+          <span className={cardTypography.badge}>
+            {t("breadcrumbOffPlan")}
+          </span>
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-[2px] bg-basalt-50 p-1">
+            <Icon name="crane" className="h-5 w-5 text-sapphire-500" />
+          </span>
         </div>
-        <div className="mt-auto space-y-3">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className={cardTypography.startingFrom}>{t("handoverLabel")}</p>
-              <p className="mt-1.5 text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
-                {handover}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
-              <p className={cn("mt-1.5 justify-end", cardTypography.price)}>
-                <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
-                {displayPrice}
-              </p>
-            </div>
+        <h3 className={cn(cardTypography.title, cardTypography.titleTwoLine)}>{title}</h3>
+        <p className={cardTypography.location}>
+          <Icon name="mapPin" className={cardTypography.locationIcon} />
+          <span className={cn(cardTypography.locationOneLine, "min-w-0")}>{location}</span>
+        </p>
+        <div aria-hidden className="min-h-0" />
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className={cardTypography.startingFrom}>{t("handoverLabel")}</p>
+            <p className="mt-1.5 text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
+              {handover}
+            </p>
           </div>
-          <div className="flex items-center justify-between gap-4">
-            <span className={cardTypography.badge}>{t("paymentPlanAvailable")}</span>
-            {href ? (
-              <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
-                {t("exploreProperty")}{" "}
-                <Icon name="arrowRight" className={cardTypography.ctaIcon} />
-              </span>
-            ) : null}
+          <div className="text-right">
+            <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
+            <p className={cn("mt-1.5 justify-end", cardTypography.price)}>
+              <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
+              {displayPrice}
+            </p>
           </div>
+        </div>
+        <div className="flex items-center justify-between gap-4">
+          <span className={cardTypography.badge}>{t("paymentPlanAvailable")}</span>
+          {href ? (
+            <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
+              {t("exploreProperty")}{" "}
+              <Icon name="arrowRight" className={cardTypography.ctaIcon} />
+            </span>
+          ) : null}
         </div>
       </div>
     </article>
