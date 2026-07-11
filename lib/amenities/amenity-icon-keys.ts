@@ -2,13 +2,11 @@ import type { AmenityIconName } from "@/components/ui/amenity-icon-registry";
 import { amenityIconSvgs } from "@/components/ui/amenity-icon-registry";
 
 /**
- * Backend `icon_key` → Figma amenity glyph.
- *
- * Prefer 1:1 keys that match AmenityIconName.
- * Aliases cover granular CMS keys until dedicated Figma icons exist.
+ * Same-category aliases only — maps variant keys to an existing Figma glyph.
+ * No cross-type reuse (tennis ≠ basketball, wifi ≠ smart-home).
  */
 const ICON_KEY_ALIASES: Record<string, AmenityIconName> = {
-  // Security
+  // Security variants
   cctv: "security",
   surveillance: "security",
   guard: "security",
@@ -16,19 +14,47 @@ const ICON_KEY_ALIASES: Record<string, AmenityIconName> = {
   gated: "security",
   "safe-room": "security",
 
-  // Courts / sports → basketball until dedicated icons exist
-  court: "basketball",
-  tennis: "basketball",
-  "multi-court": "basketball",
-  "multi-purpose-court": "basketball",
-  sports: "basketball",
-  cricket: "basketball",
-  football: "basketball",
-  padel: "basketball",
-  squash: "basketball",
-  skate: "basketball",
+  // Pool variants
+  swim: "pool",
+  swimming: "pool",
+  "infinity-pool": "pool",
+  "rooftop-pool": "pool",
+  "kids-pool": "pool",
+  "lap-pool": "pool",
+  "private-pool": "pool",
+  "sun-deck": "pool",
 
-  // Wellness
+  // Kids variants
+  "kids-play": "kids",
+  playground: "kids",
+  children: "kids",
+  nursery: "kids",
+  daycare: "kids",
+  trampoline: "kids",
+
+  // Garden / greenery
+  garden: "flower",
+  gardens: "flower",
+  landscaped: "flower",
+  lawn: "flower",
+  "community-lawn": "flower",
+  pet: "flower",
+  "green-building": "flower",
+
+  // Fitness
+  gym: "fitness",
+  "outdoor-gym": "fitness",
+
+  // Cycling / trails
+  trail: "cycling",
+  trails: "cycling",
+  jogging: "cycling",
+  running: "cycling",
+  walking: "cycling",
+  "walking-trails": "cycling",
+  "jogging-track": "cycling",
+
+  // Wellness → spa or yoga (same category)
   wellness: "spa",
   sauna: "spa",
   steam: "spa",
@@ -39,60 +65,21 @@ const ICON_KEY_ALIASES: Record<string, AmenityIconName> = {
   pilates: "yoga",
   dance: "yoga",
 
-  // Fitness / outdoors
-  gym: "fitness",
-  trail: "cycling",
-  trails: "cycling",
-  jogging: "cycling",
-  running: "cycling",
-  walking: "cycling",
-  "walking-trails": "cycling",
-  "jogging-track": "cycling",
-  golf: "fitness",
-
-  // Greenery / pets
-  garden: "flower",
-  gardens: "flower",
-  landscaped: "flower",
-  lawn: "flower",
-  "community-lawn": "flower",
-  pet: "flower",
-  "green-building": "flower",
-
-  // Home / tech
+  // Smart home
   automation: "smart-home",
   "smart-home-automation": "smart-home",
   "ai-home": "smart-home",
-  wifi: "smart-home",
-  solar: "smart-home",
 
-  // Hospitality / service
+  // Concierge / service
   butler: "concierge",
-  service: "concierge",
   reception: "concierge",
   housekeeping: "concierge",
+  "hotel-style-reception": "concierge",
+
+  // Valet / transport
   chauffeur: "valet",
   shuttle: "valet",
   arrival: "valet",
-
-  // Water
-  swim: "pool",
-  swimming: "pool",
-  "infinity-pool": "pool",
-  "sun-deck": "pool",
-  "water-sports": "beach",
-
-  // Kids
-  playground: "kids",
-  "kids-play": "kids",
-  children: "kids",
-  nursery: "kids",
-  daycare: "kids",
-  trampoline: "kids",
-
-  // Parking
-  garage: "parking",
-  "ev-charging": "parking",
 
   // Dining
   dining: "dinner",
@@ -102,26 +89,22 @@ const ICON_KEY_ALIASES: Record<string, AmenityIconName> = {
   supermarket: "dinner",
   wine: "dinner",
 
-  // Indoor leisure → lounge
-  cinema: "lounge",
-  gaming: "lounge",
-  library: "lounge",
-  music: "lounge",
-  vr: "lounge",
-  conference: "lounge",
-  coworking: "lounge",
-  "party-hall": "lounge",
+  // Lounge variants
   relaxation: "lounge",
-  wardrobe: "lounge",
+  "sky-lounge": "lounge",
+  "cigar-lounge": "lounge",
 
-  // Location / medical
+  // Location / water
   retail: "branded-location",
   shopping: "branded-location",
   marina: "sea",
   waterfront: "sea",
-  hospital: "star",
-  medical: "star",
-  prayer: "star",
+  "water-sports": "beach",
+
+  // Parking
+  garage: "parking",
+  "ev-charging": "parking",
+  driveway: "parking",
 };
 
 /** Placeholder keys the CMS uses when no real category was assigned. */
@@ -137,6 +120,10 @@ const GENERIC_ICON_KEYS = new Set([
 ]);
 
 export const DEFAULT_AMENITY_ICON: AmenityIconName = "star";
+
+export const FIGMA_AMENITY_ICON_KEYS = Object.keys(
+  amenityIconSvgs,
+).sort() as AmenityIconName[];
 
 function normalizeIconKey(key: string): string {
   return key
@@ -155,11 +142,10 @@ function isAmenityIconName(value: string): value is AmenityIconName {
 }
 
 /**
- * Resolve backend `icon_key` to a Figma amenity icon name.
- * Returns `null` for missing / generic / unknown keys so callers can fall
- * through to label matching.
+ * Resolve `icon_key` to a Figma registry name when a matching glyph exists.
+ * Returns null when no Figma file matches (caller should use backend SVG).
  */
-export function resolveAmenityIconKey(
+export function resolveFigmaAmenityIconKey(
   iconKey: string | null | undefined,
 ): AmenityIconName | null {
   if (!iconKey?.trim()) return null;
@@ -175,34 +161,8 @@ export function resolveAmenityIconKey(
   return null;
 }
 
-/** Canonical keys the backend should prefer (1:1 with Figma glyphs). */
-export const CANONICAL_AMENITY_ICON_KEYS = Object.keys(
-  amenityIconSvgs,
-).sort() as AmenityIconName[];
+/** @deprecated Use resolveFigmaAmenityIconKey */
+export const resolveAmenityIconKey = resolveFigmaAmenityIconKey;
 
-/**
- * Granular backend keys that currently alias to an existing glyph.
- * Add a matching SVG under `public/icons/figma/amenities/` to promote any
- * of these to a 1:1 icon (then remove the alias).
- */
-export const PENDING_FIGMA_AMENITY_ICONS = [
-  "wifi",
-  "tennis",
-  "cinema",
-  "shuttle",
-  "ev-charging",
-  "golf",
-  "padel",
-  "cricket",
-  "football",
-  "squash",
-  "jacuzzi",
-  "sauna",
-  "steam-room",
-  "marina",
-  "pet",
-  "library",
-  "gaming",
-  "coworking",
-  "solar",
-] as const;
+/** @deprecated Use FIGMA_AMENITY_ICON_KEYS */
+export const CANONICAL_AMENITY_ICON_KEYS = FIGMA_AMENITY_ICON_KEYS;

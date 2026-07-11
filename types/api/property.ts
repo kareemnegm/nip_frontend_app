@@ -15,10 +15,12 @@ export type ApiDeveloperRef = {
 export type ApiFacility = {
   id: number;
   facility: string;
-  /** Canonical Figma amenity key, e.g. `"security"`, `"pool"`. */
+  /** Slug from facility name — maps to Figma glyph when a file exists. */
   icon_key?: string | null;
-  /** @deprecated Prefer `icon_key`. Raw SVG is ignored by the UI. */
+  /** Inline SVG from backend — used when no Figma glyph matches `icon_key`. */
   facility_icon?: string | null;
+  /** CDN URL for amenity SVG — alternative to inline `facility_icon`. */
+  icon_url?: string | null;
 };
 
 export type ApiPropertyImage = {
