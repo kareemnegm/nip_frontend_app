@@ -15,12 +15,12 @@ export type ApiDeveloperRef = {
 export type ApiFacility = {
   id: number;
   facility: string;
-  /** Slug from facility name — maps to Figma glyph when a file exists. */
-  icon_key?: string | null;
-  /** Inline SVG from backend — used when no Figma glyph matches `icon_key`. */
+  /** Inline SVG — frontend renders this only. */
   facility_icon?: string | null;
-  /** CDN URL for amenity SVG — alternative to inline `facility_icon`. */
+  /** CDN URL for amenity SVG — used when inline SVG is omitted. */
   icon_url?: string | null;
+  /** Optional metadata from backend; not used for icon rendering. */
+  icon_key?: string | null;
 };
 
 export type ApiPropertyImage = {
