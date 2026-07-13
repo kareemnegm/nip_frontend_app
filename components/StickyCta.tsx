@@ -11,10 +11,12 @@ import { siteChromeClassName } from "./ui/SiteChrome";
 function useStickyCtaVisible() {
   const [pastHero, setPastHero] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(true);
+  const [footerVisible, setFooterVisible] = useState(false);
 
   useEffect(() => {
     const hero = document.querySelector("[data-site-hero]");
     const header = document.getElementById("site-header");
+    const footer = document.querySelector("[data-site-footer]");
     const observers: IntersectionObserver[] = [];
 
     if (hero) {
@@ -45,6 +47,20 @@ function useStickyCtaVisible() {
       observers.push(headerObserver);
     }
 
+    if (footer) {
+      const footerObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (entry) {
+            setFooterVisible(entry.isIntersecting);
+          }
+        },
+        { threshold: 0, rootMargin: "0px 0px -40% 0px" },
+      );
+
+      footerObserver.observe(footer);
+      observers.push(footerObserver);
+    }
+
     if (!hero) {
       const onScroll = () => {
         setPastHero(window.scrollY > window.innerHeight * 0.55);
@@ -63,7 +79,8 @@ function useStickyCtaVisible() {
     };
   }, []);
 
-  return pastHero && !headerVisible;
+  // Hide over the footer so mobile doesn’t show a second logo bar.
+  return pastHero && !headerVisible && !footerVisible;
 }
 
 export function StickyCta() {
@@ -97,7 +114,9 @@ export function StickyCta() {
         </LocalizedLink>
 
         <div className="flex items-center gap-5">
-          <p className="hidden text-body-sm text-basalt-200 sm:block">{tagline}</p>
+          <p className="hidden max-w-[420px] text-body-sm text-basalt-200 lg:block">
+            {tagline}
+          </p>
           <SpeakWithNipButton className="shrink-0" />
         </div>
       </div>

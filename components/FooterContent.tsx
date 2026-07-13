@@ -15,6 +15,12 @@ type FooterLink = {
   href: string;
 };
 
+type SocialLink = {
+  label: string;
+  icon: FooterSocialIconName;
+  href: string;
+};
+
 function FooterLinkGroup({
   title,
   links,
@@ -23,9 +29,9 @@ function FooterLinkGroup({
   links: FooterLink[];
 }) {
   return (
-    <div className="flex w-[103px] flex-col gap-[14px]">
-      <h3 className="text-[12px] font-semibold leading-4 text-white">{title}</h3>
-      <ul className="flex flex-col gap-[9px] text-[12px] leading-4 text-basalt-300">
+    <div className="flex min-w-0 flex-col gap-3 sm:gap-[14px]">
+      <h3 className="text-body-xs font-semibold text-white">{title}</h3>
+      <ul className="flex flex-col gap-2 text-body-xs text-basalt-300 sm:gap-[9px]">
         {links.map((link) => (
           <li key={link.href + link.label}>
             <LocalizedLink
@@ -65,6 +71,114 @@ function FooterContactRow({
 
 function NewsletterFormSlot({ labels }: { labels: NewsletterFormLabels }) {
   return <NewsletterForm labels={labels} />;
+}
+
+function FooterBrandBlock({
+  tagline,
+  newsletterTitle,
+  newsletterDesc,
+  newsletterLabels,
+}: {
+  tagline: React.ReactNode;
+  newsletterTitle: React.ReactNode;
+  newsletterDesc: React.ReactNode;
+  newsletterLabels: NewsletterFormLabels;
+}) {
+  return (
+    <div className="flex w-full max-w-[240px] flex-col gap-8 lg:gap-12">
+      <div className="flex flex-col gap-3 lg:gap-4">
+        <LocalizedLink href="/">
+          <Logo inverted />
+        </LocalizedLink>
+        <div dir="auto" className="max-w-[240px] text-body-xs text-basalt-300">
+          {tagline}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3 lg:gap-3.5">
+        <div className="text-body-xs font-semibold text-white">{newsletterTitle}</div>
+        <div className="max-w-[240px] text-body-xs text-basalt-300">{newsletterDesc}</div>
+        <NewsletterFormSlot labels={newsletterLabels} />
+      </div>
+    </div>
+  );
+}
+
+function FooterContactBlock({
+  contactTitle,
+  followTitle,
+  address,
+  socialLinks,
+  socialLayout,
+  isRtl,
+}: {
+  contactTitle: string;
+  followTitle: string;
+  address: string;
+  socialLinks: SocialLink[];
+  socialLayout: "icons" | "list";
+  isRtl: boolean;
+}) {
+  return (
+    <div className="flex flex-col gap-8 lg:gap-12" dir={isRtl ? "rtl" : "ltr"}>
+      <div className="flex flex-col gap-3 sm:gap-[14px]">
+        <h3 className="text-start text-body-xs font-semibold text-white">{contactTitle}</h3>
+        <ul className="flex flex-col gap-1 text-body-xs text-basalt-300">
+          <FooterContactRow icon="phone">
+            <span dir="ltr">+971 50 165 2441</span>
+          </FooterContactRow>
+          <FooterContactRow icon="mail">
+            <span dir="ltr">info@niprealty.com</span>
+          </FooterContactRow>
+          <FooterContactRow icon="location" align="start">
+            {address.split("\n").map((line, i, arr) => (
+              <span key={i}>
+                {line}
+                {i < arr.length - 1 && <br />}
+              </span>
+            ))}
+          </FooterContactRow>
+        </ul>
+      </div>
+
+      <div className="flex flex-col gap-3 sm:gap-[14px]">
+        <h3 className="text-start text-body-xs font-semibold text-white">{followTitle}</h3>
+        {socialLayout === "icons" ? (
+          <ul className="flex flex-row flex-wrap gap-3">
+            {socialLinks.map(({ label, icon, href }) => (
+              <li key={icon}>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="inline-flex size-9 items-center justify-center rounded-[var(--radius-field)] text-basalt-300 transition-colors hover:bg-white/5 hover:text-white"
+                >
+                  <FooterSocialIcon name={icon} />
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <ul className="flex flex-col gap-1 text-body-xs text-basalt-300">
+            {socialLinks.map(({ label, icon, href }) => (
+              <li key={icon}>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 p-1 transition-colors hover:text-white"
+                >
+                  <FooterSocialIcon name={icon} />
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export type FooterContentProps = {
@@ -129,7 +243,7 @@ export async function FooterContent({
 
   const aboutLinks: FooterLink[] = [{ label: t("aboutUs"), href: "/about" }];
 
-  const socialLinks: { label: string; icon: FooterSocialIconName; href: string }[] = [
+  const socialLinks: SocialLink[] = [
     { label: t("instagram"), icon: "instagram", href: "https://instagram.com" },
     { label: t("facebook"), icon: "facebook", href: "https://facebook.com" },
     { label: t("linkedin"), icon: "linkedin", href: "https://linkedin.com" },
@@ -144,100 +258,77 @@ export async function FooterContent({
     { label: t("reraInfo"), href: "/legal#rera" },
   ];
 
+  const brandProps = {
+    tagline,
+    newsletterTitle,
+    newsletterDesc,
+    newsletterLabels,
+  };
+
+  const contactProps = {
+    contactTitle: t("contact"),
+    followTitle: t("followUs"),
+    address: t("address"),
+    socialLinks,
+    isRtl,
+  };
+
   return (
-    <footer className="w-full bg-sapphire-800 text-white">
+    <footer data-site-footer className="w-full bg-sapphire-800 text-white">
       <div
-        className={`flex flex-col items-center gap-12 pb-10 pt-16 lg:pt-20 ${siteChromeClassName}`}
+        className={`flex flex-col gap-8 pb-24 pt-12 sm:gap-10 sm:pb-16 lg:gap-12 lg:pb-10 lg:pt-20 ${siteChromeClassName}`}
       >
-        <div dir="ltr" className="flex w-full flex-wrap items-start justify-center gap-x-[142px] gap-y-12">
-          <div className="flex w-full max-w-[240px] flex-col gap-12">
-            <div className="flex flex-col gap-4">
-              <LocalizedLink href="/">
-                <Logo inverted />
-              </LocalizedLink>
-              <div
-                dir="auto"
-                className="max-w-[240px] text-[12px] leading-4 text-basalt-300"
-              >
-                {tagline}
-              </div>
-            </div>
+        {/* —— Mobile & tablet: brand → balanced 2-col links → contact —— */}
+        <div dir="ltr" className="flex w-full flex-col gap-8 sm:gap-10 lg:hidden">
+          <FooterBrandBlock {...brandProps} />
 
-            <div className="flex flex-col gap-3.5">
-              <div className="text-[12px] font-semibold leading-4 text-white">
-                {newsletterTitle}
-              </div>
-              <div className="max-w-[240px] text-[12px] leading-4 text-basalt-300">
-                {newsletterDesc}
-              </div>
-              <NewsletterFormSlot labels={newsletterLabels} />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-12 text-[12px] leading-4">
+          <div className="grid w-full grid-cols-2 gap-x-6 gap-y-8 sm:gap-x-8 sm:gap-y-10">
             <FooterLinkGroup title={t("properties")} links={propertiesLinks} />
-            <FooterLinkGroup title={t("areas")} links={areasLinks} />
-          </div>
-
-          <div className="flex flex-col gap-12 text-[12px] leading-4">
             <FooterLinkGroup title={t("offPlan")} links={offPlanLinks} />
+            <FooterLinkGroup title={t("areas")} links={areasLinks} />
             <FooterLinkGroup title={t("resources")} links={resourcesLinks} />
-          </div>
-
-          <div className="flex flex-col gap-12 text-[12px] leading-4">
             <FooterLinkGroup title={t("insights")} links={insightsLinks} />
             <FooterLinkGroup title={t("aboutNip")} links={aboutLinks} />
           </div>
 
-          <div className="flex flex-col gap-12" dir={isRtl ? "rtl" : "ltr"}>
-            <div className="flex flex-col gap-[14px]">
-              <h3 className="text-start text-[12px] font-semibold leading-4 text-white">
-                {t("contact")}
-              </h3>
-              <ul className="flex flex-col gap-1 text-[12px] leading-4 text-basalt-300">
-                <FooterContactRow icon="phone">
-                  <span dir="ltr">+971 50 165 2441</span>
-                </FooterContactRow>
-                <FooterContactRow icon="mail">
-                  <span dir="ltr">info@niprealty.com</span>
-                </FooterContactRow>
-                <FooterContactRow icon="location" align="start">
-                  {t("address").split("\n").map((line, i, arr) => (
-                    <span key={i}>
-                      {line}
-                      {i < arr.length - 1 && <br />}
-                    </span>
-                  ))}
-                </FooterContactRow>
-              </ul>
-            </div>
+          <FooterContactBlock {...contactProps} socialLayout="icons" />
+        </div>
 
-            <div className="flex flex-col gap-[14px]">
-              <h3 className="text-start text-[12px] font-semibold leading-4 text-white">
-                {t("followUs")}
-              </h3>
-              <ul className="flex flex-col gap-1 text-[12px] leading-4 text-basalt-300">
-                {socialLinks.map(({ label, icon, href }) => (
-                  <li key={icon}>
-                    <a
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 p-1 transition-colors hover:text-white"
-                    >
-                      <FooterSocialIcon name={icon} />
-                      {label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {/* —— Desktop: Figma five-column row —— */}
+        <div
+          dir="ltr"
+          className="hidden w-full items-start justify-between gap-x-8 lg:flex xl:gap-x-[142px]"
+        >
+          <div className="shrink-0">
+            <FooterBrandBlock {...brandProps} />
+          </div>
+
+          <div className="flex min-w-0 flex-col gap-12">
+            <FooterLinkGroup title={t("properties")} links={propertiesLinks} />
+            <FooterLinkGroup title={t("areas")} links={areasLinks} />
+          </div>
+
+          <div className="flex min-w-0 flex-col gap-12">
+            <FooterLinkGroup title={t("offPlan")} links={offPlanLinks} />
+            <FooterLinkGroup title={t("resources")} links={resourcesLinks} />
+          </div>
+
+          <div className="flex min-w-0 flex-col gap-12">
+            <FooterLinkGroup title={t("insights")} links={insightsLinks} />
+            <FooterLinkGroup title={t("aboutNip")} links={aboutLinks} />
+          </div>
+
+          <div className="shrink-0">
+            <FooterContactBlock {...contactProps} socialLayout="list" />
           </div>
         </div>
 
         <div className="h-px w-full bg-basalt-300" />
 
-        <div dir="ltr" className="flex w-full flex-col gap-5 text-[12px] leading-4 md:flex-row md:items-center md:justify-between">
+        <div
+          dir="ltr"
+          className="flex w-full flex-col gap-4 text-body-xs sm:gap-5 md:flex-row md:items-center md:justify-between"
+        >
           <div className="text-basalt-300">{copyright}</div>
           <div className="flex flex-wrap gap-x-5 gap-y-2 text-text-inactive">
             {legalLinks.map((link) => (
