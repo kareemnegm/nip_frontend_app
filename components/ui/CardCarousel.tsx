@@ -161,11 +161,11 @@ export function CardCarousel({
           aria-label="Previous slide"
           className={cn(
             navButtonClass,
-            fullBleed ? "start-4 sm:start-8" : "start-0 -translate-x-1/2 sm:start-2 sm:translate-x-0",
+            fullBleed ? "start-4 sm:start-8" : "start-2 sm:start-3",
           )}
           onClick={() => scroll("prev")}
         >
-          <Icon name="chevronLeft" className="h-5 w-5 rtl:rotate-180" />
+          <Icon name="arrowRight" className="h-5 w-5 rotate-180 rtl:rotate-0" />
         </button>
       ) : null}
       {canScrollNext ? (
@@ -174,11 +174,11 @@ export function CardCarousel({
           aria-label="Next slide"
           className={cn(
             navButtonClass,
-            fullBleed ? "end-4 sm:end-8" : "end-0 translate-x-1/2 sm:end-2 sm:translate-x-0",
+            fullBleed ? "end-4 sm:end-8" : "end-2 sm:end-3",
           )}
           onClick={() => scroll("next")}
         >
-          <Icon name="chevronRight" className="h-5 w-5 rtl:rotate-180" />
+          <Icon name="arrowRight" className="h-5 w-5 rtl:rotate-180" />
         </button>
       ) : null}
       <div

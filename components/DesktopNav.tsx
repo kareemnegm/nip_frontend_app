@@ -42,7 +42,7 @@ export function DesktopNav() {
 
   return (
     <nav
-      className="hidden items-center gap-[28px] xl:flex xl:justify-self-center"
+      className="hidden items-center gap-5 lg:flex lg:justify-self-center xl:gap-[28px]"
       aria-label="Main"
       onMouseLeave={closeDropdowns}
       onBlur={(event) => {

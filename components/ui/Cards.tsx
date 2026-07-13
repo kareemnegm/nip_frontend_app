@@ -22,7 +22,7 @@ export const cardTypography = {
     "flex flex-1 flex-col justify-between px-6 pb-4 pt-6",
   bodyAligned:
     "grid flex-1 grid-rows-[auto_3.25rem_1.125rem_1fr_auto_auto] gap-3 px-6 pb-4 pt-6",
-  bodyInsight: "flex flex-1 flex-col justify-between px-6 pb-2 pt-6",
+  bodyInsight: "flex flex-1 flex-col gap-3 px-6 pb-5 pt-6",
   title: "text-h3 font-bold text-brand",
   titleTwoLine: "line-clamp-2 min-h-[3.25rem]",
   location: "flex items-center gap-1 text-body-sm text-ink-tertiary",
@@ -403,13 +403,13 @@ export function InsightCard({
       data-reveal
       className={cn(
         cardTypography.shell,
-        "h-[440px] overflow-hidden",
+        "min-h-[440px] overflow-hidden",
         href && "cursor-pointer",
         className,
       )}
     >
       {showImage ? (
-        <div className="relative h-[220px] shrink-0 overflow-hidden rounded-[4px]">
+        <div className="relative h-[200px] shrink-0 overflow-hidden rounded-[4px] sm:h-[220px]">
           <Image
             src={imageUrl!}
             alt={title}
@@ -424,9 +424,13 @@ export function InsightCard({
       )}
       <div className={cardTypography.bodyInsight}>
         <p className={cardTypography.category}>{category}</p>
-        <h3 className={cardTypography.title}>{title}</h3>
-        <p className={cardTypography.excerpt}>{excerpt}</p>
-        <div className="flex items-center justify-between gap-4 pt-1">
+        <h3 className={cn(cardTypography.title, "line-clamp-2 min-h-[3.25rem]")}>
+          {title}
+        </h3>
+        <p className={cn(cardTypography.excerpt, "line-clamp-3 min-h-[3.375rem]")}>
+          {excerpt}
+        </p>
+        <div className="mt-auto flex items-center justify-between gap-4 pt-4">
           <span className={cardTypography.metaMuted}>
             {readTime} | {author}
           </span>

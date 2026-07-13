@@ -50,6 +50,7 @@ export async function MarketPulseSection() {
               data-reveal-delay={index > 0 ? String(Math.min(index, 3)) : undefined}
               className={[
                 "flex flex-col gap-4 rounded-[var(--radius-card)] px-7 py-6 text-white",
+                "items-center text-center sm:items-start sm:text-start",
                 cardBg[index],
               ].join(" ")}
             >

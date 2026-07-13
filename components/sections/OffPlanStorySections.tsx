@@ -190,8 +190,8 @@ export async function ProjectRegisterCta({ locale = "en" }: { locale?: Locale })
             "flex flex-col items-center gap-10 text-center",
           )}
         >
-          <div className="max-w-[608px] space-y-4">
-            <p className="text-overline font-semibold text-[#8fb0dc]">
+          <div className="flex max-w-[608px] flex-col items-center gap-4">
+            <p className="text-overline font-semibold uppercase text-[#8fb0dc]">
               {t("registerInterestEyebrow")}
             </p>
             <h2 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-white">
