@@ -8,17 +8,15 @@ import { getRequestLocale } from "@/lib/i18n/server";
 import { HOME_REL_URL } from "./home-editable";
 
 /**
- * Figma 1525:28321 — 60px circle (sapphire-600), lock icon 44px inside.
+ * Figma 1525:28321 — 60px circle (sapphire-600), privacy lock 44px inside.
  */
 function OfficeCrest() {
   return (
     <div
       aria-hidden
-      className="mx-auto flex h-[60px] w-[60px] items-center justify-center rounded-full bg-sapphire-600 p-[8px]"
+      className="mx-auto flex h-[60px] w-[60px] items-center justify-center rounded-full bg-sapphire-600 p-2 text-white"
     >
-      <div className="flex h-[44px] w-[44px] items-center justify-center rounded-full border border-accent-on-dark text-accent-on-dark">
-        <Icon name="lock" className="h-5 w-5" />
-      </div>
+      <Icon name="lock" className="h-11 w-11" />
     </div>
   );
 }

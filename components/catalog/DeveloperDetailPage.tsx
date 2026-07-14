@@ -61,12 +61,6 @@ export async function DeveloperDetailPage({ locale, slug }: DeveloperDetailPageP
     communitiesFactLabel: t("communitiesFactLabel"),
     unitsLabel: t("unitsLabel"),
     presenceLabel: t("presenceLabel"),
-    defaultEstablished: t("defaultEstablished"),
-    defaultDelivered: t("defaultDelivered"),
-    defaultUnderDev: t("defaultUnderDev"),
-    defaultCommunities: t("defaultCommunities"),
-    defaultUnits: t("defaultUnits"),
-    defaultPresence: t("defaultPresence"),
     strength1: t("strength1"),
     strength2: t("strength2"),
     strength3: t("strength3"),
@@ -75,8 +69,7 @@ export async function DeveloperDetailPage({ locale, slug }: DeveloperDetailPageP
     strength6: t("strength6"),
   };
 
-  const offPlanTotal = properties.filter(isOffPlanProperty).length;
-  const facts = developerFactsFromApi(developer, offPlanTotal, labels);
+  const facts = developerFactsFromApi(developer, labels);
   const strengths = defaultDeveloperStrengths(labels);
   const description = developer.description ?? t("portfolioFallback");
   const logoUrl = resolveMediaUrl(developer.logo_url ?? developer.photo_url);
@@ -98,13 +91,15 @@ export async function DeveloperDetailPage({ locale, slug }: DeveloperDetailPageP
         logoUrl={logoUrl}
       />
 
-      <section className="bg-white py-10">
-        <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-          <div className={sitePageInnerClassName}>
-            <FactsStrip items={facts} variant="property" />
+      {facts.length > 0 ? (
+        <section className="bg-white py-10">
+          <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
+            <div className={sitePageInnerClassName}>
+              <FactsStrip items={facts} variant="property" />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section className="bg-white pb-16">
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>

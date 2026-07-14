@@ -11,12 +11,6 @@ export type DeveloperDetailLabels = {
   communitiesFactLabel: string;
   unitsLabel: string;
   presenceLabel: string;
-  defaultEstablished: string;
-  defaultDelivered: string;
-  defaultUnderDev: string;
-  defaultCommunities: string;
-  defaultUnits: string;
-  defaultPresence: string;
   strength1: string;
   strength2: string;
   strength3: string;
@@ -25,42 +19,95 @@ export type DeveloperDetailLabels = {
   strength6: string;
 };
 
+function displayString(value: string | number | null | undefined): string | null {
+  if (value == null) return null;
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? String(value) : null;
+  }
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+function formatCommunitiesCount(
+  value: number | string | null | undefined,
+): string | null {
+  if (value == null || value === "") return null;
+  const n = typeof value === "number" ? value : Number(String(value).trim());
+  if (!Number.isFinite(n)) return null;
+  return String(n);
+}
+
+function pushFact(
+  facts: FactItem[],
+  label: string,
+  value: string | null,
+  icon: IconName,
+) {
+  if (value == null) return;
+  facts.push({ label, value, icon });
+}
+
+/**
+ * Build developer facts strip from API fields.
+ * Labels/icons stay in frontend; values come from CMS via API as-is.
+ * Null/empty fields are omitted (no blank slots).
+ */
 export function developerFactsFromApi(
   developer: ApiDeveloper,
-  offPlanTotal: number,
   labels: DeveloperDetailLabels,
 ): FactItem[] {
-  const established =
-    developer.established_year != null
-      ? String(developer.established_year)
-      : labels.defaultEstablished;
+  const facts: FactItem[] = [];
 
-  const delivered =
-    developer.delivered_count?.trim() ||
-    (developer.properties_count != null
-      ? `${developer.properties_count}+ Projects`
-      : labels.defaultDelivered);
+  pushFact(
+    facts,
+    labels.establishedLabel,
+    displayString(developer.establishedYear ?? developer.established_year),
+    "established",
+  );
+  pushFact(
+    facts,
+    labels.deliveredLabel,
+    displayString(
+      developer.projectsDelivered ??
+        developer.projects_delivered ??
+        developer.delivered_count,
+    ),
+    "delivered",
+  );
+  pushFact(
+    facts,
+    labels.underDevLabel,
+    displayString(
+      developer.projectsUnderDevelopment ??
+        developer.projects_under_development ??
+        developer.under_development_count,
+    ),
+    "crane",
+  );
+  pushFact(
+    facts,
+    labels.communitiesFactLabel,
+    formatCommunitiesCount(
+      developer.communitiesCount ?? developer.communities_count,
+    ),
+    "communities",
+  );
+  pushFact(
+    facts,
+    labels.unitsLabel,
+    displayString(
+      developer.unitsDisplay ?? developer.units_display ?? developer.units_count,
+    ),
+    "floorplan",
+  );
+  pushFact(
+    facts,
+    labels.presenceLabel,
+    displayString(developer.presence),
+    "globe-presence",
+  );
 
-  const underDev =
-    developer.under_development_count?.trim() ||
-    (offPlanTotal > 0 ? `${offPlanTotal}+ Projects` : labels.defaultUnderDev);
-
-  const communities =
-    developer.communities_count != null
-      ? String(developer.communities_count)
-      : labels.defaultCommunities;
-
-  const units = developer.units_count?.trim() || labels.defaultUnits;
-  const presence = developer.presence?.trim() || labels.defaultPresence;
-
-  return [
-    { label: labels.establishedLabel, value: established, icon: "established" },
-    { label: labels.deliveredLabel, value: delivered, icon: "delivered" },
-    { label: labels.underDevLabel, value: underDev, icon: "crane" },
-    { label: labels.communitiesFactLabel, value: communities, icon: "communities" },
-    { label: labels.unitsLabel, value: units, icon: "floorplan" },
-    { label: labels.presenceLabel, value: presence, icon: "globe-presence" },
-  ];
+  return facts;
 }
 
 const defaultStrengthIcons: IconName[] = [
