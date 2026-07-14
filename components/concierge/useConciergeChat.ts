@@ -28,6 +28,8 @@ export type ConciergeChatMessage = {
   properties?: ApiProperty[];
   isStreaming?: boolean;
   meta?: ConciergeMessageMeta;
+  /** Pin lead UI after this assistant turn so later user messages stay chronologically below it. */
+  leadCapture?: LeadCaptureState | null;
 };
 
 export type ConciergeChatStatus =
@@ -167,11 +169,19 @@ export function useConciergeChat(options: UseConciergeChatOptions = {}) {
         setLeadCapture(session.leadCapture);
         sessionStartedRef.current = true;
 
+        const greetingId = createMessageId();
+        const greetingLead =
+          session.leadCapture.status === "collecting" ||
+          session.leadCapture.status === "qualified"
+            ? session.leadCapture
+            : null;
+
         setMessages([
           {
-            id: createMessageId(),
+            id: greetingId,
             role: "assistant",
             content: session.greeting,
+            leadCapture: greetingLead,
           },
         ]);
 
@@ -322,7 +332,26 @@ export function useConciergeChat(options: UseConciergeChatOptions = {}) {
                   ),
                 );
               },
-              onLeadCapture: (state) => setLeadCapture(state),
+              onLeadCapture: (state) => {
+                setLeadCapture(state);
+                const pinForm =
+                  state.status === "collecting" || state.status === "qualified";
+                setMessages((prev) =>
+                  prev.map((message) => {
+                    if (message.id === assistantId) {
+                      return {
+                        ...message,
+                        leadCapture: pinForm ? state : null,
+                      };
+                    }
+                    // Only one open lead form in the timeline.
+                    if (pinForm && message.leadCapture) {
+                      return { ...message, leadCapture: null };
+                    }
+                    return message;
+                  }),
+                );
+              },
               onMeta: (meta) => {
                 setMessages((prev) =>
                   prev.map((message) =>
@@ -407,10 +436,24 @@ export function useConciergeChat(options: UseConciergeChatOptions = {}) {
         setLeadSubmitted(true);
         setLeadThankYou(result.message);
         setLeadCapture({ status: "submitted", missingFields: [] });
+        setMessages((prev) =>
+          prev.map((message) =>
+            message.leadCapture
+              ? { ...message, leadCapture: null }
+              : message,
+          ),
+        );
       } catch (error) {
         if (isApiError(error) && error.code === "LEAD_ALREADY_SUBMITTED") {
           setLeadSubmitted(true);
           setLeadCapture({ status: "submitted", missingFields: [] });
+          setMessages((prev) =>
+            prev.map((message) =>
+              message.leadCapture
+                ? { ...message, leadCapture: null }
+                : message,
+            ),
+          );
           return;
         }
         setErrorCode(isApiError(error) ? error.code ?? "ERROR" : "ERROR");

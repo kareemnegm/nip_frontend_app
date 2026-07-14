@@ -128,6 +128,73 @@ export function ConciergeChat({
     !leadSubmitted &&
     (leadCapture.status === "collecting" || leadCapture.status === "qualified");
 
+  let leadFormMessageId: string | null = null;
+  if (showLeadForm) {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      if (messages[i]?.leadCapture) {
+        leadFormMessageId = messages[i]!.id;
+        break;
+      }
+    }
+  }
+
+  function renderLeadCaptureBlock() {
+    if (!showLeadForm) return null;
+
+    return (
+      <>
+        {leadCapture.prompt ? (
+          <div className="flex w-full justify-start">
+            <p className={assistantBubbleClass}>{leadCapture.prompt}</p>
+          </div>
+        ) : null}
+
+        <form
+          onSubmit={(event) => void handleLeadSubmit(event)}
+          className="max-w-[460px] space-y-3 rounded-2xl border border-line bg-surface-muted p-4"
+        >
+          <p className="text-body-xs font-semibold text-brand">{t("leadTitle")}</p>
+          <input
+            type="text"
+            required
+            value={leadName}
+            onChange={(event) => setLeadName(event.target.value)}
+            placeholder={t("leadName")}
+            className="h-10 w-full rounded-[var(--radius-field)] border border-line bg-white px-3 text-body-sm outline-none focus:border-brand"
+          />
+          <input
+            type="email"
+            required
+            value={leadEmail}
+            onChange={(event) => setLeadEmail(event.target.value)}
+            placeholder={t("leadEmail")}
+            className="h-10 w-full rounded-[var(--radius-field)] border border-line bg-white px-3 text-body-sm outline-none focus:border-brand"
+          />
+          <input
+            type="tel"
+            value={leadPhone}
+            onChange={(event) => setLeadPhone(event.target.value)}
+            placeholder={t("leadPhone")}
+            className="h-10 w-full rounded-[var(--radius-field)] border border-line bg-white px-3 text-body-sm outline-none focus:border-brand"
+          />
+          <label className="flex items-start gap-2 text-body-xs text-ink-secondary">
+            <input
+              type="checkbox"
+              required
+              checked={leadConsent}
+              onChange={(event) => setLeadConsent(event.target.checked)}
+              className="mt-0.5"
+            />
+            {t("leadConsent")}
+          </label>
+          <Button type="submit" size="sm" disabled={leadSubmitting}>
+            {leadSubmitting ? tc("sending") : t("leadSubmit")}
+          </Button>
+        </form>
+      </>
+    );
+  }
+
   if (status === "loading") {
     return (
       <div
@@ -244,59 +311,13 @@ export function ConciergeChat({
                 ))}
               </div>
             ) : null}
+
+            {message.id === leadFormMessageId ? renderLeadCaptureBlock() : null}
           </div>
         ))}
 
-        {leadCapture.prompt && showLeadForm ? (
-          <div className="flex w-full justify-start">
-            <p className={assistantBubbleClass}>{leadCapture.prompt}</p>
-          </div>
-        ) : null}
-
-        {showLeadForm ? (
-          <form
-            onSubmit={(event) => void handleLeadSubmit(event)}
-            className="max-w-[460px] space-y-3 rounded-2xl border border-line bg-surface-muted p-4"
-          >
-            <p className="text-body-xs font-semibold text-brand">{t("leadTitle")}</p>
-            <input
-              type="text"
-              required
-              value={leadName}
-              onChange={(event) => setLeadName(event.target.value)}
-              placeholder={t("leadName")}
-              className="h-10 w-full rounded-[var(--radius-field)] border border-line bg-white px-3 text-body-sm outline-none focus:border-brand"
-            />
-            <input
-              type="email"
-              required
-              value={leadEmail}
-              onChange={(event) => setLeadEmail(event.target.value)}
-              placeholder={t("leadEmail")}
-              className="h-10 w-full rounded-[var(--radius-field)] border border-line bg-white px-3 text-body-sm outline-none focus:border-brand"
-            />
-            <input
-              type="tel"
-              value={leadPhone}
-              onChange={(event) => setLeadPhone(event.target.value)}
-              placeholder={t("leadPhone")}
-              className="h-10 w-full rounded-[var(--radius-field)] border border-line bg-white px-3 text-body-sm outline-none focus:border-brand"
-            />
-            <label className="flex items-start gap-2 text-body-xs text-ink-secondary">
-              <input
-                type="checkbox"
-                required
-                checked={leadConsent}
-                onChange={(event) => setLeadConsent(event.target.checked)}
-                className="mt-0.5"
-              />
-              {t("leadConsent")}
-            </label>
-            <Button type="submit" size="sm" disabled={leadSubmitting}>
-              {leadSubmitting ? tc("sending") : t("leadSubmit")}
-            </Button>
-          </form>
-        ) : null}
+        {/* Fallback if lead is open but not yet pinned to a message (race). */}
+        {showLeadForm && !leadFormMessageId ? renderLeadCaptureBlock() : null}
 
         {leadSubmitted ? (
           <div className="flex w-full justify-start">
