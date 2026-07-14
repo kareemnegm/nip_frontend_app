@@ -9,6 +9,7 @@ import { cn } from "@/lib/cn";
 import { mapPropertyToCard } from "@/lib/mappers/property";
 import { ConciergeMessageContent } from "./ConciergeMessageContent";
 import { ConciergePropertyCard } from "./ConciergePropertyCard";
+import { ConciergeTypingIndicator } from "./ConciergeTypingIndicator";
 import { useConciergeChat } from "./useConciergeChat";
 
 type ConciergeChatProps = {
@@ -276,8 +277,19 @@ export function ConciergeChat({
           variant === "panel" && "min-h-[280px] p-5 sm:p-6",
         )}
       >
-        {messages.map((message) => (
+        {messages.map((message) => {
+          const isTyping =
+            message.role === "assistant" &&
+            message.isStreaming &&
+            !message.content.trim();
+          const hasAssistantBody =
+            message.role === "user" ||
+            Boolean(message.content.trim()) ||
+            isTyping;
+
+          return (
           <div key={message.id} className="flex w-full flex-col gap-4">
+            {hasAssistantBody ? (
             <div
               className={cn(
                 "flex w-full",
@@ -290,16 +302,17 @@ export function ConciergeChat({
                 }
               >
                 {message.role === "assistant" ? (
-                  message.content ? (
+                  isTyping ? (
+                    <ConciergeTypingIndicator label={t("typing")} />
+                  ) : message.content ? (
                     <ConciergeMessageContent content={message.content} />
-                  ) : message.isStreaming ? (
-                    <span className="text-ink-tertiary">{t("typing")}</span>
                   ) : null
                 ) : (
                   message.content
                 )}
               </div>
             </div>
+            ) : null}
 
             {message.role === "assistant" && message.properties?.length ? (
               <div className="flex flex-col gap-4">
@@ -314,7 +327,8 @@ export function ConciergeChat({
 
             {message.id === leadFormMessageId ? renderLeadCaptureBlock() : null}
           </div>
-        ))}
+          );
+        })}
 
         {/* Fallback if lead is open but not yet pinned to a message (race). */}
         {showLeadForm && !leadFormMessageId ? renderLeadCaptureBlock() : null}

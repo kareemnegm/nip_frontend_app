@@ -632,3 +632,29 @@ article:focus-within .motion-card-image {
 .nip-property-map-frame--embed .nip-property-map-embed {
   filter: grayscale(1) contrast(0.92) brightness(1.03);
 }
+
+/* Concierge chat — typing indicator dots */
+@keyframes concierge-typing-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+.concierge-typing-dot {
+  animation: concierge-typing-dot 1.1s ease-in-out infinite;
+}
+
+.concierge-typing-dot--delay-1 {
+  animation-delay: 0.16s;
+}
+
+.concierge-typing-dot--delay-2 {
+  animation-delay: 0.32s;
+}

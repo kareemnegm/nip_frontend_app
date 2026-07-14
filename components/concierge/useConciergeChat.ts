@@ -247,7 +247,17 @@ export function useConciergeChat(options: UseConciergeChatOptions = {}) {
       setErrorCode(null);
       setErrorMessage(null);
 
-      const activeSessionId = await ensureSession();
+      // Prefer existing session so we can show typing immediately.
+      let activeSessionId = sessionId ?? readStoredSessionId();
+      if (activeSessionId && !sessionId) {
+        setSessionId(activeSessionId);
+        sessionStartedRef.current = true;
+      }
+
+      if (!activeSessionId) {
+        activeSessionId = await beginSession();
+      }
+
       if (!activeSessionId) {
         if (serviceOff && alwaysShowChatUi) {
           setErrorCode("CONCIERGE_DISABLED");
@@ -257,32 +267,36 @@ export function useConciergeChat(options: UseConciergeChatOptions = {}) {
         return;
       }
 
+      const pendingAssistantId = createMessageId();
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: createMessageId(),
+          role: "user",
+          content: trimmed,
+        },
+        {
+          id: pendingAssistantId,
+          role: "assistant",
+          content: "",
+          isStreaming: true,
+        },
+      ]);
+
       const run = async (
         sid: string,
-        options: { retryOnMissing?: boolean; appendUser?: boolean } = {
+        options: {
+          retryOnMissing?: boolean;
+          assistantId?: string;
+          recreateAssistant?: boolean;
+        } = {
           retryOnMissing: true,
-          appendUser: true,
+          assistantId: pendingAssistantId,
         },
       ) => {
-        const assistantId = createMessageId();
+        const assistantId = options.assistantId ?? createMessageId();
 
-        if (options.appendUser) {
-          const userMessage: ConciergeChatMessage = {
-            id: createMessageId(),
-            role: "user",
-            content: trimmed,
-          };
-          setMessages((prev) => [
-            ...prev,
-            userMessage,
-            {
-              id: assistantId,
-              role: "assistant",
-              content: "",
-              isStreaming: true,
-            },
-          ]);
-        } else {
+        if (options.recreateAssistant) {
           setMessages((prev) => [
             ...prev,
             {
@@ -391,7 +405,10 @@ export function useConciergeChat(options: UseConciergeChatOptions = {}) {
             setMessages((prev) => prev.filter((m) => m.id !== assistantId));
             const newSid = await beginSession(true);
             if (newSid) {
-              await run(newSid, { retryOnMissing: false, appendUser: false });
+              await run(newSid, {
+                retryOnMissing: false,
+                recreateAssistant: true,
+              });
               return;
             }
           }
@@ -414,9 +431,9 @@ export function useConciergeChat(options: UseConciergeChatOptions = {}) {
         }
       };
 
-      await run(activeSessionId);
+      await run(activeSessionId, { assistantId: pendingAssistantId });
     },
-    [alwaysShowChatUi, beginSession, ensureSession, locale, config, sessionId, status],
+    [alwaysShowChatUi, beginSession, locale, config, sessionId, status],
   );
 
   const submitLead = useCallback(
