@@ -4,7 +4,6 @@ import { ContactRequirementForm } from "@/components/forms/ContactRequirementFor
 import { InquiryForm } from "@/components/forms/InquiryForms";
 import { Button } from "./Button";
 import { Select, Textarea, TextInput } from "./FormControls";
-import { Icon } from "./Icon";
 
 const insightCategoryOptions = [
   { label: "Select a category", value: "" },
@@ -56,7 +55,6 @@ export function ContributeInsightForm() {
         <div className="flex w-full flex-col gap-1.5">
           <p className={fieldLabelClassName}>Draft</p>
           <div className="flex w-full flex-col items-center justify-center gap-1 rounded-[var(--radius-card)] border border-dashed border-border-default bg-sapphire-50 py-6 text-center">
-            <Icon name="upload" className="h-6 w-6 text-brand" />
             <p className="text-body-sm font-medium text-ink-tertiary">
               Drop your draft here or browse
             </p>

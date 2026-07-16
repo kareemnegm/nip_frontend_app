@@ -63,12 +63,12 @@ export function LabeledSelect({
     <div className={cn("relative", widthClassName, className)}>
       <div
         className={cn(
-          "pointer-events-none flex w-full items-center gap-1.5 rounded-[var(--radius-field)] border bg-white pl-3.5 pr-3",
+          "pointer-events-none flex w-full items-center gap-1.5 overflow-hidden rounded-[var(--radius-field)] border bg-white pl-3.5 pr-3",
           heightClassName,
           borderClassName,
         )}
       >
-        <span className="shrink-0 text-label font-medium text-ink-secondary">
+        <span className="min-w-0 flex-1 truncate text-label font-medium text-ink-secondary">
           {displayLabel}
         </span>
         <SelectChevron />

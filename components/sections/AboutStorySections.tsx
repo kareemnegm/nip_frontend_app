@@ -15,10 +15,9 @@ import { getRequestLocale } from "@/lib/i18n/server";
 
 const aboutBlocks = pageBlockKeys.about;
 
-const aboutHeadingClassName =
-  "font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-1.2px] text-brand";
+const aboutHeadingClassName = "font-display text-heading-h1 uppercase text-brand";
 
-const aboutBodyClassName = "text-[17px] leading-[28px] text-ink-secondary";
+const aboutBodyClassName = "text-body-lg text-ink-secondary";
 
 const partnerLogoSlots = [
   {
@@ -69,7 +68,7 @@ export function AboutCtaRow({ className }: { className?: string }) {
       <SpeakWithNipButton href="/contact" className="flex-1 justify-center" />
       <Link
         href="/insights"
-        className="inline-flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-field)] bg-accent px-6 py-[9px] text-[13px] font-semibold leading-[18px] text-white transition-colors hover:bg-accent-hover active:bg-accent-pressed"
+        className="inline-flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-field)] bg-accent px-6 py-[9px] text-label font-semibold text-white transition-colors hover:bg-accent-hover active:bg-accent-pressed"
       >
         Read our Insights
         <Icon name="arrowRight" className="h-4 w-4 shrink-0" />
@@ -84,7 +83,12 @@ export async function AboutHeroSection() {
   return (
     <section id="team" data-site-hero className="bg-white pt-[72px] pb-12">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div className="mx-auto flex w-full max-w-[846px] flex-col items-center gap-10 text-center">
+        <div
+          className={cn(
+            sitePageInnerClassName,
+            "flex flex-col items-center gap-10 text-center",
+          )}
+        >
           <div className="flex flex-col items-center gap-4">
             <EditableText
               relUrl={aboutBlocks.relUrl}
@@ -108,7 +112,7 @@ export async function AboutHeroSection() {
                 locale,
               )}
               placeholderTag="h1"
-              className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.88px] text-brand"
+              className="font-display text-display-sm uppercase text-brand sm:text-display-lg"
             />
             <EditableText
               relUrl={aboutBlocks.relUrl}
@@ -312,7 +316,7 @@ export async function AboutStandardSection() {
                 locale,
               )}
               placeholderTag="p"
-              className="text-[13px] font-semibold italic leading-[18px] text-ink-secondary"
+              className="text-body-sm font-semibold italic text-ink-secondary"
             />
           </div>
           <AboutCtaRow />

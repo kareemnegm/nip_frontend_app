@@ -17,7 +17,6 @@ components/forms/CmsLoginForm.tsx
 components/forms/InquiryForms.tsx
 components/forms/MemberAdvisorMessageForm.tsx
 components/MobileNav.tsx
-components/sections/AboutStorySections.tsx
 components/sections/AreaStorySections.tsx
 components/sections/CatalogHeroSection.tsx
 components/sections/ConciergeStorySections.tsx

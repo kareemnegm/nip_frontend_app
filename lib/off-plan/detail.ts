@@ -176,6 +176,25 @@ export function resolveUnitTypes(property: ApiProperty): string {
   return "1–4 Bed";
 }
 
+/** Raw payment_plan_summary_parts values, fixed length 4 (unused slots are null) */
+export function resolvePaymentSplitParts(
+  property: ApiProperty,
+): (number | null)[] {
+  const parts = property.paymentPlanSummaryParts ?? property.payment_plan_summary_parts;
+  if (!parts?.length) return [null, null, null, null];
+  const normalized = parts.slice(0, 4).map((value) =>
+    typeof value === "number" && Number.isFinite(value) ? value : null,
+  );
+  while (normalized.length < 4) normalized.push(null);
+  return normalized;
+}
+
+/** Mirrors the backend join rule: filled parts joined with " / ", e.g. [60,40] -> "60 / 40" */
+function summaryFromParts(parts: (number | null)[]): string | null {
+  const filled = parts.filter((value): value is number => value != null);
+  return filled.length ? filled.join(" / ") : null;
+}
+
 export function resolvePaymentSplit(property: ApiProperty): string {
   // Prefer new camelCase shape from backend
   if (property.paymentPlanSummary?.trim()) {
@@ -185,6 +204,9 @@ export function resolvePaymentSplit(property: ApiProperty): string {
   if (property.payment_plan_summary?.trim()) {
     return property.payment_plan_summary;
   }
+  // Derive from raw parts array when only that is present
+  const fromParts = summaryFromParts(resolvePaymentSplitParts(property));
+  if (fromParts) return fromParts;
   // Legacy payment_split field
   return property.payment_split?.trim() || "60 / 40";
 }

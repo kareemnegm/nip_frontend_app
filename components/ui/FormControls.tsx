@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { cn } from "@/lib/cn";
 
 type FieldShellProps = {
@@ -66,10 +69,40 @@ export function Textarea({ label, labelClassName, className, error, ...props }: 
   );
 }
 
-export function Select({ label, labelClassName, options, className, ...props }: SelectProps) {
+export function Select({ label, labelClassName, options, className, value, defaultValue, onChange, ...props }: SelectProps) {
+  // Placeholder options (empty value) render in the same muted color as other
+  // fields' placeholder text — the browser default paints select text black
+  // regardless of whether a real value was picked, so we track it ourselves.
+  const isControlled = value !== undefined;
+  const [uncontrolledValue, setUncontrolledValue] = useState(
+    String(defaultValue ?? options[0]?.value ?? ""),
+  );
+
+  const currentValue = isControlled ? String(value) : uncontrolledValue;
+  const isPlaceholder = currentValue === "";
+
+  const selectProps = isControlled
+    ? { value }
+    : { defaultValue: defaultValue ?? options[0]?.value };
+
   return (
     <FieldShell label={label} labelClassName={labelClassName}>
-      <select className={cn(fieldClasses, "appearance-auto", className)} {...props}>
+      <select
+        className={cn(
+          fieldClasses,
+          "appearance-auto",
+          isPlaceholder && "text-text-inactive",
+          className,
+        )}
+        onChange={(event) => {
+          if (!isControlled) {
+            setUncontrolledValue(event.target.value);
+          }
+          onChange?.(event);
+        }}
+        {...selectProps}
+        {...props}
+      >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
