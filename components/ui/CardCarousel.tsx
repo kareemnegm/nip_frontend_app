@@ -27,24 +27,34 @@ type CardCarouselProps = {
 };
 
 function getScrollMetrics(element: HTMLElement, isRtl: boolean) {
-  const { scrollLeft, scrollWidth, clientWidth } = element;
-  const maxScroll = Math.max(0, scrollWidth - clientWidth);
-
+  const maxScroll = Math.max(0, element.scrollWidth - element.clientWidth);
   if (maxScroll <= 1) {
     return { canScrollPrev: false, canScrollNext: false };
   }
 
+  const first = element.firstElementChild as HTMLElement | null;
+  const last = element.lastElementChild as HTMLElement | null;
+  if (!first || !last) {
+    return { canScrollPrev: false, canScrollNext: false };
+  }
+
+  // Prefer geometry over scrollLeft — RTL scrollLeft signs differ by browser.
+  const containerRect = element.getBoundingClientRect();
+  const firstRect = first.getBoundingClientRect();
+  const lastRect = last.getBoundingClientRect();
+  const epsilon = 2;
+
   if (isRtl) {
-    const normalizedLeft = Math.abs(scrollLeft);
+    // Start is on the right: next reveals content to the left.
     return {
-      canScrollPrev: normalizedLeft < maxScroll - 1,
-      canScrollNext: normalizedLeft > 1,
+      canScrollPrev: firstRect.right > containerRect.right + epsilon,
+      canScrollNext: lastRect.left < containerRect.left - epsilon,
     };
   }
 
   return {
-    canScrollPrev: scrollLeft > 1,
-    canScrollNext: scrollLeft < maxScroll - 1,
+    canScrollPrev: firstRect.left < containerRect.left - epsilon,
+    canScrollNext: lastRect.right > containerRect.right + epsilon,
   };
 }
 
@@ -52,20 +62,27 @@ function getActiveSlideIndex(
   scroller: HTMLElement,
   slides: HTMLDivElement[],
   snapAlign: "start" | "center",
+  isRtl: boolean,
 ) {
+  const scrollerRect = scroller.getBoundingClientRect();
   const anchor =
     snapAlign === "center"
-      ? scroller.scrollLeft + scroller.clientWidth / 2
-      : scroller.scrollLeft + 16;
+      ? scrollerRect.left + scrollerRect.width / 2
+      : isRtl
+        ? scrollerRect.right - 16
+        : scrollerRect.left + 16;
 
   let closest = 0;
   let minDistance = Number.POSITIVE_INFINITY;
 
   slides.forEach((slide, index) => {
+    const rect = slide.getBoundingClientRect();
     const slideAnchor =
       snapAlign === "center"
-        ? slide.offsetLeft + slide.offsetWidth / 2
-        : slide.offsetLeft;
+        ? rect.left + rect.width / 2
+        : isRtl
+          ? rect.right
+          : rect.left;
     const distance = Math.abs(anchor - slideAnchor);
     if (distance < minDistance) {
       minDistance = distance;
@@ -128,7 +145,8 @@ export function CardCarousel({
     );
     if (slides.length === 0) return;
 
-    const currentIndex = getActiveSlideIndex(element, slides, snapAlign);
+    const isRtl = document.documentElement.dir === "rtl";
+    const currentIndex = getActiveSlideIndex(element, slides, snapAlign, isRtl);
     const nextIndex =
       direction === "next"
         ? Math.min(currentIndex + 1, slides.length - 1)
