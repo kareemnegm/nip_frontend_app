@@ -38,7 +38,7 @@ export const cardTypography = {
   badge:
     "rounded-[2px] bg-basalt-50 px-2.5 py-1 text-label-muted font-medium text-ink-secondary",
   cta: "inline-flex shrink-0 items-center gap-1 text-label-semibold font-semibold text-accent",
-  ctaIcon: "h-4 w-4",
+  ctaIcon: "h-4 w-4 rtl:rotate-180",
   category: "text-overline font-semibold uppercase text-accent",
   excerpt: "text-body-sm text-ink-secondary",
   metaMuted: "text-label-muted font-medium text-platinum-400",
@@ -79,7 +79,7 @@ type CommunityCardProps = BaseCardProps & {
   title: string;
   description?: string;
   facts: string[];
-  projectCount?: string;
+  projectCount?: number;
   href?: string;
 };
 
@@ -460,7 +460,7 @@ export function AdvisorCard({
   const viewControl = (
     <span className="inline-flex items-center gap-1 rounded-[4px] bg-accent px-3 py-1.5 text-xs font-semibold leading-4 text-white">
       View
-      <Icon name="arrowRight" className="h-4 w-4" />
+      <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
     </span>
   );
 
@@ -518,7 +518,7 @@ export function CommunityCard({
   title,
   description,
   facts,
-  projectCount = "Projects Available",
+  projectCount = 0,
   href,
   imageUrl,
   className,
@@ -586,11 +586,13 @@ export function CommunityCard({
           ) : null}
         </div>
         <div className="mt-auto flex items-center justify-between gap-4">
-          <span className={cardTypography.badge}>{projectCount}</span>
+          <span className={cardTypography.badge}>
+            {t("projectsAvailable", { count: projectCount })}
+          </span>
           {href ? (
             <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
               {t("exploreArea")}{" "}
-              <Icon name="arrowRight" className={cn(cardTypography.ctaIcon, "rtl:rotate-180")} />
+              <Icon name="arrowRight" className={cardTypography.ctaIcon} />
             </span>
           ) : null}
         </div>

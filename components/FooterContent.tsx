@@ -263,11 +263,16 @@ export async function FooterContent({
     { label: t("submitArticle"), href: "/contribute" },
   ];
 
+  // The backend doesn't localize blog category names yet — translate the
+  // known slugs on the frontend so the footer isn't English-only in Arabic.
+  const categoryLabels = (t.raw as (key: string) => Record<string, string>)(
+    "blogCategoryLabels",
+  );
   const blogCategories = await getBlogCategories(locale);
   const insightsLinks: FooterLink[] =
     blogCategories.length > 0
       ? blogCategories.map((category) => ({
-          label: category.name,
+          label: categoryLabels[category.slug] ?? category.name,
           href: `/insights?category=${encodeURIComponent(category.slug)}`,
         }))
       : [

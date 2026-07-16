@@ -74,6 +74,12 @@
     "investmentGuides": "Investment Guides",
     "goldenVisa": "Golden Visa",
     "journal": "Journal",
+    "blogCategoryLabels": {
+      "market-insights": "Market Insights",
+      "tips": "Tips",
+      "investment-guide": "Investment Guide",
+      "lifestyle": "Lifestyle"
+    },
     "aboutNip": "About NIP",
     "aboutUs": "About Us",
     "ourApproach": "Our Approach",
@@ -310,6 +316,7 @@
     "nextPhoto": "Next photo",
     "exploreProperty": "Explore Property",
     "exploreArea": "Explore Area",
+    "projectsAvailable": "{count, plural, one {# Project Available} other {# Projects Available}}",
     "startingFrom": "Starting From",
     "handoverLabel": "Handover",
     "paymentPlanAvailable": "Payment Plan Available",

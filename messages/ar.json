@@ -74,6 +74,12 @@
     "investmentGuides": "أدلة الاستثمار",
     "goldenVisa": "الإقامة الذهبية",
     "journal": "المجلة",
+    "blogCategoryLabels": {
+      "market-insights": "رؤى السوق",
+      "tips": "نصائح",
+      "investment-guide": "دليل الاستثمار",
+      "lifestyle": "نمط الحياة"
+    },
     "aboutNip": "عن NIP",
     "aboutUs": "من نحن",
     "ourApproach": "نهجنا",
@@ -310,6 +316,7 @@
     "nextPhoto": "الصورة التالية",
     "exploreProperty": "استكشف العقار",
     "exploreArea": "استكشف المنطقة",
+    "projectsAvailable": "{count, plural, one {مشروع واحد متاح} other {# مشروع متاح}}",
     "startingFrom": "يبدأ من",
     "handoverLabel": "التسليم",
     "paymentPlanAvailable": "خطة دفع متاحة",

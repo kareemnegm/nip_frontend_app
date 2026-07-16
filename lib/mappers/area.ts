@@ -7,7 +7,7 @@ export type CommunityCardModel = {
   title: string;
   description: string;
   facts: string[];
-  projectCount: string;
+  projectCount: number;
   href: string;
   imageUrl?: string;
 };
@@ -35,14 +35,12 @@ export function mapAreaToCommunityCard(
     facts.push(area.lifestyle);
   }
 
-  const count = area.project_count ?? 0;
-
   return {
     title: area.name,
     description:
       resolveAreaCardDescription(area) || options?.descriptionFallback?.trim() || "",
     facts: facts.slice(0, 4),
-    projectCount: `${count} Project${count === 1 ? "" : "s"} Available`,
+    projectCount: area.project_count ?? 0,
     href: localizedHref(locale, `/areas/${area.slug}`),
     imageUrl: resolveMediaUrl(area.image_url ?? area.photo_url),
   };
