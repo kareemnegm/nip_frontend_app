@@ -1,6 +1,6 @@
 import type { FactItem } from "@/components/ui/FactsStrip";
 import { formatAedPrice, formatFurnishing } from "@/lib/mappers/property";
-import type { ApiProperty } from "@/types/api/property";
+import type { ApiAvailableUnit, ApiProperty } from "@/types/api/property";
 
 /** Normalized payment step for UI rendering */
 export type PaymentPlanStep = {
@@ -139,25 +139,65 @@ export function defaultUnits(
   ];
 }
 
+/** Builds "750" or "750–850" when no ready-made label is provided */
+function formatSizeRange(
+  from: number | null | undefined,
+  to: number | null | undefined,
+): string | null {
+  if (from == null) return null;
+  if (to == null || to === from) return String(from);
+  return `${from}–${to}`;
+}
+
+/** Builds "AED 902,500" or "AED 902,500 – 1,200,000" when no ready-made label is provided */
+function formatPriceRange(
+  from: number | null | undefined,
+  to: number | null | undefined,
+): string | null {
+  if (from == null) return null;
+  if (to == null || to === from) return `AED ${formatAedPrice(from)}`;
+  return `AED ${formatAedPrice(from)} – ${formatAedPrice(to)}`;
+}
+
+function mapAvailableUnit(unit: ApiAvailableUnit): AvailableUnitRow {
+  const sizeLabel =
+    unit.sizeSqftLabel ??
+    unit.size_sqft_label ??
+    formatSizeRange(
+      unit.sizeSqftFrom ?? unit.size_sqft_from,
+      unit.sizeSqftTo ?? unit.size_sqft_to,
+    ) ??
+    // Legacy "size_sqft" is a plain string equivalent of sizeSqftLabel
+    unit.size_sqft;
+
+  const priceLabel =
+    unit.startingPriceLabel ??
+    unit.starting_price_label ??
+    formatPriceRange(
+      unit.startingPriceFrom ?? unit.starting_price_from,
+      unit.startingPriceTo ?? unit.starting_price_to,
+    ) ??
+    // Legacy "starting_price" is a plain number equivalent of startingPriceFrom
+    formatUnitPrice(unit.starting_price);
+
+  return {
+    unit_type: unit.unitType ?? unit.unit_type,
+    size_sqft: sizeLabel ?? "—",
+    starting_price: priceLabel,
+  };
+}
+
 export function resolveUnits(
   property: ApiProperty,
   labels: OffPlanDetailLabels,
 ): AvailableUnitRow[] {
   // Prefer new camelCase shape from backend
   if (property.availableUnits?.length) {
-    return property.availableUnits.map((unit) => ({
-      unit_type: unit.unit_type,
-      size_sqft: unit.size_sqft ?? "—",
-      starting_price: formatUnitPrice(unit.starting_price),
-    }));
+    return property.availableUnits.map(mapAvailableUnit);
   }
   // Fallback to snake_case shape
   if (property.available_units?.length) {
-    return property.available_units.map((unit) => ({
-      unit_type: unit.unit_type,
-      size_sqft: unit.size_sqft ?? "—",
-      starting_price: formatUnitPrice(unit.starting_price),
-    }));
+    return property.available_units.map(mapAvailableUnit);
   }
   // Legacy units field
   if (property.units?.length) {

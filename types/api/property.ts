@@ -53,8 +53,25 @@ export type ApiUnit = {
 /** New available unit shape from backend */
 export type ApiAvailableUnit = {
   unit_type: string;
+  unitType?: string;
+  /** Legacy — same as sizeSqftLabel */
   size_sqft?: string;
+  /** Legacy — same as startingPriceFrom */
   starting_price?: number;
+  size_sqft_from?: number | null;
+  sizeSqftFrom?: number | null;
+  size_sqft_to?: number | null;
+  sizeSqftTo?: number | null;
+  starting_price_from?: number | null;
+  startingPriceFrom?: number | null;
+  starting_price_to?: number | null;
+  startingPriceTo?: number | null;
+  /** Ready-made display, e.g. "750–850" or "850" */
+  size_sqft_label?: string | null;
+  sizeSqftLabel?: string | null;
+  /** Ready-made display, e.g. "AED 902,500" or "AED 902,500 – 1,200,000" */
+  starting_price_label?: string | null;
+  startingPriceLabel?: string | null;
 };
 
 export type ApiProperty = {
