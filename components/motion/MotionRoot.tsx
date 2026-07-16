@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const REVEAL_SELECTOR = "[data-reveal]";
 const COUNT_SELECTOR = "[data-count]";
@@ -258,6 +258,21 @@ export function MotionRoot() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const searchKey = searchParams.toString();
+  const prevPathnameRef = useRef(pathname);
+
+  // A new page (e.g. clicking any footer/header link) must always open at the
+  // top. Only react to real page-to-page navigation — filter/sort/view
+  // controls intentionally keep their scroll position by changing just the
+  // query string on the same pathname (see PropertyFilterBar / PropertyResultsToolbar),
+  // so those must not trigger this. Cross-page links with a `#section` hash
+  // are left alone so Next.js can scroll to that section instead of the top.
+  useEffect(() => {
+    if (prevPathnameRef.current === pathname) return;
+    prevPathnameRef.current = pathname;
+
+    if (window.location.hash) return;
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [pathname]);
 
   useEffect(() => {
     let cleanup = initMotion();

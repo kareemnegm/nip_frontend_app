@@ -13,8 +13,13 @@ import { localizedHref } from "@/lib/i18n/helpers";
 const compactLabelClassName = "text-label-muted font-medium text-ink";
 /** Figma "04 Label/Default" (13/18/500) — two-column select labels: Preferred language, Lead type, Budget range, Timeline. */
 const defaultLabelClassName = "text-label font-medium text-ink";
-/** Figma select fields sit on a slightly lighter border than the free-text fields. */
-const selectFieldClassName = "border-sapphire-200 text-basalt-300";
+/**
+ * Figma select fields sit on a slightly lighter border than the free-text fields.
+ * No text color override here — `Select` already darkens to `text-ink` once a
+ * real value is picked and keeps `text-text-inactive` for the placeholder, so a
+ * chosen option reads visibly darker than an unset one.
+ */
+const selectFieldClassName = "border-sapphire-200";
 
 /**
  * Figma "T14 · Speak with NIP" contact form (`1525:27475`).
