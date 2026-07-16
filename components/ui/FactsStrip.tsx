@@ -53,6 +53,7 @@ export function FactsStrip({
                 </p>
                 <p
                   className={cn(
+                    "truncate",
                     variant === "property-detail"
                       ? "text-[15px] font-bold leading-[22px] tracking-[-0.15px] text-brand"
                       : "text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand",

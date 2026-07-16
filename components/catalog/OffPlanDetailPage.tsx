@@ -63,8 +63,6 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
     paymentLabel: t("paymentLabel"),
     statusLabel: t("statusLabel"),
     statusOffPlan: t("statusOffPlan"),
-    furnishingFactLabel: t("furnishingLabel"),
-    referenceFactLabel: t("referenceLabel"),
     paymentStep1Caption: t("paymentStep1Caption"),
     paymentStep1Label: t("paymentStep1Label"),
     paymentStep2Caption: t("paymentStep2Caption"),
