@@ -64,7 +64,7 @@ export function CtaBand({
           ) : null}
         </div>
         {actions ? (
-          <div className="flex flex-col items-stretch justify-center gap-4 sm:flex-row sm:items-center">
+          <div className="flex flex-row items-stretch justify-center gap-2 sm:items-center sm:gap-4">
             {actions}
           </div>
         ) : null}

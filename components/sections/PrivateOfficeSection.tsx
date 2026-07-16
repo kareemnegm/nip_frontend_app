@@ -62,11 +62,11 @@ export async function PrivateOfficeSection() {
           </p>
 
           {/* CTAs — Figma: gap-12, w-340 */}
-          <div className="flex w-full max-w-[340px] flex-col items-stretch justify-center gap-3 sm:flex-row">
-            <Button href="/contact" variant="accent" size="lg" className="w-full flex-1">
+          <div className="flex w-full max-w-[400px] flex-row items-stretch justify-center gap-2 sm:max-w-[340px] sm:gap-3">
+            <Button href="/contact" variant="accent" size="lg" className="min-w-0 flex-1 basis-0 justify-center">
               {tCommon("requestAccess")}
             </Button>
-            <Button href="/private-office" variant="outlineInverse" size="lg" className="w-full flex-1">
+            <Button href="/private-office" variant="outlineInverse" size="lg" className="min-w-0 flex-1 basis-0 justify-center">
               {tCommon("signIn")}
             </Button>
           </div>

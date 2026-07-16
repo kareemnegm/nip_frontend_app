@@ -1,7 +1,6 @@
-import { AppLink as Link } from "@/components/AppLink";
 import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
-import { SpeakWithNipButton } from "@/components/ui/Button";
+import { SpeakWithNipButton, Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import {
   siteMaxWidth,
@@ -64,15 +63,17 @@ const partnerLogoSlots = [
 
 export function AboutCtaRow({ className }: { className?: string }) {
   return (
-    <div className={cn("flex w-full max-w-[400px] gap-3", className)}>
-      <SpeakWithNipButton href="/contact" className="flex-1 justify-center" />
-      <Link
+    <div className={cn("flex w-full max-w-[400px] flex-row items-stretch gap-2 sm:gap-3", className)}>
+      <SpeakWithNipButton href="/contact" className="min-w-0 flex-1 basis-0 justify-center" />
+      <Button
         href="/insights"
-        className="inline-flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-field)] bg-accent px-6 py-[9px] text-label font-semibold text-white transition-colors hover:bg-accent-hover active:bg-accent-pressed"
+        variant="accent"
+        size="lg"
+        className="min-w-0 flex-1 basis-0 justify-center gap-1"
       >
         Read our Insights
         <Icon name="arrowRight" className="h-4 w-4 shrink-0" />
-      </Link>
+      </Button>
     </div>
   );
 }

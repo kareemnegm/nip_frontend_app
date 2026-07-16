@@ -66,7 +66,7 @@ const variantClasses: Record<ButtonVariant, string> = {
 const sizeClasses: Record<ButtonSize, string> = {
   sm: "h-8 px-4 text-xs leading-4",
   md: "px-6 py-[9px] text-xs leading-4",
-  lg: "px-6 py-[9px] text-[13px] leading-[18px]",
+  lg: "px-3 py-[9px] text-xs leading-4 sm:px-6 sm:text-[13px] sm:leading-[18px]",
 };
 
 export function SpeakWithNipButton({
@@ -92,7 +92,7 @@ export function SpeakWithNipButton({
   );
 
   const classes = cn(
-    "inline-flex items-center justify-center gap-[3px] rounded-[var(--radius-field)] bg-sapphire-600 px-[24px] py-[9px] text-xs leading-4 text-white transition-colors hover:bg-brand-hover active:bg-brand-pressed",
+    "inline-flex items-center justify-center gap-[3px] whitespace-nowrap rounded-[var(--radius-field)] bg-sapphire-600 px-[24px] py-[9px] text-xs leading-4 text-white transition-colors hover:bg-brand-hover active:bg-brand-pressed",
     className,
   );
 
@@ -123,7 +123,7 @@ export function Button({
   const localeContext = useOptionalLocale();
   const resolvedHref = resolveHref(href, localeContext?.locale);
   const classes = cn(
-    "inline-flex items-center justify-center gap-2 rounded-[var(--radius-field)] font-semibold leading-4 transition-colors disabled:pointer-events-none disabled:opacity-40",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-field)] font-semibold leading-4 transition-colors disabled:pointer-events-none disabled:opacity-40",
     variantClasses[variant],
     variant !== "link" && sizeClasses[size],
     variant === "link" && "h-auto text-sm",

@@ -75,7 +75,7 @@ export function PageHero({
           {actions ? (
             <div
               className={cn(
-                "mt-8 flex flex-col gap-4 sm:flex-row",
+                "mt-8 flex flex-row flex-wrap items-stretch justify-center gap-2 sm:gap-4",
                 align === "center" && "justify-center",
               )}
             >

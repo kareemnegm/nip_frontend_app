@@ -225,7 +225,7 @@ export async function CuratedAdvisorBarSection({
               {t("messageDirectly", { name })}
             </p>
           </div>
-          <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+          <div className="flex w-full flex-row items-stretch gap-2 sm:w-auto sm:gap-3">
             <MemberAdvisorMessageDialog advisorName={name} locale={locale} />
             <MemberSignOutButton redirectTo={localizedHref(locale, "/private-office")} />
           </div>

@@ -42,13 +42,13 @@ export function ServerErrorSectionWithRetry({ onRetry }: ServerErrorSectionWithR
             {clientTPath(locale, "placeholders.serverError.description")}
           </p>
 
-          <div className="mt-10 flex w-full max-w-[400px] flex-col gap-3 sm:flex-row">
-            <Button onClick={onRetry} className="flex-1 justify-center">
+          <div className="mt-10 flex w-full max-w-[400px] flex-row items-stretch gap-2 sm:gap-3">
+            <Button onClick={onRetry} className="min-w-0 flex-1 basis-0 justify-center">
               {retryLabel}
             </Button>
             <Link
               href="/"
-              className="inline-flex flex-1 items-center justify-center gap-1 rounded-[var(--radius-field)] bg-accent px-6 py-[9px] text-[13px] font-semibold leading-[18px] text-white transition-colors hover:bg-accent-hover active:bg-accent-pressed"
+              className="inline-flex min-w-0 flex-1 basis-0 items-center justify-center gap-1 whitespace-nowrap rounded-[var(--radius-field)] bg-accent px-3 py-[9px] text-xs font-semibold leading-4 text-white transition-colors hover:bg-accent-hover active:bg-accent-pressed sm:px-6 sm:text-[13px] sm:leading-[18px]"
             >
               {clientT(locale, "common", "backToHome")}
               <Icon name="arrowRight" className="h-4 w-4 shrink-0 rtl:rotate-180" />

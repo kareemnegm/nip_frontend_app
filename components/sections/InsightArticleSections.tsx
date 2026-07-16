@@ -202,7 +202,7 @@ export function RelatedInsightsSection({ title, cards }: RelatedInsightsSectionP
           </p>
           <div className="grid w-full gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {cards.map((insight) => (
-              <InsightCard key={insight.href} className="min-h-[438px]" {...insight} />
+              <InsightCard key={insight.href} {...insight} />
             ))}
           </div>
         </div>

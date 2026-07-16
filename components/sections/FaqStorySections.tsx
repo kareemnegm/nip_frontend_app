@@ -119,16 +119,16 @@ export async function FaqCtaSection() {
             className="max-w-[520px] text-body-sm leading-[18px] text-ink-tertiary"
           />
           {/* Figma 1525:27566 — gap:12px; each button flex:1 0 0 + whitespace-nowrap (labels never wrap) */}
-          <div className="flex items-stretch justify-center gap-3">
+          <div className="flex w-full max-w-[400px] flex-row items-stretch justify-center gap-2 sm:gap-3">
             <LocalizedLink
               href="/concierge"
-              className="inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[var(--radius-field)] bg-accent px-6 py-[9px] text-xs font-semibold leading-4 text-white transition-colors hover:bg-accent-hover active:bg-accent-pressed"
+              className="inline-flex min-w-0 flex-1 basis-0 items-center justify-center whitespace-nowrap rounded-[var(--radius-field)] bg-accent px-3 py-[9px] text-xs font-semibold leading-4 text-white transition-colors hover:bg-accent-hover active:bg-accent-pressed sm:px-6"
             >
               {tc("askConcierge")}
             </LocalizedLink>
             <SpeakWithNipButton
               href="/contact"
-              className="shrink-0 whitespace-nowrap"
+              className="min-w-0 flex-1 basis-0 justify-center"
             />
           </div>
         </div>

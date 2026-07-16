@@ -28,12 +28,12 @@ export async function HomeCtaSection() {
         />
         {/* Figma 1525:28344 — gap:12px; each button: flex:1 0 0, align-self:stretch, px-6 py-[9px], gap-1, whitespace-nowrap */}
         {/* Figma 1525:28344: row w=356px, gap=12px → each button exactly (356-12)/2 = 172px */}
-        <div className="flex w-[356px] items-stretch gap-3">
+        <div className="flex w-full max-w-[400px] flex-row items-stretch gap-2 sm:max-w-[356px] sm:gap-3">
           <Button
             href="/contact"
             variant="primary"
             size="lg"
-            className="flex-1 basis-0 gap-[3px] whitespace-nowrap"
+            className="min-w-0 flex-1 basis-0 justify-center gap-[3px]"
           >
             <span className="font-semibold">{tc("speakWith")}</span>
             <span className="font-[family-name:var(--font-logo)] font-medium">{tc("nip")}</span>
@@ -42,7 +42,7 @@ export async function HomeCtaSection() {
             href="/concierge"
             variant="accent"
             size="lg"
-            className="flex-1 basis-0 gap-1 whitespace-nowrap"
+            className="min-w-0 flex-1 basis-0 justify-center gap-1"
           >
             {tc("askConcierge")}
             <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />

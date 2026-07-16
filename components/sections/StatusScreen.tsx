@@ -61,7 +61,7 @@ export function StatusScreen({
           </p>
         ) : null}
         {actions ? (
-          <div className="mt-8 flex flex-col items-stretch justify-center gap-4 sm:flex-row sm:items-center">
+          <div className="mt-8 flex flex-row items-stretch justify-center gap-2 sm:items-center sm:gap-4">
             {actions}
           </div>
         ) : null}

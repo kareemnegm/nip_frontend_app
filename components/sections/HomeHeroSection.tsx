@@ -86,12 +86,12 @@ export async function HomeHeroSection() {
           />
         </div>
 
-        <div className="flex w-full max-w-[452px] flex-row items-stretch gap-2 sm:gap-3 sm:items-center">
+        <div className="flex w-full max-w-[452px] flex-row items-stretch gap-2 sm:gap-3">
           <Button
             href="/insights"
             variant="accent"
             size="lg"
-            className="min-w-0 flex-1 justify-center gap-1 px-3 sm:px-6"
+            className="min-w-0 flex-1 basis-0 justify-center gap-1"
           >
             {t("readInsights")}{" "}
             <Icon name="arrowRight" className="h-4 w-4 shrink-0 rtl:rotate-180" />
@@ -100,7 +100,7 @@ export async function HomeHeroSection() {
             href="/contact"
             variant="outlineInverse"
             size="lg"
-            className="min-w-0 flex-1 justify-center gap-[3px] px-3 sm:px-6"
+            className="min-w-0 flex-1 basis-0 justify-center gap-[3px]"
           >
             <span className="font-semibold">{tc("speakWith")}</span>
             <span className="font-[family-name:var(--font-logo)] font-medium">{tc("nip")}</span>

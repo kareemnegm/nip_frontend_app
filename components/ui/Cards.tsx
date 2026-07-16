@@ -20,8 +20,9 @@ export const cardTypography = {
   body: "flex flex-1 flex-col justify-between px-6 pb-4 pt-6",
   /** Figma "Description" frame — pt 24, px 24, pb 16, no forced row heights (avoids dead space under short titles) */
   bodySale: "flex flex-1 flex-col px-6 pb-4 pt-6",
-  /** Figma Card / Insight 1525:28283 — Description: pt 24, px 24, pb 8, justify-between */
-  bodyInsight: "flex flex-1 flex-col justify-between px-6 pb-2 pt-6",
+  /** Figma Card / Insight 1525:28283 — Description: pt 24, px 24, pb 8, space-between */
+  bodyInsight:
+    "flex min-h-0 flex-1 flex-col justify-between overflow-hidden px-6 pb-2 pt-6",
   title: "text-h3 font-bold text-brand",
   titleTwoLine: "line-clamp-2",
   location: "flex items-center gap-1 text-body-sm text-ink-tertiary",
@@ -397,12 +398,13 @@ export function InsightCard({
   const [imageError, setImageError] = useState(false);
   const showImage = Boolean(imageUrl) && !imageError;
 
+  // Figma Card / Insight 1525:28283 — 480×440, p 8, image 220, description space-between
   const card = (
     <article
       data-reveal
       className={cn(
         cardTypography.shell,
-        "h-full",
+        "h-full min-h-[440px]",
         href && "cursor-pointer",
         className,
       )}
@@ -422,16 +424,27 @@ export function InsightCard({
         <ImagePlaceholder />
       )}
       <div className={cardTypography.bodyInsight}>
-        <p className={cardTypography.category}>{category}</p>
-        <h3 className={cn(cardTypography.title, "line-clamp-2")}>{title}</h3>
-        <p className={cn(cardTypography.excerpt, "line-clamp-2")}>{excerpt}</p>
-        <div className="flex items-center justify-between gap-4 pt-1">
-          <span className={cardTypography.metaMuted}>
-            {readTime} | {author}
+        <p className={cn(cardTypography.category, "shrink-0")}>{category}</p>
+        <h3 className={cn(cardTypography.title, "shrink-0 line-clamp-2")}>
+          {title}
+        </h3>
+        <p className={cn(cardTypography.excerpt, "shrink-0 line-clamp-2")}>
+          {excerpt}
+        </p>
+        <div className="flex shrink-0 items-center justify-between gap-4 overflow-hidden pt-1">
+          <span className={cn(cardTypography.metaMuted, "inline-flex items-center gap-1")}>
+            <span>{readTime}</span>
+            <span aria-hidden>|</span>
+            <span>{author}</span>
           </span>
           {href ? (
-            <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
-              {t("readInsight")}{" "}
+            <span
+              className={cn(
+                cardTypography.cta,
+                "motion-link-arrow inline-flex gap-1 py-2 ps-2",
+              )}
+            >
+              {t("readInsight")}
               <Icon name="arrowRight" className={cardTypography.ctaIcon} />
             </span>
           ) : null}
@@ -442,7 +455,10 @@ export function InsightCard({
 
   if (href) {
     return (
-      <Link href={href} className="block h-full w-full text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2">
+      <Link
+        href={href}
+        className="block h-full min-h-[440px] w-full text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2"
+      >
         {card}
       </Link>
     );

@@ -30,11 +30,11 @@ export async function ThankYouSection() {
             />
           </div>
 
-          <div className="flex w-full max-w-[400px] flex-col gap-3 sm:flex-row">
-            <Button href="/" className="flex-1 justify-center">
+          <div className="flex w-full max-w-[400px] flex-row items-stretch gap-2 sm:gap-3">
+            <Button href="/" className="min-w-0 flex-1 basis-0 justify-center">
               {tc("backToHome")}
             </Button>
-            <Button href="/insights" className="flex-1 justify-center gap-1">
+            <Button href="/insights" className="min-w-0 flex-1 basis-0 justify-center gap-1">
               {tc("exploreInsights")}
               <Icon name="arrowRight" className="h-4 w-4 shrink-0 rtl:rotate-180" />
             </Button>
