@@ -237,12 +237,12 @@
   "status": {
     "notFoundTitle": "Page not found",
     "notFoundDescription": "The page you are looking for does not exist or has been moved.",
-    "serverErrorTitle": "Something went wrong",
-    "serverErrorDescription": "We could not load this page. Please try again shortly.",
+    "serverErrorTitle": "Something went Wrong",
+    "serverErrorDescription": "We're looking into it. Please try again shortly — Your Data is Safe.",
     "thankYouTitle": "Thank you",
     "thankYouDescription": "Your submission has been received. We will be in touch shortly.",
     "notFoundEyebrow": "404",
-    "serverErrorEyebrow": "500",
+    "serverErrorEyebrow": "ERROR 500",
     "thankYouEyebrow": "CONFIRMATION"
   },
   "catalog": {
@@ -716,9 +716,9 @@
       "description": "The page you're looking for has moved or no longer exists. Let's get you back on track."
     },
     "serverError": {
-      "eyebrow": "500",
-      "title": "Something Went Wrong",
-      "description": "We could not load this page. Please try again shortly."
+      "eyebrow": "ERROR 500",
+      "title": "Something went Wrong",
+      "description": "We're looking into it. Please try again shortly — Your Data is Safe."
     },
     "global": {
       "footer": {

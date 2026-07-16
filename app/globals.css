@@ -39,7 +39,7 @@
   --color-border-strong: #6f95c5;
   --color-success: #36957c;
   --color-warning: #b07a1e;
-  --color-error: #b23a48;
+  --color-error: #c33d5f; /* Figma Feedback/Red-600 — 500 error badge + eyebrow */
   --color-gold: #b07a1e;
   --color-gold-muted: #9a6818;
   --color-basalt-50: #eef1f5;

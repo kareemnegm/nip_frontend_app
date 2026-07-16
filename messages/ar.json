@@ -238,11 +238,11 @@
     "notFoundTitle": "الصفحة غير موجودة",
     "notFoundDescription": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
     "serverErrorTitle": "حدث خطأ ما",
-    "serverErrorDescription": "تعذر تحميل هذه الصفحة. يرجى المحاولة مرة أخرى قريباً.",
+    "serverErrorDescription": "نحن نتحقق من الأمر. يرجى المحاولة مرة أخرى قريباً — بياناتك بأمان.",
     "thankYouTitle": "شكراً لك",
     "thankYouDescription": "تم استلام طلبك. سنتواصل معك قريباً.",
     "notFoundEyebrow": "404",
-    "serverErrorEyebrow": "500",
+    "serverErrorEyebrow": "خطأ 500",
     "thankYouEyebrow": "تأكيد"
   },
   "catalog": {
@@ -716,9 +716,9 @@
       "description": "الصفحة التي تبحث عنها نُقلت أو لم تعد موجودة. دعنا نعيدك إلى المسار الصحيح."
     },
     "serverError": {
-      "eyebrow": "500",
+      "eyebrow": "خطأ 500",
       "title": "حدث خطأ ما",
-      "description": "تعذر تحميل هذه الصفحة. يرجى المحاولة مرة أخرى قريباً."
+      "description": "نحن نتحقق من الأمر. يرجى المحاولة مرة أخرى قريباً — بياناتك بأمان."
     },
     "global": {
       "footer": {
