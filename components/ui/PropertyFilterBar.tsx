@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { preserveScrollOnNextNavigation } from "@/lib/navigation/scroll-preserve";
 import { LabeledSelect } from "./LabeledSelect";
 
 const KEYWORD_DEBOUNCE_MS = 400;
@@ -123,6 +124,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
     (next: PropertyFilterValues) => {
       const query = buildQueryString(next, searchParams);
       const href = query ? `${basePath}?${query}` : basePath;
+      preserveScrollOnNextNavigation();
       startTransition(() => {
         router.push(href, { scroll: false });
       });

@@ -2,6 +2,7 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
+import { consumePreserveScrollFlag } from "@/lib/navigation/scroll-preserve";
 
 const REVEAL_SELECTOR = "[data-reveal]";
 const COUNT_SELECTOR = "[data-count]";
@@ -258,21 +259,26 @@ export function MotionRoot() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const searchKey = searchParams.toString();
-  const prevPathnameRef = useRef(pathname);
+  const navKey = `${pathname}?${searchKey}`;
+  const prevNavKeyRef = useRef(navKey);
 
-  // A new page (e.g. clicking any footer/header link) must always open at the
-  // top. Only react to real page-to-page navigation — filter/sort/view
-  // controls intentionally keep their scroll position by changing just the
-  // query string on the same pathname (see PropertyFilterBar / PropertyResultsToolbar),
-  // so those must not trigger this. Cross-page links with a `#section` hash
-  // are left alone so Next.js can scroll to that section instead of the top.
+  // Any navigation (clicking a footer/header/card link — even one that lands
+  // on the same pathname with a different query string, e.g. a footer link
+  // like "Exclusives" → /properties?exclusive=1) must open at the top.
+  // The one exception is same-page filter/sort/view controls, which
+  // deliberately keep the user's scroll position — they call
+  // preserveScrollOnNextNavigation() right before navigating so this effect
+  // knows to skip them (see PropertyFilterBar / PropertyResultsToolbar).
+  // Links with a `#section` hash are also left alone so Next.js can scroll
+  // to that section instead of the top.
   useEffect(() => {
-    if (prevPathnameRef.current === pathname) return;
-    prevPathnameRef.current = pathname;
+    if (prevNavKeyRef.current === navKey) return;
+    prevNavKeyRef.current = navKey;
 
+    if (consumePreserveScrollFlag()) return;
     if (window.location.hash) return;
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-  }, [pathname]);
+  }, [navKey]);
 
   useEffect(() => {
     let cleanup = initMotion();

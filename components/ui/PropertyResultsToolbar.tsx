@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useCallback, useTransition } from "react";
 import { cn } from "@/lib/cn";
+import { preserveScrollOnNextNavigation } from "@/lib/navigation/scroll-preserve";
 import { Icon } from "./Icon";
 import { LabeledSelect } from "./LabeledSelect";
 
@@ -49,6 +50,7 @@ export function PropertyResultsToolbar({
         }
       }
       const qs = params.toString();
+      preserveScrollOnNextNavigation();
       startTransition(() => {
         router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
       });
