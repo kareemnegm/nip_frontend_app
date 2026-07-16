@@ -110,10 +110,11 @@ export function developerFactsFromApi(
   return facts;
 }
 
+/** Figma T07 developer strength chips (1525:27855). */
 const defaultStrengthIcons: IconName[] = [
   "skyline",
-  "handover",
-  "percent",
+  "handover-check",
+  "resale",
   "star",
   "concierge",
   "globe-presence",
