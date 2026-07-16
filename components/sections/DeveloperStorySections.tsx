@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/SiteChrome";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { cn } from "@/lib/cn";
-import Link from "next/link";
+import { AppLink as Link } from "@/components/AppLink";
 import { AreaAboutSection, AreaSectionHeading } from "./AreaStorySections";
 
 const developerSectionTitleClassName =

@@ -1,3 +1,4 @@
+import { AppLink } from "@/components/AppLink";
 import { cn } from "@/lib/cn";
 
 export type BreadcrumbItem = {
@@ -38,12 +39,12 @@ export function Breadcrumbs({
                   </span>
                 ) : null}
                 {item.href && !isLast ? (
-                  <a
+                  <AppLink
                     href={item.href}
                     className="transition-colors hover:text-brand"
                   >
                     {item.label}
-                  </a>
+                  </AppLink>
                 ) : (
                   <span className={isLast ? "text-basalt-300" : undefined}>
                     {item.label}
@@ -68,9 +69,9 @@ export function Breadcrumbs({
           return (
             <li key={`${item.label}-${index}`} className="flex items-center gap-1.5">
               {item.href && !isLast ? (
-                <a href={item.href} className="transition-colors hover:text-brand">
+                <AppLink href={item.href} className="transition-colors hover:text-brand">
                   {item.label}
-                </a>
+                </AppLink>
               ) : (
                 <span className={isLast ? active : undefined}>{item.label}</span>
               )}

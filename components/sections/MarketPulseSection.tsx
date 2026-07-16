@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { AppLink as Link } from "@/components/AppLink";
 import { getTranslations } from "next-intl/server";
 import { CurrencyIcon } from "@/components/ui/CurrencyIcon";
 import { Container } from "@/components/ui/Container";

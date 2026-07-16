@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { scrollPageToTop } from "@/lib/navigation/scroll-to-top";
 
 type MemberSignOutButtonProps = {
   className?: string;
@@ -23,7 +24,8 @@ export function MemberSignOutButton({
     try {
       await fetch("/api/member/logout", { method: "POST" });
     } finally {
-      router.push(redirectTo);
+      scrollPageToTop();
+      router.push(redirectTo, { scroll: true });
       router.refresh();
     }
   }

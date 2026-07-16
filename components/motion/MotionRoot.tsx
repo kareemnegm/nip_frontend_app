@@ -1,9 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
-import { consumePreserveScrollFlag } from "@/lib/navigation/scroll-preserve";
-import { scrollPageToTopReliable } from "@/lib/navigation/scroll-to-top";
+import { useEffect } from "react";
 
 const REVEAL_SELECTOR = "[data-reveal]";
 const COUNT_SELECTOR = "[data-count]";
@@ -260,40 +258,9 @@ export function MotionRoot() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const searchKey = searchParams.toString();
-  const navKey = `${pathname}?${searchKey}`;
-  const prevNavKeyRef = useRef(navKey);
 
-  // Any navigation (clicking a footer/header/card link — even one that lands
-  // on the same pathname with a different query string, e.g. a footer link
-  // like "Exclusives" → /properties?exclusive=1) must open at the top.
-  // The one exception is same-page filter/sort/view controls, which
-  // deliberately keep the user's scroll position — they call
-  // preserveScrollOnNextNavigation() right before navigating so this effect
-  // knows to skip them (see PropertyFilterBar / PropertyResultsToolbar).
-  // Links with a `#section` hash are also left alone so Next.js can scroll
-  // to that section instead of the top.
-  useEffect(() => {
-    if (prevNavKeyRef.current === navKey) return;
-    prevNavKeyRef.current = navKey;
-
-    if (consumePreserveScrollFlag()) return;
-    if (window.location.hash) return;
-    return scrollPageToTopReliable();
-  }, [navKey]);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !("scrollRestoration" in window.history)) {
-      return;
-    }
-
-    const previous = window.history.scrollRestoration;
-    window.history.scrollRestoration = "manual";
-
-    return () => {
-      window.history.scrollRestoration = previous;
-    };
-  }, []);
-
+  // Scroll-to-top on navigation lives in ScrollToTopOnNavigate (locale layout)
+  // so it survives per-page SiteShell remounts.
   useEffect(() => {
     let cleanup = initMotion();
     const retry = window.setTimeout(() => {

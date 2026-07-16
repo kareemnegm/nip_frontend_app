@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { AppLink as Link } from "@/components/AppLink";
 import { cn } from "@/lib/cn";
 import { clientT } from "@/lib/i18n/client-messages";
 import { useOptionalLocale } from "@/lib/i18n/context";
@@ -117,6 +117,7 @@ export function Button({
   className,
   href,
   children,
+  onClick,
   ...props
 }: ButtonProps) {
   const localeContext = useOptionalLocale();
@@ -131,14 +132,18 @@ export function Button({
 
   if (resolvedHref) {
     return (
-      <Link href={resolvedHref} className={classes}>
+      <Link
+        href={resolvedHref}
+        className={classes}
+        onClick={onClick as React.MouseEventHandler<HTMLAnchorElement> | undefined}
+      >
         {children}
       </Link>
     );
   }
 
   return (
-    <button className={classes} {...props}>
+    <button className={classes} onClick={onClick} {...props}>
       {children}
     </button>
   );

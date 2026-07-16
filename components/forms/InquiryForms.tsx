@@ -9,6 +9,7 @@ import { Icon } from "@/components/ui/Icon";
 import { getFieldError, isApiError } from "@/lib/api/errors";
 import { useLocale } from "@/lib/i18n/context";
 import { localizedHref } from "@/lib/i18n/helpers";
+import { scrollPageToTop } from "@/lib/navigation/scroll-to-top";
 
 type InquiryFormProps = {
   variant: "consultation" | "privateAdvisory";
@@ -67,7 +68,8 @@ export function InquiryForm({ variant }: InquiryFormProps) {
           errors: data.errors,
         });
       }
-      router.push(localizedHref(locale, "/thank-you"));
+      scrollPageToTop();
+      router.push(localizedHref(locale, "/thank-you"), { scroll: true });
     } catch (error) {
       if (isApiError(error) && error.errors) {
         const mapped: Record<string, string> = {};
@@ -204,7 +206,8 @@ export function PropertyInquiryForm({
         }
         return;
       }
-      router.push(localizedHref(locale, "/thank-you"));
+      scrollPageToTop();
+      router.push(localizedHref(locale, "/thank-you"), { scroll: true });
     } catch (error) {
       if (isApiError(error) && error.errors) {
         const mapped: Record<string, string> = {};

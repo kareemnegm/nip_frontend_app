@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { useLocale } from "@/lib/i18n/context";
 import { localizedHref } from "@/lib/i18n/helpers";
+import { scrollPageToTop } from "@/lib/navigation/scroll-to-top";
 
 type HomeSearchFormProps = {
   label: string;
@@ -31,7 +32,7 @@ export function HomeSearchForm({
       ? `/properties?keyword=${encodeURIComponent(trimmed)}`
       : "/properties";
     startTransition(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      scrollPageToTop();
       router.push(localizedHref(locale, path), { scroll: true });
     });
   }

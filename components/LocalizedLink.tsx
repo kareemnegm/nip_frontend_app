@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import { AppLink } from "@/components/AppLink";
 import { useLocale } from "@/lib/i18n/context";
 import { localizedHref } from "@/lib/i18n/helpers";
 import { cn } from "@/lib/cn";
 
 type LocalizedLinkProps = Omit<
-  React.ComponentProps<typeof Link>,
+  React.ComponentProps<typeof AppLink>,
   "href"
 > & {
   href: string;
@@ -21,8 +21,8 @@ export function LocalizedLink({
   const { locale } = useLocale();
 
   return (
-    <Link href={localizedHref(locale, href)} className={cn(className)} {...props}>
+    <AppLink href={localizedHref(locale, href)} className={cn(className)} {...props}>
       {children}
-    </Link>
+    </AppLink>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { AppLink as Link } from "@/components/AppLink";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/cn";
 import { Icon } from "./Icon";

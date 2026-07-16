@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { AppLink as Link } from "@/components/AppLink";
 import { getTranslations } from "next-intl/server";
 import { Button, Icon } from "@/components/ui";
 import { EditableStatusCopy } from "@/components/sections/EditableStatusCopy";

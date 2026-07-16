@@ -5,9 +5,10 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { TextInput } from "@/components/ui/FormControls";
+import { AppLink as Link } from "@/components/AppLink";
 import { localizedHref } from "@/lib/i18n/helpers";
 import type { Locale } from "@/lib/i18n/config";
-import Link from "next/link";
+import { scrollPageToTop } from "@/lib/navigation/scroll-to-top";
 
 export function PrivateOfficeLoginForm({ locale }: { locale: Locale }) {
   const router = useRouter();
@@ -34,7 +35,8 @@ export function PrivateOfficeLoginForm({ locale }: { locale: Locale }) {
         setError(data.message ?? t("signInFailed"));
         return;
       }
-      router.push(localizedHref(locale, "/private-office/member"));
+      scrollPageToTop();
+      router.push(localizedHref(locale, "/private-office/member"), { scroll: true });
       router.refresh();
     } catch {
       setError(t("signInFailedRetry"));

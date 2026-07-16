@@ -605,15 +605,21 @@ article:focus-within .motion-card-image {
   position: relative;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .nav-caret,
-  .nav-dropdown-panel {
-    transition: none !important;
-    transform: none !important;
-  }
+/* Closed menus must stay invisible in every browser / a11y mode (opacity alone is not enough). */
+.nav-dropdown-panel[hidden],
+.nav-dropdown-panel[data-open="false"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
 
-  .nav-dropdown-panel {
-    opacity: 1 !important;
+@media (prefers-reduced-motion: reduce) {
+  /* Disable motion only — never force dropdown panels visible (that stacked both menus). */
+  .nav-caret,
+  .nav-dropdown-panel,
+  .nav-dropdown-panel > div {
+    transition: none !important;
   }
 
   [data-reveal],

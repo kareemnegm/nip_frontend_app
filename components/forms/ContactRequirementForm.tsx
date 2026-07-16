@@ -8,6 +8,7 @@ import { Checkbox, PhoneInput, Select, Textarea, TextInput } from "@/components/
 import { isApiError } from "@/lib/api/errors";
 import { useLocale } from "@/lib/i18n/context";
 import { localizedHref } from "@/lib/i18n/helpers";
+import { scrollPageToTop } from "@/lib/navigation/scroll-to-top";
 
 /** Figma "04 Label/Small" (11/14/500) — compact field labels: Name, Phone number, Email address, Message. */
 const compactLabelClassName = "text-label-muted font-medium text-ink";
@@ -111,7 +112,8 @@ export function ContactRequirementForm() {
           errors: data.errors,
         });
       }
-      router.push(localizedHref(locale, "/thank-you"));
+      scrollPageToTop();
+      router.push(localizedHref(locale, "/thank-you"), { scroll: true });
     } catch (error) {
       if (isApiError(error) && error.errors) {
         const mapped: Record<string, string> = {};

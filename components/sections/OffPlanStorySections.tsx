@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { AppLink as Link } from "@/components/AppLink";
 import { getTranslations } from "next-intl/server";
 import { AmenityIcon } from "@/components/ui/AmenityIcon";
 import { Icon } from "@/components/ui/Icon";

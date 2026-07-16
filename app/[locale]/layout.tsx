@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { CmsLayoutProviders } from "@/components/cms/CmsLayoutProviders";
+import { ScrollToTopOnNavigate } from "@/components/ScrollToTopOnNavigate";
 import { LocaleProvider } from "@/lib/i18n/context";
 import { isLocale, locales } from "@/lib/i18n/config";
 import { resolveLocale } from "@/lib/i18n/helpers";
@@ -32,6 +33,7 @@ export default async function LocaleLayout({
   return (
     <LocaleProvider locale={locale}>
       <NextIntlClientProvider locale={locale} messages={messages}>
+        <ScrollToTopOnNavigate />
         <CmsLayoutProviders>{children}</CmsLayoutProviders>
       </NextIntlClientProvider>
     </LocaleProvider>

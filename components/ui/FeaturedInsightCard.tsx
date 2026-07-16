@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import { AppLink as Link } from "@/components/AppLink";
 import { cn } from "@/lib/cn";
 
 export type FeaturedInsightCardProps = {
