@@ -23,8 +23,10 @@ export async function HomeHeroSection() {
       data-site-hero
       className="relative self-stretch overflow-hidden bg-sapphire-800 text-white"
     >
-      {/* Figma: background 50% / cover no-repeat */}
-      <div data-parallax className="absolute inset-0 bg-sapphire-800">
+      {/* Figma: background 50% / cover no-repeat.
+          Oversize the parallax layer (±40px) so MotionRoot's translate
+          never reveals the sapphire fallback as a strip under the header. */}
+      <div data-parallax className="absolute -inset-10 bg-sapphire-800">
         <EditableImage
           relUrl={HOME_REL_URL}
           blockKey={heroBlocks.image}
@@ -84,21 +86,21 @@ export async function HomeHeroSection() {
           />
         </div>
 
-        <div className="flex w-full max-w-[452px] flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+        <div className="flex w-full max-w-[452px] flex-row items-stretch gap-2 sm:gap-3 sm:items-center">
           <Button
             href="/insights"
             variant="accent"
             size="lg"
-            className="w-full flex-1 gap-1"
+            className="min-w-0 flex-1 justify-center gap-1 px-3 sm:px-6"
           >
             {t("readInsights")}{" "}
-            <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
+            <Icon name="arrowRight" className="h-4 w-4 shrink-0 rtl:rotate-180" />
           </Button>
           <Button
             href="/contact"
             variant="outlineInverse"
             size="lg"
-            className="w-full flex-1 gap-[3px]"
+            className="min-w-0 flex-1 justify-center gap-[3px] px-3 sm:px-6"
           >
             <span className="font-semibold">{tc("speakWith")}</span>
             <span className="font-[family-name:var(--font-logo)] font-medium">{tc("nip")}</span>

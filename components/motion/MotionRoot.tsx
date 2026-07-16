@@ -3,6 +3,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { consumePreserveScrollFlag } from "@/lib/navigation/scroll-preserve";
+import { scrollPageToTopReliable } from "@/lib/navigation/scroll-to-top";
 
 const REVEAL_SELECTOR = "[data-reveal]";
 const COUNT_SELECTOR = "[data-count]";
@@ -277,8 +278,21 @@ export function MotionRoot() {
 
     if (consumePreserveScrollFlag()) return;
     if (window.location.hash) return;
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    return scrollPageToTopReliable();
   }, [navKey]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !("scrollRestoration" in window.history)) {
+      return;
+    }
+
+    const previous = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+
+    return () => {
+      window.history.scrollRestoration = previous;
+    };
+  }, []);
 
   useEffect(() => {
     let cleanup = initMotion();

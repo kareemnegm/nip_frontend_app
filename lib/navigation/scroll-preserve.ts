@@ -1,24 +1,38 @@
 /**
- * Lets same-page controls (filter/sort/view toggles that change only the
- * query string) opt out of the global "scroll to top on navigation" behavior
- * in MotionRoot, without MotionRoot having to guess intent from the URL
- * alone. A short expiry window guards against a stale flag suppressing an
- * unrelated later navigation if no scroll effect happens to consume it.
+ * Opt out of scroll-to-top for exactly ONE upcoming navigation — used by
+ * same-page filter/sort/view controls (PropertyFilterBar, PropertyResultsToolbar).
+ *
+ * Uses a one-shot flag (not a time window) so a filter click cannot accidentally
+ * suppress scroll on a later footer link like "Exclusives" or "Lifestyle".
  */
-const PRESERVE_WINDOW_MS = 2000;
+const RESET_MS = 500;
 
-let preserveUntil = 0;
+let preserveNext = false;
+let resetTimer: ReturnType<typeof setTimeout> | null = null;
 
 export function preserveScrollOnNextNavigation() {
-  preserveUntil = Date.now() + PRESERVE_WINDOW_MS;
+  preserveNext = true;
+
+  if (resetTimer) {
+    clearTimeout(resetTimer);
+  }
+
+  resetTimer = setTimeout(() => {
+    preserveNext = false;
+    resetTimer = null;
+  }, RESET_MS);
 }
 
-/** Returns true once if a preserve request is still active, then clears it. */
+/** Returns true once if the very next navigation should keep scroll position. */
 export function consumePreserveScrollFlag(): boolean {
-  if (preserveUntil !== 0 && Date.now() <= preserveUntil) {
-    preserveUntil = 0;
-    return true;
+  if (!preserveNext) {
+    return false;
   }
-  preserveUntil = 0;
-  return false;
+
+  preserveNext = false;
+  if (resetTimer) {
+    clearTimeout(resetTimer);
+    resetTimer = null;
+  }
+  return true;
 }
