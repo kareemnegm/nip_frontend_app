@@ -9,6 +9,7 @@ export type EditableCtaBandProps = {
   blockKey: string;
   locale: Locale;
   placeholderContent: string;
+  eyebrow?: string;
   actions?: React.ReactNode;
   tone?: CtaBandProps["tone"];
   className?: string;
@@ -19,6 +20,7 @@ export function EditableCtaBand({
   blockKey,
   locale,
   placeholderContent,
+  eyebrow,
   actions,
   tone = "dark",
   className,
@@ -29,6 +31,7 @@ export function EditableCtaBand({
     <CtaBand
       tone={tone}
       className={className}
+      eyebrow={eyebrow}
       actions={actions}
       title={
         <EditableText
@@ -38,7 +41,7 @@ export function EditableCtaBand({
           placeholderContent={placeholderContent}
           placeholderTag="h2"
           className={cn(
-            "mt-3 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl",
+            "font-display font-normal uppercase text-display-lg",
             isDark ? "text-white" : "text-brand",
           )}
         />

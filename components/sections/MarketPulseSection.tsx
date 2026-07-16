@@ -35,6 +35,7 @@ export async function MarketPulseSection() {
           title={await getCmsPlaceholder("placeholders.home.marketPulse", "title", locale)}
           description={await getCmsPlaceholder("placeholders.home.marketPulse", "desc", locale)}
           descriptionMaxWidth="max-w-[464px]"
+          titleClassName="text-display-sm sm:text-display-lg"
           editable={{
             relUrl: homeEditable.relUrl,
             titleKey: homeEditable.marketPulse.titleKey,
@@ -42,14 +43,14 @@ export async function MarketPulseSection() {
           }}
         />
 
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
           {marketPulseStats.map((stat, index) => (
             <div
               key={stat.label}
               data-reveal
               data-reveal-delay={index > 0 ? String(Math.min(index, 3)) : undefined}
               className={[
-                "flex flex-col gap-4 rounded-[var(--radius-card)] px-7 py-6 text-white",
+                "flex flex-col gap-2 rounded-[var(--radius-card)] px-4 py-4 text-white sm:gap-4 sm:px-7 sm:py-6",
                 "items-center text-center sm:items-start sm:text-start",
                 cardBg[index],
               ].join(" ")}
@@ -58,8 +59,10 @@ export async function MarketPulseSection() {
                 {stat.context}
               </p>
 
-              <p className="flex items-center gap-1.5 text-stat-value font-bold leading-[2.625rem]">
-                {stat.icon ? <CurrencyIcon currency="AED" className="h-7 w-7 shrink-0" /> : null}
+              <p className="flex items-center gap-1 text-stat-value-sm font-bold sm:gap-1.5 sm:text-stat-value">
+                {stat.icon ? (
+                  <CurrencyIcon currency="AED" className="h-5 w-5 shrink-0 sm:h-7 sm:w-7" />
+                ) : null}
                 <span
                   data-count={stat.count}
                   data-count-prefix={stat.prefix}

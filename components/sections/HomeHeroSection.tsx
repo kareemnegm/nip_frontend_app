@@ -66,7 +66,7 @@ export async function HomeHeroSection() {
             className={cn(
               "whitespace-pre-line font-display font-normal uppercase text-white",
               "max-w-[620px]",
-              "text-[3rem] leading-[3.25rem] tracking-[-0.04em]",
+              "text-display-sm",
               "sm:text-display-hero-sm sm:leading-[4rem]",
               "lg:text-display-hero lg:leading-[4.5rem] lg:tracking-[-0.04em]",
             )}

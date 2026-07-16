@@ -34,22 +34,22 @@ export function PropertyAdvisoryCard({
     <>
       <aside
         className={cn(
-          "flex w-full max-w-[312px] shrink-0 flex-col gap-6 rounded-[var(--radius-card)] border border-[#dbe0ec] bg-sapphire-50 p-6 lg:sticky lg:top-28 lg:self-start",
+          "flex w-full max-w-[312px] shrink-0 flex-col gap-6 rounded-[var(--radius-card)] border border-line bg-sapphire-50 p-6 lg:sticky lg:top-28 lg:self-start",
           className,
         )}
       >
-        <p className="text-[11px] font-medium leading-[14px] text-accent">{labels.eyebrow}</p>
-        <p className="text-body-sm leading-[18px] text-ink-tertiary">{labels.description}</p>
+        <p className="text-label-muted font-medium text-accent">{labels.eyebrow}</p>
+        <p className="text-body-sm text-ink-tertiary">{labels.description}</p>
 
         <div className="flex items-center gap-2.5">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand px-2">
-            <span className="font-[family-name:var(--font-logo)] text-[10px] font-medium leading-none text-white">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand">
+            <span className="font-[family-name:var(--font-logo)] text-label-semibold font-medium text-white">
               NIP
             </span>
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-semibold leading-4 text-brand">{labels.advisoryName}</p>
-            <p className="text-xs leading-4 text-basalt-300">{labels.advisoryResponds}</p>
+            <p className="text-label-semibold font-semibold text-brand">{labels.advisoryName}</p>
+            <p className="text-body-xs text-basalt-300">{labels.advisoryResponds}</p>
           </div>
         </div>
 

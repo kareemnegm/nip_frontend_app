@@ -88,6 +88,8 @@
   /* Stat value — Archivo Bold, market pulse cards */
   --text-stat-value: 2.25rem;           /* 36px */
   --text-stat-value--line-height: 2.625rem;   /* 42px */
+  --text-stat-value-sm: 1.5rem;         /* 24px / market pulse cards, mobile 2-up grid */
+  --text-stat-value-sm--line-height: 1.75rem; /* 28px */
 
   /* Headings — Archivo */
   --text-h1: 1.75rem;                   /* 28px */

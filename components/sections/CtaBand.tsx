@@ -28,41 +28,43 @@ export function CtaBand({
         className,
       )}
     >
-      <Container className="flex flex-col items-center py-16 text-center sm:py-20">
-        {eyebrow ? (
-          <p
-            className={cn(
-              "text-[11px] font-semibold uppercase tracking-[0.18em]",
-              isDark ? "text-gold" : "text-brand",
-            )}
-          >
-            {eyebrow}
-          </p>
-        ) : null}
-        {typeof title === "string" ? (
-          <h2
-            className={cn(
-              "mt-3 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-4xl lg:text-5xl",
-              isDark ? "text-white" : "text-brand",
-            )}
-          >
-            {title}
-          </h2>
-        ) : (
-          title
-        )}
-        {description ? (
-          <p
-            className={cn(
-              "mt-4 max-w-2xl text-sm leading-7 sm:text-base",
-              isDark ? "text-white/75" : "text-ink-secondary",
-            )}
-          >
-            {description}
-          </p>
-        ) : null}
+      <Container className="flex flex-col items-center gap-10 py-16 text-center sm:py-20">
+        <div className="flex flex-col items-center gap-4">
+          {eyebrow ? (
+            <p
+              className={cn(
+                "text-overline font-semibold uppercase",
+                isDark ? "text-accent-on-dark" : "text-accent",
+              )}
+            >
+              {eyebrow}
+            </p>
+          ) : null}
+          {typeof title === "string" ? (
+            <h2
+              className={cn(
+                "font-display font-normal uppercase text-display-lg",
+                isDark ? "text-white" : "text-brand",
+              )}
+            >
+              {title}
+            </h2>
+          ) : (
+            title
+          )}
+          {description ? (
+            <p
+              className={cn(
+                "max-w-2xl text-body-regular",
+                isDark ? "text-white/75" : "text-ink-secondary",
+              )}
+            >
+              {description}
+            </p>
+          ) : null}
+        </div>
         {actions ? (
-          <div className="mt-8 flex flex-col items-stretch justify-center gap-4 sm:flex-row sm:items-center">
+          <div className="flex flex-col items-stretch justify-center gap-4 sm:flex-row sm:items-center">
             {actions}
           </div>
         ) : null}

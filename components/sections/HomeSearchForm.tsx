@@ -40,7 +40,7 @@ export function HomeSearchForm({
       <p className="text-overline text-center font-semibold uppercase text-ink-tertiary">
         {label}
       </p>
-      <div className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-line bg-white py-1.5 pl-[18px] pr-1.5 sm:flex-row sm:items-center">
+      <div className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-line bg-white p-1.5 sm:flex-row sm:items-center sm:py-1.5 sm:pl-[18px] sm:pr-1.5">
         <input
           type="search"
           value={keyword}

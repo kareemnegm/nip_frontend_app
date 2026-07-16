@@ -22,6 +22,7 @@ const twMerge = extendTailwindMerge({
           "display-lg",
           "display-sm",
           "stat-value",
+            "stat-value-sm",
           "heading-h1",
           "heading-h2",
           "h1",

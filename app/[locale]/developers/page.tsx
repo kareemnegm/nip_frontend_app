@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { SiteShell } from "@/components/SiteShell";
 import { CatalogHeroSection } from "@/components/sections/CatalogHeroSection";
 import { EditableCtaBand } from "@/components/sections/EditableCtaBand";
-import { ApiPagination, CatalogEmptyState, Button, Container, Icon } from "@/components/ui";
+import { ApiPagination, CatalogEmptyState, Container, Icon } from "@/components/ui";
 import { getDevelopers } from "@/lib/api/developers";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
@@ -55,15 +55,15 @@ export default async function DevelopersPage({ params, searchParams }: PageProps
                   href={localizedHref(locale, `/developers/${developer.slug}`)}
                   className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-line bg-white p-8 transition-shadow hover:shadow-[var(--shadow-card)]"
                 >
-                  <span className="font-[family-name:var(--font-display)] text-2xl font-semibold tracking-tight text-brand">
+                  <span className="font-display text-h3 font-bold text-brand">
                     {developer.name}
                   </span>
                   {developer.properties_count != null ? (
-                    <span className="text-sm text-ink-secondary">
+                    <span className="text-body-sm text-ink-secondary">
                       {tc("projects", { count: developer.properties_count })}
                     </span>
                   ) : null}
-                  <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-accent">
+                  <span className="mt-2 inline-flex items-center gap-1 text-label-semibold font-semibold text-accent">
                     {tc("viewMaker")}{" "}
                     <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
                   </span>
@@ -84,10 +84,17 @@ export default async function DevelopersPage({ params, searchParams }: PageProps
         blockKey={developerBlocks.cta.title}
         locale={locale}
         placeholderContent={await getCmsPlaceholder("pages.developers", "ctaTitle", locale)}
+        eyebrow={t("advisory")}
         actions={
-          <Button href="/contact" variant="accent">
-            {tc("speakWith")} {tc("nip")}
-          </Button>
+          <Link
+            href={localizedHref(locale, "/contact")}
+            className="inline-flex items-center justify-center gap-[3px] rounded-[var(--radius-field)] bg-white px-6 py-[9px] text-overline text-brand transition-colors hover:bg-sapphire-50"
+          >
+            <span className="font-semibold">{tc("speakWith")}</span>
+            <span className="font-[family-name:var(--font-logo)] font-medium">
+              {tc("nip")}
+            </span>
+          </Link>
         }
       />
     </SiteShell>

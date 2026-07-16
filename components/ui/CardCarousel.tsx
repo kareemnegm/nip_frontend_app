@@ -187,6 +187,10 @@ export function CardCarousel({
           "flex snap-x snap-mandatory scroll-smooth items-start overflow-x-auto overflow-y-hidden overscroll-x-contain",
           "touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           trackHeight !== undefined && "h-[var(--carousel-track-height)]",
+          // Full-bleed carousels lose the page's ambient gutter — restore it on
+          // mobile only so the first/last slide isn't flush against the screen
+          // edge (desktop/tablet keep the original edge-to-edge bleed).
+          fullBleed && "px-5 sm:px-0",
         )}
         style={{
           gap: `${gap}px`,
