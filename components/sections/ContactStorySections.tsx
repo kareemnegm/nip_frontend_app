@@ -39,7 +39,7 @@ export async function ContactHeroSection() {
               locale={locale}
               placeholderContent={await getCmsPlaceholder("placeholders.contact.hero", "title", locale)}
               placeholderTag="h1"
-              className="font-display text-display-lg uppercase text-brand"
+              className="font-display text-display-sm uppercase text-brand sm:text-display-lg"
             />
           </div>
           <EditableText
@@ -48,7 +48,7 @@ export async function ContactHeroSection() {
             locale={locale}
             placeholderContent={await getCmsPlaceholder("placeholders.contact.hero", "description", locale)}
             placeholderTag="p"
-            className="max-w-[640px] text-body-lg text-ink"
+            className="max-w-[640px] text-body-sm text-ink sm:text-body-lg"
           />
         </div>
       </div>

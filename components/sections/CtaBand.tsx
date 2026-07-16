@@ -43,7 +43,7 @@ export function CtaBand({
           {typeof title === "string" ? (
             <h2
               className={cn(
-                "font-display font-normal uppercase text-display-lg",
+                "font-display font-normal uppercase text-display-sm sm:text-display-lg",
                 isDark ? "text-white" : "text-brand",
               )}
             >
@@ -55,7 +55,7 @@ export function CtaBand({
           {description ? (
             <p
               className={cn(
-                "max-w-2xl text-body-regular",
+                "max-w-2xl text-body-sm sm:text-body-regular",
                 isDark ? "text-white/75" : "text-ink-secondary",
               )}
             >

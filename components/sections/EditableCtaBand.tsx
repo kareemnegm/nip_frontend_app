@@ -41,7 +41,7 @@ export function EditableCtaBand({
           placeholderContent={placeholderContent}
           placeholderTag="h2"
           className={cn(
-            "font-display font-normal uppercase text-display-lg",
+            "font-display font-normal uppercase text-display-sm sm:text-display-lg",
             isDark ? "text-white" : "text-brand",
           )}
         />

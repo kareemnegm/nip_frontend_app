@@ -25,7 +25,7 @@ export async function ThankYouSection() {
             <EditableStatusCopy
               page="thankYou"
               eyebrowClassName="text-overline font-semibold uppercase text-success"
-              titleClassName="font-display font-normal uppercase text-brand text-display-lg"
+              titleClassName="font-display font-normal uppercase text-brand text-display-sm sm:text-display-lg"
               descriptionClassName="max-w-[520px] text-body-sm text-ink-tertiary"
             />
           </div>

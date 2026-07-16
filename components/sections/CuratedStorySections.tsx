@@ -49,7 +49,7 @@ async function CuratedSectionHeading({ section }: { section: CuratedSection }) {
         locale={locale}
         placeholderContent={await getCmsPlaceholder(ns, "title", locale)}
         placeholderTag="h2"
-        className="font-[family-name:var(--font-display)] text-[36px] uppercase leading-[38px] tracking-[-0.02em] text-brand sm:text-[44px] sm:leading-[42px]"
+        className="font-display text-display-sm uppercase text-brand sm:text-display-lg"
       />
       <EditableText
         relUrl={curatedBlocks.relUrl}
@@ -57,7 +57,7 @@ async function CuratedSectionHeading({ section }: { section: CuratedSection }) {
         locale={locale}
         placeholderContent={await getCmsPlaceholder(ns, "description", locale)}
         placeholderTag="p"
-        className="max-w-[464px] text-body-md leading-[22px] text-ink-secondary"
+        className="max-w-[464px] text-body-sm text-ink-secondary sm:text-body-md"
       />
     </div>
   );
@@ -106,7 +106,7 @@ export async function CuratedHeroSection({ user }: { user: ApiMemberUser }) {
               locale={locale}
               placeholderContent={await getCmsPlaceholder("placeholders.curated.hero", "title", locale)}
               placeholderTag="h1"
-              className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-white sm:text-[52px] sm:leading-[50px]"
+              className="font-display text-display-sm uppercase text-white sm:text-display-lg"
             />
             <EditableText
               relUrl={curatedBlocks.relUrl}
@@ -114,7 +114,7 @@ export async function CuratedHeroSection({ user }: { user: ApiMemberUser }) {
               locale={locale}
               placeholderContent={await getCmsPlaceholder("placeholders.curated.hero", "description", locale)}
               placeholderTag="p"
-              className="text-body-lg leading-[28px] text-sapphire-100"
+              className="text-body-sm text-sapphire-100 sm:text-body-lg"
             />
           </div>
           <div className="shrink-0 lg:text-right">

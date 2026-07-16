@@ -55,7 +55,7 @@ export default async function InsightsPage({ params, searchParams }: PageProps) 
         page="insights"
         locale={locale}
         className="bg-white pt-[72px] pb-10"
-        descriptionClassName="max-w-[640px] text-[17px] leading-7 text-ink-secondary"
+        descriptionClassName="max-w-[640px] text-body-sm text-ink-secondary sm:text-body-lg"
         placeholders={{
           eyebrow: await getCmsPlaceholder("placeholders.insights.hero", "eyebrow", locale),
           title: await getCmsPlaceholder("placeholders.insights.hero", "title", locale),

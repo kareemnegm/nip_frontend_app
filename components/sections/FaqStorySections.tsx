@@ -56,7 +56,7 @@ export async function FaqHeroSection() {
             locale={locale}
             placeholderContent={await getCmsPlaceholder("placeholders.faq.hero", "title", locale)}
             placeholderTag="h1"
-            className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand"
+            className="font-display text-display-sm uppercase text-brand sm:text-display-lg"
           />
           <EditableText
             relUrl={faqBlocks.relUrl}
@@ -64,7 +64,7 @@ export async function FaqHeroSection() {
             locale={locale}
             placeholderContent={await getCmsPlaceholder("placeholders.faq.hero", "description", locale)}
             placeholderTag="p"
-            className="max-w-[640px] text-body-lg leading-7 text-ink-secondary"
+            className="max-w-[640px] text-body-sm text-ink-secondary sm:text-body-lg"
           />
         </div>
       </div>

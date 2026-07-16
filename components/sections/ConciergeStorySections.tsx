@@ -45,7 +45,7 @@ export async function ConciergePageSection() {
                 locale,
               )}
               placeholderTag="h1"
-              className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
+              className="font-display text-display-sm uppercase text-brand sm:text-display-lg"
             />
             <EditableText
               relUrl={conciergeBlocks.relUrl}

@@ -49,7 +49,7 @@ export async function LegalHeroSection({ locale }: LegalPageProps) {
               locale={locale}
               placeholderContent={await getCmsPlaceholder("pages.legal", "hero.title", locale)}
               placeholderTag="h1"
-              className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand"
+              className="font-display text-display-sm uppercase text-brand sm:text-display-lg"
             />
           </div>
           <EditableText

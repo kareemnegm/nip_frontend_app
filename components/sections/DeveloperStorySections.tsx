@@ -45,7 +45,7 @@ export function DeveloperHero({
             <p className="font-sans text-overline font-semibold uppercase text-accent">
               {eyebrow}
             </p>
-            <h1 className="font-[family-name:var(--font-display)] font-normal text-display-lg uppercase text-brand">
+            <h1 className="font-display font-normal text-display-sm uppercase text-brand sm:text-display-lg">
               {title}
             </h1>
             <p className="font-sans font-normal text-body-sm text-ink-tertiary">
@@ -176,7 +176,7 @@ export async function DeveloperAdvisoryCta({ developerName }: { developerName: s
             <p className="text-overline font-semibold text-accent-on-dark">
               {tDev("advisory")}
             </p>
-            <h2 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-white">
+            <h2 className="font-display text-display-sm uppercase text-white sm:text-display-lg">
               {tDev("interestedInAddress", { name: developerName })}
             </h2>
           </div>

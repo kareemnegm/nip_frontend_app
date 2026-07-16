@@ -47,7 +47,7 @@ export function AreaHero({
       <div className={cn("relative mx-auto w-full pb-14", siteMaxWidth, sitePageGutterX)}>
         <div className={cn(sitePageInnerClassName, "flex flex-col gap-3")}>
           <p className="text-overline font-semibold text-platinum-400">{eyebrow}</p>
-          <h1 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[52px] tracking-[-0.04em] text-white sm:text-[64px] sm:leading-[72px]">
+          <h1 className="font-display text-display-sm uppercase text-white sm:text-display-hero">
             {title}
           </h1>
           <p className="max-w-[398px] text-body-sm text-sapphire-100">{description}</p>
@@ -73,7 +73,7 @@ export function AreaSectionHeading({
       <p className="text-overline font-semibold text-accent">{eyebrow}</p>
       <h2
         className={cn(
-          "font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-brand",
+          "font-display text-display-sm uppercase text-brand sm:text-display-lg",
           titleClassName,
         )}
       >
@@ -241,7 +241,7 @@ export function AreaExploreCta({
         >
           <div className="space-y-4">
             <p className="text-overline font-semibold text-accent-on-dark">{eyebrow}</p>
-            <h2 className="font-[family-name:var(--font-display)] text-[44px] uppercase leading-[42px] tracking-[-0.02em] text-white">
+            <h2 className="font-display text-display-sm uppercase text-white sm:text-display-lg">
               {title}
             </h2>
           </div>

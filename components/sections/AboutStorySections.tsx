@@ -124,7 +124,7 @@ export async function AboutHeroSection() {
                 locale,
               )}
               placeholderTag="p"
-              className={cn("max-w-[680px]", aboutBodyClassName)}
+              className="max-w-[680px] text-body-sm text-ink-secondary sm:text-body-lg"
             />
           </div>
           <AboutCtaRow />

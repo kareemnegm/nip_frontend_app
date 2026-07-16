@@ -25,8 +25,8 @@ export async function ServerErrorSection() {
             <EditableStatusCopy
               page="serverError"
               eyebrowClassName="text-overline font-semibold uppercase tracking-[0.18em] text-error"
-              titleClassName="mt-3 font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
-              descriptionClassName="mt-4 max-w-[680px] text-body-lg leading-[28px] text-ink-secondary"
+              titleClassName="mt-3 font-display text-display-sm text-brand sm:text-display-lg"
+              descriptionClassName="mt-4 max-w-[680px] text-body-sm text-ink-secondary sm:text-body-lg"
             />
           </div>
 
