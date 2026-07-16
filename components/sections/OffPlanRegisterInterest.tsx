@@ -113,7 +113,8 @@ export function OffPlanRegisterInterestCta({
   propertyId: number;
   pageUrl: string;
   eyebrow: string;
-  title: string;
+  /** Rendered heading — usually an EditableText (h2) from the parent Server Component */
+  title: React.ReactNode;
   modalTitle: string;
   className?: string;
 }) {
@@ -126,9 +127,7 @@ export function OffPlanRegisterInterestCta({
           <p className="text-[11px] font-medium uppercase leading-[14px] tracking-[0.08em] text-[#8fb0dc]">
             {eyebrow}
           </p>
-          <h2 className="max-w-[720px] font-[family-name:var(--font-display)] text-[44px] uppercase leading-[52px] tracking-[-0.04em] text-white">
-            {title}
-          </h2>
+          {title}
           <SpeakWithNipWhiteButton onClick={() => setModalOpen(true)} />
         </div>
       </section>

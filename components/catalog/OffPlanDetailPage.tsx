@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { EditableText } from "@/components/EditableText";
 import { SiteShell } from "@/components/SiteShell";
 import {
   OffPlanRegisterInterestButton,
@@ -27,6 +28,7 @@ import {
 import { resolveMediaUrl } from "@/lib/api/media-url";
 import { getPropertyBySlug, getSimilarPropertiesFor } from "@/lib/api/properties";
 import { cn } from "@/lib/cn";
+import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
 import {
@@ -202,7 +204,16 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
         propertyId={property.id}
         pageUrl={pageUrl}
         eyebrow={t("registerInterestEyebrow")}
-        title={t("registerInterestTitle")}
+        title={
+          <EditableText
+            relUrl={pageBlockKeys.offPlan.relUrl}
+            blockKey={pageBlockKeys.offPlan.detailCta.title}
+            locale={locale}
+            placeholderContent={t("registerInterestTitle")}
+            placeholderTag="h2"
+            className="max-w-[720px] font-[family-name:var(--font-display)] text-[44px] uppercase leading-[52px] tracking-[-0.04em] text-white"
+          />
+        }
         modalTitle={t("privateViewingTitle")}
       />
 

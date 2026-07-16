@@ -44,7 +44,7 @@ export function PaymentPlanSection({
             )}
           >
             {step.caption ? (
-              <p className="text-xs leading-4 text-white/80">{step.caption}</p>
+              <p className="text-xs leading-4 text-sapphire-100">{step.caption}</p>
             ) : (
               <span aria-hidden />
             )}

@@ -93,12 +93,14 @@ export function resolvePaymentPlan(
   property: ApiProperty,
   labels: OffPlanDetailLabels,
 ): PaymentPlanStep[] {
-  // Prefer new camelCase shape from backend
+  // Prefer new camelCase shape from backend.
+  // Figma card order: muted description on top, big %, bold stage/timing on bottom
+  // (e.g. "Reservation & SPA" / "10%" / "On Booking") — so `description` → caption, `stage` → label.
   if (property.paymentPlan?.length) {
     return property.paymentPlan.map((item) => ({
-      caption: item.stage,
+      caption: item.description ?? null,
       percentage: `${item.percentage}%`,
-      label: item.description ?? "",
+      label: item.stage,
     }));
   }
   // Fallback to snake_case shape
