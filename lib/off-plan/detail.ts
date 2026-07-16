@@ -204,12 +204,61 @@ export function resolveUnits(
   return defaultUnits(property, labels);
 }
 
+function bedLabel(count: number): string {
+  return `${count} Bed`;
+}
+
+/** Builds "1 Bed" or "1–4 Bed" from a min/max bedroom range */
+function formatBedsRange(
+  min: number | null | undefined,
+  max: number | null | undefined,
+): string | null {
+  if (min == null) return null;
+  if (max == null || max === min) return bedLabel(min);
+  return `${min}–${max} Bed`;
+}
+
+/** Extracts the bed count from strings like "1 Bed", "Studio", "4-Bedroom" */
+function parseBedCount(unitType: string): number | null {
+  const match = unitType.match(/(\d+)/);
+  return match ? Number.parseInt(match[1], 10) : null;
+}
+
+/** Derives min/max bed range from available_units' unitType labels, e.g. "1 Bed" + "4 Bed" → 1–4 */
+function bedsRangeFromAvailableUnits(
+  property: ApiProperty,
+): { min: number; max: number } | null {
+  const units = property.availableUnits ?? property.available_units;
+  if (!units?.length) return null;
+
+  const counts = units
+    .map((unit) => parseBedCount(unit.unitType ?? unit.unit_type ?? ""))
+    .filter((count): count is number => count != null);
+
+  if (!counts.length) return null;
+  return { min: Math.min(...counts), max: Math.max(...counts) };
+}
+
 export function resolveUnitTypes(property: ApiProperty): string {
+  // Prefer backend-computed summary (new camelCase, then snake_case)
+  if (property.unitTypes?.trim()) {
+    return property.unitTypes;
+  }
   if (property.unit_types?.trim()) {
     return property.unit_types;
   }
+  // Derive from explicit min/max bed fields
+  const bedsMin = property.bedsMin ?? property.beds_min;
+  const bedsMax = property.bedsMax ?? property.beds_max;
+  const fromMinMax = formatBedsRange(bedsMin, bedsMax);
+  if (fromMinMax) return fromMinMax;
+  // Derive from available_units' unitType labels
+  const fromUnits = bedsRangeFromAvailableUnits(property);
+  if (fromUnits) {
+    return formatBedsRange(fromUnits.min, fromUnits.max) ?? "1–4 Bed";
+  }
   if (property.bedrooms != null) {
-    return `${property.bedrooms} Bed`;
+    return bedLabel(property.bedrooms);
   }
   return "1–4 Bed";
 }

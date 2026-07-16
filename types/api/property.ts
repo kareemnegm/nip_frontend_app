@@ -110,7 +110,13 @@ export type ApiProperty = {
   handoverQuarter?: string | null;
   furnishing?: string | null;
   reference_no?: string | null;
+  /** Bedroom summary derived by backend from available_units, e.g. "1–4 Bed" */
   unit_types?: string | null;
+  unitTypes?: string | null;
+  beds_min?: number | null;
+  bedsMin?: number | null;
+  beds_max?: number | null;
+  bedsMax?: number | null;
   payment_split?: string | null;
   /** Display label built by backend, e.g. "60 / 40" or "60 / 40 / 80 / 20" */
   payment_plan_summary?: string | null;

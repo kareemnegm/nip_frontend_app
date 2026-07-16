@@ -144,12 +144,16 @@ html[dir="rtl"] body {
   font-family: var(--font-almarai), Arial, Helvetica, sans-serif;
 }
 
+/* Didot has no Arabic glyphs and its negative letter-spacing (tuned for Latin
+   caps) makes connected Arabic letterforms visually collide — e.g. "في".
+   Force the Arabic UI font + normal tracking wherever a Didot/display
+   heading class is used, regardless of utility specificity/layer order. */
 html[dir="rtl"] [data-site-hero] h1,
 html[dir="rtl"] [data-site-hero] h2,
 html[dir="rtl"] .font-display,
 html[dir="rtl"] .font-\[family-name\:var\(--font-display\)\] {
-  font-family: var(--font-almarai), Arial, Helvetica, sans-serif;
-  letter-spacing: normal;
+  font-family: var(--font-almarai), Arial, Helvetica, sans-serif !important;
+  letter-spacing: normal !important;
 }
 
 html[dir="rtl"] input,

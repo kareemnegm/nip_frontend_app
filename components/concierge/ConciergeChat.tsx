@@ -40,7 +40,22 @@ export function ConciergeChat({
   const [leadConsent, setLeadConsent] = useState(false);
   const [leadSubmitting, setLeadSubmitting] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const userHasMessagedRef = useRef(false);
+  const shouldAutoScrollRef = useRef(true);
+  const wasSendingRef = useRef(false);
+
+  function isNearBottom(container: HTMLElement) {
+    const threshold = 96;
+    return (
+      container.scrollHeight - container.scrollTop - container.clientHeight <
+      threshold
+    );
+  }
+
+  function focusInput() {
+    inputRef.current?.focus({ preventScroll: true });
+  }
 
   const chat = useConciergeChat({
     autoStartSession,
@@ -67,16 +82,32 @@ export function ConciergeChat({
   } = chat;
 
   useEffect(() => {
-    if (!userHasMessagedRef.current) return;
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    function handleScroll() {
+      shouldAutoScrollRef.current = isNearBottom(container!);
+    }
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (!userHasMessagedRef.current || !shouldAutoScrollRef.current) return;
 
     const container = messagesContainerRef.current;
     if (!container) return;
 
-    container.scrollTo({
-      top: container.scrollHeight,
-      behavior: isSending ? "auto" : "smooth",
-    });
-  }, [messages, leadCapture.status, isSending]);
+    container.scrollTop = container.scrollHeight;
+  }, [messages, leadCapture.status]);
+
+  useEffect(() => {
+    if (wasSendingRef.current && !isSending) {
+      focusInput();
+    }
+    wasSendingRef.current = isSending;
+  }, [isSending]);
 
   useEffect(() => {
     if (chat.sessionId && onSessionStart) {
@@ -93,7 +124,10 @@ export function ConciergeChat({
     const value = input;
     setInput("");
     userHasMessagedRef.current = true;
+    shouldAutoScrollRef.current = true;
+    focusInput();
     await send(value);
+    focusInput();
   }
 
   async function handleChipClick(prompt: string) {
@@ -360,10 +394,11 @@ export function ConciergeChat({
         )}
       >
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(event) => setInput(event.target.value)}
-          disabled={isSending || status === "error"}
+          disabled={status === "error"}
           aria-label={t("inputPlaceholder")}
           placeholder={t("inputPlaceholder")}
           className="h-9 min-w-0 flex-1 border-0 bg-transparent text-[13px] text-ink outline-none placeholder:text-ink-tertiary disabled:opacity-60"
@@ -373,7 +408,7 @@ export function ConciergeChat({
           variant="accent"
           size="md"
           className="shrink-0"
-          disabled={isSending || !input.trim()}
+          disabled={isSending || !input.trim() || status === "error"}
         >
           {isSending ? tc("sending") : tc("send")}
         </Button>

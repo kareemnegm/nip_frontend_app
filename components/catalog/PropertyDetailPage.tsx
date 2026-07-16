@@ -8,6 +8,7 @@ import {
   PropertyStoryContent,
   PropertyViewingCard,
 } from "@/components/sections/PropertyStorySections";
+import { SavePropertyButton } from "@/components/sections/SavePropertyButton";
 import {
   Badge,
   Breadcrumbs,
@@ -23,10 +24,12 @@ import {
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
 import { resolveMediaUrl } from "@/lib/api/media-url";
+import { getMemberSavedStatus } from "@/lib/api/member";
 import { getPropertyBySlug, getSimilarPropertiesFor } from "@/lib/api/properties";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
+import { getMemberToken } from "@/lib/member/auth.server";
 import {
   formatAedPrice,
   formatFurnishing,
@@ -129,6 +132,17 @@ export async function PropertyDetailPage({
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const pageUrl = `${siteUrl}${localizedHref(locale, `/${detailBase}/${slug}`)}`;
 
+  const memberToken = await getMemberToken();
+  let initialSaved = false;
+  if (memberToken) {
+    try {
+      const status = await getMemberSavedStatus(memberToken, property.id);
+      initialSaved = status.saved;
+    } catch {
+      initialSaved = false;
+    }
+  }
+
   return (
     <SiteShell>
       <section className="bg-white pb-6 pt-10">
@@ -171,9 +185,22 @@ export async function PropertyDetailPage({
                   <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
                   {formatAedPrice(property.price ?? null)}
                 </p>
-                <Button href={localizedHref(locale, "/contact")} className="w-full sm:w-auto">
-                  {t("requestAdvisory")}
-                </Button>
+                <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
+                  {memberToken ? (
+                    <SavePropertyButton
+                      propertyId={property.id}
+                      initialSaved={initialSaved}
+                      labels={{
+                        save: t("saveProperty"),
+                        saved: t("savedProperty"),
+                        remove: t("removeSavedProperty"),
+                      }}
+                    />
+                  ) : null}
+                  <Button href={localizedHref(locale, "/contact")} className="w-full sm:w-auto">
+                    {t("requestAdvisory")}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

@@ -11,6 +11,7 @@ import {
   getMemberProfile,
   getMemberSaved,
 } from "@/lib/api/member";
+import { resolveMediaUrl } from "@/lib/api/media-url";
 import { getMemberToken } from "@/lib/member/auth.server";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
@@ -78,14 +79,14 @@ export function curatedToAdvisorCards(items: ApiCuratedItem[], locale: Locale = 
       item.type === "project" ? item.project?.slug : item.property?.slug;
     const imageUrl =
       item.type === "project"
-        ? item.project?.primaryImage ?? undefined
-        : item.property?.primaryImage ?? undefined;
+        ? item.project?.primaryImage
+        : item.property?.primaryImage;
 
     return {
       id: item.id,
       title: item.title,
       excerpt: item.note ?? listingTitle ?? "",
-      imageUrl: imageUrl ?? undefined,
+      imageUrl: resolveMediaUrl(imageUrl),
       href: slug
         ? localizedHref(
             locale,

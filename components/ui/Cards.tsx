@@ -496,7 +496,7 @@ export function AdvisorCard({
         </div>
         <div className="flex items-center justify-between pt-2">
           <span className="inline-flex items-end gap-1 text-xs leading-4 text-white">
-            <Icon name="lock" className="h-6 w-6 shrink-0" />
+            <Icon name="lockOpen" className="h-6 w-6 shrink-0" />
             Advisor-Released
           </span>
           {href ? (

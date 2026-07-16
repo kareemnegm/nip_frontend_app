@@ -77,6 +77,13 @@ export async function unsaveMemberProperty(token: string, propertyId: number) {
   });
 }
 
+export async function getMemberSavedStatus(token: string, propertyId: number) {
+  return apiGet<{ saved: boolean; savedAt?: string | null }>(
+    `/member/saved/${propertyId}`,
+    { token, revalidate: false },
+  );
+}
+
 export async function getMemberNotes(
   token: string,
   params: { page?: number; limit?: number; locale?: Locale } = {},

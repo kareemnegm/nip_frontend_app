@@ -35,12 +35,14 @@ export type IconName =
   | "grid"
   | "grow"
   | "handover"
+  | "heart"
   | "home"
   | "image"
   | "instagram"
   | "linkedin"
   | "list"
   | "lock"
+  | "lockOpen"
   | "mail"
   | "mapPin"
   | "menu"
@@ -96,6 +98,10 @@ const fallbackStrokePaths: Partial<Record<IconName, React.ReactNode>> = {
   ),
   frown: (
     <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM8.5 15.5a4.5 4.5 0 0 1 7 0M9 9.5h.01M15 9.5h.01" />
+  ),
+  /** Placeholder until Figma heart asset is exported */
+  heart: (
+    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" />
   ),
   pencil: <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />,
   plus: <path d="M12 5v14M5 12h14" />,
