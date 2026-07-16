@@ -26,17 +26,20 @@ export type SectionHeadingProps = {
  *   line-height: 42px; letter-spacing: -0.88px (= -0.02em); text-transform: uppercase;
  *   color: #0B3268 (text-brand); text-align: center
  *
- * Mobile derived: text-display-sm (36/38/-0.02em).
+ * Mobile: text-display-sm (36/38) — same scale as home hero title.
+ * sm+: text-display-lg (44/42).
  * Tokens include line-height + letter-spacing — no need for separate leading/tracking.
  */
 const titleBase =
-  "font-display font-normal uppercase text-brand text-display-lg";
+  "font-display font-normal uppercase text-brand text-display-sm sm:text-display-lg";
 
 /**
- * Figma description: Archivo Regular 15/22 #323E58; text-align: center (inherited from container).
- * CTA section override: text-body-sm via descriptionClassName prop.
+ * Mobile: body-sm (13/18) — same scale as home hero body.
+ * sm+: body-regular (15/22) per Figma desktop.
+ * CTA can force body-sm at all breakpoints via descriptionClassName.
  */
-const descBase = "text-body-regular font-normal text-ink-secondary";
+const descBase =
+  "text-body-sm font-normal text-ink-secondary sm:text-body-regular";
 
 export async function SectionHeading({
   title,

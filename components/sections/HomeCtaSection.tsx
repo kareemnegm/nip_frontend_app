@@ -19,7 +19,7 @@ export async function HomeCtaSection() {
           title={await getCmsPlaceholder("placeholders.home.cta", "title", locale)}
           description={await getCmsPlaceholder("placeholders.home.cta", "desc", locale)}
           descriptionMaxWidth="max-w-[520px]"
-          descriptionClassName="text-body-sm"
+          descriptionClassName="text-body-sm sm:text-body-sm"
           editable={{
             relUrl: homeEditable.relUrl,
             titleKey: homeEditable.homeCta.titleKey,

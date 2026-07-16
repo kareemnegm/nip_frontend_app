@@ -35,7 +35,6 @@ export async function MarketPulseSection() {
           title={await getCmsPlaceholder("placeholders.home.marketPulse", "title", locale)}
           description={await getCmsPlaceholder("placeholders.home.marketPulse", "desc", locale)}
           descriptionMaxWidth="max-w-[464px]"
-          titleClassName="text-display-sm sm:text-display-lg"
           editable={{
             relUrl: homeEditable.relUrl,
             titleKey: homeEditable.marketPulse.titleKey,

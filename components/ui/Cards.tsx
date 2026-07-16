@@ -329,10 +329,11 @@ export function OffPlanCard({
       )}
     >
       <CardImage imageUrl={imageUrl} alt={title} icon="building" />
-      {/* Figma "Card / Project" 1525:27936 — Description uses justify-between across 5 rows;
-          the only explicit gap override is pt-[8px] on the Handover/Starting-From row. */}
+      {/* Figma "Card / Project" 1525:28104 — Description uses justify-between across 5 rows;
+          the only explicit gap override is pt-[8px] on the Handover/Starting-From row, whose
+          label→value stacks use an 8px gap. */}
       <div className={cardTypography.body}>
-        <div className="flex items-center justify-between">
+        <div className="flex items-start justify-between">
           <span className={cardTypography.badge}>
             {t("breadcrumbOffPlan")}
           </span>
@@ -344,15 +345,15 @@ export function OffPlanCard({
           <span className={cn(cardTypography.locationOneLine, "min-w-0")}>{location}</span>
         </p>
         <div className="flex items-start justify-between gap-4 pt-2">
-          <div>
+          <div className="flex flex-col gap-2">
             <p className={cardTypography.startingFrom}>{t("handoverLabel")}</p>
-            <p className="mt-1.5 text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
+            <p className="text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
               {handover}
             </p>
           </div>
-          <div className="text-right">
+          <div className="flex flex-col items-end gap-2 text-right">
             <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
-            <p className={cn("mt-1.5 justify-end", cardTypography.price)}>
+            <p className={cn("justify-end", cardTypography.price)}>
               <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
               {displayPrice}
             </p>
