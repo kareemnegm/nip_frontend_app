@@ -16,6 +16,13 @@ export function isOffPlanProperty(property: ApiProperty): boolean {
   return property.listing_type?.toLowerCase() === "offplan";
 }
 
+export function formatFurnishing(value: string): string {
+  return value
+    .split(/[-_]/)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
 export function propertyDetailHref(
   property: ApiProperty,
   locale: Locale,

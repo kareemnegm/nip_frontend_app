@@ -1,5 +1,5 @@
 import type { FactItem } from "@/components/ui/FactsStrip";
-import { formatAedPrice } from "@/lib/mappers/property";
+import { formatAedPrice, formatFurnishing } from "@/lib/mappers/property";
 import type { ApiProperty } from "@/types/api/property";
 
 /** Normalized payment step for UI rendering */
@@ -24,6 +24,8 @@ export type OffPlanDetailLabels = {
   paymentLabel: string;
   statusLabel: string;
   statusOffPlan: string;
+  furnishingFactLabel: string;
+  referenceFactLabel: string;
   paymentStep1Caption: string;
   paymentStep1Label: string;
   paymentStep2Caption: string;
@@ -275,6 +277,18 @@ export function offPlanFactsFromApi(
     label: labels.statusLabel,
     value: labels.statusOffPlan,
     icon: "crane",
+  });
+
+  facts.push({
+    label: labels.furnishingFactLabel,
+    value: property.furnishing ? formatFurnishing(property.furnishing) : "—",
+    icon: "sofa",
+  });
+
+  facts.push({
+    label: labels.referenceFactLabel,
+    value: property.reference_no ?? "—",
+    icon: "reference",
   });
 
   return facts;

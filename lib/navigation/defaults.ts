@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/i18n/config";
+import type { ApiBlogCategory } from "@/types/api";
 import type { NavigationItem, NavigationPayload, NavigationZone } from "@/types/api/navigation";
 import en from "@/messages/en.json";
 import ar from "@/messages/ar.json";
@@ -90,7 +91,30 @@ function buildFooterZones(locale: Locale, f: FooterMessages): NavigationZone[] {
   ];
 }
 
-function buildFooterItems(locale: Locale, f: FooterMessages): NavigationItem[] {
+function footerInsightsLinks(
+  f: FooterMessages,
+  blogCategories?: ApiBlogCategory[],
+): { label: string; href: string }[] {
+  if (blogCategories && blogCategories.length > 0) {
+    return blogCategories.map((category) => ({
+      label: category.name,
+      href: `/insights?category=${encodeURIComponent(category.slug)}`,
+    }));
+  }
+
+  return [
+    { label: f.marketIntelligence, href: "/insights?category=market-intelligence" },
+    { label: f.investmentGuides, href: "/insights?category=investment-guides" },
+    { label: f.goldenVisa, href: "/insights?category=golden-visa" },
+    { label: f.journal, href: "/insights" },
+  ];
+}
+
+function buildFooterItems(
+  locale: Locale,
+  f: FooterMessages,
+  blogCategories?: ApiBlogCategory[],
+): NavigationItem[] {
   const items: NavigationItem[] = [];
 
   const propertiesLinks = [
@@ -135,13 +159,7 @@ function buildFooterItems(locale: Locale, f: FooterMessages): NavigationItem[] {
     items.push(makeItem(NAV_ZONE_KEYS.FOOTER_RESOURCES, locale, link.label, link.href, i + 1));
   });
 
-  const insightsLinks = [
-    { label: f.marketIntelligence, href: "/insights?category=market-intelligence" },
-    { label: f.investmentGuides, href: "/insights?category=investment-guides" },
-    { label: f.goldenVisa, href: "/insights?category=golden-visa" },
-    { label: f.journal, href: "/insights" },
-  ];
-  insightsLinks.forEach((link, i) => {
+  footerInsightsLinks(f, blogCategories).forEach((link, i) => {
     items.push(makeItem(NAV_ZONE_KEYS.FOOTER_INSIGHTS, locale, link.label, link.href, i + 1));
   });
 
@@ -222,7 +240,10 @@ function buildHeaderItems(locale: Locale, n: NavMessages): NavigationItem[] {
   return items;
 }
 
-export function buildDefaultNavigation(locale: Locale): NavigationPayload {
+export function buildDefaultNavigation(
+  locale: Locale,
+  options: { blogCategories?: ApiBlogCategory[] } = {},
+): NavigationPayload {
   const f = footerMessages(locale);
   const n = navMessages(locale);
 
@@ -231,7 +252,10 @@ export function buildDefaultNavigation(locale: Locale): NavigationPayload {
       makeZone(NAV_ZONE_KEYS.HEADER_MAIN, locale, "Main navigation", 0),
       ...buildFooterZones(locale, f),
     ],
-    items: [...buildHeaderItems(locale, n), ...buildFooterItems(locale, f)],
+    items: [
+      ...buildHeaderItems(locale, n),
+      ...buildFooterItems(locale, f, options.blogCategories),
+    ],
   };
 }
 

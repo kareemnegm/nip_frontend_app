@@ -4,6 +4,7 @@ import {
   NewsletterForm,
   type NewsletterFormLabels,
 } from "@/components/forms/InquiryForms";
+import { getBlogCategories } from "@/lib/api/blogs";
 import { cn } from "@/lib/cn";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { FooterIcon, FooterSocialIcon, type FooterSocialIconName } from "./ui/FooterIcon";
@@ -234,12 +235,25 @@ export async function FooterContent({
     { label: t("submitArticle"), href: "/contribute" },
   ];
 
-  const insightsLinks: FooterLink[] = [
-    { label: t("marketIntelligence"), href: "/insights?category=market-intelligence" },
-    { label: t("investmentGuides"), href: "/insights?category=investment-guides" },
-    { label: t("goldenVisa"), href: "/insights?category=golden-visa" },
-    { label: t("journal"), href: "/insights" },
-  ];
+  const blogCategories = await getBlogCategories(locale);
+  const insightsLinks: FooterLink[] =
+    blogCategories.length > 0
+      ? blogCategories.map((category) => ({
+          label: category.name,
+          href: `/insights?category=${encodeURIComponent(category.slug)}`,
+        }))
+      : [
+          {
+            label: t("marketIntelligence"),
+            href: "/insights?category=market-intelligence",
+          },
+          {
+            label: t("investmentGuides"),
+            href: "/insights?category=investment-guides",
+          },
+          { label: t("goldenVisa"), href: "/insights?category=golden-visa" },
+          { label: t("journal"), href: "/insights" },
+        ];
 
   const aboutLinks: FooterLink[] = [{ label: t("aboutUs"), href: "/about" }];
 

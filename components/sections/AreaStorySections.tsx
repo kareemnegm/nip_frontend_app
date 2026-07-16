@@ -121,7 +121,7 @@ export function AreaAboutSection({
         {title}
       </h2>
       <p className="max-w-[900px] text-body-lg text-ink">{body}</p>
-      <div className="flex max-w-[900px] flex-wrap gap-2.5">
+      <div className="flex flex-wrap items-center gap-2.5">
         {highlights.map((item) => (
           <AreaFeaturePill key={item.label} {...item} />
         ))}

@@ -26,7 +26,7 @@ export function SiteShellClient({ children }: SiteShellClientProps) {
           </LocalizedLink>
         </div>
       </header>
-      <main className="flex-1">{children}</main>
+      <main className="flex flex-1 flex-col">{children}</main>
       <footer className="border-t border-line bg-sapphire-800 py-8 text-center text-sm text-basalt-300">
         © 2026 NIP — Novel Insight Property
       </footer>

@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { apiGet, apiPost, apiRequest } from "./client";
+import { getBlogCategories } from "./blogs";
 import { buildDefaultNavigation } from "@/lib/navigation/defaults";
 import type { Locale } from "@/lib/i18n/config";
 import type {
@@ -10,6 +11,11 @@ import type {
   NavigationZoneUpdatePayload,
 } from "@/types/api/navigation";
 
+async function defaultNavigationWithInsights(locale: Locale) {
+  const blogCategories = await getBlogCategories(locale);
+  return buildDefaultNavigation(locale, { blogCategories });
+}
+
 export const getNavigation = cache(async (locale: Locale): Promise<NavigationPayload> => {
   try {
     return await apiGet<NavigationPayload>("/navigation", {
@@ -17,7 +23,7 @@ export const getNavigation = cache(async (locale: Locale): Promise<NavigationPay
       revalidate: 60,
     });
   } catch {
-    return buildDefaultNavigation(locale);
+    return defaultNavigationWithInsights(locale);
   }
 });
 
@@ -32,7 +38,7 @@ export async function getNavigationAdmin(
       revalidate: false,
     });
   } catch {
-    return buildDefaultNavigation(locale);
+    return defaultNavigationWithInsights(locale);
   }
 }
 

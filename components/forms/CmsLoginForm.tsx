@@ -98,7 +98,7 @@ export function CmsLoginCard({ locale }: { locale: Locale }) {
 
   return (
     <div className="w-full max-w-md rounded-[var(--radius-card)] border border-line bg-white p-8 shadow-[var(--shadow-card)] sm:p-10">
-      <div className="flex items-start justify-between">
+      <div className="flex w-full items-center justify-between">
         <Logo />
         <span className="text-end text-[10px] font-semibold uppercase leading-tight tracking-wide text-ink-tertiary">
           {t("contentEditorLine1")}

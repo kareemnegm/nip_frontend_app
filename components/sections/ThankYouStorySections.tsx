@@ -14,7 +14,7 @@ export async function ThankYouSection() {
   const tc = await getTranslations({ locale, namespace: "common" });
 
   return (
-    <section className="flex items-center justify-center bg-white py-20 lg:py-[140px]">
+    <section className="flex flex-1 items-center justify-center bg-white py-20 lg:py-[140px]">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className="mx-auto flex w-full max-w-[846px] flex-col items-center gap-[18px] text-center">
           <span className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-success text-white">

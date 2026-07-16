@@ -29,6 +29,7 @@ import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
 import {
   formatAedPrice,
+  formatFurnishing,
   isOffPlanProperty,
   mapPropertyToCard,
   mapPropertyToOffPlanCard,
@@ -40,13 +41,6 @@ type PropertyDetailPageProps = {
   slug: string;
   detailBase: "properties" | "off-plan";
 };
-
-function formatFurnishing(value: string): string {
-  return value
-    .split(/[-_]/)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-}
 
 function propertyFactsFromApi(
   property: ApiProperty,
@@ -76,20 +70,16 @@ function propertyFactsFromApi(
     property.type
       ? { label: labels.typeLabel, value: property.type, icon: "building" as const }
       : null,
-    property.furnishing
-      ? {
-          label: labels.furnishingLabel,
-          value: formatFurnishing(property.furnishing),
-          icon: "sofa" as const,
-        }
-      : null,
-    property.reference_no
-      ? {
-          label: labels.referenceLabel,
-          value: property.reference_no,
-          icon: "reference" as const,
-        }
-      : null,
+    {
+      label: labels.furnishingLabel,
+      value: property.furnishing ? formatFurnishing(property.furnishing) : "—",
+      icon: "sofa" as const,
+    },
+    {
+      label: labels.referenceLabel,
+      value: property.reference_no ?? "—",
+      icon: "reference" as const,
+    },
   ].filter(Boolean) as Array<{
     label: string;
     value: string;

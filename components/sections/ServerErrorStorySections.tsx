@@ -14,7 +14,7 @@ export async function ServerErrorSection() {
   const tc = await getTranslations({ locale, namespace: "common" });
 
   return (
-    <section className="flex min-h-[60vh] items-center bg-white py-20 pb-[72px]">
+    <section className="flex flex-1 items-center justify-center bg-white py-20 pb-[72px]">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div className="mx-auto flex w-full max-w-[846px] flex-col items-center text-center">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-error text-white">
