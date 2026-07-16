@@ -78,7 +78,8 @@ export async function ContributeFormSection() {
             "flex flex-col items-start gap-10 lg:flex-row lg:justify-between",
           )}
         >
-          <div className="flex w-full flex-col gap-6 lg:max-w-[380px]">
+          {/* Figma 1525:27349 — title + points share the same left edge (no ul indent) */}
+          <div className="flex w-full flex-col items-start gap-6 lg:max-w-[380px]">
             <EditableText
               relUrl={blocks.relUrl}
               blockKey={blocks.sidebar.title}
@@ -87,16 +88,19 @@ export async function ContributeFormSection() {
               placeholderTag="h2"
               className="text-h3 font-bold text-brand"
             />
-            <ul className="flex flex-col gap-6">
+            <ul className="m-0 flex w-full list-none flex-col gap-6 p-0">
               {contributePublishPoints.map((point) => (
-                <li key={point.title} className="flex flex-col gap-1.5">
+                <li key={point.title} className="flex w-full flex-col items-start gap-1.5">
                   <div className="flex items-center gap-2.5">
-                    <span className="h-2 w-2 shrink-0 rounded-full bg-accent" />
+                    <span className="size-2 shrink-0 rounded-full bg-accent" aria-hidden />
                     <p className="text-label-semibold font-semibold text-brand">
                       {point.title}
                     </p>
                   </div>
-                  <p className="text-body-sm text-ink-tertiary">{point.body}</p>
+                  {/* Body flush with bullet (x=0), not indented under the title */}
+                  <p className="w-full max-w-[360px] text-start text-body-sm text-ink-tertiary">
+                    {point.body}
+                  </p>
                 </li>
               ))}
             </ul>

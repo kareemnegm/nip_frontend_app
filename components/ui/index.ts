@@ -47,6 +47,7 @@ export type { IconName, IconProps } from "./Icon";
 export { InsightCategoryFilters } from "./InsightCategoryFilters";
 export { FeaturedInsightCard } from "./FeaturedInsightCard";
 export type { FeaturedInsightCardProps } from "./FeaturedInsightCard";
+export { RelatedInsightCard } from "./RelatedInsightCard";
 export { ImagePlaceholder } from "./ImagePlaceholder";
 export type { ImagePlaceholderProps } from "./ImagePlaceholder";
 export { ConsultationRequestForm, ContactRequestForm, PrivateAdvisoryForm } from "./LeadForms";

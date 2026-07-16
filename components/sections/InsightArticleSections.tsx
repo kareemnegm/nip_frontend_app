@@ -1,7 +1,8 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { Breadcrumbs, Button, Icon, InsightCard } from "@/components/ui";
+import { Breadcrumbs, Button, Icon } from "@/components/ui";
 import type { InsightCardProps } from "@/components/ui/Cards";
+import { RelatedInsightCard } from "@/components/ui/RelatedInsightCard";
 import {
   siteMaxWidth,
   sitePageGutterX,
@@ -197,12 +198,12 @@ export function RelatedInsightsSection({ title, cards }: RelatedInsightsSectionP
     <section className="w-full bg-sapphire-50">
       <div className={cn("mx-auto w-full pt-16 pb-20", siteMaxWidth, sitePageGutterX)}>
         <div className={cn(sitePageInnerClassName, "flex flex-col items-center gap-7")}>
-          <p className="text-center text-[12px] font-semibold uppercase leading-4 text-accent">
+          <p className="w-full text-center text-overline font-semibold uppercase text-accent">
             {title}
           </p>
-          <div className="grid w-full gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <div className="grid w-full items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {cards.map((insight) => (
-              <InsightCard key={insight.href} {...insight} />
+              <RelatedInsightCard key={insight.href} {...insight} />
             ))}
           </div>
         </div>
