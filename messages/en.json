@@ -721,6 +721,9 @@
       "description": "We're looking into it. Please try again shortly — Your Data is Safe."
     },
     "global": {
+      "stickyCta": {
+        "tagline": "Discreet Advisory for Elevated Living"
+      },
       "footer": {
         "tagline": "Curated real estate advisory focused on exceptional residences and long-term market insight across Dubai.",
         "newsletterTitle": "Stay Ahead of the Market",
