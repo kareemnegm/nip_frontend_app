@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { LocalizedLink } from "./LocalizedLink";
 import { Icon } from "./ui/Icon";
 import { cn } from "@/lib/cn";
@@ -30,6 +30,8 @@ function NavCaret({ open }: { open: boolean }) {
 export function DesktopNav() {
   const localeContext = useOptionalLocale();
   const navT = (key: string) => clientT(localeContext?.locale, "nav", key);
+  const navId = useId();
+  const navRef = useRef<HTMLElement>(null);
   const [openDropdown, setOpenDropdown] = useState<NavDropdownKey | null>(null);
 
   function openOnly(dropdown: NavDropdownKey) {
@@ -40,8 +42,31 @@ export function DesktopNav() {
     setOpenDropdown(null);
   }
 
+  useEffect(() => {
+    if (!openDropdown) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") closeDropdowns();
+    }
+
+    function onPointerDown(event: PointerEvent) {
+      const target = event.target as Node | null;
+      if (target && !navRef.current?.contains(target)) {
+        closeDropdowns();
+      }
+    }
+
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [openDropdown]);
+
   return (
     <nav
+      ref={navRef}
       className="hidden items-center gap-5 lg:flex lg:justify-self-center xl:gap-[28px]"
       aria-label="Main"
       onMouseLeave={closeDropdowns}
@@ -56,6 +81,7 @@ export function DesktopNav() {
           const dropdownKey = item.dropdown as NavDropdownKey;
           const dropdownItems = getNavDropdownItems(dropdownKey);
           const isOpen = openDropdown === dropdownKey;
+          const panelId = `${navId}-${dropdownKey}-panel`;
 
           return (
             <div
@@ -67,17 +93,24 @@ export function DesktopNav() {
                 href={item.href}
                 className={navLinkClass}
                 aria-expanded={isOpen}
+                aria-controls={panelId}
+                aria-haspopup="menu"
                 onFocus={() => openOnly(dropdownKey)}
               >
                 {navT(item.key)}
                 <NavCaret open={isOpen} />
               </LocalizedLink>
               <div
+                id={panelId}
+                role="menu"
+                hidden={!isOpen}
+                aria-hidden={!isOpen}
+                data-open={isOpen ? "true" : "false"}
                 className={cn(
-                  "nav-dropdown-panel absolute start-1/2 top-full z-30 -translate-x-1/2 pt-3 transition-[opacity,transform] duration-300 ease-[var(--motion-ease-lux)] rtl:translate-x-1/2",
+                  "nav-dropdown-panel absolute start-1/2 top-full z-30 -translate-x-1/2 pt-3 transition-[opacity,transform,visibility] duration-300 ease-[var(--motion-ease-lux)] rtl:translate-x-1/2",
                   isOpen
-                    ? "pointer-events-auto opacity-100"
-                    : "pointer-events-none opacity-0",
+                    ? "pointer-events-auto visible opacity-100"
+                    : "pointer-events-none invisible opacity-0",
                 )}
               >
                 <div
@@ -88,9 +121,11 @@ export function DesktopNav() {
                 >
                   <ul className="flex flex-col gap-1">
                     {dropdownItems.map((link) => (
-                      <li key={`${dropdownKey}-${link.key}`}>
+                      <li key={`${dropdownKey}-${link.key}`} role="none">
                         <LocalizedLink
                           href={link.href}
+                          role="menuitem"
+                          tabIndex={isOpen ? 0 : -1}
                           className="block px-5 py-2 text-[13px] leading-[18px] text-ink transition-colors duration-200 hover:bg-sapphire-50 hover:text-brand"
                           onFocus={() => openOnly(dropdownKey)}
                         >

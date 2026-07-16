@@ -144,9 +144,8 @@ function FooterContactBlock({
 }) {
   const phone = "+971 50 165 2441";
   const email = "info@niprealty.com";
-  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    address.replace(/\n/g, ", "),
-  )}`;
+  const mapsHref =
+    "https://www.google.com/maps/place/Novel+Insight+Property/@25.2209709,55.2851914,17z/data=!3m1!4b1!4m6!3m5!1s0x3e5f13c209c0e98d:0xb06087cf1bc6060c!8m2!3d25.2209709!4d55.2851914!16s%2Fg%2F11x9bhvm7l";
 
   return (
     <div className="flex flex-col gap-8 lg:gap-12" dir={isRtl ? "rtl" : "ltr"}>
