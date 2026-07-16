@@ -23,24 +23,30 @@ export function FactsStrip({
     return (
       <div
         className={cn(
-          // Mobile: fixed 2-col grid so each row (Beds|Baths, Area|Type, …) stays aligned.
+          // Mobile / tablet: full-width 2-col grid (same width as gallery & other page boxes).
           // Desktop: single horizontal strip with dividers between facts.
-          "grid w-full grid-cols-2 items-stretch overflow-hidden rounded-[var(--radius-card)] border border-border-default bg-white py-4 sm:flex sm:flex-nowrap sm:items-center sm:py-[22px]",
+          "mx-auto box-border grid w-full max-w-full grid-cols-2 overflow-hidden rounded-[var(--radius-card)] border border-border-default bg-white py-3",
+          "lg:flex lg:flex-nowrap lg:items-center lg:py-[22px]",
           className,
         )}
       >
         {items.map((item, index) => (
           <div
-            key={`${item.label}-${item.value}`}
-            className="flex min-w-0 items-center sm:flex-1"
+            key={`${item.label}-${index}`}
+            className={cn(
+              "flex w-full min-w-0 items-center justify-center",
+              "lg:flex-1 lg:justify-start",
+              // Balanced padding so both columns sit evenly inside the full-width card
+              index % 2 === 0 ? "pl-4 pr-2 lg:px-0" : "pl-2 pr-4 lg:px-0",
+            )}
           >
             {index > 0 ? (
               <div
                 aria-hidden
-                className="hidden h-9 w-px shrink-0 bg-border-default sm:block"
+                className="hidden h-9 w-px shrink-0 bg-border-default lg:block"
               />
             ) : null}
-            <div className="flex min-w-0 flex-1 items-center justify-center gap-2 px-3 py-2.5 sm:px-4 sm:py-0">
+            <div className="flex min-w-0 max-w-full items-center gap-2 py-2.5 lg:flex-1 lg:justify-center lg:px-4 lg:py-0">
               {variant === "property-detail" && isPropertyFactIconName(item.icon) ? (
                 <PropertyFactIcon name={item.icon} />
               ) : (

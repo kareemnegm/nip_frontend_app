@@ -218,8 +218,9 @@ export async function PropertyDetailPage({
       {facts.length > 0 ? (
         <section className="bg-white pb-10">
           <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-            <div className={sitePageInnerClassName}>
+            <div className={cn(sitePageInnerClassName, "w-full")}>
               <FactsStrip
+                className="w-full"
                 items={facts}
                 variant={detailBase === "properties" ? "property-detail" : "property"}
               />

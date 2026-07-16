@@ -34,7 +34,7 @@ export function PropertyAdvisoryCard({
     <>
       <aside
         className={cn(
-          "flex w-full max-w-[312px] shrink-0 flex-col gap-6 rounded-[var(--radius-card)] border border-line bg-sapphire-50 p-6 lg:sticky lg:top-28 lg:self-start",
+          "mx-auto flex w-full max-w-[312px] shrink-0 flex-col gap-6 rounded-[var(--radius-card)] border border-line bg-sapphire-50 p-6 lg:mx-0 lg:sticky lg:top-28 lg:self-start",
           className,
         )}
       >
