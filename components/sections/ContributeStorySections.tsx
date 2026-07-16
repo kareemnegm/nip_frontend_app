@@ -41,7 +41,7 @@ export async function ContributeHeroSection() {
               locale={locale}
               placeholderContent={await getCmsPlaceholder("placeholders.contribute.hero", "eyebrow", locale)}
               placeholderTag="p"
-              className="text-overline font-semibold leading-4 text-accent"
+              className="text-overline font-semibold text-accent"
             />
             <EditableText
               relUrl={blocks.relUrl}
@@ -49,7 +49,7 @@ export async function ContributeHeroSection() {
               locale={locale}
               placeholderContent={await getCmsPlaceholder("placeholders.contribute.hero", "title", locale)}
               placeholderTag="h1"
-              className="font-[family-name:var(--font-display)] text-[44px] leading-[42px] tracking-[-0.02em] text-brand"
+              className="font-display text-display-lg uppercase text-brand"
             />
           </div>
           <EditableText
@@ -58,7 +58,7 @@ export async function ContributeHeroSection() {
             locale={locale}
             placeholderContent={await getCmsPlaceholder("placeholders.contribute.hero", "description", locale)}
             placeholderTag="p"
-            className="max-w-[680px] text-body-lg leading-[28px] text-ink-secondary"
+            className="max-w-[640px] text-body-lg text-ink-secondary"
           />
         </div>
       </div>
@@ -70,35 +70,33 @@ export async function ContributeFormSection() {
   const locale = await getRequestLocale();
 
   return (
-    <section className="bg-white pb-[72px] pt-10">
+    <section className="bg-white pt-10 pb-20">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div
           className={cn(
             sitePageInnerClassName,
-            "grid gap-10 lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)] lg:gap-16",
+            "flex flex-col items-start gap-10 lg:flex-row lg:justify-between",
           )}
         >
-          <div className="max-w-[512px] lg:pt-4">
+          <div className="flex w-full flex-col gap-6 lg:max-w-[380px]">
             <EditableText
               relUrl={blocks.relUrl}
               blockKey={blocks.sidebar.title}
               locale={locale}
               placeholderContent={await getCmsPlaceholder("placeholders.contribute.sidebar", "title", locale)}
               placeholderTag="h2"
-              className="text-xl font-bold leading-[26px] text-brand"
+              className="text-h3 font-bold text-brand"
             />
-            <ul className="mt-6 space-y-6">
+            <ul className="flex flex-col gap-6">
               {contributePublishPoints.map((point) => (
-                <li key={point.title} className="flex gap-3">
-                  <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-accent" />
-                  <div>
-                    <p className="text-body-md font-bold leading-[22px] text-ink">
+                <li key={point.title} className="flex flex-col gap-1.5">
+                  <div className="flex items-center gap-2.5">
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-accent" />
+                    <p className="text-label-semibold font-semibold text-brand">
                       {point.title}
                     </p>
-                    <p className="mt-1 text-body-sm leading-[18px] text-ink-secondary">
-                      {point.body}
-                    </p>
                   </div>
+                  <p className="text-body-sm text-ink-tertiary">{point.body}</p>
                 </li>
               ))}
             </ul>

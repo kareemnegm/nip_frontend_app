@@ -67,7 +67,7 @@ const UNIQUE_COUNTRIES = COUNTRIES.filter(
 const DEFAULT_COUNTRY = UNIQUE_COUNTRIES[0];
 
 const fieldClasses =
-  "h-11 rounded-[var(--radius-field)] border border-line bg-white text-sm text-ink outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-sapphire-100";
+  "h-11 rounded-[var(--radius-field)] border border-border-default bg-white text-body-sm text-ink outline-none transition placeholder:text-text-inactive focus:border-brand focus:ring-2 focus:ring-sapphire-100";
 
 function Flag({ iso2, className }: { iso2: string; className?: string }) {
   return (
@@ -85,6 +85,7 @@ function Flag({ iso2, className }: { iso2: string; className?: string }) {
 
 export type PhoneInputProps = {
   label?: string;
+  labelClassName?: string;
   placeholder?: string;
   error?: string;
   value?: string;
@@ -97,6 +98,7 @@ export type PhoneInputProps = {
 
 export function PhoneInput({
   label = "Phone Number",
+  labelClassName,
   placeholder = "Phone number",
   error,
   onChange,
@@ -168,8 +170,12 @@ export function PhoneInput({
   }, [open]);
 
   return (
-    <label className="flex flex-col gap-2 text-start text-xs font-semibold text-ink-secondary">
-      {label ? <span>{label}</span> : null}
+    <label className="flex w-full flex-col gap-2 text-start">
+      {label ? (
+        <span className={cn("text-label-semibold font-semibold text-ink-secondary", labelClassName)}>
+          {label}
+        </span>
+      ) : null}
       <div ref={rootRef} className="relative flex gap-3 rtl:flex-row-reverse">
         <button
           type="button"
@@ -214,12 +220,12 @@ export function PhoneInput({
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search country"
-                className="h-9 w-full rounded-[var(--radius-field)] border border-line px-3 text-sm font-normal text-ink outline-none focus:border-brand"
+                className="h-9 w-full rounded-[var(--radius-field)] border border-line px-3 text-body-sm font-normal text-ink outline-none focus:border-brand"
               />
             </div>
             <ul id={listboxId} role="listbox" className="max-h-60 overflow-y-auto py-1">
               {filtered.length === 0 ? (
-                <li className="px-3 py-2 text-sm font-normal text-ink-secondary">No results</li>
+                <li className="px-3 py-2 text-body-sm font-normal text-ink-secondary">No results</li>
               ) : (
                 filtered.map((c) => (
                   <li key={c.iso2}>
@@ -229,7 +235,7 @@ export function PhoneInput({
                       aria-selected={c.iso2 === country.iso2}
                       onClick={() => selectCountry(c)}
                       className={cn(
-                        "flex w-full items-center gap-2.5 px-3 py-2 text-start text-sm font-normal text-ink hover:bg-sapphire-50",
+                        "flex w-full items-center gap-2.5 px-3 py-2 text-start text-body-sm font-normal text-ink hover:bg-sapphire-50",
                         c.iso2 === country.iso2 && "bg-sapphire-50",
                       )}
                     >
@@ -244,7 +250,7 @@ export function PhoneInput({
           </div>
         ) : null}
       </div>
-      {error ? <span className="text-xs font-normal text-error">{error}</span> : null}
+      {error ? <span className="text-body-xs font-normal text-error">{error}</span> : null}
     </label>
   );
 }

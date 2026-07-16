@@ -212,7 +212,14 @@ export function CardCarousel({
               ...(trackHeight !== undefined ? { height: `${trackHeight}px` } : {}),
             }}
           >
-            <div className="flex h-full w-full overflow-hidden [&>*]:h-full [&>*]:w-full">
+            <div
+              className={cn(
+                "flex w-full [&>*]:w-full",
+                trackHeight !== undefined
+                  ? "h-full overflow-hidden [&>*]:h-full"
+                  : "[&>*]:h-full",
+              )}
+            >
               {child}
             </div>
           </div>

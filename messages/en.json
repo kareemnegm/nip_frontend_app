@@ -31,7 +31,7 @@
     "viewAll": "View all",
     "learnMore": "Learn more",
     "readMore": "Read more",
-    "backToHome": "Back to home",
+    "backToHome": "Back to Home",
     "contactUs": "Contact us",
     "detailsOnRequest": "Details on request",
     "property": "Property",
@@ -39,6 +39,7 @@
     "search": "Search",
     "askConcierge": "Ask the Concierge",
     "readLatestInsights": "Read the Latest Insights",
+    "exploreInsights": "Explore Insights",
     "readInsight": "Read the Insight",
     "exploreCollection": "Explore the Collection",
     "searchProperties": "Search Properties",
@@ -151,21 +152,57 @@
     "signInFailedRetry": "Sign in failed. Please try again.",
     "messageSent": "Message sent",
     "messageCouldNotBeSent": "Message could not be sent.",
-    "phoneNumber": "Phone Number",
+    "phoneNumber": "Phone number",
     "phonePlaceholder": "Phone number",
     "stepIndicator": "Step 1 of 2",
     "fullName": "Full Name",
-    "emailAddress": "E-mail Address",
+    "namePlaceholder": "Your name",
+    "emailAddress": "Email address",
     "yourMessage": "Your Message",
-    "consentUpdates": "I agree to receive curated updates from Novel Insight Property.",
-    "requirementTitle": "Tell us a little about your Requirement",
-    "requirementSubtitle": "A NIP advisor will review your note and respond with the most relevant next step.",
+    "preferredLanguage": "Preferred language",
+    "leadType": "Lead type",
+    "budgetRange": "Budget range",
+    "timeline": "Timeline",
+    "requirementMessagePlaceholder": "Tell us what you are considering, what matters most, or where you would like guidance.",
+    "consentUpdates": "I agree to receive curated updates from Novel Insight Property",
+    "requirementTitle": "Tell us a little about your requirement",
+    "requirementSubtitle": "A NIP advisor will review your note and respond with the most relevant next step",
     "submitConsultationRequest": "Submit Consultation Request",
+    "consultationHelper": "Submissions route to the Zoho lead path. reCAPTCHA on step 2",
     "privateAdvisoryTitle": "Request Private Advisory",
     "privateAdvisorySubtitle": "Discreet and tailored. An advisor responds within one business day.",
     "requestPrivateAdvisory": "Request Private Advisory",
     "formErrorGeneric": "Something went wrong. Please try again.",
-    "invalidValue": "Invalid value"
+    "invalidValue": "Invalid value",
+    "leadTypeOptions": {
+      "placeholder": "Buying / Investing / Other",
+      "buying": "Buying",
+      "investing": "Investing",
+      "renting": "Renting / Leasing",
+      "other": "Other"
+    },
+    "budgetRangeOptions": {
+      "placeholder": "Select budget",
+      "under2m": "Under AED 2M",
+      "between2And5m": "AED 2M – 5M",
+      "between5And10m": "AED 5M – 10M",
+      "tenPlus": "AED 10M+"
+    },
+    "timelineOptions": {
+      "placeholder": "Select timeline",
+      "immediate": "Immediate (0–1 month)",
+      "oneToThreeMonths": "1–3 months",
+      "threeToSixMonths": "3–6 months",
+      "sixToTwelveMonths": "6–12 months",
+      "exploring": "Just exploring"
+    },
+    "preferredLanguageOptions": {
+      "english": "English",
+      "arabic": "Arabic",
+      "russian": "Russian",
+      "chinese": "Chinese",
+      "french": "French"
+    }
   },
   "privateOffice": {
     "title": "Private Office",
@@ -592,7 +629,7 @@
       "hero": {
         "eyebrow": "NIP PRIVATE ADVISORY",
         "title": "Speak with NIP",
-        "description": "A considered property decision begins with a conversation."
+        "description": "A considered property decision begins with a conversation"
       },
       "intro": {
         "overline": "PRIVATE ADVISORY | BY INVITATION",
@@ -659,9 +696,9 @@
       }
     },
     "thankYou": {
-      "eyebrow": "CONFIRMATION",
-      "title": "Request Received",
-      "description": "We've received your request. A member of the NIP advisory team will be in touch shortly."
+      "eyebrow": "Request Received",
+      "title": "Thank You",
+      "description": "We've received your Request. A Private Advisor will be in touch within One Business Day."
     },
     "notFound": {
       "eyebrow": "Error 404",

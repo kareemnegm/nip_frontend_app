@@ -40,6 +40,10 @@ export function AreaHero({
           sizes="100vw"
         />
       ) : null}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 h-[75%] bg-gradient-to-t from-brand via-brand/70 to-transparent"
+      />
       <div className={cn("relative mx-auto w-full pb-14", siteMaxWidth, sitePageGutterX)}>
         <div className={cn(sitePageInnerClassName, "flex flex-col gap-3")}>
           <p className="text-overline font-semibold text-platinum-400">{eyebrow}</p>

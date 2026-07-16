@@ -25,6 +25,7 @@ export type IconName =
   | "crane"
   | "developer"
   | "downtown"
+  | "error404"
   | "facebook"
   | "family"
   | "floorplan"
@@ -96,7 +97,6 @@ const fallbackStrokePaths: Partial<Record<IconName, React.ReactNode>> = {
   frown: (
     <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM8.5 15.5a4.5 4.5 0 0 1 7 0M9 9.5h.01M15 9.5h.01" />
   ),
-  list: <path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01" />,
   pencil: <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />,
   plus: <path d="M12 5v14M5 12h14" />,
   search: <path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM21 21l-4.3-4.3" />,

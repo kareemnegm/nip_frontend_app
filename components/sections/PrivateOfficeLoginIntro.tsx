@@ -7,16 +7,17 @@ import { getRequestLocale } from "@/lib/i18n/server";
 
 const loginBlocks = pageBlockKeys.privateOffice;
 
+/** Figma node 1525:27708 — lock badge + "PRIVATE OFFICE" overline + Didot H1 + description. */
 export async function PrivateOfficeLoginIntro() {
   const locale = await getRequestLocale();
   const t = await getTranslations({ locale, namespace: "privateOffice" });
 
   return (
-    <div className="mt-8 text-center">
-      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white">
-        <Icon name="lock" className="h-5 w-5" />
+    <div className="flex flex-col items-center gap-4 text-center">
+      <span className="flex h-[52px] w-[52px] items-center justify-center rounded-full bg-sapphire-600 text-white">
+        <Icon name="lock" className="h-9 w-9" />
       </span>
-      <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-tertiary">
+      <p className="text-overline font-semibold uppercase text-platinum-600">
         {t("title")}
       </p>
       <EditableText
@@ -25,7 +26,7 @@ export async function PrivateOfficeLoginIntro() {
         locale={locale}
         placeholderContent={await getCmsPlaceholder("placeholders.privateOffice.login", "title", locale)}
         placeholderTag="h1"
-        className="mt-3 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-brand"
+        className="text-property-h1"
       />
       <EditableText
         relUrl={loginBlocks.relUrl}
@@ -33,7 +34,7 @@ export async function PrivateOfficeLoginIntro() {
         locale={locale}
         placeholderContent={await getCmsPlaceholder("placeholders.privateOffice.login", "description", locale)}
         placeholderTag="p"
-        className="mx-auto mt-3 max-w-xs text-sm leading-6 text-ink-secondary"
+        className="max-w-[360px] text-body-sm text-ink-tertiary"
       />
     </div>
   );

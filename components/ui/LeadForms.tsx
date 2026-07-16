@@ -1,5 +1,6 @@
 "use client";
 
+import { ContactRequirementForm } from "@/components/forms/ContactRequirementForm";
 import { InquiryForm } from "@/components/forms/InquiryForms";
 import { Button } from "./Button";
 import { Select, Textarea, TextInput } from "./FormControls";
@@ -12,22 +13,15 @@ const insightCategoryOptions = [
   { label: "Community Guides", value: "community-guides" },
 ];
 
-function FormCard({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="rounded-[var(--radius-card)] bg-sapphire-50 p-6">
-      <div className="rounded-[var(--radius-card)] border border-line bg-white p-8 shadow-[var(--shadow-card)]">
-        {children}
-      </div>
-    </div>
-  );
-}
+/** Figma "04 Label/Small" (11/14/500) — compact field labels on the Contribute form card. */
+const fieldLabelClassName = "text-label-muted font-medium text-ink-secondary";
 
 export function PrivateAdvisoryForm() {
   return <InquiryForm variant="privateAdvisory" />;
 }
 
 export function ContactRequestForm() {
-  return <InquiryForm variant="contact" />;
+  return <ContactRequirementForm />;
 }
 
 export function ConsultationRequestForm() {
@@ -36,29 +30,41 @@ export function ConsultationRequestForm() {
 
 export function ContributeInsightForm() {
   return (
-    <FormCard>
-      <form className="space-y-5">
-        <TextInput label="Article Title" placeholder="A clear, specific headline" />
-        <Select label="Category" options={insightCategoryOptions} />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <TextInput label="Author" placeholder="Your name" />
-          <TextInput label="Email" type="email" placeholder="you@email.com" />
+    <div className="flex w-full flex-col items-start gap-[18px] rounded-xl border border-line bg-white p-9 lg:max-w-[540px]">
+      <form className="flex w-full flex-col items-start gap-[18px]">
+        <TextInput
+          label="Article Title"
+          labelClassName={fieldLabelClassName}
+          placeholder="A clear, specific headline"
+        />
+        <Select label="Category" labelClassName={fieldLabelClassName} options={insightCategoryOptions} />
+        <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
+          <TextInput label="Author" labelClassName={fieldLabelClassName} placeholder="Your name" />
+          <TextInput
+            label="Email"
+            labelClassName={fieldLabelClassName}
+            type="email"
+            placeholder="you@email.com"
+          />
         </div>
-        <Textarea label="Abstract" placeholder="A short summary of your piece..." />
-        <div>
-          <p className="mb-2 text-xs font-semibold text-ink-secondary">Draft</p>
-          <div className="flex flex-col items-center justify-center gap-1 rounded-[var(--radius-field)] border border-dashed border-line bg-sapphire-50 px-6 py-8 text-center">
+        <Textarea
+          label="Abstract"
+          labelClassName={fieldLabelClassName}
+          placeholder="A short summary of your piece..."
+          className="min-h-[96px]"
+        />
+        <div className="flex w-full flex-col gap-1.5">
+          <p className={fieldLabelClassName}>Draft</p>
+          <div className="flex w-full flex-col items-center justify-center gap-1 rounded-[var(--radius-card)] border border-dashed border-border-default bg-sapphire-50 py-6 text-center">
             <Icon name="upload" className="h-6 w-6 text-brand" />
-            <p className="mt-1 text-body-sm leading-[18px] text-ink-secondary">
+            <p className="text-body-sm font-medium text-ink-tertiary">
               Drop your draft here or browse
             </p>
-            <p className="text-xs leading-4 text-ink-tertiary">PDF or DOCX · max 10MB</p>
+            <p className="text-body-xs text-basalt-300">PDF or DOCX · max 10MB</p>
           </div>
         </div>
-        <Button type="submit" className="w-full justify-center">
-          Submit for Review
-        </Button>
+        <Button type="submit">Submit for Review</Button>
       </form>
-    </FormCard>
+    </div>
   );
 }

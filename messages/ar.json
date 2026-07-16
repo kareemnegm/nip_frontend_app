@@ -39,6 +39,7 @@
     "search": "بحث",
     "askConcierge": "اسأل الاستشاري",
     "readLatestInsights": "اقرأ أحدث الرؤى",
+    "exploreInsights": "استكشف الرؤى",
     "readInsight": "اقرأ الرؤية",
     "exploreCollection": "استكشف المجموعة",
     "searchProperties": "البحث عن عقارات",
@@ -155,17 +156,53 @@
     "phonePlaceholder": "رقم الهاتف",
     "stepIndicator": "الخطوة 1 من 2",
     "fullName": "الاسم الكامل",
+    "namePlaceholder": "اسمك",
     "emailAddress": "البريد الإلكتروني",
     "yourMessage": "رسالتك",
-    "consentUpdates": "أوافق على تلقي تحديثات منسقة من Novel Insight Property.",
+    "preferredLanguage": "اللغة المفضلة",
+    "leadType": "نوع الطلب",
+    "budgetRange": "نطاق الميزانية",
+    "timeline": "الإطار الزمني",
+    "requirementMessagePlaceholder": "أخبرنا بما تفكر فيه، وما يهمك أكثر، أو أين تحتاج إلى التوجيه.",
+    "consentUpdates": "أوافق على تلقي تحديثات منسقة من Novel Insight Property",
     "requirementTitle": "أخبرنا قليلاً عن متطلباتك",
-    "requirementSubtitle": "سيراجع مستشار NIP ملاحظتك ويرد بأكثر الخطوات التالية ملاءمة.",
+    "requirementSubtitle": "سيراجع مستشار NIP ملاحظتك ويرد بأكثر الخطوات التالية ملاءمة",
     "submitConsultationRequest": "إرسال طلب الاستشارة",
+    "consultationHelper": "تُوجَّه الطلبات إلى مسار العملاء في Zoho. reCAPTCHA في الخطوة 2",
     "privateAdvisoryTitle": "طلب استشارة خاصة",
     "privateAdvisorySubtitle": "بسرية وتخصيص. يرد المستشار خلال يوم عمل واحد.",
     "requestPrivateAdvisory": "طلب استشارة خاصة",
     "formErrorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
-    "invalidValue": "قيمة غير صالحة"
+    "invalidValue": "قيمة غير صالحة",
+    "leadTypeOptions": {
+      "placeholder": "شراء / استثمار / أخرى",
+      "buying": "شراء",
+      "investing": "استثمار",
+      "renting": "إيجار / تأجير",
+      "other": "أخرى"
+    },
+    "budgetRangeOptions": {
+      "placeholder": "اختر الميزانية",
+      "under2m": "أقل من 2 مليون درهم",
+      "between2And5m": "2 – 5 مليون درهم",
+      "between5And10m": "5 – 10 مليون درهم",
+      "tenPlus": "أكثر من 10 مليون درهم"
+    },
+    "timelineOptions": {
+      "placeholder": "اختر الإطار الزمني",
+      "immediate": "فوري (0 – 1 شهر)",
+      "oneToThreeMonths": "1 – 3 أشهر",
+      "threeToSixMonths": "3 – 6 أشهر",
+      "sixToTwelveMonths": "6 – 12 شهراً",
+      "exploring": "أستكشف الخيارات فقط"
+    },
+    "preferredLanguageOptions": {
+      "english": "الإنجليزية",
+      "arabic": "العربية",
+      "russian": "الروسية",
+      "chinese": "الصينية",
+      "french": "الفرنسية"
+    }
   },
   "privateOffice": {
     "title": "المكتب الخاص",
@@ -592,7 +629,7 @@
       "hero": {
         "eyebrow": "NIP استشارة خاصة",
         "title": "تحدث مع NIP",
-        "description": "قرار عقاري مدروس يبدأ بمحادثة."
+        "description": "قرار عقاري مدروس يبدأ بمحادثة"
       },
       "intro": {
         "overline": "استشارة خاصة | بالدعوة",
@@ -659,9 +696,9 @@
       }
     },
     "thankYou": {
-      "eyebrow": "تأكيد",
-      "title": "تم استلام الطلب",
-      "description": "استلمنا طلبك. سيتواصل معك أحد أعضاء فريق NIP الاستشاري قريباً."
+      "eyebrow": "تم استلام الطلب",
+      "title": "شكراً لك",
+      "description": "لقد استلمنا طلبك. سيتواصل معك مستشار خاص خلال يوم عمل واحد."
     },
     "notFound": {
       "eyebrow": "خطأ 404",

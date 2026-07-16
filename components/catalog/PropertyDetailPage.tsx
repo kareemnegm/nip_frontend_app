@@ -23,7 +23,7 @@ import {
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
 import { resolveMediaUrl } from "@/lib/api/media-url";
-import { getPropertyBySlug, getSimilarProperties } from "@/lib/api/properties";
+import { getPropertyBySlug, getSimilarPropertiesFor } from "@/lib/api/properties";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
@@ -107,8 +107,10 @@ export async function PropertyDetailPage({
   if (detailBase === "off-plan" && !isOffPlanProperty(property)) notFound();
   if (detailBase === "properties" && isOffPlanProperty(property)) notFound();
 
-  const similar = (await getSimilarProperties(slug, locale)).filter((item) =>
-    detailBase === "off-plan" ? isOffPlanProperty(item) : !isOffPlanProperty(item),
+  const similar = await getSimilarPropertiesFor(
+    property,
+    locale,
+    detailBase === "off-plan" ? "offplan" : "sale",
   );
   const listHref = localizedHref(locale, `/${detailBase}`);
   const t = await getTranslations({ locale, namespace: "catalog" });

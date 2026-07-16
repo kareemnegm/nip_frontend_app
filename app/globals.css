@@ -37,7 +37,7 @@
   --color-line: #d9deea;
   --color-border-default: #bbcadd;
   --color-border-strong: #6f95c5;
-  --color-success: #2e7d5b;
+  --color-success: #36957c;
   --color-warning: #b07a1e;
   --color-error: #b23a48;
   --color-gold: #b07a1e;
@@ -56,6 +56,7 @@
   --font-logo: var(--font-kalnia);
 
   --radius-card: 8px;
+  --radius-card-lg: 16px;      /* elevated auth cards (Private Office / CMS login) */
   --radius-field: 4px;
   --shadow-card: 0 2px 4px rgb(18 51 94 / 6%);
 
@@ -79,6 +80,10 @@
   --text-heading-h1: 30px;
   --text-heading-h1--line-height: 38px;
   --text-heading-h1--letter-spacing: -1.2px;
+
+  /* 02 Heading/H2 — Archivo Bold, form card headings (Figma exact) */
+  --text-heading-h2: 24px;
+  --text-heading-h2--line-height: 30px;
 
   /* Stat value — Archivo Bold, market pulse cards */
   --text-stat-value: 2.25rem;           /* 36px */
@@ -117,6 +122,8 @@
   --text-label-semibold--line-height: 1rem;
   --text-label-muted: 0.6875rem;        /* 11px */
   --text-label-muted--line-height: 0.875rem;
+  --text-tagline-micro: 0.5rem;         /* 8px — auth-card logo tagline ("For Those Who Expect More") only */
+  --text-tagline-micro--line-height: 0.625rem;
 }
 
 html {

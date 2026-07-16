@@ -3,10 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
-import { Icon } from "./Icon";
-
-const filterSelectClassName =
-  "h-[38px] w-full min-w-0 flex-1 appearance-none rounded-[var(--radius-field)] border border-line bg-white bg-[length:10px] bg-[right_12px_center] bg-no-repeat px-3.5 pe-8 text-body-sm font-medium text-ink-secondary outline-none sm:max-w-[140px] lg:max-w-[110px]";
+import { LabeledSelect } from "./LabeledSelect";
 
 const KEYWORD_DEBOUNCE_MS = 400;
 
@@ -22,39 +19,6 @@ type PropertyFilterBarProps = {
   basePath: string;
   values?: PropertyFilterValues;
 };
-
-function FilterSelect({
-  "aria-label": ariaLabel,
-  options,
-  value,
-  onChange,
-}: {
-  "aria-label": string;
-  options: Array<{ label: string; value: string }>;
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  return (
-    <div className="relative min-w-0 flex-1 sm:max-w-[140px] lg:max-w-[110px]">
-      <select
-        aria-label={ariaLabel}
-        className={filterSelectClassName}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-      >
-        {options.map((option) => (
-          <option key={option.value || option.label} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-      <Icon
-        name="chevronDown"
-        className="pointer-events-none absolute right-3 top-1/2 h-2.5 w-2.5 -translate-y-1/2 text-ink-secondary rtl:right-auto rtl:left-3"
-      />
-    </div>
-  );
-}
 
 function buildQueryString(
   values: PropertyFilterValues,
@@ -187,7 +151,6 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
       debounceRef.current = null;
     }
 
-    // Always reset results when keyword is cleared — bypass skip guard
     if (value === "") {
       skipKeywordDebounceRef.current = false;
       pushFilters({ keyword: "" });
@@ -222,7 +185,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
 
   return (
     <form
-      className="flex w-full flex-wrap items-center gap-2.5 overflow-hidden rounded-[var(--radius-card)] border border-line bg-white p-3 shadow-[var(--shadow-card)] lg:flex-nowrap"
+      className="flex w-full flex-wrap items-center gap-2.5 overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface p-3 shadow-[var(--shadow-card)] lg:flex-nowrap"
       onSubmit={onSubmit}
     >
       <input
@@ -232,23 +195,19 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
         value={keyword}
         onChange={(event) => onKeywordChange(event.target.value)}
         onKeyDown={(event) => {
-          // Ctrl/Cmd + A then Delete/Backspace clears the field in one keystroke;
-          // the onChange fires normally, but ESC in some browsers also clears.
           if (event.key === "Escape" && keyword !== "") {
             onKeywordChange("");
           }
         }}
         ref={(el) => {
-          // Catch the native "search" event that fires when the × clear button
-          // is clicked — this event is not forwarded by React's onChange.
           if (!el) return;
           const handler = () => onKeywordChange("");
           el.addEventListener("search", handler);
           return () => el.removeEventListener("search", handler);
         }}
-        className="h-[38px] min-w-0 flex-[1_1_200px] rounded-[var(--radius-field)] bg-sapphire-50 px-3.5 text-body-sm text-ink outline-none placeholder:text-text-inactive lg:flex-[1.4_1_0%]"
+        className="min-w-0 w-full shrink-0 rounded-[var(--radius-field)] bg-sapphire-50 px-3.5 py-2.5 text-body-sm text-ink outline-none placeholder:text-text-inactive lg:w-[470px] lg:flex-none"
       />
-      <FilterSelect
+      <LabeledSelect
         aria-label={t("location")}
         options={filterOptions}
         value={area}
@@ -257,7 +216,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
           pushFilters({ area: value });
         }}
       />
-      <FilterSelect
+      <LabeledSelect
         aria-label={t("type")}
         options={typeOptions}
         value={type}
@@ -266,7 +225,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
           pushFilters({ type: value });
         }}
       />
-      <FilterSelect
+      <LabeledSelect
         aria-label={t("price")}
         options={priceOptions}
         value={minPrice}
@@ -275,7 +234,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
           pushFilters({ min_price: value });
         }}
       />
-      <FilterSelect
+      <LabeledSelect
         aria-label={t("bedsFilter")}
         options={bedsOptions}
         value={bedrooms}
@@ -287,7 +246,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
       <button
         type="submit"
         disabled={isPending}
-        className="inline-flex h-[38px] w-full shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-sapphire-600 px-[22px] text-overline font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-60 sm:w-auto sm:min-w-[96px] lg:shrink-0"
+        className="inline-flex w-full shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-brand px-[22px] py-[9px] text-overline font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-60 sm:w-[96px] lg:flex-none"
       >
         {isPending ? tc("loading") : tc("search")}
       </button>

@@ -225,8 +225,9 @@ async function main() {
     variables: variablesReport,
     tailwindTypography,
     nextSteps: [
-      "Compare typography px values with docs/FIGMA-AUDIT.md and .cursor/skills/figma-to-react-components/nip-typography-map.md",
+      "Compare typography px values with .cursor/design-system/typography-map.md and docs/FIGMA-AUDIT.md",
       "Update app/globals.css @theme tokens if Figma changed",
+      "Update .cursor/design-system/ maps when tokens change",
       "Map Figma style names to Heading/Text variants in components/ui/",
       "Run npm run check after any globals.css edits",
     ],

@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { defaultLocale, type Locale } from "@/lib/i18n/config";
+import { isOffPlanProperty } from "@/lib/mappers/property";
 import type {
   ApiProperty,
   LaravelPaginated,
@@ -67,6 +68,50 @@ export async function getSimilarProperties(
     logApiFallback(`GET /properties/${slug}/similar`, error);
     return [];
   }
+}
+
+/**
+ * Similar-properties card grid for a detail page (Figma "Similar Properties",
+ * node 1525:28213). The `/properties/{slug}/similar` recommendation endpoint
+ * sometimes returns listings of the *other* listing type (e.g. off-plan
+ * projects under a ready-property page), which silently emptied this
+ * section. This backfills with same-listing-type properties from the
+ * regular catalog so the section reliably renders whenever matching
+ * inventory exists.
+ */
+export async function getSimilarPropertiesFor(
+  property: ApiProperty,
+  locale: Locale = defaultLocale,
+  listingType: "sale" | "offplan",
+  limit = 3,
+): Promise<ApiProperty[]> {
+  const matchesListingType = (item: ApiProperty) =>
+    listingType === "offplan" ? isOffPlanProperty(item) : !isOffPlanProperty(item);
+
+  const results = (await getSimilarProperties(property.slug, locale))
+    .filter(matchesListingType)
+    .slice(0, limit);
+  const seen = new Set(results.map((item) => item.id));
+
+  if (results.length >= limit) return results;
+
+  const fallbackQueries: PropertyListParams[] = [
+    { listing_type: listingType, type: property.type ?? undefined, per_page: limit + 6, locale },
+    { listing_type: listingType, per_page: limit + 6, locale },
+  ];
+
+  for (const params of fallbackQueries) {
+    if (results.length >= limit) break;
+    const page = await getProperties(params);
+    for (const item of page.data) {
+      if (results.length >= limit) break;
+      if (item.slug === property.slug || seen.has(item.id)) continue;
+      seen.add(item.id);
+      results.push(item);
+    }
+  }
+
+  return results;
 }
 
 export function buildPropertySearchParams(

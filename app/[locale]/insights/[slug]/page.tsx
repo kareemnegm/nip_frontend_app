@@ -17,6 +17,7 @@ import {
   mapBlogToInsightCard,
   resolveBlogAuthor,
   resolveBlogExcerpt,
+  resolveBlogLeadParagraph,
 } from "@/lib/mappers/blog";
 
 type PageProps = {
@@ -86,7 +87,7 @@ export default async function InsightArticlePage({ params }: PageProps) {
           locale={locale}
           category={blog.category?.name ?? "Insight"}
           title={blog.title}
-          excerpt={resolveBlogExcerpt(blog)}
+          excerpt={resolveBlogLeadParagraph(blog)}
           author={resolveBlogAuthor(blog)}
           publishedAt={blog.created_at}
           readTime={formatBlogReadTime(blog.read_time)}

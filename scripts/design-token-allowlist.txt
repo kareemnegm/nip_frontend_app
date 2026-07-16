@@ -1,0 +1,54 @@
+# Temporary design-token debt — remove a path when that page/section is refixed to Figma.
+# Paths are repo-relative with forward slashes.
+# New pages must NOT be added here.
+# See: .cursor/design-system/forbidden.md
+
+app/[locale]/developers/page.tsx
+app/[locale]/insights/page.tsx
+components/catalog/OffPlanDetailPage.tsx
+components/catalog/PropertyDetailPage.tsx
+components/cms/CmsStaffBar.tsx
+components/concierge/ConciergeChat.tsx
+components/DesktopNav.tsx
+components/EditableImageClient.tsx
+components/EditableTextClient.tsx
+components/FaqAccordion.tsx
+components/forms/CmsLoginForm.tsx
+components/forms/InquiryForms.tsx
+components/forms/MemberAdvisorMessageForm.tsx
+components/MobileNav.tsx
+components/sections/AboutStorySections.tsx
+components/sections/AreaStorySections.tsx
+components/sections/CatalogHeroSection.tsx
+components/sections/ConciergeStorySections.tsx
+components/sections/CtaBand.tsx
+components/sections/CuratedStorySections.tsx
+components/sections/DeveloperStorySections.tsx
+components/sections/EditableCtaBand.tsx
+components/sections/FaqStorySections.tsx
+components/sections/HomeHeroSection.tsx
+components/sections/HomeSearchForm.tsx
+components/sections/InsightArticleSections.tsx
+components/sections/LegalStorySections.tsx
+components/sections/OffPlanRegisterInterest.tsx
+components/sections/OffPlanStorySections.tsx
+components/sections/PageHero.tsx
+components/sections/PrivateOfficeMemberSections.tsx
+components/sections/PrivateOfficeSection.tsx
+components/sections/PropertyAdvisoryCard.tsx
+components/sections/PropertyGalleryClient.tsx
+components/sections/PropertyStorySections.tsx
+components/sections/SectionHeading.tsx
+components/sections/ServerErrorStorySections.client.tsx
+components/sections/ServerErrorStorySections.tsx
+components/sections/StatusScreen.tsx
+components/SiteShellClient.tsx
+components/ui/Badge.tsx
+components/ui/Breadcrumbs.tsx
+components/ui/Button.tsx
+components/ui/Cards.tsx
+components/ui/FactsStrip.tsx
+components/ui/FeaturedInsightCard.tsx
+components/ui/Modal.tsx
+components/ui/PropertyMapCanvas.tsx
+components/ui/SearchBars.tsx

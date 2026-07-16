@@ -25,7 +25,7 @@ import {
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
 import { resolveMediaUrl } from "@/lib/api/media-url";
-import { getPropertyBySlug, getSimilarProperties } from "@/lib/api/properties";
+import { getPropertyBySlug, getSimilarPropertiesFor } from "@/lib/api/properties";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
@@ -52,9 +52,7 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
   const property = await getPropertyBySlug(slug, locale);
   if (!property || !isOffPlanProperty(property)) notFound();
 
-  const similar = (await getSimilarProperties(slug, locale)).filter((item) =>
-    isOffPlanProperty(item),
-  );
+  const similar = await getSimilarPropertiesFor(property, locale, "offplan");
   const listHref = localizedHref(locale, "/off-plan");
   const t = await getTranslations({ locale, namespace: "catalog" });
   const labels: OffPlanDetailLabels = {

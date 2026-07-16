@@ -44,8 +44,8 @@ export function PrivateOfficeLoginForm({ locale }: { locale: Locale }) {
   }
 
   return (
-    <>
-      <form className="mt-8 space-y-4" onSubmit={onSubmit}>
+    <div className="flex w-full flex-col items-center gap-4">
+      <form className="flex w-full flex-col gap-4" onSubmit={onSubmit}>
         <TextInput
           label={t("email")}
           type="email"
@@ -63,26 +63,26 @@ export function PrivateOfficeLoginForm({ locale }: { locale: Locale }) {
           required
         />
         {error ? (
-          <p className="text-sm text-error" role="alert">
+          <p className="text-body-sm text-error" role="alert">
             {error}
           </p>
         ) : null}
-        <div className="flex justify-center pt-2">
+        <div className="flex justify-center">
           <Button type="submit" disabled={loading}>
             {loading ? tCommon("signingIn") : tCommon("signIn")}
           </Button>
         </div>
       </form>
 
-      <p className="mt-6 text-center text-sm text-brand">
+      <p className="text-center text-label-muted font-medium text-accent">
         <Link href={localizedHref(locale, "/contact")} className="hover:underline">
           {t("requestAccess")}
         </Link>
-        <span className="mx-2 text-ink-tertiary">|</span>
+        <span className="mx-2">|</span>
         <Link href={localizedHref(locale, "/contact")} className="hover:underline">
           {t("forgotPassword")}
         </Link>
       </p>
-    </>
+    </div>
   );
 }

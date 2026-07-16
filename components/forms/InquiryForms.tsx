@@ -11,7 +11,7 @@ import { useLocale } from "@/lib/i18n/context";
 import { localizedHref } from "@/lib/i18n/helpers";
 
 type InquiryFormProps = {
-  variant: "contact" | "consultation" | "privateAdvisory";
+  variant: "consultation" | "privateAdvisory";
 };
 
 export function InquiryForm({ variant }: InquiryFormProps) {
@@ -33,11 +33,7 @@ export function InquiryForm({ variant }: InquiryFormProps) {
   const subtitle =
     variant === "privateAdvisory" ? t("privateAdvisorySubtitle") : t("requirementSubtitle");
   const submitLabel =
-    variant === "contact"
-      ? t("sendMessage")
-      : variant === "consultation"
-        ? t("submitConsultationRequest")
-        : t("requestPrivateAdvisory");
+    variant === "consultation" ? t("submitConsultationRequest") : t("requestPrivateAdvisory");
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -55,28 +51,21 @@ export function InquiryForm({ variant }: InquiryFormProps) {
     };
 
     try {
-      if (variant === "contact") {
-        const res = await fetch("/api/forms/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
+      const res = await fetch("/api/forms/consultation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...payload,
+          external_source:
+            variant === "privateAdvisory" ? "Website Private Advisory" : "Website Consultation",
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw Object.assign(new Error(data.message ?? t("messageCouldNotBeSent")), {
+          status: res.status,
+          errors: data.errors,
         });
-        const data = await res.json();
-        if (!res.ok) throw Object.assign(new Error(data.message ?? t("messageCouldNotBeSent")), { status: res.status, errors: data.errors });
-      } else {
-        const res = await fetch("/api/forms/consultation", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...payload,
-            external_source:
-              variant === "privateAdvisory"
-                ? "Website Private Advisory"
-                : "Website Consultation",
-          }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw Object.assign(new Error(data.message ?? t("messageCouldNotBeSent")), { status: res.status, errors: data.errors });
       }
       router.push(localizedHref(locale, "/thank-you"));
     } catch (error) {

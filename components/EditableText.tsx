@@ -66,9 +66,9 @@ export async function EditableText({
   const dbElementTag = block?.elementTag;
   const dbTag: Tag = isTag(dbElementTag) ? dbElementTag : "p";
 
-  const hasDbContent =
-    dbContent !== null && dbContent !== undefined && dbContent !== "";
-  const effectiveContent = hasDbContent ? dbContent : (placeholderContent ?? null);
+  const trimmedDb = (dbContent ?? "").trim();
+  const hasDbContent = trimmedDb !== "";
+  const effectiveContent = hasDbContent ? trimmedDb : (placeholderContent ?? null);
   const tag: Tag = hasDbContent
     ? dbTag
     : isTag(placeholderTag)

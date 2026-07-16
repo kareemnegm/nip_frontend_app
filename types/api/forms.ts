@@ -5,6 +5,10 @@ export type ContactInquiryPayload = {
   message: string;
   interested_property?: string;
   language?: string;
+  preferred_language?: string;
+  lead_type?: string;
+  budget_range?: string;
+  timeline?: string;
   company?: string;
   "g-recaptcha-response"?: string;
 };

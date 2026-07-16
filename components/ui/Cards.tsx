@@ -18,31 +18,30 @@ export const cardTypography = {
   shell:
     "flex h-full flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
   body: "flex flex-1 flex-col justify-between px-6 pb-4 pt-6",
-  bodySale:
-    "flex flex-1 flex-col justify-between px-6 pb-4 pt-6",
-  bodyAligned:
-    "grid flex-1 grid-rows-[auto_3.25rem_1.125rem_1fr_auto_auto] gap-3 px-6 pb-4 pt-6",
-  bodyInsight: "flex flex-1 flex-col gap-3 px-6 pb-5 pt-6",
+  /** Figma "Description" frame — pt 24, px 24, pb 16, no forced row heights (avoids dead space under short titles) */
+  bodySale: "flex flex-1 flex-col px-6 pb-4 pt-6",
+  /** Figma Card / Insight 1525:28283 — Description: pt 24, px 24, pb 8, justify-between */
+  bodyInsight: "flex flex-1 flex-col justify-between px-6 pb-2 pt-6",
   title: "text-h3 font-bold text-brand",
-  titleTwoLine: "line-clamp-2 min-h-[3.25rem]",
+  titleTwoLine: "line-clamp-2",
   location: "flex items-center gap-1 text-body-sm text-ink-tertiary",
   locationOneLine: "line-clamp-1 min-h-[1.125rem]",
   locationIcon: "h-3.5 w-3.5 shrink-0 text-accent",
-  meta: "inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold leading-4 text-ink",
+  meta: "inline-flex shrink-0 items-center gap-1.5 text-label-semibold font-semibold text-ink",
   metaRow: "flex min-h-[22px] flex-nowrap gap-[14px] overflow-hidden",
   metaIconWrap:
     "inline-flex h-[22px] w-[22px] items-center justify-center rounded-[2px] bg-basalt-50 p-1",
   metaIcon: "h-3.5 w-3.5 text-ink",
-  startingFrom: "text-xs leading-4 text-ink-tertiary",
-  price: "flex items-center gap-2 text-xl font-bold leading-[26px] text-brand",
+  startingFrom: "text-body-xs text-ink-tertiary",
+  price: "flex items-center gap-2 text-h3 font-bold text-brand",
   priceIcon: "h-[18px] w-[18px] shrink-0",
   badge:
-    "rounded-[2px] bg-basalt-50 px-2.5 py-1 text-[11px] font-medium leading-[14px] text-ink-secondary",
-  cta: "inline-flex shrink-0 items-center gap-1 text-xs font-semibold leading-4 text-accent",
+    "rounded-[2px] bg-basalt-50 px-2.5 py-1 text-label-muted font-medium text-ink-secondary",
+  cta: "inline-flex shrink-0 items-center gap-1 text-label-semibold font-semibold text-accent",
   ctaIcon: "h-4 w-4",
   category: "text-overline font-semibold uppercase text-accent",
-  excerpt: "text-[13px] leading-[18px] text-ink-secondary",
-  metaMuted: "text-[11px] font-medium leading-[14px] text-platinum-400",
+  excerpt: "text-body-sm text-ink-secondary",
+  metaMuted: "text-label-muted font-medium text-platinum-400",
 } as const;
 
 export type PropertyCardProps = BaseCardProps & {
@@ -249,11 +248,11 @@ export function PropertyCard({
       {imageLabel ? <span className="sr-only">{imageLabel}</span> : null}
       <div className={cardTypography.bodySale}>
         <h3 className={cn(cardTypography.title, cardTypography.titleTwoLine)}>{title}</h3>
-        <p className={cardTypography.location}>
+        <p className={cn(cardTypography.location, "mt-2")}>
           <Icon name="mapPin" className={cardTypography.locationIcon} />
           <span className={cn(cardTypography.locationOneLine, "min-w-0")}>{location}</span>
         </p>
-        <div className={cardTypography.metaRow}>
+        <div className={cn(cardTypography.metaRow, "mt-3")}>
           {meta.map((item) => (
             <span key={item} className={cardTypography.meta}>
               <span className={cardTypography.metaIconWrap}>
@@ -266,14 +265,14 @@ export function PropertyCard({
             </span>
           ))}
         </div>
-        <div className="flex items-center justify-between gap-4 pt-6">
+        <div className="mt-auto flex items-center justify-between gap-4 pt-6">
           <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
           <p className={cardTypography.price}>
             <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
             {stripCurrencyPrefix(price, currency)}
           </p>
         </div>
-        <div className="flex items-center justify-between gap-4">
+        <div className="mt-4 flex items-center justify-between gap-4">
           <div className="flex flex-wrap gap-2">
             {badges.map((badge) => (
               <span key={badge} className={cardTypography.badge}>
@@ -324,28 +323,27 @@ export function OffPlanCard({
       data-reveal
       className={cn(
         cardTypography.shell,
-        "h-[480px] overflow-hidden",
+        "h-full min-h-[480px] overflow-hidden",
         href && "cursor-pointer",
         className,
       )}
     >
       <CardImage imageUrl={imageUrl} alt={title} icon="building" />
-      <div className={cardTypography.bodyAligned}>
+      {/* Figma "Card / Project" 1525:27936 — Description uses justify-between across 5 rows;
+          the only explicit gap override is pt-[8px] on the Handover/Starting-From row. */}
+      <div className={cardTypography.body}>
         <div className="flex items-center justify-between">
           <span className={cardTypography.badge}>
             {t("breadcrumbOffPlan")}
           </span>
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-[2px] bg-basalt-50 p-1">
-            <Icon name="crane" className="h-5 w-5 text-sapphire-500" />
-          </span>
+          <Icon name="crane" className="h-6 w-6 shrink-0 text-accent" />
         </div>
         <h3 className={cn(cardTypography.title, cardTypography.titleTwoLine)}>{title}</h3>
         <p className={cardTypography.location}>
           <Icon name="mapPin" className={cardTypography.locationIcon} />
           <span className={cn(cardTypography.locationOneLine, "min-w-0")}>{location}</span>
         </p>
-        <div aria-hidden className="min-h-0" />
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start justify-between gap-4 pt-2">
           <div>
             <p className={cardTypography.startingFrom}>{t("handoverLabel")}</p>
             <p className="mt-1.5 text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
@@ -403,19 +401,19 @@ export function InsightCard({
       data-reveal
       className={cn(
         cardTypography.shell,
-        "min-h-[440px] overflow-hidden",
+        "h-full",
         href && "cursor-pointer",
         className,
       )}
     >
       {showImage ? (
-        <div className="relative h-[200px] shrink-0 overflow-hidden rounded-[4px] sm:h-[220px]">
+        <div className="relative h-[220px] shrink-0 overflow-hidden rounded-[4px]">
           <Image
             src={imageUrl!}
             alt={title}
             fill
             className="motion-card-image object-cover object-center"
-            sizes="(max-width: 768px) 100vw, 33vw"
+            sizes="(max-width: 768px) 100vw, 480px"
             onError={() => setImageError(true)}
           />
         </div>
@@ -424,13 +422,9 @@ export function InsightCard({
       )}
       <div className={cardTypography.bodyInsight}>
         <p className={cardTypography.category}>{category}</p>
-        <h3 className={cn(cardTypography.title, "line-clamp-2 min-h-[3.25rem]")}>
-          {title}
-        </h3>
-        <p className={cn(cardTypography.excerpt, "line-clamp-3 min-h-[3.375rem]")}>
-          {excerpt}
-        </p>
-        <div className="mt-auto flex items-center justify-between gap-4 pt-4">
+        <h3 className={cn(cardTypography.title, "line-clamp-2")}>{title}</h3>
+        <p className={cn(cardTypography.excerpt, "line-clamp-2")}>{excerpt}</p>
+        <div className="flex items-center justify-between gap-4 pt-1">
           <span className={cardTypography.metaMuted}>
             {readTime} | {author}
           </span>
@@ -549,7 +543,7 @@ export function CommunityCard({
       <div className={cardTypography.body}>
         <div className="space-y-3">
           <h3 className={cn(cardTypography.title, "flex items-center gap-1.5")}>
-            <Icon name="mapPin" className={cardTypography.priceIcon} />
+            <Icon name="mapPin" className={cn(cardTypography.priceIcon, "text-accent")} />
             {title}
           </h3>
           {showDescription ? (

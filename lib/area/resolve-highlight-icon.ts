@@ -20,8 +20,8 @@ const HIGHLIGHT_MATCH_RULES: MatchRule[] = [
   // Water / coastal
   { kind: "amenity", icon: "beach", keywords: ["beach"] },
   {
-    kind: "amenity",
-    icon: "sea",
+    kind: "figma",
+    icon: "waterfront",
     keywords: ["marina", "berth", "yacht", "waterfront", "harbour", "harbor", "canal"],
   },
   // Dining / food
@@ -30,11 +30,12 @@ const HIGHLIGHT_MATCH_RULES: MatchRule[] = [
     icon: "dinner",
     keywords: ["dining", "restaurant", "cuisine", "dinner", "cafe", "café"],
   },
-  // Hospitality / resort
+  // Hospitality — five-star rating uses the star glyph, not the concierge bell
+  { kind: "amenity", icon: "star", keywords: ["five-star", "5-star"] },
   {
     kind: "amenity",
     icon: "concierge",
-    keywords: ["resort", "hotel", "five-star", "5-star", "concierge", "butler"],
+    keywords: ["resort", "hotel", "concierge", "butler"],
   },
   // Wellness
   { kind: "amenity", icon: "spa", keywords: ["spa", "wellness", "sauna"] },
@@ -43,17 +44,19 @@ const HIGHLIGHT_MATCH_RULES: MatchRule[] = [
   { kind: "amenity", icon: "yoga", keywords: ["yoga", "meditation", "pilates"] },
   { kind: "amenity", icon: "cycling", keywords: ["cycl", "bike", "bicycle"] },
   { kind: "amenity", icon: "basketball", keywords: ["basketball", "tennis", "court"] },
+  // Family — must be checked before the "villa" keyword below, since "Family
+  // Villas" would otherwise match the garden/park rule first.
+  { kind: "amenity", icon: "family-villas", keywords: ["family"] },
   // Greenery / lifestyle
   {
     kind: "amenity",
     icon: "flower",
     keywords: ["garden", "park", "green", "landscap", "nature", "villa"],
   },
-  // Family
   {
     kind: "amenity",
     icon: "kids",
-    keywords: ["family", "child", "kids", "nursery", "school", "playground"],
+    keywords: ["child", "kids", "nursery", "school", "playground"],
   },
   // Branded / luxury
   {
