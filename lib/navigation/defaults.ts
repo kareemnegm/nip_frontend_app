@@ -168,10 +168,14 @@ function buildFooterItems(
   );
 
   const socialLinks = [
-    { label: "Instagram", href: "https://instagram.com", icon: "instagram" },
-    { label: "Facebook", href: "https://facebook.com", icon: "facebook" },
-    { label: "LinkedIn", href: "https://linkedin.com", icon: "linkedin" },
-    { label: "Youtube", href: "https://youtube.com", icon: "youtube" },
+    { label: "Instagram", href: "https://www.instagram.com/niprealty/", icon: "instagram" },
+    {
+      label: "Facebook",
+      href: "https://www.facebook.com/profile.php?id=61579168220701",
+      icon: "facebook",
+    },
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/106200404/", icon: "linkedin" },
+    { label: "Youtube", href: "https://www.youtube.com/@NIPrealty", icon: "youtube" },
   ];
   socialLinks.forEach((link, i) => {
     items.push(

@@ -291,10 +291,14 @@ export async function FooterContent({
   const aboutLinks: FooterLink[] = [{ label: t("aboutUs"), href: "/about" }];
 
   const socialLinks: SocialLink[] = [
-    { label: t("instagram"), icon: "instagram", href: "https://instagram.com" },
-    { label: t("facebook"), icon: "facebook", href: "https://facebook.com" },
-    { label: t("linkedin"), icon: "linkedin", href: "https://linkedin.com" },
-    { label: t("youtube"), icon: "youtube", href: "https://youtube.com" },
+    { label: t("instagram"), icon: "instagram", href: "https://www.instagram.com/niprealty/" },
+    {
+      label: t("facebook"),
+      icon: "facebook",
+      href: "https://www.facebook.com/profile.php?id=61579168220701",
+    },
+    { label: t("linkedin"), icon: "linkedin", href: "https://www.linkedin.com/company/106200404/" },
+    { label: t("youtube"), icon: "youtube", href: "https://www.youtube.com/@NIPrealty" },
   ];
 
   const legalLinks: FooterLink[] = [
