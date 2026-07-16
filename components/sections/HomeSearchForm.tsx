@@ -31,7 +31,8 @@ export function HomeSearchForm({
       ? `/properties?keyword=${encodeURIComponent(trimmed)}`
       : "/properties";
     startTransition(() => {
-      router.push(localizedHref(locale, path));
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      router.push(localizedHref(locale, path), { scroll: true });
     });
   }
 

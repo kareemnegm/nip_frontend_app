@@ -169,19 +169,19 @@ export function PropertyCard({
       data-reveal
       className={cn(
         cardTypography.shell,
-        "h-auto flex-row items-stretch overflow-hidden",
+        "h-auto flex-col overflow-hidden sm:flex-row sm:items-stretch",
         href && "cursor-pointer",
         className,
       )}
     >
-      <div className="relative h-[200px] w-[220px] shrink-0 self-stretch overflow-hidden rounded-[4px] sm:min-h-[200px]">
+      <div className="relative h-[200px] w-full shrink-0 overflow-hidden rounded-[4px] sm:h-auto sm:w-[220px] sm:min-h-[200px] sm:self-stretch">
         {imageUrl ? (
           <Image
             src={imageUrl}
             alt={imageLabel ?? title}
             fill
             className="object-cover"
-            sizes="220px"
+            sizes="(max-width: 640px) 100vw, 220px"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center bg-basalt-100">
@@ -190,12 +190,12 @@ export function PropertyCard({
         )}
       </div>
       {imageLabel ? <span className="sr-only">{imageLabel}</span> : null}
-      <div className="flex flex-1 flex-col justify-between px-6 py-5">
-        <div className="space-y-2">
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5">
+        <div className="min-w-0 space-y-2">
           <h3 className={cardTypography.title}>{title}</h3>
           <p className={cardTypography.location}>
             <Icon name="mapPin" className={cardTypography.locationIcon} />
-            {location}
+            <span className="min-w-0 truncate">{location}</span>
           </p>
           <div className="flex flex-wrap gap-3 pt-1">
             {meta.map((item) => (
@@ -208,15 +208,15 @@ export function PropertyCard({
             ))}
           </div>
         </div>
-        <div className="mt-4 flex items-center justify-between gap-4">
-          <div>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="min-w-0">
             <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
             <p className={cardTypography.price}>
               <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
               {stripCurrencyPrefix(price, currency)}
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <div className="flex flex-wrap gap-2">
               {badges.map((badge) => (
                 <span key={badge} className={cardTypography.badge}>

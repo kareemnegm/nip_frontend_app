@@ -9,14 +9,22 @@ import { localizedHref } from "@/lib/i18n/helpers";
 export function CmsStaffBar() {
   const router = useRouter();
   const { locale } = useLocale();
-  const { canEdit, user, loading } = useCanEditCms();
+  const { canEdit, user, loading, refresh } = useCanEditCms();
 
   if (loading || !canEdit) {
     return null;
   }
 
   async function signOut() {
-    await fetch("/api/cms/logout", { method: "POST" });
+    const response = await fetch("/api/cms/logout", {
+      method: "POST",
+      credentials: "same-origin",
+    });
+    if (!response.ok) {
+      return;
+    }
+
+    await refresh();
     router.refresh();
   }
 
