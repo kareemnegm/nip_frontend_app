@@ -20,6 +20,9 @@ export const cardTypography = {
   body: "flex flex-1 flex-col justify-between px-6 pb-4 pt-6",
   /** Figma "Description" frame — pt 24, px 24, pb 16, no forced row heights (avoids dead space under short titles) */
   bodySale: "flex flex-1 flex-col px-6 pb-4 pt-6",
+  /** Figma Card / Project (Off-Plan) 1525:28104 — Description: pt 24, px 24, pb 16, space-between */
+  bodyOffPlan:
+    "flex min-h-0 flex-1 flex-col justify-between overflow-hidden px-6 pb-4 pt-6",
   /** Figma Card / Insight 1525:28283 — Description: pt 24, px 24, pb 8, space-between */
   bodyInsight:
     "flex min-h-0 flex-1 flex-col justify-between overflow-hidden px-6 pb-2 pt-6",
@@ -319,6 +322,7 @@ export function OffPlanCard({
   const t = useTranslations("catalog");
   const displayPrice = stripCurrencyPrefix(price, currency);
 
+  // Figma Card / Project 1525:28104 — side rows use justify-between (flush to 24px side padding)
   const card = (
     <article
       data-reveal
@@ -330,23 +334,22 @@ export function OffPlanCard({
       )}
     >
       <CardImage imageUrl={imageUrl} alt={title} icon="building" />
-      {/* Figma "Card / Project" 1525:28104 — Description uses justify-between across 5 rows;
-          the only explicit gap override is pt-[8px] on the Handover/Starting-From row, whose
-          label→value stacks use an 8px gap. */}
-      <div className={cardTypography.body}>
-        <div className="flex items-start justify-between">
+      <div className={cardTypography.bodyOffPlan}>
+        <div className="flex w-full shrink-0 items-start justify-between">
           <span className={cardTypography.badge}>
             {t("breadcrumbOffPlan")}
           </span>
           <Icon name="crane" className="h-6 w-6 shrink-0 text-accent" />
         </div>
-        <h3 className={cn(cardTypography.title, cardTypography.titleTwoLine)}>{title}</h3>
-        <p className={cardTypography.location}>
+        <h3 className={cn(cardTypography.title, cardTypography.titleTwoLine, "shrink-0")}>
+          {title}
+        </h3>
+        <p className={cn(cardTypography.location, "shrink-0")}>
           <Icon name="mapPin" className={cardTypography.locationIcon} />
           <span className={cn(cardTypography.locationOneLine, "min-w-0")}>{location}</span>
         </p>
-        <div className="flex items-start justify-between gap-4 pt-2">
-          <div className="flex flex-col gap-2">
+        <div className="flex w-full shrink-0 items-center justify-between pt-2">
+          <div className="flex flex-col items-start gap-2">
             <p className={cardTypography.startingFrom}>{t("handoverLabel")}</p>
             <p className="text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
               {handover}
@@ -360,11 +363,16 @@ export function OffPlanCard({
             </p>
           </div>
         </div>
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex w-full shrink-0 items-center justify-between overflow-hidden">
           <span className={cardTypography.badge}>{t("paymentPlanAvailable")}</span>
           {href ? (
-            <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
-              {t("exploreProperty")}{" "}
+            <span
+              className={cn(
+                cardTypography.cta,
+                "motion-link-arrow inline-flex gap-1 py-2 ps-2",
+              )}
+            >
+              {t("exploreProperty")}
               <Icon name="arrowRight" className={cardTypography.ctaIcon} />
             </span>
           ) : null}
@@ -375,7 +383,10 @@ export function OffPlanCard({
 
   if (href) {
     return (
-      <Link href={href} className="block h-full w-full text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2">
+      <Link
+        href={href}
+        className="block h-full min-h-[480px] w-full text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2"
+      >
         {card}
       </Link>
     );
