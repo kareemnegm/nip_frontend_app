@@ -108,8 +108,8 @@ export function CmsLoginCard({ locale }: { locale: Locale }) {
       </div>
 
       <div className="mt-8 text-center">
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white">
-          <Icon name="lock" className="h-5 w-5" />
+        <span className="mx-auto flex h-[52px] w-[52px] items-center justify-center rounded-full bg-brand text-white">
+          <Icon name="lock" className="h-9 w-9" />
         </span>
         <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-tertiary">
           {t("staffAccess")}

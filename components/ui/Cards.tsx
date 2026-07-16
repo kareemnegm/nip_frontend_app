@@ -542,8 +542,11 @@ export function CommunityCard({
       <CardImage imageUrl={imageUrl} alt={title} icon="mapPin" />
       <div className={cardTypography.body}>
         <div className="space-y-3">
-          <h3 className={cn(cardTypography.title, "flex items-center gap-1.5")}>
-            <Icon name="mapPin" className={cn(cardTypography.priceIcon, "text-accent")} />
+          <h3 className={cn(cardTypography.title, "flex items-start gap-1.5")}>
+            <Icon
+              name="mapPin"
+              className={cn(cardTypography.priceIcon, "mt-1 text-accent")}
+            />
             {title}
           </h3>
           {showDescription ? (

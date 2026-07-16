@@ -52,20 +52,42 @@ function FooterContactRow({
   icon,
   children,
   align = "center",
+  href,
 }: {
   icon: "phone" | "mail" | "location";
   children: React.ReactNode;
   align?: "center" | "start";
+  href?: string;
 }) {
-  return (
-    <li
-      className={cn(
-        "flex gap-2 p-1",
-        align === "start" ? "items-start" : "items-center",
-      )}
-    >
-      <FooterIcon name={icon} className="shrink-0 text-basalt-300" />
+  const rowClassName = cn(
+    "flex gap-2 p-1 transition-colors",
+    align === "start" ? "items-start" : "items-center",
+  );
+  const content = (
+    <>
+      <FooterIcon
+        name={icon}
+        className="shrink-0 text-basalt-300 transition-colors group-hover:text-white"
+      />
       <span dir="auto">{children}</span>
+    </>
+  );
+
+  return (
+    <li>
+      {href ? (
+        <a
+          href={href}
+          {...(icon === "location"
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
+          className={cn(rowClassName, "group hover:text-white")}
+        >
+          {content}
+        </a>
+      ) : (
+        <span className={rowClassName}>{content}</span>
+      )}
     </li>
   );
 }
@@ -120,18 +142,24 @@ function FooterContactBlock({
   socialLayout: "icons" | "list";
   isRtl: boolean;
 }) {
+  const phone = "+971 50 165 2441";
+  const email = "info@niprealty.com";
+  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    address.replace(/\n/g, ", "),
+  )}`;
+
   return (
     <div className="flex flex-col gap-8 lg:gap-12" dir={isRtl ? "rtl" : "ltr"}>
       <div className="flex flex-col gap-3 sm:gap-[14px]">
         <h3 className="text-start text-body-xs font-semibold text-white">{contactTitle}</h3>
         <ul className="flex flex-col gap-1 text-body-xs text-basalt-300">
-          <FooterContactRow icon="phone">
-            <span dir="ltr">+971 50 165 2441</span>
+          <FooterContactRow icon="phone" href={`tel:${phone.replace(/\s/g, "")}`}>
+            <span dir="ltr">{phone}</span>
           </FooterContactRow>
-          <FooterContactRow icon="mail">
-            <span dir="ltr">info@niprealty.com</span>
+          <FooterContactRow icon="mail" href={`mailto:${email}`}>
+            <span dir="ltr">{email}</span>
           </FooterContactRow>
-          <FooterContactRow icon="location" align="start">
+          <FooterContactRow icon="location" align="start" href={mapsHref}>
             {address.split("\n").map((line, i, arr) => (
               <span key={i}>
                 {line}
