@@ -122,7 +122,7 @@ export async function PropertyListingPage({
                 })}
               </div>
             ) : (
-              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
                 {data.map((property) => {
                   const card =
                     mode === "offplan"

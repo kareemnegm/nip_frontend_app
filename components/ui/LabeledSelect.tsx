@@ -68,7 +68,7 @@ export function LabeledSelect({
           borderClassName,
         )}
       >
-        <span className="min-w-0 flex-1 truncate text-label font-medium text-ink-secondary">
+        <span className="min-w-0 truncate text-label font-medium text-ink-secondary">
           {displayLabel}
         </span>
         <SelectChevron />
