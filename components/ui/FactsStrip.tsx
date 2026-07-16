@@ -23,19 +23,24 @@ export function FactsStrip({
     return (
       <div
         className={cn(
-          "flex w-full flex-wrap items-center overflow-hidden rounded-[var(--radius-card)] border border-border-default bg-white py-[22px] sm:flex-nowrap",
+          // Mobile: fixed 2-col grid so each row (Beds|Baths, Area|Type, …) stays aligned.
+          // Desktop: single horizontal strip with dividers between facts.
+          "grid w-full grid-cols-2 items-stretch overflow-hidden rounded-[var(--radius-card)] border border-border-default bg-white py-4 sm:flex sm:flex-nowrap sm:items-center sm:py-[22px]",
           className,
         )}
       >
         {items.map((item, index) => (
-          <div key={`${item.label}-${item.value}`} className="flex flex-1 items-center">
+          <div
+            key={`${item.label}-${item.value}`}
+            className="flex min-w-0 items-center sm:flex-1"
+          >
             {index > 0 ? (
               <div
                 aria-hidden
                 className="hidden h-9 w-px shrink-0 bg-border-default sm:block"
               />
             ) : null}
-            <div className="flex min-w-[140px] flex-1 items-center justify-center gap-2 px-3 py-2 sm:min-w-0 sm:px-4 sm:py-0">
+            <div className="flex min-w-0 flex-1 items-center justify-center gap-2 px-3 py-2.5 sm:px-4 sm:py-0">
               {variant === "property-detail" && isPropertyFactIconName(item.icon) ? (
                 <PropertyFactIcon name={item.icon} />
               ) : (
