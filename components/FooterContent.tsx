@@ -327,7 +327,7 @@ export async function FooterContent({
   return (
     <footer data-site-footer className="w-full bg-sapphire-800 text-white">
       <div
-        className={`flex flex-col gap-8 pb-24 pt-12 sm:gap-10 sm:pb-16 lg:gap-12 lg:pb-10 lg:pt-20 ${siteChromeClassName}`}
+        className={`flex flex-col gap-8 pb-6 pt-12 sm:gap-10 sm:pb-10 lg:gap-12 lg:pb-10 lg:pt-20 ${siteChromeClassName}`}
       >
         {/* —— Mobile & tablet: brand → balanced 2-col links → contact —— */}
         <div dir="ltr" className="flex w-full flex-col gap-8 sm:gap-10 lg:hidden">
