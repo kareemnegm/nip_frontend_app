@@ -95,8 +95,12 @@ export type ApiProperty = {
   reference_no?: string | null;
   unit_types?: string | null;
   payment_split?: string | null;
+  /** Display label built by backend, e.g. "60 / 40" or "60 / 40 / 80 / 20" */
   payment_plan_summary?: string | null;
   paymentPlanSummary?: string | null;
+  /** Raw values behind the summary label, fixed length 4, unused slots are null */
+  payment_plan_summary_parts?: (number | null)[] | null;
+  paymentPlanSummaryParts?: (number | null)[] | null;
   payment_plan?: ApiPaymentStep[] | null;
   paymentPlan?: ApiPaymentPlanItem[] | null;
   units?: ApiUnit[] | null;
