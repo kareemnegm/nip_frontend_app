@@ -68,6 +68,7 @@ export async function CatalogHeroSection({
                 placeholderTag="p"
                 className={cn(
                   "max-w-[672px] text-body-sm text-brand",
+                  locale === "ar" && "pt-3",
                   descriptionClassName,
                 )}
               />
