@@ -45,6 +45,12 @@ export const siteWideCardGutterX = "px-5 sm:px-8 lg:px-20 xl:px-[148px]";
 
 export const siteWideCardInnerClassName = "mx-auto w-full max-w-[1144px]";
 
+/** Market Pulse stat-card row — Figma 1525:28295: 192px gutters, 1056px inner. */
+export const siteMarketPulseLayoutClassName = cn(
+  "mx-auto flex w-full max-w-[1440px] flex-col items-center gap-10",
+  "px-5 sm:px-8 lg:px-20 xl:px-[192px]",
+);
+
 /** Header, footer, sticky CTA inner wrapper. */
 export const siteChromeClassName = cn(
   "mx-auto w-full",

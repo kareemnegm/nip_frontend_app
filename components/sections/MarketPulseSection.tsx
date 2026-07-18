@@ -1,14 +1,16 @@
 import { AppLink as Link } from "@/components/AppLink";
 import { getTranslations } from "next-intl/server";
 import { CurrencyIcon } from "@/components/ui/CurrencyIcon";
-import { Container } from "@/components/ui/Container";
+import { siteMarketPulseLayoutClassName, siteSectionY } from "@/components/ui/SiteChrome";
+import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { homeEditable } from "./home-editable";
 import { SectionHeading } from "./SectionHeading";
 
 /**
- * Figma 1525:28300 — 4 stat cards, gap-16, px-28 py-24
+ * Figma 1525:28295/28300 — 1056px inner (192px gutters), 4 stat cards
+ * fixed at 252px wide each at desktop, gap-16 (16px), px-28 py-24 padding.
  * Card backgrounds: sapphire-400, 500, 600, 700
  * Context color: sapphire-100 on card-1 (lighter bg), sapphire-200 on cards 2-4
  * Stat value: Archivo Bold 36/42 white → text-stat-value font-bold
@@ -29,8 +31,8 @@ export async function MarketPulseSection() {
   ];
 
   return (
-    <section className="bg-white py-16 sm:py-20">
-      <Container className="max-w-[1056px] space-y-10 px-6">
+    <section className={cn("bg-white", siteSectionY)}>
+      <div className={siteMarketPulseLayoutClassName}>
         <SectionHeading
           title={await getCmsPlaceholder("placeholders.home.marketPulse", "title", locale)}
           description={await getCmsPlaceholder("placeholders.home.marketPulse", "desc", locale)}
@@ -42,14 +44,14 @@ export async function MarketPulseSection() {
           }}
         />
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
+        <div className="grid w-full grid-cols-2 gap-4 lg:grid-cols-4">
           {marketPulseStats.map((stat, index) => (
             <div
               key={stat.label}
               data-reveal
               data-reveal-delay={index > 0 ? String(Math.min(index, 3)) : undefined}
               className={[
-                "flex flex-col gap-2 rounded-[var(--radius-card)] px-4 py-4 text-white sm:gap-4 sm:px-7 sm:py-6",
+                "flex flex-col gap-4 rounded-[var(--radius-card)] px-4 py-4 text-white sm:px-7 sm:py-6",
                 "items-center text-center sm:items-start sm:text-start",
                 cardBg[index],
               ].join(" ")}
@@ -86,7 +88,7 @@ export async function MarketPulseSection() {
             {t("marketPulse.viewPerspective")}
           </Link>
         </p>
-      </Container>
+      </div>
     </section>
   );
 }
