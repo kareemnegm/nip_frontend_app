@@ -141,10 +141,13 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
                 <p className="text-[11px] font-medium uppercase leading-[14px] text-basalt-300 lg:text-end">
                   {t("startingFrom")}
                 </p>
-                <p className="flex items-center gap-2 text-[30px] font-bold leading-[38px] text-brand">
+                {/* Figma 1525:28125 — h-[20px] so 16px flex gaps stay tight despite 38px leading */}
+                <div className="flex h-5 items-center justify-end gap-2 overflow-visible text-[30px] font-bold leading-[38px] text-brand">
                   <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
-                  {formatAedPrice(property.price ?? null)}
-                </p>
+                  <span className="whitespace-nowrap">
+                    {formatAedPrice(property.price ?? null)}
+                  </span>
+                </div>
                 <OffPlanRegisterInterestButton
                   propertyId={property.id}
                   pageUrl={pageUrl}

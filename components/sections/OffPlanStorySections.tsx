@@ -30,7 +30,7 @@ export function PaymentPlanSection({
   className?: string;
 }) {
   return (
-    <section className={cn("space-y-7", className)}>
+    <section className={cn("space-y-6", className)}>
       <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
         {title}
       </h2>
@@ -39,19 +39,24 @@ export function PaymentPlanSection({
           <article
             key={`${step.percentage}-${step.label}-${index}`}
             className={cn(
-              "flex min-h-[160px] flex-col justify-between rounded-[var(--radius-card)] p-6 text-white",
+              "flex flex-col items-start gap-4 rounded-[var(--radius-card)] px-7 py-6 text-white",
               paymentPlanCardColors[index % paymentPlanCardColors.length],
             )}
           >
             {step.caption ? (
-              <p className="text-xs leading-4 text-sapphire-100">{step.caption}</p>
+              <p
+                className={cn(
+                  "text-xs leading-4",
+                  index === 0 ? "text-sapphire-100" : "text-sapphire-200",
+                )}
+              >
+                {step.caption}
+              </p>
             ) : (
               <span aria-hidden />
             )}
-            <p className="text-[36px] font-bold leading-[44px] tracking-[-0.02em]">
-              {step.percentage}
-            </p>
-            <p className="text-sm font-medium leading-5">{step.label}</p>
+            <p className="text-[36px] font-bold leading-[42px]">{step.percentage}</p>
+            <p className="text-xs font-semibold leading-4">{step.label}</p>
           </article>
         ))}
       </div>
