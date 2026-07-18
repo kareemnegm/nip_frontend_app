@@ -41,9 +41,17 @@ async function getHeroPlaceholders(catalogPage: CatalogPage, locale: Locale) {
       ? "placeholders.offPlan.hero"
       : "placeholders.properties.hero";
 
+  const eyebrow = await getCmsPlaceholder(ns, "eyebrow", locale);
+  const title = await getCmsPlaceholder(ns, "title", locale);
+
+  /* Properties listing hero (Figma) has no description under the title */
+  if (catalogPage === "properties") {
+    return { eyebrow, title };
+  }
+
   return {
-    eyebrow: await getCmsPlaceholder(ns, "eyebrow", locale),
-    title: await getCmsPlaceholder(ns, "title", locale),
+    eyebrow,
+    title,
     description: await getCmsPlaceholder(ns, "description", locale),
   };
 }

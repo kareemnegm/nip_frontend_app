@@ -59,7 +59,7 @@ export async function CatalogHeroSection({
               placeholderTag="h1"
               className="font-[family-name:var(--font-display)] text-display-sm uppercase text-brand sm:text-display-lg"
             />
-            {hero.description ? (
+            {"description" in hero && hero.description ? (
               <EditableText
                 relUrl={blocks.relUrl}
                 blockKey={hero.description}

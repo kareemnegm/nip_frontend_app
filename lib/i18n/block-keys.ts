@@ -60,7 +60,8 @@ export const pageBlockKeys = {
   },
   properties: {
     relUrl: "/properties",
-    hero: { eyebrow: "hero-eyebrow", title: "hero-title", description: "hero-description" },
+    /* Figma properties listing hero has eyebrow + title only — no description line */
+    hero: { eyebrow: "hero-eyebrow", title: "hero-title" },
   },
   offPlan: {
     relUrl: "/off-plan",
