@@ -46,30 +46,18 @@ export function FactsStrip({
                 className="hidden h-9 w-px shrink-0 bg-border-default lg:block"
               />
             ) : null}
-            <div className="flex min-w-0 max-w-full items-center gap-2 py-2.5 lg:flex-1 lg:justify-center lg:px-4 lg:py-0">
+            {/* Figma 1525:28154 — icon 36px, gap 6px, label 11/14 inactive, value 15/22 semibold */}
+            <div className="flex min-w-0 max-w-full items-center gap-1.5 py-2.5 lg:flex-1 lg:justify-center lg:px-4 lg:py-0">
               {variant === "property-detail" && isPropertyFactIconName(item.icon) ? (
-                <PropertyFactIcon name={item.icon} />
+                <PropertyFactIcon name={item.icon} className="h-9 w-9" />
               ) : (
                 <Icon name={item.icon} className="h-9 w-9 shrink-0 text-sapphire-600" />
               )}
-              <div className="min-w-0 text-left">
-                <p
-                  className={cn(
-                    variant === "property-detail"
-                      ? "text-label-muted font-medium text-basalt-300"
-                      : "text-[11px] font-medium leading-[14px] text-text-inactive",
-                  )}
-                >
+              <div className="flex min-w-0 flex-col items-start justify-center gap-1 text-left">
+                <p className="text-label-muted font-medium text-text-inactive">
                   {item.label}
                 </p>
-                <p
-                  className={cn(
-                    "truncate",
-                    variant === "property-detail"
-                      ? "text-[15px] font-bold leading-[22px] tracking-[-0.15px] text-brand"
-                      : "text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand",
-                  )}
-                >
+                <p className="truncate text-body-regular font-semibold tracking-[-0.01em] text-brand">
                   {item.value}
                 </p>
               </div>
