@@ -31,6 +31,13 @@ const nextConfig: NextConfig = {
     remotePatterns: apiImageHosts(),
     // Media is served from NEXT_PUBLIC_API_URL (see lib/api/media-url.ts).
     dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
+    // Developer/area logos are often uploaded as SVG. next/image blocks SVG
+    // optimization by default (XSS risk from embedded scripts), so it must be
+    // allowed explicitly — paired with a strict CSP so an untrusted SVG still
+    // can't execute a script when served through the optimizer.
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 };
 
