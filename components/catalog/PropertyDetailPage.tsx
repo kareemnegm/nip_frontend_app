@@ -148,7 +148,8 @@ export async function PropertyDetailPage({
       <section className="bg-white pb-6 pt-10">
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
           <div className={sitePageInnerClassName}>
-            <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
+            {/* Figma 1525:28111 — items-end + justify-between; price column gap 16px, price row h 20px */}
+            <div className="flex flex-col items-start gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-0">
               <div className="flex max-w-[614px] flex-col gap-5">
                 <Breadcrumbs
                   format="property"
@@ -168,23 +169,38 @@ export async function PropertyDetailPage({
                   {property.type ? <Badge tone="property">{property.type}</Badge> : null}
                   {property.purpose ? <Badge tone="property">{property.purpose}</Badge> : null}
                 </div>
-                <h1 className="text-property-h1">{property.title}</h1>
+                <h1 className="m-0 text-property-h1">{property.title}</h1>
                 {property.location ? (
-                  <p className="flex items-center gap-1.5 text-body-sm text-ink-tertiary">
+                  <p className="m-0 flex items-center gap-1.5 text-body-sm text-ink-tertiary">
                     <Icon name="mapPin" className="h-3.5 w-3.5 shrink-0 text-accent" />
                     {property.location}
                   </p>
                 ) : null}
               </div>
 
-              <div className="flex flex-col items-start gap-4 lg:items-end">
-                <p className="text-[11px] font-medium leading-[14px] text-basalt-300 lg:text-end">
+              <div
+                className={cn(
+                  "flex shrink-0 flex-col",
+                  detailBase === "properties"
+                    ? "items-end gap-4"
+                    : "items-start gap-4 lg:items-end",
+                )}
+              >
+                <p className="m-0 text-[11px] font-medium leading-[14px] text-basalt-300 lg:text-end">
                   {t("guidePrice")}
                 </p>
-                <p className="flex items-center gap-2 text-[30px] font-bold leading-[38px] text-brand">
+                {/* Figma 1525:28125 — h-[20px] so 16px flex gaps stay tight despite 38px leading */}
+                <div
+                  className={cn(
+                    "flex items-center gap-2 text-[30px] font-bold leading-[38px] text-brand",
+                    detailBase === "properties" && "h-5 justify-end overflow-visible",
+                  )}
+                >
                   <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
-                  {formatAedPrice(property.price ?? null)}
-                </p>
+                  <span className="whitespace-nowrap">
+                    {formatAedPrice(property.price ?? null)}
+                  </span>
+                </div>
                 <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
                   {memberToken ? (
                     <SavePropertyButton
