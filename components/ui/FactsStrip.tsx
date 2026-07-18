@@ -53,11 +53,12 @@ export function FactsStrip({
               ) : (
                 <Icon name={item.icon} className="h-9 w-9 shrink-0 text-sapphire-600" />
               )}
+              {/* Figma 1525:28154 — 4px between label/value; trim + tight LH so 22px token LH doesn’t open a gap */}
               <div className="flex min-w-0 flex-col items-start justify-center gap-1 text-left">
-                <p className="text-label-muted font-medium text-text-inactive">
+                <p className="text-label-muted font-medium !leading-none text-text-inactive [text-box:trim-both_cap_alphabetic]">
                   {item.label}
                 </p>
-                <p className="truncate text-body-regular font-semibold tracking-[-0.01em] text-brand">
+                <p className="truncate text-body-regular font-semibold !leading-none tracking-[-0.01em] text-brand [text-box:trim-both_cap_alphabetic]">
                   {item.value}
                 </p>
               </div>
