@@ -110,10 +110,11 @@ export function PropertyStoryContent({
               locationName={locationName}
               propertyTitle={propertyTitle}
               locale={locale}
-              className="h-[400px]"
+              /* Figma 1525:28189 — Google Map 672×300 */
+              className="h-[300px] w-full"
             />
           ) : locationImageUrl ? (
-            <div className="relative h-[400px] overflow-hidden rounded-[var(--radius-card)] border border-line shadow-[var(--shadow-card)]">
+            <div className="relative h-[300px] w-full overflow-hidden rounded-[var(--radius-card)] border border-line shadow-[var(--shadow-card)]">
               <Image
                 src={locationImageUrl}
                 alt={labels.locationTitle}
@@ -123,7 +124,7 @@ export function PropertyStoryContent({
               />
             </div>
           ) : (
-            <div className="flex h-[400px] items-center justify-center rounded-[var(--radius-card)] border border-line bg-basalt-100 shadow-[var(--shadow-card)]">
+            <div className="flex h-[300px] w-full items-center justify-center rounded-[var(--radius-card)] border border-line bg-basalt-100 shadow-[var(--shadow-card)]">
               <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
             </div>
           )}
