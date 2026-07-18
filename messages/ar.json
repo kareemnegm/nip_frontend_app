@@ -318,6 +318,7 @@
     "previousPhoto": "الصورة السابقة",
     "nextPhoto": "الصورة التالية",
     "exploreProperty": "استكشف العقار",
+    "readPropertyStory": "اقرأ قصة العقار",
     "exploreArea": "استكشف المنطقة",
     "projectsAvailable": "{count, plural, one {مشروع واحد متاح} other {# مشروع متاح}}",
     "startingFrom": "يبدأ من",

@@ -60,6 +60,8 @@ export type PropertyCardProps = BaseCardProps & {
   meta?: string[];
   badges?: string[];
   layout?: "grid" | "list";
+  /** Override default "Explore Property" CTA — Featured Selection uses Figma "Read the Property Story". */
+  ctaLabel?: string;
 };
 
 export type InsightCardProps = BaseCardProps & {
@@ -163,8 +165,10 @@ export function PropertyCard({
   badges = [],
   layout = "grid",
   className,
+  ctaLabel,
 }: PropertyCardProps) {
   const t = useTranslations("catalog");
+  const ctaText = ctaLabel ?? t("exploreProperty");
 
   const isList = layout === "list";
 
@@ -230,7 +234,7 @@ export function PropertyCard({
             </div>
             {href ? (
               <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex shrink-0")}>
-                {t("exploreProperty")}{" "}
+                {ctaText}{" "}
                 <Icon name="arrowRight" className={cardTypography.ctaIcon} />
               </span>
             ) : null}
@@ -286,7 +290,7 @@ export function PropertyCard({
           </div>
           {href ? (
             <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
-              {t("exploreProperty")}{" "}
+              {ctaText}{" "}
               <Icon name="arrowRight" className={cardTypography.ctaIcon} />
             </span>
           ) : null}

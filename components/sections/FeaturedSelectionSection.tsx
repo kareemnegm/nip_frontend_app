@@ -17,6 +17,9 @@ export async function FeaturedSelectionSection({
 }) {
   const locale = await getRequestLocale();
   const t = await getTranslations({ locale, namespace: "home.empty" });
+  const tCatalog = await getTranslations({ locale, namespace: "catalog" });
+  /* Figma 1525:28332 — Featured Selection CTA only (other property cards keep "Explore Property") */
+  const featuredCtaLabel = tCatalog("readPropertyStory");
 
   return (
     <section className={cn("overflow-hidden bg-sapphire-50", siteSectionY)}>
@@ -35,15 +38,24 @@ export async function FeaturedSelectionSection({
         {properties.length === 0 ? (
           <CatalogEmptyState message={t("featured")} />
         ) : properties.length <= 3 ? (
-          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          /* Figma 1525:28336 — card row gap is 8px (1240px row − 3×408px cards = 16px ÷ 2 gaps) */
+          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-2">
             {properties.map((property, index) => (
-              <PropertyCard key={property.href ?? `featured-${index}`} {...property} />
+              <PropertyCard
+                key={property.href ?? `featured-${index}`}
+                {...property}
+                ctaLabel={featuredCtaLabel}
+              />
             ))}
           </div>
         ) : (
-          <CardCarousel className="w-full" slideWidth={408} gap={24} trackHeight={480}>
+          <CardCarousel className="w-full" slideWidth={408} gap={8} trackHeight={480}>
             {properties.map((property, index) => (
-              <PropertyCard key={property.href ?? `featured-${index}`} {...property} />
+              <PropertyCard
+                key={property.href ?? `featured-${index}`}
+                {...property}
+                ctaLabel={featuredCtaLabel}
+              />
             ))}
           </CardCarousel>
         )}

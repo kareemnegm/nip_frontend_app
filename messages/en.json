@@ -318,6 +318,7 @@
     "previousPhoto": "Previous photo",
     "nextPhoto": "Next photo",
     "exploreProperty": "Explore Property",
+    "readPropertyStory": "Read the Property Story",
     "exploreArea": "Explore Area",
     "projectsAvailable": "{count, plural, one {# Project Available} other {# Projects Available}}",
     "startingFrom": "Starting From",
