@@ -28,7 +28,7 @@ export const cardTypography = {
     "flex min-h-0 flex-1 flex-col justify-between overflow-hidden px-6 pb-2 pt-6",
   title: "text-h3 font-bold text-brand",
   titleTwoLine: "line-clamp-2",
-  location: "flex items-center gap-1 text-body-sm text-ink-tertiary",
+  location: "flex items-start gap-1 text-body-sm text-ink-tertiary",
   locationOneLine: "line-clamp-1 min-h-[1.125rem]",
   locationIcon: "h-3.5 w-3.5 shrink-0 text-accent",
   meta: "inline-flex shrink-0 items-center gap-1.5 text-label-semibold font-semibold text-ink",
