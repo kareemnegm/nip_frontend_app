@@ -355,8 +355,9 @@ export function OffPlanCard({
         <div className="flex w-full shrink-0 items-center justify-between pt-2">
           <div className="flex flex-col items-start gap-2">
             <p className={cardTypography.startingFrom}>{t("handoverLabel")}</p>
-            {/* Figma 1525:27936 — Handover value uses text-box trim; Starting From left untouched */}
-            <p className="text-body-regular font-semibold !leading-none tracking-[-0.01em] text-brand [text-box:trim-both_cap_alphabetic]">
+            {/* Figma 1525:27936 — value keeps its normal 22px line-height + text-box trim (matches Figma
+                Dev Mode code exactly); forcing leading-none clips glyphs where text-box is unsupported. */}
+            <p className="text-body-regular font-semibold tracking-[-0.01em] text-brand [text-box:trim-both_cap_alphabetic]">
               {handover}
             </p>
           </div>

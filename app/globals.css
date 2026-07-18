@@ -639,7 +639,9 @@ article:focus-within .motion-card-image {
   }
 }
 
-/* Property facts strip — Figma 1525:28154 (4px gap; trim + LH 1 so stack matches Dev Mode) */
+/* Property facts strip — Figma 1525:28154: gap 4px; label normal leading (11/14),
+   value keeps its 22px line-height but trims half-leading via text-box (Figma's own Dev Mode
+   markup does exactly this — do NOT force line-height:1, it clips glyphs where text-box is unsupported). */
 .nip-facts-strip-stack {
   display: flex;
   min-width: 0;
@@ -654,7 +656,9 @@ article:focus-within .motion-card-image {
 .nip-facts-strip-stack__value {
   margin: 0;
   padding: 0;
-  line-height: 1 !important;
+}
+
+.nip-facts-strip-stack__value {
   text-box: trim-both cap alphabetic;
 }
 
