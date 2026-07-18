@@ -38,8 +38,8 @@ export async function FeaturedSelectionSection({
         {properties.length === 0 ? (
           <CatalogEmptyState message={t("featured")} />
         ) : properties.length <= 3 ? (
-          /* Figma 1525:28336 — card row gap is 8px (1240px row − 3×408px cards = 16px ÷ 2 gaps) */
-          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-2">
+          /* Figma 1525:28336 — 1240px row: 3×408px cards + 2×8px gaps; no side peeks */
+          <div className="grid w-full max-w-[1240px] grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-2">
             {properties.map((property, index) => (
               <PropertyCard
                 key={property.href ?? `featured-${index}`}
@@ -49,15 +49,18 @@ export async function FeaturedSelectionSection({
             ))}
           </div>
         ) : (
-          <CardCarousel className="w-full" slideWidth={408} gap={8} trackHeight={480}>
-            {properties.map((property, index) => (
-              <PropertyCard
-                key={property.href ?? `featured-${index}`}
-                {...property}
-                ctaLabel={featuredCtaLabel}
-              />
-            ))}
-          </CardCarousel>
+          /* Clip viewport to exactly 3 cards (1240px) so adjacent slides never peek */
+          <div className="w-full max-w-[1240px] overflow-hidden">
+            <CardCarousel className="w-full" slideWidth={408} gap={8} trackHeight={480}>
+              {properties.map((property, index) => (
+                <PropertyCard
+                  key={property.href ?? `featured-${index}`}
+                  {...property}
+                  ctaLabel={featuredCtaLabel}
+                />
+              ))}
+            </CardCarousel>
+          </div>
         )}
       </div>
     </section>
