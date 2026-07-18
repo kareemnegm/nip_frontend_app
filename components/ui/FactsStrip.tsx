@@ -55,7 +55,8 @@ export function FactsStrip({
                 <p className="nip-facts-strip-stack__label text-label-muted font-medium text-text-inactive">
                   {item.label}
                 </p>
-                <p className="nip-facts-strip-stack__value truncate text-body-regular font-semibold tracking-[-0.01em] text-brand">
+                {/* No `truncate` here: its overflow-hidden clips descenders once text-box trims the line box */}
+                <p className="nip-facts-strip-stack__value whitespace-nowrap text-body-regular font-semibold tracking-[-0.01em] text-brand">
                   {item.value}
                 </p>
               </div>
