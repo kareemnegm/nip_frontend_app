@@ -107,6 +107,9 @@ export function AvailableUnitsTable({
 
 export function MasterplanLocationSection({
   title,
+  developerEyebrow,
+  developerName,
+  developerDescription,
   imageUrl,
   latitude,
   longitude,
@@ -117,6 +120,9 @@ export function MasterplanLocationSection({
   className,
 }: {
   title: string;
+  developerEyebrow?: string;
+  developerName?: string | null;
+  developerDescription?: string | null;
   imageUrl?: string;
   latitude?: number | null;
   longitude?: number | null;
@@ -134,6 +140,23 @@ export function MasterplanLocationSection({
       <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
         {title}
       </h2>
+      {developerName ? (
+        <div className="flex max-w-[558px] flex-col gap-2">
+          {developerEyebrow ? (
+            <p className="font-sans text-overline font-semibold uppercase text-accent">
+              {developerEyebrow}
+            </p>
+          ) : null}
+          <p className="font-display font-normal text-display-sm uppercase text-brand sm:text-display-lg">
+            {developerName}
+          </p>
+          {developerDescription ? (
+            <p className="font-sans font-normal text-body-sm text-ink-tertiary">
+              {developerDescription}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
       {hasMapCoordinates ? (
         <PropertyMap
           latitude={latitude}

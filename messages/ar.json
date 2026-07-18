@@ -332,6 +332,8 @@
     "paymentPlanTitle": "خطة الدفع",
     "availableUnitsTitle": "الوحدات المتاحة",
     "masterplanTitle": "المخطط الرئيسي والموقع",
+    "masterDeveloperLabel": "المطور الرئيسي",
+    "masterDeveloperDescriptionFallback": "مطور رئيسي موثوق يشتهر بتقديم مجتمعات استثنائية ومخططة بعناية في دبي.",
     "unitType": "نوع الوحدة",
     "sizeSqft": "المساحة (قدم²)",
     "startingPrice": "السعر الابتدائي",

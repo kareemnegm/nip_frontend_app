@@ -101,6 +101,9 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
   const masterPlanImageUrl =
     resolveMediaUrl(property.master_plan_image_url) ??
     resolveMediaUrl(property.location_image_url);
+  const masterDeveloperName = property.developers?.[0]?.name ?? null;
+  const masterDeveloperDescription =
+    property.master_plan_description?.trim() || t("masterDeveloperDescriptionFallback");
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const pageUrl = `${siteUrl}${localizedHref(locale, `/off-plan/${slug}`)}`;
@@ -191,6 +194,9 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
             />
             <MasterplanLocationSection
               title={t("masterplanTitle")}
+              developerEyebrow={`${t("masterDeveloperLabel")} | ${areaLabel}`}
+              developerName={masterDeveloperName}
+              developerDescription={masterDeveloperName ? masterDeveloperDescription : null}
               imageUrl={masterPlanImageUrl}
               latitude={property.latitude}
               longitude={property.longitude}
