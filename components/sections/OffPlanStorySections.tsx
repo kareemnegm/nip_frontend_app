@@ -85,7 +85,7 @@ export function AvailableUnitsTable({
         {title}
       </h2>
       <div className="overflow-hidden rounded-[var(--radius-card)] border border-line">
-        <div className="grid grid-cols-[1.2fr_1fr_1fr] bg-brand px-6 py-4 text-xs font-semibold uppercase leading-4 tracking-[0.04em] text-white">
+        <div className="grid grid-cols-[1.2fr_1fr_1fr] bg-brand px-6 py-4 text-xs font-semibold leading-4 text-white">
           <span>{unitTypeLabel}</span>
           <span>{sizeLabel}</span>
           <span className="text-end">{startingPriceLabel}</span>
