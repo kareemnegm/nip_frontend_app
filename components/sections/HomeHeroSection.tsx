@@ -39,11 +39,6 @@ export async function HomeHeroSection() {
           imageClassName="object-cover object-center"
         />
       </div>
-      {/* Figma gradient overlay — dark navy left→transparent right, ensures text legibility against any hero image */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-sapphire-800/85 via-sapphire-800/50 to-transparent"
-      />
 
       {/* Figma 1525:28266 — display:flex; flex-direction:column; align-items:flex-start; gap:36px; padding:200px 180px */}
       <div className={siteHeroLayoutClassName}>
