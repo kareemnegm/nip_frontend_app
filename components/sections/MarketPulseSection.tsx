@@ -9,11 +9,13 @@ import { homeEditable } from "./home-editable";
 import { SectionHeading } from "./SectionHeading";
 
 /**
- * Figma 1525:28295/28300 — 1056px inner (192px gutters), 4 stat cards
- * fixed at 252px wide each at desktop, gap-16 (16px), px-28 py-24 padding.
+ * Figma 1525:28295/28300/28301 — 1056px inner (192px gutters), 4 stat cards
+ * fixed at 252×137px each at desktop, gap-16 (16px), px-28 py-24 padding.
  * Card backgrounds: sapphire-400, 500, 600, 700
  * Context color: sapphire-100 on card-1 (lighter bg), sapphire-200 on cards 2-4
- * Stat value: Archivo Bold 36/42 white → text-stat-value font-bold
+ * Stat value: Archivo Bold 36px, Figma trims the line-box to the digit
+ * cap-height (25px row) — reproduced here with leading-[25px] so the
+ * 3 stacked rows (16 + 25 + 16) + 2×16 gaps + 24px padding = 137px exactly.
  * Label: Archivo SemiBold 12/16 white → text-overline font-semibold
  */
 const cardBg = ["bg-sapphire-400", "bg-sapphire-500", "bg-sapphire-600", "bg-sapphire-700"] as const;
@@ -51,16 +53,21 @@ export async function MarketPulseSection() {
               data-reveal
               data-reveal-delay={index > 0 ? String(Math.min(index, 3)) : undefined}
               className={[
-                "flex flex-col gap-4 rounded-[var(--radius-card)] px-4 py-4 text-white sm:px-7 sm:py-6",
+                "flex flex-col justify-center gap-4 overflow-hidden rounded-[var(--radius-card)] px-4 py-4 text-white sm:h-[137px] sm:px-7 sm:py-6",
                 "items-center text-center sm:items-start sm:text-start",
                 cardBg[index],
               ].join(" ")}
             >
-              <p className={["text-body-xs font-normal", cardContext[index]].join(" ")}>
+              <p
+                className={[
+                  "sm:whitespace-nowrap text-body-xs font-normal",
+                  cardContext[index],
+                ].join(" ")}
+              >
                 {stat.context}
               </p>
 
-              <p className="flex items-center gap-1 text-stat-value-sm font-bold sm:gap-1.5 sm:text-stat-value">
+              <p className="flex items-center gap-1 text-stat-value-sm font-bold sm:gap-1.5 sm:text-stat-value sm:leading-[25px]">
                 {stat.icon ? (
                   <CurrencyIcon currency="AED" className="h-5 w-5 shrink-0 sm:h-7 sm:w-7" />
                 ) : null}
@@ -75,7 +82,9 @@ export async function MarketPulseSection() {
                 </span>
               </p>
 
-              <p className="text-overline font-semibold text-white">{stat.label}</p>
+              <p className="text-overline font-semibold text-white sm:whitespace-nowrap">
+                {stat.label}
+              </p>
             </div>
           ))}
         </div>
