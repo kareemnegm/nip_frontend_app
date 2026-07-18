@@ -639,7 +639,7 @@ article:focus-within .motion-card-image {
   }
 }
 
-/* Property facts strip — Figma 1525:28154 label/value stack (4px gap, no LH inflation) */
+/* Property facts strip — Figma 1525:28154 (4px gap; trim + LH 1 so stack matches Dev Mode) */
 .nip-facts-strip-stack {
   display: flex;
   min-width: 0;
