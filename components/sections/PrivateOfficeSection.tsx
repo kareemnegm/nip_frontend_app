@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { EditableText } from "@/components/EditableText";
 import { Button } from "@/components/ui/Button";
-import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
@@ -29,7 +28,16 @@ export async function PrivateOfficeSection() {
   return (
     /* Figma: bg sapphire-800 (#071e40), py-80, flex-col gap-40, centered */
     <section className="bg-sapphire-800 py-16 text-white sm:py-20">
-      <Container className="mx-auto max-w-[520px] text-center">
+      {/*
+       * Plain centered wrapper (not the shared Container) — Container's
+       * site-wide gutter (px-5 sm:px-8 lg:px-20) was stacking on top of
+       * max-w-[520px], squeezing the inner content down to ~360px at
+       * desktop widths. That was just barely too narrow for the "PRIVATE
+       * OFFICE" Didot title in Safari/Edge (slightly wider glyph metrics
+       * than Chrome), wrapping it onto two lines. A fixed 24px inset has
+       * plenty of room and matches Figma's centered 520px block.
+       */}
+      <div className="mx-auto w-full max-w-[520px] px-6 text-center">
         <div data-reveal className="flex flex-col items-center gap-10">
           <OfficeCrest />
 
@@ -41,7 +49,7 @@ export async function PrivateOfficeSection() {
               locale={locale}
               placeholderContent={await getCmsPlaceholder("placeholders.home.privateOffice", "title", locale)}
               placeholderTag="h2"
-              className="font-display font-normal uppercase text-white text-display-sm sm:text-display-lg"
+              className="font-display font-normal uppercase text-white text-display-sm sm:whitespace-nowrap sm:text-display-lg"
             />
 
             {/* Body — Figma: Archivo Regular 13/18 accent-on-dark (#8fb0dc), w-464 */}
@@ -71,7 +79,7 @@ export async function PrivateOfficeSection() {
             </Button>
           </div>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }
