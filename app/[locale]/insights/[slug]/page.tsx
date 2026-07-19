@@ -82,7 +82,9 @@ export default async function InsightArticlePage({ params }: PageProps) {
 
   return (
     <SiteShell>
-      <article className="w-full bg-white">
+      {/* Use <div> (not <article>) so a stray </article> in CMS HTML can never
+          close this wrapper during SSR and blank the page. */}
+      <div className="w-full bg-white">
         <InsightArticleHero
           locale={locale}
           category={blog.category?.name ?? "Insight"}
@@ -100,7 +102,7 @@ export default async function InsightArticlePage({ params }: PageProps) {
 
         <InsightArticleBody html={body} />
         <InsightArticleAdvisoryCta locale={locale} />
-      </article>
+      </div>
 
       {relatedCards.length > 0 ? (
         <RelatedInsightsSection title={t("relatedTitle")} cards={relatedCards} />

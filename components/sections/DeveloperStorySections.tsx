@@ -53,28 +53,30 @@ export function DeveloperHero({
             </p>
           </div>
 
-          <div className="flex flex-col items-center gap-2 self-stretch pb-10 lg:ltr:items-end lg:rtl:items-start">
-            {logoUrl ? (
-              <div className="relative h-[120px] w-full max-w-[280px]">
-                <Image
-                  src={logoUrl}
-                  alt={`${title} logo`}
-                  fill
-                  className="object-contain object-center lg:ltr:object-right lg:rtl:object-left"
-                  sizes="280px"
-                />
-              </div>
-            ) : (
-              <p
-                aria-hidden
-                className="font-[family-name:var(--font-display)] text-[40px] uppercase leading-none tracking-[0.12em] text-brand"
-              >
-                {fallbackLogoText}
-              </p>
-            )}
-            {!logoUrl ? (
-              <span className="sr-only">{fallbackLogoText} logo</span>
-            ) : null}
+          <div className="inline-flex shrink-0 flex-col items-center">
+            <div className="flex w-full flex-col items-center pb-10">
+              {logoUrl ? (
+                <div className="relative flex h-[120px] w-[280px] max-w-full items-center justify-center">
+                  <Image
+                    src={logoUrl}
+                    alt={`${title} logo`}
+                    fill
+                    className="object-contain object-center"
+                    sizes="280px"
+                  />
+                </div>
+              ) : (
+                <p
+                  aria-hidden
+                  className="text-center font-[family-name:var(--font-display)] text-[40px] uppercase leading-none tracking-[0.12em] text-brand"
+                >
+                  {fallbackLogoText}
+                </p>
+              )}
+              {!logoUrl ? (
+                <span className="sr-only">{fallbackLogoText} logo</span>
+              ) : null}
+            </div>
             <SpeakWithNipButton href="/contact" />
           </div>
         </div>

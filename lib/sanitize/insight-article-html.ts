@@ -76,6 +76,8 @@ export function prepareInsightArticleHtml(raw: string): string {
   html = html.replace(/<!--[\s\S]*?-->/g, "");
   html = html.replace(/<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi, "");
   html = html.replace(/<script\b[^>]*\/?\s*>/gi, "");
+  html = html.replace(/<style\b[^>]*>[\s\S]*?<\/style\b[^>]*>/gi, "");
+  html = html.replace(/<style\b[^>]*\/?\s*>/gi, "");
   html = html.replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, "");
   html = html.replace(/\s+on\w+\s*=\s*[^\s>]+/gi, "");
   html = html.replace(
@@ -88,7 +90,10 @@ export function prepareInsightArticleHtml(raw: string): string {
     html = bodyMatch[1];
   }
 
-  html = html.replace(/<\/?(?:html|head|body)[^>]*>/gi, "");
+  // Document / landmark wrappers must never ship into dangerouslySetInnerHTML.
+  // Legacy CMS exports almost always end with a stray `</article>`; during SSR
+  // that closing tag closes the page's real <article> and blanks the page.
+  html = html.replace(/<\/?(?:html|head|body|article|main|header|nav)[^>]*>/gi, "");
 
   html = html.replace(/<footer[\s\S]*?<\/footer>/gi, "");
   html = html.replace(/<img[^>]*alt=["'][^"']*logo[^"']*["'][^>]*>/gi, "");
