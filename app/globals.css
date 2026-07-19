@@ -499,11 +499,22 @@ textarea {
   transition:
     opacity var(--motion-reveal-duration) var(--motion-ease-lux),
     transform var(--motion-reveal-duration) var(--motion-ease-lux);
+  /* iOS Safari can miss IntersectionObserver for opacity:0 nodes — force
+     visibility after a short delay so pages never stay blank. */
+  animation: nip-reveal-failsafe 0.45s var(--motion-ease-lux) 1.2s forwards;
 }
 
 [data-reveal].is-visible {
   opacity: 1;
   transform: translateY(0);
+  animation: none;
+}
+
+@keyframes nip-reveal-failsafe {
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 [data-reveal-delay="1"] {

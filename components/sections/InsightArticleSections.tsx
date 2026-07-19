@@ -56,6 +56,7 @@ export async function InsightArticleHero({
   return (
     <section
       data-site-hero
+      data-no-reveal
       className={cn("mx-auto w-full bg-white", siteMaxWidth, sitePageGutterX)}
     >
       <div className="mx-auto flex max-w-[916px] flex-col items-center gap-[18px] pb-9 pt-14 text-center lg:pt-[56px]">
@@ -110,7 +111,10 @@ export type InsightArticleFeaturedImageProps = {
 
 export function InsightArticleFeaturedImage({ src, alt }: InsightArticleFeaturedImageProps) {
   return (
-    <section className={cn("mx-auto w-full bg-white pb-12", siteMaxWidth, sitePageGutterX)}>
+    <section
+      data-no-reveal
+      className={cn("mx-auto w-full bg-white pb-12", siteMaxWidth, sitePageGutterX)}
+    >
       <div
         className={cn(
           sitePageInnerClassName,
@@ -145,9 +149,14 @@ export function InsightArticleBody({ html }: InsightArticleBodyProps) {
   if (!prepared) return null;
 
   return (
-    <section className={cn("mx-auto w-full bg-white pb-16", siteMaxWidth, sitePageGutterX)}>
+    <section
+      data-no-reveal
+      className={cn("mx-auto w-full bg-white pb-16", siteMaxWidth, sitePageGutterX)}
+    >
       {/* dangerouslySetInnerHTML directly on .insight-article-body so CMS blocks
-          are its direct children and the flex-col gap-24 applies to each of them */}
+          are its direct children and the flex-col gap-24 applies to each of them.
+          data-no-reveal: never hide this behind scroll-reveal — iOS Safari can
+          leave opacity:0 sections blank forever. */}
       <div
         className="insight-article-body mx-auto max-w-[720px]"
         dangerouslySetInnerHTML={{ __html: prepared }}
@@ -165,7 +174,10 @@ export async function InsightArticleAdvisoryCta({ locale }: InsightArticleAdviso
   const tc = await getTranslations({ locale, namespace: "common" });
 
   return (
-    <section className={cn("mx-auto w-full bg-white pb-[72px]", siteMaxWidth, sitePageGutterX)}>
+    <section
+      data-no-reveal
+      className={cn("mx-auto w-full bg-white pb-[72px]", siteMaxWidth, sitePageGutterX)}
+    >
       <div
         className={cn(
           sitePageInnerClassName,
@@ -195,7 +207,7 @@ export function RelatedInsightsSection({ title, cards }: RelatedInsightsSectionP
   if (cards.length === 0) return null;
 
   return (
-    <section className="w-full bg-sapphire-50">
+    <section data-no-reveal className="w-full bg-sapphire-50">
       <div className={cn("mx-auto w-full pt-16 pb-20", siteMaxWidth, sitePageGutterX)}>
         <div className={cn(sitePageInnerClassName, "flex flex-col items-center gap-7")}>
           <p className="w-full text-center text-overline font-semibold uppercase text-accent">

@@ -33,6 +33,9 @@ function initReveal(root: ParentNode) {
     return () => {};
   }
 
+  // threshold 0 + generous rootMargin: iOS Safari often never fires IO for
+  // opacity:0 / transformed elements when threshold is higher (e.g. 0.15) or
+  // when rootMargin shrinks the viewport — content then stays blank forever.
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -42,7 +45,7 @@ function initReveal(root: ParentNode) {
         }
       });
     },
-    { threshold: 0.15, rootMargin: "0px 0px -60px 0px" },
+    { threshold: 0, rootMargin: "120px 0px 120px 0px" },
   );
 
   root.querySelectorAll(REVEAL_SELECTOR).forEach((el) => {
@@ -51,8 +54,12 @@ function initReveal(root: ParentNode) {
     }
 
     const rect = el.getBoundingClientRect();
+    const viewportH = window.innerHeight || document.documentElement.clientHeight || 0;
     const inView =
-      rect.top < window.innerHeight * 0.92 && rect.bottom > window.innerHeight * 0.08;
+      rect.width > 0 &&
+      rect.height > 0 &&
+      rect.top < viewportH + 120 &&
+      rect.bottom > -120;
 
     if (inView) {
       revealWhenReady(el);
@@ -62,7 +69,16 @@ function initReveal(root: ParentNode) {
     observer.observe(el);
   });
 
-  return () => observer.disconnect();
+  // Hard failsafe: if IO/rAF never marks a reveal (common on iPhone Safari),
+  // force content visible so pages can never stay white.
+  const failsafe = window.setTimeout(() => {
+    showImmediately(root, `${REVEAL_SELECTOR}:not(.is-visible)`);
+  }, 800);
+
+  return () => {
+    window.clearTimeout(failsafe);
+    observer.disconnect();
+  };
 }
 
 function initHeroReveal(root: ParentNode) {
@@ -215,15 +231,24 @@ function initSmoothAnchors() {
 }
 
 function discoverSectionReveals(root: ParentNode) {
-  root.querySelectorAll("main section:not([data-site-hero])").forEach((section) => {
-    if (section.hasAttribute("data-reveal") || section.querySelector("[data-reveal]")) {
-      return;
-    }
-    section.setAttribute("data-reveal", "");
-  });
+  root
+    .querySelectorAll("main section:not([data-site-hero]):not([data-no-reveal])")
+    .forEach((section) => {
+      if (
+        section.closest("[data-no-reveal]") ||
+        section.hasAttribute("data-reveal") ||
+        section.querySelector("[data-reveal]")
+      ) {
+        return;
+      }
+      section.setAttribute("data-reveal", "");
+    });
 
   root.querySelectorAll("[data-site-hero]").forEach((hero) => {
-    if (hero.querySelector("[data-hero-title], [data-hero-eyebrow]")) {
+    if (
+      hero.hasAttribute("data-no-reveal") ||
+      hero.querySelector("[data-hero-title], [data-hero-eyebrow]")
+    ) {
       return;
     }
 
@@ -231,6 +256,7 @@ function discoverSectionReveals(root: ParentNode) {
     if (
       inner instanceof HTMLElement &&
       !inner.hasAttribute("data-reveal") &&
+      !inner.hasAttribute("data-no-reveal") &&
       !inner.querySelector("[data-reveal]")
     ) {
       inner.setAttribute("data-reveal", "");
