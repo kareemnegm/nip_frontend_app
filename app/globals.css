@@ -174,6 +174,18 @@ textarea {
   font: inherit;
 }
 
+/* iOS Safari auto-zooms the page when a focused form field is smaller than
+   16px. Our body/inputs are 13px (text-body-sm) for the design, so bump just
+   the form-field font size back to 16px on phone widths to stop the zoom —
+   desktop/tablet sizing is untouched. */
+@media (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 /* T12 · Insight Article — CMS body typography (Figma 1525:27591) */
 /* dangerouslySetInnerHTML sits directly on .insight-article-body;
    its direct children are the CMS content blocks. */
