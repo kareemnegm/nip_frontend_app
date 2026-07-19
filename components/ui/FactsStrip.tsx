@@ -40,8 +40,11 @@ export function FactsStrip({
             ) : null}
             <div
               className={cn(
-                "flex min-w-0 items-center justify-center gap-1.5 py-2.5",
-                "lg:flex-1 lg:py-0",
+                // Mobile: left-align so icons/text line up down each column
+                // (justify-center shifts short vs long labels left/right).
+                // Desktop keeps centered cells to match Figma.
+                "flex min-w-0 items-center justify-start gap-1.5 py-2.5",
+                "lg:flex-1 lg:justify-center lg:py-0",
                 index % 2 === 0 ? "pl-4 pr-2 lg:px-0" : "pl-2 pr-4 lg:px-0",
               )}
             >

@@ -9,13 +9,12 @@ import { LabeledSelect } from "./LabeledSelect";
 const KEYWORD_DEBOUNCE_MS = 400;
 
 /**
- * The single-row desktop layout (input + 4 selects + button, no wrap) needs
- * ~1080px to fit without clipping. That's wider than tablet viewports
- * (iPad portrait/landscape all land under 1280px), so tablets get their own
- * 2-row grid here instead of inheriting the cramped desktop row.
+ * Below xl: search on its own row; Location / Type / Price / Beds / Search
+ * sit in one horizontal row (like desktop) so nothing stacks or clips.
+ * xl+: single desktop row — input + 4 selects + button.
  */
-const TABLET_SELECT_WIDTH_CLASS =
-  "w-full min-w-0 flex-1 sm:max-w-[140px] md:w-full md:max-w-none md:flex-none xl:w-[110px] xl:max-w-[110px] xl:flex-none";
+const SELECT_WIDTH_CLASS =
+  "min-w-0 flex-1 xl:w-[110px] xl:max-w-[110px] xl:flex-none";
 
 export type PropertyFilterValues = {
   keyword?: string;
@@ -196,7 +195,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
 
   return (
     <form
-      className="flex w-full flex-wrap items-center gap-2.5 overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface p-3 shadow-[var(--shadow-card)] xl:flex-nowrap"
+      className="flex w-full flex-col gap-2.5 overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface p-3 shadow-[var(--shadow-card)] xl:flex-row xl:flex-nowrap xl:items-center"
       onSubmit={onSubmit}
     >
       <input
@@ -218,15 +217,12 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
         }}
         className="min-w-0 w-full shrink-0 rounded-[var(--radius-field)] bg-sapphire-50 px-3.5 py-2.5 text-body-sm text-ink outline-none placeholder:text-text-inactive xl:w-[470px] xl:flex-none"
       />
-      {/* Tablet-only (md–xl, e.g. iPad): a real 2x2 grid row so the four
-          selects don't ragged-wrap. `contents` on mobile/desktop keeps them
-          as plain flex items, matching the original layout exactly. */}
-      <div className="contents md:grid md:w-full md:grid-cols-2 md:gap-2.5 xl:contents">
+      <div className="flex w-full min-w-0 flex-nowrap items-center gap-2.5 xl:w-auto xl:contents">
         <LabeledSelect
           aria-label={t("location")}
           options={filterOptions}
           value={area}
-          widthClassName={TABLET_SELECT_WIDTH_CLASS}
+          widthClassName={SELECT_WIDTH_CLASS}
           onChange={(value) => {
             setArea(value);
             pushFilters({ area: value });
@@ -236,7 +232,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
           aria-label={t("type")}
           options={typeOptions}
           value={type}
-          widthClassName={TABLET_SELECT_WIDTH_CLASS}
+          widthClassName={SELECT_WIDTH_CLASS}
           onChange={(value) => {
             setType(value);
             pushFilters({ type: value });
@@ -246,7 +242,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
           aria-label={t("price")}
           options={priceOptions}
           value={minPrice}
-          widthClassName={TABLET_SELECT_WIDTH_CLASS}
+          widthClassName={SELECT_WIDTH_CLASS}
           onChange={(value) => {
             setMinPrice(value);
             pushFilters({ min_price: value });
@@ -256,20 +252,20 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
           aria-label={t("bedsFilter")}
           options={bedsOptions}
           value={bedrooms}
-          widthClassName={TABLET_SELECT_WIDTH_CLASS}
+          widthClassName={SELECT_WIDTH_CLASS}
           onChange={(value) => {
             setBedrooms(value);
             pushFilters({ bedrooms: value });
           }}
         />
+        <button
+          type="submit"
+          disabled={isPending}
+          className="inline-flex h-full shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-brand px-3.5 py-[9px] text-overline font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-60 sm:px-[22px] xl:w-[96px] xl:flex-none"
+        >
+          {isPending ? tc("loading") : tc("search")}
+        </button>
       </div>
-      <button
-        type="submit"
-        disabled={isPending}
-        className="inline-flex w-full shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-brand px-[22px] py-[9px] text-overline font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-60 sm:w-[96px] md:w-full md:flex-none xl:w-[96px] xl:flex-none"
-      >
-        {isPending ? tc("loading") : tc("search")}
-      </button>
     </form>
   );
 }

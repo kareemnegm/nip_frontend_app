@@ -140,23 +140,27 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
                 </p>
               </div>
 
-              <div className="flex flex-col items-start gap-4 lg:items-end">
+              <div className="flex w-full flex-col gap-4 lg:w-auto lg:items-end">
                 <p className="text-[11px] font-medium uppercase leading-[14px] text-basalt-300 lg:text-end">
                   {t("startingFrom")}
                 </p>
-                {/* Figma 1525:28125 — h-[20px] so 16px flex gaps stay tight despite 38px leading */}
-                <div className="flex h-5 items-center justify-end gap-2 overflow-visible text-[30px] font-bold leading-[38px] text-brand">
-                  <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
-                  <span className="whitespace-nowrap">
-                    {formatAedPrice(property.price ?? null)}
-                  </span>
+                {/* Mobile: price + CTA on one row. Desktop: stacked & right-aligned. */}
+                <div className="flex w-full items-center justify-between gap-3 lg:w-auto lg:flex-col lg:items-end lg:justify-start lg:gap-4">
+                  {/* Figma 1525:28125 — h-[20px] so 16px flex gaps stay tight despite 38px leading */}
+                  <div className="flex h-5 items-center gap-2 overflow-visible text-[30px] font-bold leading-[38px] text-brand lg:justify-end">
+                    <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
+                    <span className="whitespace-nowrap">
+                      {formatAedPrice(property.price ?? null)}
+                    </span>
+                  </div>
+                  <OffPlanRegisterInterestButton
+                    propertyId={property.id}
+                    pageUrl={pageUrl}
+                    label={t("registerInterest")}
+                    modalTitle={t("privateViewingTitle")}
+                    className="w-auto shrink-0"
+                  />
                 </div>
-                <OffPlanRegisterInterestButton
-                  propertyId={property.id}
-                  pageUrl={pageUrl}
-                  label={t("registerInterest")}
-                  modalTitle={t("privateViewingTitle")}
-                />
               </div>
             </div>
           </div>

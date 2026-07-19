@@ -178,44 +178,40 @@ export async function PropertyDetailPage({
                 ) : null}
               </div>
 
-              <div
-                className={cn(
-                  "flex shrink-0 flex-col",
-                  detailBase === "properties"
-                    ? "items-end gap-4"
-                    : "items-start gap-4 lg:items-end",
-                )}
-              >
+              <div className="flex w-full shrink-0 flex-col gap-4 lg:w-auto lg:items-end">
                 <p className="m-0 text-[11px] font-medium leading-[14px] text-basalt-300 lg:text-end">
                   {t("guidePrice")}
                 </p>
-                {/* Figma 1525:28125 — h-[20px] so 16px flex gaps stay tight despite 38px leading */}
-                <div
-                  className={cn(
-                    "flex items-center gap-2 text-[30px] font-bold leading-[38px] text-brand",
-                    detailBase === "properties" && "h-5 justify-end overflow-visible",
-                  )}
-                >
-                  <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
-                  <span className="whitespace-nowrap">
-                    {formatAedPrice(property.price ?? null)}
-                  </span>
-                </div>
-                <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
-                  {memberToken ? (
-                    <SavePropertyButton
-                      propertyId={property.id}
-                      initialSaved={initialSaved}
-                      labels={{
-                        save: t("saveProperty"),
-                        saved: t("savedProperty"),
-                        remove: t("removeSavedProperty"),
-                      }}
-                    />
-                  ) : null}
-                  <Button href={localizedHref(locale, "/contact")} className="w-full sm:w-auto">
-                    {t("requestAdvisory")}
-                  </Button>
+                {/* Mobile: price + CTA on one row. Desktop: stacked & right-aligned (Figma 1525:28123). */}
+                <div className="flex w-full items-center justify-between gap-3 lg:w-auto lg:flex-col lg:items-end lg:justify-start lg:gap-4">
+                  {/* Figma 1525:28125 — h-[20px] so 16px flex gaps stay tight despite 38px leading */}
+                  <div
+                    className={cn(
+                      "flex items-center gap-2 text-[30px] font-bold leading-[38px] text-brand",
+                      detailBase === "properties" && "h-5 overflow-visible lg:justify-end",
+                    )}
+                  >
+                    <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
+                    <span className="whitespace-nowrap">
+                      {formatAedPrice(property.price ?? null)}
+                    </span>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3">
+                    {memberToken ? (
+                      <SavePropertyButton
+                        propertyId={property.id}
+                        initialSaved={initialSaved}
+                        labels={{
+                          save: t("saveProperty"),
+                          saved: t("savedProperty"),
+                          remove: t("removeSavedProperty"),
+                        }}
+                      />
+                    ) : null}
+                    <Button href={localizedHref(locale, "/contact")}>
+                      {t("requestAdvisory")}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
