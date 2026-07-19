@@ -53,22 +53,23 @@ export function DeveloperHero({
             </p>
           </div>
 
-          <div className="inline-flex shrink-0 flex-col items-center">
-            <div className="flex w-full flex-col items-center pb-10">
+          {/* Mobile: logo + CTA side by side. Desktop: stacked (logo above button). */}
+          <div className="flex w-full shrink-0 flex-row items-center justify-between gap-4 lg:w-auto lg:flex-col lg:justify-center lg:gap-0">
+            <div className="flex min-w-0 flex-1 items-center justify-center lg:w-full lg:flex-none lg:pb-10">
               {logoUrl ? (
-                <div className="relative flex h-[120px] w-[280px] max-w-full items-center justify-center">
+                <div className="relative flex h-[88px] w-full max-w-[160px] items-center justify-center sm:h-[100px] sm:max-w-[200px] lg:h-[120px] lg:max-w-[280px] lg:w-[280px]">
                   <Image
                     src={logoUrl}
                     alt={`${title} logo`}
                     fill
                     className="object-contain object-center"
-                    sizes="280px"
+                    sizes="(max-width: 1023px) 160px, 280px"
                   />
                 </div>
               ) : (
                 <p
                   aria-hidden
-                  className="text-center font-[family-name:var(--font-display)] text-[40px] uppercase leading-none tracking-[0.12em] text-brand"
+                  className="text-center font-[family-name:var(--font-display)] text-[28px] uppercase leading-none tracking-[0.12em] text-brand lg:text-[40px]"
                 >
                   {fallbackLogoText}
                 </p>
@@ -77,7 +78,7 @@ export function DeveloperHero({
                 <span className="sr-only">{fallbackLogoText} logo</span>
               ) : null}
             </div>
-            <SpeakWithNipButton href="/contact" />
+            <SpeakWithNipButton href="/contact" className="shrink-0" />
           </div>
         </div>
       </div>
