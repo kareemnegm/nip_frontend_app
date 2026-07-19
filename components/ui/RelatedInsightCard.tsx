@@ -65,15 +65,17 @@ export function RelatedInsightCard({
           {excerpt}
         </p>
 
-        {/* Footer — Figma: justify-between, pt 4 */}
-        <div className="flex w-full shrink-0 items-center justify-between overflow-hidden pt-1">
-          <div className="flex shrink-0 items-center gap-1 whitespace-nowrap text-label-muted font-medium text-platinum-400">
-            <span>{readTime}</span>
-            <span aria-hidden>|</span>
-            <span>{author}</span>
+        {/* Mobile: stack meta + CTA; sm+: side-by-side like Figma */}
+        <div className="flex w-full shrink-0 flex-col items-start gap-2 overflow-hidden pt-1 sm:flex-row sm:items-center sm:justify-between">
+          <div className="inline-flex max-w-full min-w-0 items-center gap-1 text-label-muted font-medium text-platinum-400">
+            <span className="shrink-0 whitespace-nowrap">{readTime}</span>
+            <span aria-hidden className="shrink-0">
+              |
+            </span>
+            <span className="min-w-0 truncate">{author}</span>
           </div>
           {href ? (
-            <span className="inline-flex shrink-0 items-center justify-center gap-1 py-2 ps-2 text-label-semibold font-semibold whitespace-nowrap text-accent">
+            <span className="inline-flex shrink-0 items-center justify-center gap-1 py-2 text-label-semibold font-semibold whitespace-nowrap text-accent sm:ps-2">
               {t("readInsight")}
               <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
             </span>

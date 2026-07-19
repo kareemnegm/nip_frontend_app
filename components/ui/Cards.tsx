@@ -448,17 +448,26 @@ export function InsightCard({
         <p className={cn(cardTypography.excerpt, "shrink-0 line-clamp-2")}>
           {excerpt}
         </p>
-        <div className="flex shrink-0 items-center justify-between gap-4 overflow-hidden pt-1">
-          <span className={cn(cardTypography.metaMuted, "inline-flex items-center gap-1")}>
-            <span>{readTime}</span>
-            <span aria-hidden>|</span>
-            <span>{author}</span>
+        {/* Mobile: stack meta + CTA so "9 min read | Author" never wraps mid-phrase.
+            sm+: keep the side-by-side Figma footer. */}
+        <div className="flex shrink-0 flex-col items-start gap-2 overflow-hidden pt-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <span
+            className={cn(
+              cardTypography.metaMuted,
+              "inline-flex max-w-full min-w-0 items-center gap-1",
+            )}
+          >
+            <span className="shrink-0 whitespace-nowrap">{readTime}</span>
+            <span aria-hidden className="shrink-0">
+              |
+            </span>
+            <span className="min-w-0 truncate">{author}</span>
           </span>
           {href ? (
             <span
               className={cn(
                 cardTypography.cta,
-                "motion-link-arrow inline-flex gap-1 py-2 ps-2",
+                "motion-link-arrow inline-flex shrink-0 gap-1 py-2 sm:ps-2",
               )}
             >
               {t("readInsight")}
