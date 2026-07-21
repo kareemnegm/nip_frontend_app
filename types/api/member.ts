@@ -3,6 +3,8 @@ export type ApiMemberAdvisor = {
   name: string;
   email?: string;
   availability?: string | null;
+  photoUrl?: string | null;
+  photo_url?: string | null;
 };
 
 export type ApiMemberUser = {
@@ -64,7 +66,7 @@ export type ApiCuratedItem = {
   type: "property" | "project";
   property: ApiMemberPropertyCard | null;
   project: ApiMemberOffplanCard | null;
-  advisor?: { id: number; name: string } | null;
+  advisor?: ApiMemberAdvisor | null;
 };
 
 export type ApiSavedItem = {
@@ -77,7 +79,7 @@ export type ApiAdvisorNote = {
   title: string;
   content: string;
   createdAt: string;
-  advisor?: { id: number; name: string } | null;
+  advisor?: ApiMemberAdvisor | null;
 };
 
 export type ApiMemberMessagePayload = {

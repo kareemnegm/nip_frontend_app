@@ -1,5 +1,7 @@
 export { Badge } from "./Badge";
 export type { BadgeProps } from "./Badge";
+export { AdvisorAvatar } from "./AdvisorAvatar";
+export type { AdvisorAvatarProps } from "./AdvisorAvatar";
 export { Breadcrumbs } from "./Breadcrumbs";
 export type { BreadcrumbItem, BreadcrumbsProps } from "./Breadcrumbs";
 export { Button, SpeakWithNipButton } from "./Button";

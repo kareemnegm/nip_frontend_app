@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import { CuratedAdvisorCta } from "@/components/forms/CuratedAdvisorCta";
 import { EditableText } from "@/components/EditableText";
-import { AdvisorCard, Icon } from "@/components/ui";
+import { AdvisorCard, AdvisorAvatar } from "@/components/ui";
 import { CatalogEmptyState } from "@/components/ui/ApiPagination";
 import {
   siteMaxWidth,
@@ -243,9 +243,7 @@ export async function CuratedAdvisorBarSection({
           )}
         >
           <div className="flex items-center gap-3.5">
-            <span className="flex h-[52px] w-[52px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand text-white">
-              <Icon name="user" className="h-6 w-6" />
-            </span>
+            <AdvisorAvatar advisor={advisor} name={name} size={52} />
             <div className="flex flex-col gap-2">
               <p className="text-h4 font-semibold text-ink">{t("haveQuestion")}</p>
               <p className="text-body-sm text-ink-tertiary">{t("messageDirectly", { name })}</p>

@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { MemberAdvisorMessageDialog } from "@/components/forms/MemberAdvisorMessageForm";
 import { MemberSignOutButton } from "@/components/forms/MemberSignOutButton";
-import { AdvisorCard, Icon, PropertyCard } from "@/components/ui";
+import { AdvisorCard, AdvisorAvatar, PropertyCard } from "@/components/ui";
 import type { PropertyCardProps } from "@/components/ui/Cards";
 import { CatalogEmptyState } from "@/components/ui/ApiPagination";
 import {
@@ -170,9 +170,7 @@ export async function PrivateOfficeMemberAdvisorBar({
           )}
         >
           <div className="flex items-center gap-3.5">
-            <span className="flex h-[52px] w-[52px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand text-white">
-              <Icon name="user" className="h-6 w-6" />
-            </span>
+            <AdvisorAvatar advisor={advisor} name={name} size={52} />
             <div className="flex flex-col gap-2">
               <p className="text-[15px] font-semibold leading-[22px] tracking-[-0.01em] text-brand">
                 {t("yourAdvisor")} | {name}
