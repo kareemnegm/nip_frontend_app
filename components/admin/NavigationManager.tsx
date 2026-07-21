@@ -8,6 +8,7 @@ import { TextInput } from "@/components/ui/FormControls";
 import { useLocale } from "@/lib/i18n/context";
 import { NAV_ZONE_KEYS } from "@/lib/navigation/zone-keys";
 import { getZoneItems } from "@/lib/navigation/defaults";
+import { normalizeNavigationPayload } from "@/lib/navigation/normalize";
 import { resolveSeoPath } from "@/lib/navigation/seo-path";
 import type {
   NavigationItem,
@@ -52,7 +53,7 @@ export function NavigationManager({
           throw new Error(data.error ?? "Failed to load navigation");
         }
         if (active) {
-          setPayload(data);
+          setPayload(normalizeNavigationPayload(data));
         }
       } catch (err) {
         if (active) {
@@ -89,7 +90,7 @@ export function NavigationManager({
       if (!res.ok) {
         throw new Error(data.error ?? "Failed to load navigation");
       }
-      setPayload(data);
+      setPayload(normalizeNavigationPayload(data));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load");
     } finally {
@@ -229,7 +230,14 @@ export function NavigationManager({
       {loading ? <p className="mt-8 text-body-sm text-ink-secondary">Loading…</p> : null}
       {error ? <p className="mt-8 text-body-sm text-error">{error}</p> : null}
 
-      {!loading && payload ? (
+      {!loading && payload && zones.length === 0 ? (
+        <p className="mt-8 text-body-sm text-ink-secondary">
+          No navigation groups matched this screen for locale <strong>{locale}</strong>. Try
+          refreshing the page — if it stays empty, check the navigation API connection.
+        </p>
+      ) : null}
+
+      {!loading && payload && zones.length > 0 ? (
         <div className="mt-8 space-y-8">
           {zones.map((zone) => {
             const items = getZoneItems(payload, zone.key, { includeHidden: true });

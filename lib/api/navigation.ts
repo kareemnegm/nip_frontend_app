@@ -2,6 +2,10 @@ import { cache } from "react";
 import { apiGet, apiPost, apiRequest } from "./client";
 import { getBlogCategories } from "./blogs";
 import { buildDefaultNavigation } from "@/lib/navigation/defaults";
+import {
+  mergeNavigationDefaults,
+  normalizeNavigationPayload,
+} from "@/lib/navigation/normalize";
 import type { Locale } from "@/lib/i18n/config";
 import type {
   NavigationItemCreatePayload,
@@ -18,10 +22,15 @@ async function defaultNavigationWithInsights(locale: Locale) {
 
 export const getNavigation = cache(async (locale: Locale): Promise<NavigationPayload> => {
   try {
-    return await apiGet<NavigationPayload>("/navigation", {
+    const raw = await apiGet<NavigationPayload | { data: NavigationPayload }>("/navigation", {
       locale,
       revalidate: 60,
     });
+    const payload = normalizeNavigationPayload(raw);
+    if (payload.zones.length === 0 && payload.items.length === 0) {
+      return defaultNavigationWithInsights(locale);
+    }
+    return payload;
   } catch {
     return defaultNavigationWithInsights(locale);
   }
@@ -31,14 +40,23 @@ export async function getNavigationAdmin(
   locale: Locale,
   token: string,
 ): Promise<NavigationPayload> {
+  const defaults = await defaultNavigationWithInsights(locale);
   try {
-    return await apiGet<NavigationPayload>("/navigation/admin", {
-      locale,
-      token,
-      revalidate: false,
-    });
+    const raw = await apiGet<NavigationPayload | { data: NavigationPayload }>(
+      "/navigation/admin",
+      {
+        locale,
+        token,
+        revalidate: false,
+      },
+    );
+    const payload = normalizeNavigationPayload(raw);
+    if (payload.zones.length === 0 && payload.items.length === 0) {
+      return defaults;
+    }
+    return mergeNavigationDefaults(payload, defaults);
   } catch {
-    return defaultNavigationWithInsights(locale);
+    return defaults;
   }
 }
 
