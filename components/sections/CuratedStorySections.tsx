@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
+import Link from "next/link";
+import { CuratedAdvisorCta } from "@/components/forms/CuratedAdvisorCta";
 import { EditableText } from "@/components/EditableText";
-import { MemberAdvisorMessageDialog } from "@/components/forms/MemberAdvisorMessageForm";
-import { MemberSignOutButton } from "@/components/forms/MemberSignOutButton";
 import { AdvisorCard, Icon } from "@/components/ui";
 import { CatalogEmptyState } from "@/components/ui/ApiPagination";
 import {
@@ -28,20 +28,26 @@ const curatedBlocks = pageBlockKeys.curated;
 
 type CuratedSection = "selection" | "notes";
 
-async function CuratedSectionHeading({ section }: { section: CuratedSection }) {
+async function CuratedSectionHeading({
+  section,
+  showDescription = false,
+}: {
+  section: CuratedSection;
+  showDescription?: boolean;
+}) {
   const locale = await getRequestLocale();
   const ns = `placeholders.curated.${section}` as const;
   const blocks = curatedBlocks[section];
 
   return (
-    <div className="flex max-w-3xl flex-col gap-4">
+    <div className="flex max-w-3xl flex-col gap-1.5">
       <EditableText
         relUrl={curatedBlocks.relUrl}
         blockKey={blocks.eyebrow}
         locale={locale}
         placeholderContent={await getCmsPlaceholder(ns, "eyebrow", locale)}
         placeholderTag="p"
-        className="text-overline font-semibold text-accent"
+        className="text-overline font-semibold text-brand"
       />
       <EditableText
         relUrl={curatedBlocks.relUrl}
@@ -49,16 +55,18 @@ async function CuratedSectionHeading({ section }: { section: CuratedSection }) {
         locale={locale}
         placeholderContent={await getCmsPlaceholder(ns, "title", locale)}
         placeholderTag="h2"
-        className="font-display text-display-sm uppercase text-brand sm:text-display-lg"
+        className="font-display text-heading-h1 uppercase text-ink"
       />
-      <EditableText
-        relUrl={curatedBlocks.relUrl}
-        blockKey={blocks.description}
-        locale={locale}
-        placeholderContent={await getCmsPlaceholder(ns, "description", locale)}
-        placeholderTag="p"
-        className="max-w-[464px] text-body-sm text-ink-secondary sm:text-body-md"
-      />
+      {showDescription ? (
+        <EditableText
+          relUrl={curatedBlocks.relUrl}
+          blockKey={blocks.description}
+          locale={locale}
+          placeholderContent={await getCmsPlaceholder(ns, "description", locale)}
+          placeholderTag="p"
+          className="max-w-[464px] text-body-sm text-ink-secondary"
+        />
+      ) : null}
     </div>
   );
 }
@@ -68,12 +76,10 @@ export async function CuratedHeroSection({ user }: { user: ApiMemberUser }) {
   const t = await getTranslations({ locale, namespace: "privateOffice" });
   const advisorName = user.advisor?.name ?? t("yourAdvisor");
   const hero = curatedBlocks.hero;
+  const memberHref = localizedHref(locale, "/private-office/member");
 
   return (
-    <section
-      data-site-hero
-      className="bg-[linear-gradient(166.53deg,#254672_0%,#081a33_71.43%)] py-14 text-white sm:py-16 lg:py-20"
-    >
+    <section data-site-hero className="bg-sapphire-800 pb-10 pt-14 text-white">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div
           className={cn(
@@ -81,23 +87,34 @@ export async function CuratedHeroSection({ user }: { user: ApiMemberUser }) {
             "flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between",
           )}
         >
-          <div className="flex max-w-[680px] flex-col gap-4">
-            <div className="space-y-2">
+          <div className="flex max-w-[611px] flex-col gap-4">
+            <p className="text-body-xs text-platinum-200">
+              <Link href={memberHref} className="hover:text-white">
+                {t("title")}
+              </Link>
+              {" › "}
               <EditableText
                 relUrl={curatedBlocks.relUrl}
                 blockKey={hero.eyebrow}
                 locale={locale}
-                placeholderContent={await getCmsPlaceholder("placeholders.curated.hero", "eyebrow", locale)}
-                placeholderTag="p"
-                className="text-overline font-semibold text-gold"
+                placeholderContent={await getCmsPlaceholder(
+                  "placeholders.curated.hero",
+                  "eyebrow",
+                  locale,
+                )}
+                placeholderTag="span"
+                className="inline text-body-xs text-platinum-200"
               />
+            </p>
+            <div className="flex items-center gap-1.5">
+              <span className="size-2 shrink-0 rounded-full bg-accent" aria-hidden />
               <EditableText
                 relUrl={curatedBlocks.relUrl}
                 blockKey={hero.badge}
                 locale={locale}
                 placeholderContent={await getCmsPlaceholder("placeholders.curated.hero", "badge", locale)}
                 placeholderTag="p"
-                className="text-overline font-semibold uppercase tracking-[0.18em] text-platinum-400"
+                className="text-overline font-semibold uppercase text-accent-on-dark"
               />
             </div>
             <EditableText
@@ -106,7 +123,7 @@ export async function CuratedHeroSection({ user }: { user: ApiMemberUser }) {
               locale={locale}
               placeholderContent={await getCmsPlaceholder("placeholders.curated.hero", "title", locale)}
               placeholderTag="h1"
-              className="font-display text-display-sm uppercase text-white sm:text-display-lg"
+              className="font-display text-heading-h1 uppercase text-white"
             />
             <EditableText
               relUrl={curatedBlocks.relUrl}
@@ -114,13 +131,15 @@ export async function CuratedHeroSection({ user }: { user: ApiMemberUser }) {
               locale={locale}
               placeholderContent={await getCmsPlaceholder("placeholders.curated.hero", "description", locale)}
               placeholderTag="p"
-              className="text-body-sm text-sapphire-100 sm:text-body-lg"
+              className="text-body-sm text-text-inactive"
             />
           </div>
           <div className="shrink-0 lg:text-right">
-            <p className="text-overline font-semibold text-platinum-400">{t("yourAdvisor")}</p>
-            <p className="mt-2 text-lg font-bold text-white">{advisorName}</p>
-            <p className="mt-1 text-body-xs text-sapphire-100">
+            <p className="text-label-muted font-medium uppercase text-platinum-200">
+              {t("yourAdvisor").toUpperCase()}
+            </p>
+            <p className="mt-2 text-h4 font-semibold text-white">{advisorName}</p>
+            <p className="mt-2 text-body-xs text-accent-on-dark">
               {user.advisor?.availability ?? t("respondsWithinHours")}
             </p>
           </div>
@@ -133,22 +152,34 @@ export async function CuratedHeroSection({ user }: { user: ApiMemberUser }) {
 export async function CuratedSelectionSection({
   items = [],
 }: {
-  items?: Array<{ id?: number; title: string; excerpt: string }>;
+  items?: Array<{
+    id?: number;
+    title: string;
+    excerpt: string;
+    href?: string;
+    imageUrl?: string;
+  }>;
 }) {
   const locale = await getRequestLocale();
   const t = await getTranslations({ locale, namespace: "pages.curated" });
 
   return (
-    <section className="bg-white py-16 sm:py-20">
+    <section className="bg-white py-14">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div className={cn(sitePageInnerClassName, "space-y-10")}>
+        <div className={cn(sitePageInnerClassName, "flex flex-col gap-6")}>
           <CuratedSectionHeading section="selection" />
           {items.length === 0 ? (
             <CatalogEmptyState message={t("noCurated")} />
           ) : (
-            <div className="grid gap-2 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {items.map((item) => (
-                <AdvisorCard key={item.id ?? item.title} title={item.title} excerpt={item.excerpt} />
+                <AdvisorCard
+                  key={item.id ?? item.title}
+                  title={item.title}
+                  excerpt={item.excerpt}
+                  href={item.href}
+                  imageUrl={item.imageUrl}
+                />
               ))}
             </div>
           )}
@@ -163,30 +194,24 @@ export async function CuratedNotesSection({ notes = [] }: { notes?: ApiAdvisorNo
   const t = await getTranslations({ locale, namespace: "pages.curated" });
 
   return (
-    <section className="bg-sapphire-50 py-16 sm:py-20">
+    <section className="bg-sapphire-50 py-14">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div className={cn(sitePageInnerClassName, "space-y-10")}>
+        <div className={cn(sitePageInnerClassName, "flex flex-col gap-6")}>
           <CuratedSectionHeading section="notes" />
           {notes.length === 0 ? (
             <CatalogEmptyState message={t("noNotes")} />
           ) : (
-            <div className="space-y-4">
+            <div className="flex max-w-[820px] flex-col gap-4">
               {notes.map((note) => (
                 <article
                   key={note.id}
-                  className="rounded-[var(--radius-card)] border border-line bg-white p-6 shadow-[var(--shadow-card)]"
+                  className="rounded-[var(--radius-card)] border border-line bg-white px-6 py-5"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <p className="text-body-md font-bold leading-[22px] text-brand">
-                      {note.title}
-                    </p>
-                    <span className="shrink-0 text-body-xs leading-4 text-ink-tertiary">
-                      {formatNoteDate(note.createdAt)}
-                    </span>
+                  <div className="flex flex-wrap items-center gap-2 text-body-xs leading-4">
+                    <p className="font-semibold text-ink">{note.title}</p>
+                    <span className="text-ink-tertiary">{formatNoteDate(note.createdAt)}</span>
                   </div>
-                  <p className="mt-3 max-w-[760px] text-body-sm leading-[18px] text-ink-secondary">
-                    {note.content}
-                  </p>
+                  <p className="mt-2 text-body-sm text-ink-secondary">{note.content}</p>
                 </article>
               ))}
             </div>
@@ -206,9 +231,10 @@ export async function CuratedAdvisorBarSection({
 }) {
   const t = await getTranslations({ locale, namespace: "privateOffice" });
   const name = advisor?.name ?? t("yourAdvisor");
+  const contactHref = localizedHref(locale, "/contact");
 
   return (
-    <section className="border-t border-line bg-white">
+    <section className="bg-white">
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
         <div
           className={cn(
@@ -216,19 +242,16 @@ export async function CuratedAdvisorBarSection({
             "flex flex-col items-start justify-between gap-6 py-8 sm:flex-row sm:items-center",
           )}
         >
-          <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-white">
-              <Icon name="user" className="h-5 w-5" />
+          <div className="flex items-center gap-3.5">
+            <span className="flex h-[52px] w-[52px] shrink-0 items-center justify-center overflow-hidden rounded-full bg-brand text-white">
+              <Icon name="user" className="h-6 w-6" />
             </span>
-            <p className="max-w-[520px] text-body-sm leading-[18px] text-ink-secondary">
-              <span className="font-bold text-brand">{t("haveQuestion")}</span>{" "}
-              {t("messageDirectly", { name })}
-            </p>
+            <div className="flex flex-col gap-2">
+              <p className="text-h4 font-semibold text-ink">{t("haveQuestion")}</p>
+              <p className="text-body-sm text-ink-tertiary">{t("messageDirectly", { name })}</p>
+            </div>
           </div>
-          <div className="flex w-full flex-row items-stretch gap-2 sm:w-auto sm:gap-3">
-            <MemberAdvisorMessageDialog advisorName={name} locale={locale} />
-            <MemberSignOutButton redirectTo={localizedHref(locale, "/private-office")} />
-          </div>
+          <CuratedAdvisorCta advisorName={name} locale={locale} contactHref={contactHref} />
         </div>
       </div>
     </section>

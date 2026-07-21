@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Textarea, TextInput } from "@/components/ui/FormControls";
 import { Icon } from "@/components/ui/Icon";
 import { getFieldError, isApiError } from "@/lib/api/errors";
+import { cn } from "@/lib/cn";
 
 type MemberAdvisorMessageFormProps = {
   advisorName?: string;
@@ -129,9 +130,11 @@ export function MemberAdvisorMessageForm({
 export function MemberAdvisorMessageDialog({
   advisorName,
   locale = "en",
+  triggerClassName,
 }: {
   advisorName?: string;
   locale?: "en" | "ar";
+  triggerClassName?: string;
 }) {
   const [open, setOpen] = useState(false);
   const t = useTranslations("privateOffice");
@@ -142,7 +145,7 @@ export function MemberAdvisorMessageDialog({
         type="button"
         variant="primary"
         size="md"
-        className="w-full shrink-0 justify-center sm:w-auto"
+        className={cn("w-full shrink-0 justify-center sm:w-auto", triggerClassName)}
         onClick={() => setOpen(true)}
       >
         {t("messageAdvisor")}

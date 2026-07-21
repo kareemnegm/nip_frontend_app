@@ -685,15 +685,14 @@
     },
     "curated": {
       "hero": {
-        "eyebrow": "Private Office | Curated for You",
+        "eyebrow": "Curated for You",
         "badge": "By Introduction Only",
         "title": "Selected for You, by Your Advisor",
         "description": "A confidential selection of properties and projects aligned with your mandate. Curated, never catalogued. Released by your advisor as relevant."
       },
       "selection": {
         "eyebrow": "YOUR CURATED VIEW",
-        "title": "Curated for You",
-        "description": "A confidential selection of properties and projects aligned with your mandate. Released by your advisor as relevant."
+        "title": "A Considered Selection"
       },
       "notes": {
         "eyebrow": "ADVISOR NOTES",

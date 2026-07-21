@@ -501,7 +501,7 @@ export function AdvisorCard({
   className,
 }: AdvisorCardProps) {
   const viewControl = (
-    <span className="inline-flex items-center gap-1 rounded-[4px] bg-accent px-3 py-1.5 text-xs font-semibold leading-4 text-white">
+    <span className="inline-flex items-center gap-1 rounded-[var(--radius-field)] bg-accent px-3 py-1.5 text-label-semibold font-semibold text-white">
       View
       <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
     </span>
@@ -510,35 +510,35 @@ export function AdvisorCard({
   return (
     <article
       className={cn(
-        "flex h-full flex-col rounded-[8px] border border-[#7c8694] bg-sapphire-800 p-2 text-white shadow-[0px_2px_4px_rgba(18,51,94,0.06)]",
+        "flex h-[440px] flex-col rounded-[var(--radius-card)] border border-platinum-600 bg-sapphire-800 p-2 text-white shadow-[var(--shadow-card)]",
         className,
       )}
     >
       {imageUrl ? (
-        <div className="relative h-[220px] w-full shrink-0 overflow-hidden rounded-[4px] bg-[#d9e0ea]">
+        <div className="relative h-[220px] w-full shrink-0 overflow-hidden rounded-[var(--radius-field)] bg-basalt-100">
           <Image
             src={imageUrl}
             alt=""
             fill
             className="object-cover object-center"
-            sizes="(max-width: 768px) 100vw, 344px"
+            sizes="(max-width: 768px) 100vw, 528px"
           />
         </div>
       ) : (
-        <div className="flex h-[220px] w-full shrink-0 items-center justify-center rounded-[4px] bg-[#d9e0ea]">
-          <Icon name="home" className="h-[70px] w-[70px] text-white/80" />
+        <div className="flex h-[220px] w-full shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-basalt-100">
+          <Icon name="image" className="h-[140px] w-[140px] text-white/80" />
         </div>
       )}
-      <div className="flex flex-1 flex-col justify-between px-6 pb-6 pt-8">
-        <span className="w-fit rounded-[4px] bg-[#7c8694] px-3 py-1.5 text-[11px] font-medium leading-[14px] text-white">
+      <div className="flex flex-1 flex-col justify-between overflow-hidden px-6 pb-6 pt-8">
+        <span className="w-fit rounded-[var(--radius-field)] bg-platinum-600 px-3 py-1.5 text-label-muted font-medium text-white">
           PRIVATE
         </span>
         <div className="flex flex-col gap-2">
-          <h3 className="text-xl font-bold leading-[26px] text-white">{title}</h3>
-          <p className="text-xs leading-4 text-[#8fb0dc]">{excerpt}</p>
+          <h3 className="line-clamp-1 text-h3 font-bold text-white">{title}</h3>
+          <p className="line-clamp-2 text-body-xs text-accent-on-dark">{excerpt}</p>
         </div>
         <div className="flex items-center justify-between pt-2">
-          <span className="inline-flex items-end gap-1 text-xs leading-4 text-white">
+          <span className="inline-flex items-end gap-1 text-body-xs text-white">
             <Icon name="lockOpen" className="h-6 w-6 shrink-0" />
             Advisor-Released
           </span>
