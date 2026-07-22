@@ -10,9 +10,22 @@ import { localizedHref, toLocaleAgnosticPath } from "@/lib/i18n/helpers";
 
 const PUBLIC_FILE = /\.[^/]+$/;
 
-/** Static Arancia campaign (public/arancia) — not locale-prefixed. */
-function isAranciaCampaignPath(pathname: string): boolean {
-  return pathname === "/arancia" || pathname.startsWith("/arancia/");
+/** Map pretty URLs → static HTML in public/arancia (internal rewrite, no redirect loop). */
+const ARANCIA_HTML_REWRITE: Record<string, string> = {
+  "/arancia/": "/arancia/index.html",
+  "/arancia/thank-you/": "/arancia/thank-you/index.html",
+  "/arancia/ar/": "/arancia/ar/index.html",
+  "/arancia/ar/thank-you/": "/arancia/ar/thank-you/index.html",
+};
+
+const ARANCIA_TRAILING_SLASH: Record<string, string> = {
+  "/arancia/thank-you": "/arancia/thank-you/",
+  "/arancia/ar": "/arancia/ar/",
+  "/arancia/ar/thank-you": "/arancia/ar/thank-you/",
+};
+
+function aranciaHtmlRewrite(pathname: string): string | null {
+  return ARANCIA_HTML_REWRITE[pathname] ?? null;
 }
 
 function getPreferredLocale(request: NextRequest): Locale {
@@ -43,11 +56,21 @@ export function middleware(request: NextRequest) {
   if (pathname === "/arancia") {
     const url = request.nextUrl.clone();
     url.pathname = "/arancia/";
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(url, 308);
   }
 
-  if (isAranciaCampaignPath(pathname)) {
-    return NextResponse.next();
+  const aranciaSlash = ARANCIA_TRAILING_SLASH[pathname];
+  if (aranciaSlash) {
+    const url = request.nextUrl.clone();
+    url.pathname = aranciaSlash;
+    return NextResponse.redirect(url, 308);
+  }
+
+  const aranciaHtml = aranciaHtmlRewrite(pathname);
+  if (aranciaHtml) {
+    const url = request.nextUrl.clone();
+    url.pathname = aranciaHtml;
+    return NextResponse.rewrite(url);
   }
 
   const segments = pathname.split("/").filter(Boolean);
