@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { SpeakWithNipButton } from "@/components/ui/Button";
 import type { IconName } from "@/components/ui/Icon";
@@ -11,6 +10,7 @@ import { getRequestLocale } from "@/lib/i18n/server";
 import { cn } from "@/lib/cn";
 import { AppLink as Link } from "@/components/AppLink";
 import { AreaAboutSection, AreaSectionHeading } from "./AreaStorySections";
+import { DeveloperHeroLogo } from "./DeveloperHeroLogo";
 
 const developerSectionTitleClassName =
   "text-[32px] leading-8 tracking-[-0.02em]";
@@ -54,19 +54,15 @@ export function DeveloperHero({
           </div>
 
           {/* Mobile: logo + CTA side by side. Desktop: stacked (logo above button).
-              Figma 1525:27840 — column w-134; logo 134×27; pb-40; button 134×34. */}
-          <div className="flex w-full shrink-0 flex-row items-center justify-between gap-4 lg:w-[134px] lg:flex-col lg:items-center lg:justify-center lg:gap-0">
+              Figma 1525:27840 — column sized to button; logo w-full × ~24px (wide marks). */}
+          <div className="flex w-full shrink-0 flex-row items-center justify-between gap-4 lg:w-auto lg:flex-col lg:items-stretch lg:justify-center lg:gap-0">
             <div className="flex min-w-0 flex-1 items-center justify-center lg:w-full lg:flex-none lg:pb-10">
               {logoUrl ? (
-                <div className="relative aspect-[120/24] w-full max-w-[134px] lg:max-w-none">
-                  <Image
-                    src={logoUrl}
-                    alt={`${title} logo`}
-                    fill
-                    className="object-contain object-center"
-                    sizes="134px"
-                  />
-                </div>
+                <DeveloperHeroLogo
+                  src={logoUrl}
+                  alt={`${title} logo`}
+                  className="max-w-[134px] lg:max-w-none"
+                />
               ) : (
                 <p
                   aria-hidden
