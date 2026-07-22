@@ -10,6 +10,11 @@ import { localizedHref, toLocaleAgnosticPath } from "@/lib/i18n/helpers";
 
 const PUBLIC_FILE = /\.[^/]+$/;
 
+/** Static Arancia campaign (public/arancia) — not locale-prefixed. */
+function isAranciaCampaignPath(pathname: string): boolean {
+  return pathname === "/arancia" || pathname.startsWith("/arancia/");
+}
+
 function getPreferredLocale(request: NextRequest): Locale {
   const cookieLocale = request.cookies.get(LOCALE_COOKIE)?.value;
   if (cookieLocale && isLocale(cookieLocale)) {
@@ -35,10 +40,26 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (pathname === "/arancia") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/arancia/";
+    return NextResponse.redirect(url);
+  }
+
+  if (isAranciaCampaignPath(pathname)) {
+    return NextResponse.next();
+  }
+
   const segments = pathname.split("/").filter(Boolean);
   const maybeLocale = segments[0];
 
   if (maybeLocale && isLocale(maybeLocale)) {
+    if (segments[1] === "arancia") {
+      const rest = segments.slice(2).join("/");
+      const url = request.nextUrl.clone();
+      url.pathname = rest ? `/arancia/${rest}` : "/arancia/";
+      return NextResponse.redirect(url);
+    }
     // Fix accidental double-locale URLs such as /en/en/properties
     if (segments[1] && isLocale(segments[1])) {
       const url = request.nextUrl.clone();

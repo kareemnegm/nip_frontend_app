@@ -3,7 +3,6 @@
 # New pages must NOT be added here.
 # See: .cursor/design-system/forbidden.md
 
-app/[locale]/developers/page.tsx
 app/[locale]/insights/page.tsx
 components/catalog/OffPlanDetailPage.tsx
 components/catalog/PropertyDetailPage.tsx
@@ -20,10 +19,7 @@ components/MobileNav.tsx
 components/sections/AreaStorySections.tsx
 components/sections/CatalogHeroSection.tsx
 components/sections/ConciergeStorySections.tsx
-components/sections/CtaBand.tsx
-components/sections/CuratedStorySections.tsx
 components/sections/DeveloperStorySections.tsx
-components/sections/EditableCtaBand.tsx
 components/sections/FaqStorySections.tsx
 components/sections/HomeHeroSection.tsx
 components/sections/HomeSearchForm.tsx
@@ -34,7 +30,6 @@ components/sections/OffPlanStorySections.tsx
 components/sections/PageHero.tsx
 components/sections/PrivateOfficeMemberSections.tsx
 components/sections/PrivateOfficeSection.tsx
-components/sections/PropertyAdvisoryCard.tsx
 components/sections/PropertyGalleryClient.tsx
 components/sections/PropertyStorySections.tsx
 components/sections/SectionHeading.tsx

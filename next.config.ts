@@ -27,6 +27,17 @@ function apiImageHosts(): { protocol: "http" | "https"; hostname: string }[] {
 }
 
 const nextConfig: NextConfig = {
+  async rewrites() {
+    return [
+      { source: "/arancia/", destination: "/arancia/index.html" },
+      { source: "/arancia/thank-you/", destination: "/arancia/thank-you/index.html" },
+      { source: "/arancia/ar/", destination: "/arancia/ar/index.html" },
+      {
+        source: "/arancia/ar/thank-you/",
+        destination: "/arancia/ar/thank-you/index.html",
+      },
+    ];
+  },
   images: {
     remotePatterns: apiImageHosts(),
     // Media is served from NEXT_PUBLIC_API_URL (see lib/api/media-url.ts).
