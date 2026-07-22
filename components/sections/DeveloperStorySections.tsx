@@ -57,13 +57,13 @@ export function DeveloperHero({
           <div className="flex w-full shrink-0 flex-row items-center justify-between gap-4 lg:w-auto lg:flex-col lg:justify-center lg:gap-0">
             <div className="flex min-w-0 flex-1 items-center justify-center lg:w-full lg:flex-none lg:pb-10">
               {logoUrl ? (
-                <div className="relative flex h-[88px] w-full max-w-[160px] items-center justify-center sm:h-[100px] sm:max-w-[200px] lg:h-[120px] lg:max-w-[280px] lg:w-[280px]">
+                <div className="relative flex h-[28px] w-full max-w-[130px] items-center justify-center sm:h-[30px] sm:max-w-[150px] lg:h-[24px] lg:w-full lg:max-w-none">
                   <Image
                     src={logoUrl}
                     alt={`${title} logo`}
                     fill
                     className="object-contain object-center"
-                    sizes="(max-width: 1023px) 160px, 280px"
+                    sizes="(max-width: 1023px) 150px, 200px"
                   />
                 </div>
               ) : (

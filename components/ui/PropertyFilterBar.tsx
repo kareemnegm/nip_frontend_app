@@ -9,12 +9,12 @@ import { LabeledSelect } from "./LabeledSelect";
 const KEYWORD_DEBOUNCE_MS = 400;
 
 /**
- * Below xl: search on its own row; Location / Type / Price / Beds / Search
- * sit in one horizontal row (like desktop) so nothing stacks or clips.
- * xl+: single desktop row — input + 4 selects + button.
+ * The Figma desktop row needs the full 1080px content width, which is only
+ * available at a 1440px viewport once the page's 180px gutters are applied.
+ * Below that, keep the keyword full-width and reflow controls into a grid.
  */
 const SELECT_WIDTH_CLASS =
-  "min-w-0 flex-1 xl:w-[110px] xl:max-w-[110px] xl:flex-none";
+  "w-full min-w-0 min-[1440px]:w-[110px] min-[1440px]:max-w-[110px] min-[1440px]:flex-none";
 
 export type PropertyFilterValues = {
   keyword?: string;
@@ -195,7 +195,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
 
   return (
     <form
-      className="flex w-full flex-col gap-2.5 overflow-hidden rounded-[var(--radius-card)] border border-line bg-surface p-3 shadow-[var(--shadow-card)] xl:flex-row xl:flex-nowrap xl:items-center"
+      className="flex w-full flex-col gap-2.5 rounded-[var(--radius-card)] border border-line bg-surface p-3 shadow-[var(--shadow-card)] min-[1440px]:flex-row min-[1440px]:flex-nowrap min-[1440px]:items-center"
       onSubmit={onSubmit}
     >
       <input
@@ -215,9 +215,9 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
           el.addEventListener("search", handler);
           return () => el.removeEventListener("search", handler);
         }}
-        className="min-w-0 w-full shrink-0 rounded-[var(--radius-field)] bg-sapphire-50 px-3.5 py-2.5 text-body-sm text-ink outline-none placeholder:text-text-inactive xl:w-[470px] xl:flex-none"
+        className="w-full min-w-0 shrink-0 rounded-[var(--radius-field)] bg-sapphire-50 px-3.5 py-2.5 text-body-sm text-ink outline-none placeholder:text-text-inactive min-[1440px]:w-[470px] min-[1440px]:flex-none"
       />
-      <div className="flex w-full min-w-0 flex-nowrap items-center gap-2.5 xl:w-auto xl:contents">
+      <div className="grid w-full min-w-0 grid-cols-2 gap-2.5 lg:grid-cols-5 min-[1440px]:contents">
         <LabeledSelect
           aria-label={t("location")}
           options={filterOptions}
@@ -261,7 +261,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex h-full shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-brand px-3.5 py-[9px] text-overline font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-60 sm:px-[22px] xl:w-[96px] xl:flex-none"
+          className="col-span-2 inline-flex h-full min-h-9 shrink-0 items-center justify-center rounded-[var(--radius-field)] bg-brand px-3.5 py-[9px] text-overline font-semibold text-white transition-colors hover:bg-brand-hover disabled:opacity-60 sm:px-[22px] lg:col-span-1 min-[1440px]:w-[96px] min-[1440px]:flex-none"
         >
           {isPending ? tc("loading") : tc("search")}
         </button>
