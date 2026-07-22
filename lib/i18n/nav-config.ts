@@ -1,4 +1,6 @@
-export const mainNavItems = [
+import { TEMP_HIDE_MAIN_NAV_CONCIERGE } from "@/lib/temporary-ui-flags";
+
+const allMainNavItems = [
   { key: "home", href: "/" as const },
   { key: "insights", href: "/insights" as const },
   {
@@ -11,6 +13,10 @@ export const mainNavItems = [
   { key: "developers", href: "/developers" as const },
   { key: "concierge", href: "/concierge" as const },
 ] as const;
+
+export const mainNavItems = allMainNavItems.filter(
+  (item) => !(TEMP_HIDE_MAIN_NAV_CONCIERGE && item.key === "concierge"),
+);
 
 export const propertiesDropdownItems = [
   { key: "apartments", href: "/properties?type=apartment" as const },

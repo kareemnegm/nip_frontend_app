@@ -11,6 +11,7 @@ import {
 } from "@/lib/i18n/config";
 import { switchLocalePathname } from "@/lib/i18n/helpers";
 import { useLocale } from "@/lib/i18n/context";
+import { TEMP_HIDE_AR_LANGUAGE_SWITCH } from "@/lib/temporary-ui-flags";
 
 type LanguageSwitcherProps = {
   className?: string;
@@ -23,11 +24,18 @@ export function LanguageSwitcher({
 }: LanguageSwitcherProps) {
   const { locale: currentLocale } = useLocale();
   const pathname = usePathname();
+  const switcherLocales = TEMP_HIDE_AR_LANGUAGE_SWITCH
+    ? locales.filter((locale) => locale !== "ar")
+    : [...locales];
+
+  if (switcherLocales.length <= 1) {
+    return null;
+  }
 
   if (variant === "compact") {
     return (
       <div className={cn("flex items-center gap-1.5", className)}>
-        {locales.map((locale, index) => (
+        {switcherLocales.map((locale, index) => (
           <span key={locale} className="inline-flex items-center gap-1.5">
             {index > 0 ? (
               <span className="text-ink-secondary" aria-hidden>
@@ -54,7 +62,7 @@ export function LanguageSwitcher({
       )}
     >
       <Icon name="globe" className="h-[18px] w-[18px] shrink-0 text-sapphire-600" />
-      {locales.map((locale, index) => (
+      {switcherLocales.map((locale, index) => (
         <span key={locale} className="inline-flex items-center gap-1.5">
           {index > 0 ? (
             <span className="h-3 w-px shrink-0 bg-ink-secondary" aria-hidden />

@@ -14,6 +14,7 @@ import {
   mainNavItems,
   type NavDropdownKey,
 } from "@/lib/i18n/nav-config";
+import { isLanguageSwitcherVisible } from "@/lib/temporary-ui-flags";
 
 const navLinkClass =
   "rounded-[var(--radius-field)] px-3 py-3 text-base font-semibold text-ink transition-colors hover:bg-sapphire-50 hover:text-brand";
@@ -178,10 +179,12 @@ export function MobileNav() {
           </nav>
 
           <div className="shrink-0 space-y-4 border-t border-line px-6 py-6">
-            <div className="flex items-center gap-2 text-sm font-semibold text-ink">
-              <Icon name="globe" className="h-[18px] w-[18px] text-brand" />
-              <LanguageSwitcher variant="compact" />
-            </div>
+            {isLanguageSwitcherVisible() ? (
+              <div className="flex items-center gap-2 text-sm font-semibold text-ink">
+                <Icon name="globe" className="h-[18px] w-[18px] text-brand" />
+                <LanguageSwitcher variant="compact" />
+              </div>
+            ) : null}
             <SpeakWithNipButton className="w-full" onClick={close} />
           </div>
         </aside>
