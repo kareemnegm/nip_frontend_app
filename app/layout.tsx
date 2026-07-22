@@ -50,6 +50,10 @@ export const metadata: Metadata = {
   },
   description:
     "Prudent, knowledge-first global real estate advisory for elevated living in Dubai.",
+  icons: {
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    shortcut: "/favicon.svg",
+  },
   openGraph: {
     siteName: "NIP Reality",
     type: "website",

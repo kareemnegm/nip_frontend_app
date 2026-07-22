@@ -53,23 +53,24 @@ export function DeveloperHero({
             </p>
           </div>
 
-          {/* Mobile: logo + CTA side by side. Desktop: stacked (logo above button). */}
-          <div className="flex w-full shrink-0 flex-row items-center justify-between gap-4 lg:w-auto lg:flex-col lg:justify-center lg:gap-0">
+          {/* Mobile: logo + CTA side by side. Desktop: stacked (logo above button).
+              Figma 1525:27840 — column w-134; logo 134×27; pb-40; button 134×34. */}
+          <div className="flex w-full shrink-0 flex-row items-center justify-between gap-4 lg:w-[134px] lg:flex-col lg:items-center lg:justify-center lg:gap-0">
             <div className="flex min-w-0 flex-1 items-center justify-center lg:w-full lg:flex-none lg:pb-10">
               {logoUrl ? (
-                <div className="flex w-full max-w-[200px] items-center justify-center sm:max-w-[220px] lg:w-[220px] lg:max-w-[220px]">
+                <div className="relative aspect-[120/24] w-full max-w-[134px] lg:max-w-none">
                   <Image
                     src={logoUrl}
                     alt={`${title} logo`}
-                    width={220}
-                    height={80}
-                    className="h-auto max-h-[56px] w-auto max-w-full object-contain sm:max-h-[64px] lg:max-h-[72px]"
+                    fill
+                    className="object-contain object-center"
+                    sizes="134px"
                   />
                 </div>
               ) : (
                 <p
                   aria-hidden
-                  className="text-center font-[family-name:var(--font-display)] text-[28px] uppercase leading-none tracking-[0.12em] text-brand lg:text-[40px]"
+                  className="w-full max-w-[134px] text-center font-[family-name:var(--font-display)] text-[22px] uppercase leading-none tracking-[0.08em] text-brand lg:max-w-none"
                 >
                   {fallbackLogoText}
                 </p>
@@ -78,7 +79,7 @@ export function DeveloperHero({
                 <span className="sr-only">{fallbackLogoText} logo</span>
               ) : null}
             </div>
-            <SpeakWithNipButton href="/contact" className="shrink-0" />
+            <SpeakWithNipButton href="/contact" className="shrink-0 lg:w-full lg:justify-center" />
           </div>
         </div>
       </div>
