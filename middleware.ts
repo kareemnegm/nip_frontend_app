@@ -10,22 +10,23 @@ import { localizedHref, toLocaleAgnosticPath } from "@/lib/i18n/helpers";
 
 const PUBLIC_FILE = /\.[^/]+$/;
 
-/** Map pretty URLs → static HTML in public/arancia (internal rewrite, no redirect loop). */
-const ARANCIA_HTML_REWRITE: Record<string, string> = {
-  "/arancia/": "/arancia/index.html",
-  "/arancia/thank-you/": "/arancia/thank-you/index.html",
-  "/arancia/ar/": "/arancia/ar/index.html",
-  "/arancia/ar/thank-you/": "/arancia/ar/thank-you/index.html",
+/** Pretty Arancia URLs → static HTML (rewrite keeps address bar; base href in each HTML fixes assets). */
+const ARANCIA_PAGE_REWRITE: Record<string, string> = {
+  "/arancia": "/arancia/index.html",
+  "/arancia/thank-you": "/arancia/thank-you/index.html",
+  "/arancia/ar": "/arancia/ar/index.html",
+  "/arancia/ar/thank-you": "/arancia/ar/thank-you/index.html",
 };
 
-const ARANCIA_TRAILING_SLASH: Record<string, string> = {
-  "/arancia/thank-you": "/arancia/thank-you/",
-  "/arancia/ar": "/arancia/ar/",
-  "/arancia/ar/thank-you": "/arancia/ar/thank-you/",
-};
-
-function aranciaHtmlRewrite(pathname: string): string | null {
-  return ARANCIA_HTML_REWRITE[pathname] ?? null;
+function normalizeAranciaPathname(pathname: string): string {
+  if (
+    pathname.startsWith("/arancia") &&
+    pathname.length > "/arancia".length &&
+    pathname.endsWith("/")
+  ) {
+    return pathname.replace(/\/+$/, "");
+  }
+  return pathname;
 }
 
 function getPreferredLocale(request: NextRequest): Locale {
@@ -53,20 +54,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (pathname === "/arancia") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/arancia/";
-    return NextResponse.redirect(url, 308);
-  }
-
-  const aranciaSlash = ARANCIA_TRAILING_SLASH[pathname];
-  if (aranciaSlash) {
-    const url = request.nextUrl.clone();
-    url.pathname = aranciaSlash;
-    return NextResponse.redirect(url, 308);
-  }
-
-  const aranciaHtml = aranciaHtmlRewrite(pathname);
+  const aranciaPath = normalizeAranciaPathname(pathname);
+  const aranciaHtml = ARANCIA_PAGE_REWRITE[aranciaPath];
   if (aranciaHtml) {
     const url = request.nextUrl.clone();
     url.pathname = aranciaHtml;
@@ -80,7 +69,7 @@ export function middleware(request: NextRequest) {
     if (segments[1] === "arancia") {
       const rest = segments.slice(2).join("/");
       const url = request.nextUrl.clone();
-      url.pathname = rest ? `/arancia/${rest}` : "/arancia/";
+      url.pathname = rest ? `/arancia/${rest}`.replace(/\/+$/, "") : "/arancia";
       return NextResponse.redirect(url);
     }
     // Fix accidental double-locale URLs such as /en/en/properties
