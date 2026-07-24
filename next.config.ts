@@ -27,6 +27,7 @@ function apiImageHosts(): { protocol: "http" | "https"; hostname: string }[] {
 }
 
 const nextConfig: NextConfig = {
+  output: "standalone",
   images: {
     remotePatterns: apiImageHosts(),
     // Media is served from NEXT_PUBLIC_API_URL (see lib/api/media-url.ts).
