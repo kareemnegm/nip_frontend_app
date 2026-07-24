@@ -11,6 +11,37 @@ import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { localizedHref, resolveLocale } from "@/lib/i18n/helpers";
 import { localizedMetadata } from "@/lib/i18n/metadata";
 
+const UPPERCASE_DEVELOPER_WORDS = new Set(["pjsc", "llc", "ltd", "plc", "dmcc", "uae"]);
+
+function titleCaseDeveloperWord(word: string): string {
+  const lower = word.toLowerCase();
+  if (UPPERCASE_DEVELOPER_WORDS.has(lower)) {
+    return lower.toUpperCase();
+  }
+  return lower.charAt(0).toUpperCase() + lower.slice(1);
+}
+
+/** Listing only: title-case ALL-CAPS API names (e.g. EMAAR PROPERTIES). Keeps mixed-case brands (DarGlobal). */
+function formatDeveloperListingName(name: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) return trimmed;
+
+  const letters = trimmed.replace(/[^A-Za-z]/g, "");
+  if (letters.length === 0 || letters !== letters.toUpperCase()) {
+    return trimmed;
+  }
+
+  return trimmed
+    .split(/\s+/)
+    .map((word) =>
+      word
+        .split(/(-)/)
+        .map((part) => (part === "-" ? part : titleCaseDeveloperWord(part)))
+        .join(""),
+    )
+    .join(" ");
+}
+
 type PageProps = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -56,7 +87,7 @@ export default async function DevelopersPage({ params, searchParams }: PageProps
                   className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-line bg-white p-8 transition-shadow hover:shadow-[var(--shadow-card)]"
                 >
                   <span className="font-display text-h3 font-bold text-brand">
-                    {developer.name}
+                    {formatDeveloperListingName(developer.name)}
                   </span>
                   {developer.properties_count != null ? (
                     <span className="text-body-sm text-ink-secondary">
