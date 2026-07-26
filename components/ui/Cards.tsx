@@ -5,7 +5,9 @@ import { AppLink as Link } from "@/components/AppLink";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
+import type { AreaFeatureItem } from "@/lib/area/detail";
 import { stripCurrencyPrefix } from "@/lib/i18n/currency-icon";
+import { AmenityIcon } from "./AmenityIcon";
 import { CurrencyIcon } from "./CurrencyIcon";
 import { Icon } from "./Icon";
 
@@ -83,9 +85,9 @@ type AdvisorCardProps = BaseCardProps & {
 
 type CommunityCardProps = BaseCardProps & {
   title: string;
-  description?: string;
-  facts: string[];
-  projectCount?: number;
+  facts: AreaFeatureItem[];
+  projectsAvailableLabel: string;
+  exploreAreaLabel: string;
   href?: string;
 };
 
@@ -555,87 +557,103 @@ export function AdvisorCard({
   );
 }
 
-const communityFactIcons = ["family", "park", "metro", "building"] as const;
+/** Figma Card / Area (1054:1280) fact icon — 18×18, brand stroke/fill. */
+function CardFactIcon({
+  icon,
+  iconSvg,
+  iconUrl,
+  label,
+}: Pick<AreaFeatureItem, "icon" | "iconSvg" | "iconUrl" | "label">) {
+  const amenity = (
+    <AmenityIcon
+      facilityIcon={iconSvg}
+      iconUrl={iconUrl}
+      facility={label}
+      className="h-[18px] w-[18px] text-brand [&>svg]:h-[18px] [&>svg]:w-[18px] [&_svg]:h-[18px] [&_svg]:w-[18px]"
+    />
+  );
 
+  if (iconSvg?.trim() || iconUrl?.trim()) {
+    return amenity;
+  }
+
+  return <Icon name={icon} className="h-[18px] w-[18px] shrink-0 text-brand" />;
+}
+
+/**
+ * CommunityCard — Figma Card / Area (node 1054:1278 / description 1054:1280)
+ * Pixel-perfect: 408×442, p-2, image h-236, body px-6 pt-6 pb-4.
+ */
 export function CommunityCard({
   title,
-  description,
   facts,
-  projectCount = 0,
+  projectsAvailableLabel,
+  exploreAreaLabel,
   href,
   imageUrl,
   className,
 }: CommunityCardProps & { imageUrl?: string }) {
-  const t = useTranslations("catalog");
   const leftFacts = facts.slice(0, 2);
   const rightFacts = facts.slice(2, 4);
-  const showDescription = Boolean(description?.trim());
-  const showFacts = !showDescription && facts.length > 0;
 
   const card = (
     <article
       data-reveal
       className={cn(
-        cardTypography.shell,
-        "min-h-[440px]",
+        "flex h-[442px] flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
         href && "cursor-pointer",
         className,
       )}
     >
       <CardImage imageUrl={imageUrl} alt={title} icon="mapPin" />
-      <div className={cardTypography.body}>
-        <div className="space-y-3">
-          <h3 className={cn(cardTypography.title, "flex items-start gap-1.5")}>
-            <Icon
-              name="mapPin"
-              className={cn(cardTypography.priceIcon, "mt-1 text-accent")}
-            />
+      {/* Description — Figma: px-24, pt-24, pb-16, flex-1, justify-between */}
+      <div className="flex min-h-0 flex-1 flex-col justify-between overflow-hidden px-6 pb-4 pt-6">
+        {/* Title row — Figma: flex items-center gap-[6px] */}
+        <div className="flex items-center gap-[6px]">
+          <Icon
+            name="mapPin"
+            className="h-[18px] w-[19px] shrink-0 text-accent"
+          />
+          <h3 className="text-h3 font-bold leading-[26px] text-brand">
             {title}
           </h3>
-          {showDescription ? (
-            <p className={cn(cardTypography.excerpt, "line-clamp-3")}>{description}</p>
-          ) : null}
-          {showFacts ? (
-            <div className="flex gap-6 py-2.5">
-              <div className="flex flex-col gap-2">
-                {leftFacts.map((fact, index) => (
-                  <span
-                    key={fact}
-                    className="inline-flex items-center gap-2 text-body-xs text-ink"
-                  >
-                    <Icon
-                      name={communityFactIcons[index] ?? "mapPin"}
-                      className={cn(cardTypography.priceIcon, "text-brand")}
-                    />
-                    {fact}
-                  </span>
-                ))}
-              </div>
-              <div className="flex flex-col gap-2">
-                {rightFacts.map((fact, index) => (
-                  <span
-                    key={fact}
-                    className="inline-flex items-center gap-2 text-body-xs text-ink"
-                  >
-                    <Icon
-                      name={communityFactIcons[index + 2] ?? "building"}
-                      className={cn(cardTypography.priceIcon, "text-brand")}
-                    />
-                    {fact}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ) : null}
         </div>
-        <div className="mt-auto flex items-center justify-between gap-4">
-          <span className={cardTypography.badge}>
-            {t("projectsAvailable", { count: projectCount })}
+
+        {/* Facts grid — Figma: flex gap-24, py-10 */}
+        <div className="flex gap-6 py-[10px]">
+          <div className="flex flex-col gap-2">
+            {leftFacts.map((fact) => (
+              <span
+                key={fact.label}
+                className="inline-flex items-center gap-2 text-body-xs leading-4 text-ink"
+              >
+                <CardFactIcon {...fact} />
+                {fact.label}
+              </span>
+            ))}
+          </div>
+          <div className="flex flex-col gap-2">
+            {rightFacts.map((fact) => (
+              <span
+                key={fact.label}
+                className="inline-flex items-center gap-2 text-body-xs leading-4 text-ink"
+              >
+                <CardFactIcon {...fact} />
+                {fact.label}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom row — Figma: flex justify-between items-center */}
+        <div className="flex items-center justify-between">
+          <span className="rounded-[2px] bg-basalt-50 px-[10px] py-1 text-label-muted font-medium leading-[14px] text-ink-secondary">
+            {projectsAvailableLabel}
           </span>
           {href ? (
-            <span className={cn(cardTypography.cta, "motion-link-arrow inline-flex")}>
-              {t("exploreArea")}{" "}
-              <Icon name="arrowRight" className={cardTypography.ctaIcon} />
+            <span className="motion-link-arrow inline-flex items-center gap-1 py-2 ps-2 text-label-semibold font-semibold leading-4 text-accent">
+              {exploreAreaLabel}
+              <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
             </span>
           ) : null}
         </div>
@@ -647,7 +665,7 @@ export function CommunityCard({
     return (
       <Link
         href={href}
-        className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2"
+        className="block h-[442px] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2"
       >
         {card}
       </Link>

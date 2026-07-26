@@ -28,13 +28,23 @@ export default async function AreasPage({ params, searchParams }: PageProps) {
   const locale = resolveLocale(rawLocale);
   const sp = await searchParams;
   const page = sp.page ? Number(Array.isArray(sp.page) ? sp.page[0] : sp.page) : 1;
-  const [{ data, meta }, t, tc] = await Promise.all([
+  const [{ data, meta }, t, tc, tCatalog] = await Promise.all([
     getAreas({ page, per_page: 9, locale }),
     getTranslations({ locale, namespace: "pages.areas" }),
     getTranslations({ locale, namespace: "common" }),
+    getTranslations({ locale, namespace: "catalog" }),
   ]);
   const areas = data.map((area) =>
-    mapAreaToCommunityCard(area, locale, { descriptionFallback: t("exploreFallback") }),
+    mapAreaToCommunityCard(area, locale, {
+      cardLabels: {
+        highlight1: t("highlight1"),
+        highlight2: t("highlight2"),
+        connectivity1: t("connectivity1"),
+        connectivity2: t("connectivity2"),
+      },
+      projectsAvailableLabel: (count) => tCatalog("projectsAvailable", { count }),
+      exploreAreaLabel: tCatalog("exploreArea"),
+    }),
   );
   const areaBlocks = pageBlockKeys.areas;
 

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
+import { AmenityIcon } from "@/components/ui/AmenityIcon";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { PropertyMap } from "@/components/ui/PropertyMap";
 import {
@@ -83,13 +84,24 @@ export function AreaSectionHeading({
   );
 }
 
-function FeaturePillIcon({ icon, iconSvg }: { icon: IconName; iconSvg?: string | null }) {
-  if (iconSvg?.trim()) {
+function FeaturePillIcon({
+  icon,
+  iconSvg,
+  iconUrl,
+  label,
+}: {
+  icon: IconName;
+  iconSvg?: string | null;
+  iconUrl?: string | null;
+  label: string;
+}) {
+  if (iconSvg?.trim() || iconUrl?.trim()) {
     return (
-      <span
-        className="flex h-6 w-6 shrink-0 items-center justify-center [&_svg]:h-6 [&_svg]:w-6 [&_svg]:text-brand"
-        dangerouslySetInnerHTML={{ __html: iconSvg }}
-        aria-hidden
+      <AmenityIcon
+        facilityIcon={iconSvg}
+        iconUrl={iconUrl}
+        facility={label}
+        className="h-6 w-6 text-brand [&>svg]:h-6 [&>svg]:w-6 [&_svg]:h-6 [&_svg]:w-6"
       />
     );
   }
@@ -97,10 +109,10 @@ function FeaturePillIcon({ icon, iconSvg }: { icon: IconName; iconSvg?: string |
   return <Icon name={icon} className="h-6 w-6 shrink-0 text-brand" />;
 }
 
-export function AreaFeaturePill({ label, icon, iconSvg }: AreaFeatureItem) {
+export function AreaFeaturePill({ label, icon, iconSvg, iconUrl }: AreaFeatureItem) {
   return (
     <span className="inline-flex items-center gap-2 rounded-[var(--radius-field)] bg-basalt-50 py-2 pl-3 pr-4 text-[11px] font-medium leading-[14px] text-ink-secondary">
-      <FeaturePillIcon icon={icon} iconSvg={iconSvg} />
+      <FeaturePillIcon icon={icon} iconSvg={iconSvg} iconUrl={iconUrl} label={label} />
       {label}
     </span>
   );
@@ -177,11 +189,13 @@ export function AreaMapSection({
           <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
         </div>
       )}
-      <div className="flex flex-wrap gap-2.5">
-        {connectivity.map((item) => (
-          <AreaFeaturePill key={item.label} {...item} />
-        ))}
-      </div>
+      {connectivity.length > 0 ? (
+        <div className="flex flex-wrap gap-2.5">
+          {connectivity.map((item) => (
+            <AreaFeaturePill key={item.label} {...item} />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -25,8 +25,9 @@ function RouteTracker() {
     const query = searchParams.toString();
     const pagePath = query ? `${pathname}?${query}` : pathname;
 
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
+    const w = window as Window & { dataLayer?: Record<string, unknown>[] };
+    const dataLayer = (w.dataLayer = w.dataLayer ?? []);
+    dataLayer.push({
       event: "page_view",
       page_path: pagePath,
       page_location: window.location.href,

@@ -48,10 +48,11 @@ export async function DeveloperDetailPage({ locale, slug }: DeveloperDetailPageP
   const developer = await getDeveloperBySlug(slug, locale);
   if (!developer) notFound();
 
-  const [{ data: properties }, t, tAreas] = await Promise.all([
+  const [{ data: properties }, t, tAreas, tCatalog] = await Promise.all([
     getProperties({ developer: slug, per_page: 9, locale }),
     getTranslations({ locale, namespace: "pages.developers" }),
     getTranslations({ locale, namespace: "pages.areas" }),
+    getTranslations({ locale, namespace: "catalog" }),
   ]);
 
   const labels: DeveloperDetailLabels = {
@@ -79,7 +80,16 @@ export async function DeveloperDetailPage({ locale, slug }: DeveloperDetailPageP
     await Promise.all(areaSlugs.map((areaSlug) => getAreaBySlug(areaSlug, locale)))
   ).filter((area): area is NonNullable<typeof area> => area != null);
   const communityCards = resolvedAreas.map((area) =>
-    mapAreaToCommunityCard(area, locale, { descriptionFallback: tAreas("exploreFallback") }),
+    mapAreaToCommunityCard(area, locale, {
+      cardLabels: {
+        highlight1: tAreas("highlight1"),
+        highlight2: tAreas("highlight2"),
+        connectivity1: tAreas("connectivity1"),
+        connectivity2: tAreas("connectivity2"),
+      },
+      projectsAvailableLabel: (count) => tCatalog("projectsAvailable", { count }),
+      exploreAreaLabel: tCatalog("exploreArea"),
+    }),
   );
 
   return (

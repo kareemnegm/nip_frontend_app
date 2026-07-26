@@ -19,8 +19,9 @@ export type ApiFacility = {
   facility_icon?: string | null;
   /** CDN URL for amenity SVG — used when inline SVG is omitted. */
   icon_url?: string | null;
-  /** Optional metadata from backend; not used for icon rendering. */
+  /** Optional metadata from backend; used when inline SVG is omitted. */
   icon_key?: string | null;
+  is_figma_icon?: boolean | null;
 };
 
 export type ApiPropertyImage = {

@@ -95,6 +95,8 @@ const ICON_KEY_ALIASES: Record<string, AmenityIconName> = {
   "cigar-lounge": "lounge",
 
   // Location / water
+  "private-beaches": "beach",
+  beaches: "beach",
   retail: "branded-location",
   shopping: "branded-location",
   marina: "sea",

@@ -1,3 +1,5 @@
+import type { ApiFacility } from "@/types/api/property";
+
 export type ApiAreaHighlight = {
   label: string;
   icon?: string | null;
@@ -21,5 +23,7 @@ export type ApiArea = {
   longitude?: number;
   highlights?: ApiAreaHighlight[] | null;
   connectivity?: ApiAreaHighlight[] | null;
+  facilities?: ApiFacility[] | null;
+  facility_ids?: number[] | null;
   properties?: unknown[];
 };

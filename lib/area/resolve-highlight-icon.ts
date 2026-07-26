@@ -70,7 +70,7 @@ const HIGHLIGHT_MATCH_RULES: MatchRule[] = [
   {
     kind: "figma",
     icon: "building",
-    keywords: ["residence", "residential", "apartment", "tower", "penthouse"],
+    keywords: ["residence", "residential", "apartment", "tower", "penthouse", "retail", "outlet", "shop", "mall"],
   },
   // Transport — connectivity section
   {
