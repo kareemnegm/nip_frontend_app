@@ -1,6 +1,12 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Almarai, Archivo, Bodoni_Moda, Cormorant_Garamond, Geist_Mono, Kalnia } from "next/font/google";
+import { AnalyticsRouteTracker } from "@/components/analytics/AnalyticsRouteTracker";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import {
+  GoogleTagManager,
+  GoogleTagManagerNoScript,
+} from "@/components/analytics/GoogleTagManager";
 import { defaultLocale, getDirection, isLocale, LOCALE_COOKIE } from "@/lib/i18n/config";
 import "./globals.css";
 
@@ -89,7 +95,15 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={`${archivo.variable} ${geistMono.variable} ${bodoni.variable} ${cormorant.variable} ${kalnia.variable} ${almarai.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <head>
+        <GoogleTagManager />
+        <GoogleAnalytics />
+      </head>
+      <body className="flex min-h-full flex-col">
+        <GoogleTagManagerNoScript />
+        <AnalyticsRouteTracker />
+        {children}
+      </body>
     </html>
   );
 }

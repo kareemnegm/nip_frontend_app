@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { defaultLocale, type Locale } from "@/lib/i18n/config";
-import { isOffPlanProperty } from "@/lib/mappers/property";
+import { isOffPlanProperty, isResaleProperty } from "@/lib/mappers/property";
 import type {
   ApiProperty,
   LaravelPaginated,
@@ -82,11 +82,15 @@ export async function getSimilarProperties(
 export async function getSimilarPropertiesFor(
   property: ApiProperty,
   locale: Locale = defaultLocale,
-  listingType: "sale" | "offplan",
+  listingType: "sale" | "offplan" | "resale",
   limit = 3,
 ): Promise<ApiProperty[]> {
-  const matchesListingType = (item: ApiProperty) =>
-    listingType === "offplan" ? isOffPlanProperty(item) : !isOffPlanProperty(item);
+  // "sale" is the catch-all: anything that is neither off-plan nor resale.
+  const matchesListingType = (item: ApiProperty) => {
+    if (listingType === "offplan") return isOffPlanProperty(item);
+    if (listingType === "resale") return isResaleProperty(item);
+    return !isOffPlanProperty(item) && !isResaleProperty(item);
+  };
 
   const results = (await getSimilarProperties(property.slug, locale))
     .filter(matchesListingType)

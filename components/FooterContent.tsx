@@ -258,7 +258,7 @@ export async function FooterContent({
 
   const resourcesLinks: FooterLink[] = [
     { label: t("faq"), href: "/faq" },
-    { label: t("aiConcierge"), href: "/concierge" },
+    // Temporarily hidden — AI Concierge link removed from footer on request.
     { label: t("submitArticle"), href: "/contribute" },
   ];
 

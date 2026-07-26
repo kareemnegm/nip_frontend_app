@@ -1,12 +1,22 @@
 import type { FactItem } from "@/components/ui/FactsStrip";
 import { formatAedPrice } from "@/lib/mappers/property";
-import type { ApiAvailableUnit, ApiProperty } from "@/types/api/property";
+import type {
+  ApiAvailableUnit,
+  ApiPaymentPlanGroup,
+  ApiProperty,
+} from "@/types/api/property";
 
 /** Normalized payment step for UI rendering */
 export type PaymentPlanStep = {
   caption?: string | null;
   percentage: string;
   label: string;
+};
+
+/** One selectable plan — the section shows a switcher when there is more than one. */
+export type PaymentPlanGroup = {
+  title: string;
+  steps: PaymentPlanStep[];
 };
 
 /** Normalized unit for UI rendering */
@@ -16,14 +26,8 @@ export type AvailableUnitRow = {
   starting_price: string;
 };
 
-export type OffPlanDetailLabels = {
-  developerFactLabel: string;
-  handoverFactLabel: string;
-  unitTypesLabel: string;
-  startingFromFactLabel: string;
-  paymentLabel: string;
-  statusLabel: string;
-  statusOffPlan: string;
+/** Shared by off-plan and resale — both render the payment plan cards. */
+export type PaymentPlanLabels = {
   paymentStep1Caption: string;
   paymentStep1Label: string;
   paymentStep2Caption: string;
@@ -32,6 +36,16 @@ export type OffPlanDetailLabels = {
   paymentStep3Label: string;
   paymentStep4Caption: string;
   paymentStep4Label: string;
+};
+
+export type OffPlanDetailLabels = PaymentPlanLabels & {
+  developerFactLabel: string;
+  handoverFactLabel: string;
+  unitTypesLabel: string;
+  startingFromFactLabel: string;
+  paymentLabel: string;
+  statusLabel: string;
+  statusOffPlan: string;
   defaultUnit1Type: string;
   defaultUnit1Size: string;
   defaultUnit2Type: string;
@@ -64,50 +78,118 @@ export function formatUnitPrice(price: number | null | undefined): string {
   return `AED ${formatAedPrice(price)}`;
 }
 
-export function defaultPaymentPlan(labels: OffPlanDetailLabels): PaymentPlanStep[] {
+/** Top card labels are fixed design copy, not backend data. */
+function paymentPlanCaptions(labels: PaymentPlanLabels): string[] {
+  return [
+    labels.paymentStep1Caption,
+    labels.paymentStep2Caption,
+    labels.paymentStep3Caption,
+    labels.paymentStep4Caption,
+  ];
+}
+
+export function defaultPaymentPlan(labels: PaymentPlanLabels): PaymentPlanStep[] {
+  const captions = paymentPlanCaptions(labels);
   return [
     {
-      caption: labels.paymentStep1Caption,
+      caption: captions[0],
       percentage: "10%",
       label: labels.paymentStep1Label,
     },
     {
-      caption: labels.paymentStep2Caption,
+      caption: captions[1],
       percentage: "20%",
       label: labels.paymentStep2Label,
     },
     {
-      caption: labels.paymentStep3Caption,
+      caption: captions[2],
       percentage: "30%",
       label: labels.paymentStep3Label,
     },
     {
-      caption: labels.paymentStep4Caption,
+      caption: captions[3],
       percentage: "40%",
       label: labels.paymentStep4Label,
     },
   ];
 }
 
+function backendPaymentPlanGroups(
+  property: ApiProperty,
+): ApiPaymentPlanGroup[] | null {
+  const groups = property.paymentPlans ?? property.payment_plans;
+  if (!groups?.length) return null;
+  const withStages = groups.filter((group) => group.stages?.length);
+  return withStages.length ? withStages : null;
+}
+
+/** True when the backend actually shipped a plan for this property. */
+export function hasBackendPaymentPlan(property: ApiProperty): boolean {
+  return Boolean(
+    backendPaymentPlanGroups(property) ||
+      property.paymentPlan?.length ||
+      property.payment_plan?.length,
+  );
+}
+
 export function resolvePaymentPlan(
   property: ApiProperty,
-  labels: OffPlanDetailLabels,
+  labels: PaymentPlanLabels,
 ): PaymentPlanStep[] {
+  // Figma card order: muted caption on top, big %, bold stage/timing on bottom
+  // (e.g. "Reservation / EOI" / "10%" / "On Booking"). The backend `description` carries
+  // that caption; the fixed design copy only fills in when it is missing.
+  const captions = paymentPlanCaptions(labels);
+  const groups = backendPaymentPlanGroups(property);
+  if (groups) {
+    return stagesToSteps(groups[0].stages ?? [], captions);
+  }
   // Prefer new camelCase shape from backend.
-  // Figma card order: muted description on top, big %, bold stage/timing on bottom
-  // (e.g. "Reservation & SPA" / "10%" / "On Booking") — so `description` → caption, `stage` → label.
   if (property.paymentPlan?.length) {
-    return property.paymentPlan.map((item) => ({
-      caption: item.description ?? null,
-      percentage: `${item.percentage}%`,
-      label: item.stage,
-    }));
+    return stagesToSteps(property.paymentPlan, captions);
   }
   // Fallback to snake_case shape
   if (property.payment_plan?.length) {
-    return property.payment_plan;
+    return property.payment_plan.map((step, index) => ({
+      ...step,
+      caption: step.caption ?? captions[index] ?? null,
+    }));
   }
   return defaultPaymentPlan(labels);
+}
+
+function stagesToSteps(
+  stages: { stage: string; percentage: number; description?: string }[],
+  captions: string[],
+): PaymentPlanStep[] {
+  return stages.map((item, index) => ({
+    caption: item.description?.trim() || captions[index] || null,
+    percentage: `${item.percentage}%`,
+    label: item.stage,
+  }));
+}
+
+/**
+ * Every plan the buyer can switch between. Falls back to a single unnamed group
+ * so callers can always render the same component.
+ */
+export function resolvePaymentPlanGroups(
+  property: ApiProperty,
+  labels: PaymentPlanLabels,
+): PaymentPlanGroup[] {
+  const captions = paymentPlanCaptions(labels);
+  const groups = backendPaymentPlanGroups(property);
+  if (groups) {
+    return groups
+      .map((group, index) => ({
+        position: group.position ?? index + 1,
+        title: (group.title ?? group.name ?? "").trim(),
+        steps: stagesToSteps(group.stages ?? [], captions),
+      }))
+      .sort((a, b) => a.position - b.position)
+      .map(({ title, steps }) => ({ title, steps }));
+  }
+  return [{ title: "", steps: resolvePaymentPlan(property, labels) }];
 }
 
 export function defaultUnits(

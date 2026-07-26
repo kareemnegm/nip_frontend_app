@@ -13,56 +13,8 @@ import {
 import { cn } from "@/lib/cn";
 import { localizedHref } from "@/lib/i18n/helpers";
 import type { Locale } from "@/lib/i18n/config";
-import {
-  paymentPlanCardColors,
-  type AvailableUnitRow,
-  type PaymentPlanStep,
-} from "@/lib/off-plan/detail";
+import type { AvailableUnitRow } from "@/lib/off-plan/detail";
 import type { ApiFacility } from "@/types/api/property";
-
-export function PaymentPlanSection({
-  title,
-  steps,
-  className,
-}: {
-  title: string;
-  steps: PaymentPlanStep[];
-  className?: string;
-}) {
-  return (
-    <section className={cn("space-y-6", className)}>
-      <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
-        {title}
-      </h2>
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {steps.map((step, index) => (
-          <article
-            key={`${step.percentage}-${step.label}-${index}`}
-            className={cn(
-              "flex flex-col items-start gap-4 rounded-[var(--radius-card)] px-7 py-6 text-white",
-              paymentPlanCardColors[index % paymentPlanCardColors.length],
-            )}
-          >
-            {step.caption ? (
-              <p
-                className={cn(
-                  "text-xs leading-4",
-                  index === 0 ? "text-sapphire-100" : "text-sapphire-200",
-                )}
-              >
-                {step.caption}
-              </p>
-            ) : (
-              <span aria-hidden />
-            )}
-            <p className="text-[36px] font-bold leading-[42px]">{step.percentage}</p>
-            <p className="text-xs font-semibold leading-4">{step.label}</p>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 export function AvailableUnitsTable({
   title,
@@ -134,33 +86,18 @@ export function MasterplanLocationSection({
       <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
         {title}
       </h2>
-      {hasMapCoordinates ? (
-        <PropertyMap
-          latitude={latitude}
-          longitude={longitude}
-          label={title}
-          locationName={locationName}
-          propertyTitle={propertyTitle}
-          locale={locale}
-          className="h-[420px]"
-        />
-      ) : (
+      {/* Masterplan render first, then amenities, then the location map. */}
+      {imageUrl ? (
         <div className="relative h-[420px] overflow-hidden rounded-[var(--radius-card)] border border-line shadow-[var(--shadow-card)]">
-          {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt={title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1080px) 100vw, 1080px"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center bg-basalt-100">
-              <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
-            </div>
-          )}
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 1080px) 100vw, 1080px"
+          />
         </div>
-      )}
+      ) : null}
       {items.length > 0 ? (
         <div className="flex flex-wrap gap-[10px]">
           {items.map((item) => (
@@ -178,6 +115,21 @@ export function MasterplanLocationSection({
           ))}
         </div>
       ) : null}
+      {hasMapCoordinates ? (
+        <PropertyMap
+          latitude={latitude}
+          longitude={longitude}
+          label={title}
+          locationName={locationName}
+          propertyTitle={propertyTitle}
+          locale={locale}
+          className="h-[420px]"
+        />
+      ) : imageUrl ? null : (
+        <div className="flex h-[420px] items-center justify-center rounded-[var(--radius-card)] border border-line bg-basalt-100 shadow-[var(--shadow-card)]">
+          <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
+        </div>
+      )}
     </section>
   );
 }

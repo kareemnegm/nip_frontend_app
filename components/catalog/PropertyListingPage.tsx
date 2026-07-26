@@ -67,8 +67,19 @@ export async function PropertyListingPage({
   const currentView: "grid" | "list" = sp.view === "list" ? "list" : "grid";
   const currentSort = sp.sort ?? sp.order_by ?? "newest";
 
+  // Properties page filters by `listing_type` = sale | resale (both hit the
+  // backend the same way off-plan does). Off-plan is always "offplan". Default
+  // to "sale" when no valid value is present, and never let the off-plan value
+  // leak onto the properties page.
+  const listingType =
+    mode === "offplan"
+      ? "offplan"
+      : sp.listing_type === "resale"
+        ? "resale"
+        : "sale";
+
   const params = buildPropertyListParams(searchParams, {
-    listing_type: mode === "offplan" ? "offplan" : "sale",
+    listing_type: listingType,
     per_page: 9,
     locale,
   });
@@ -86,21 +97,19 @@ export async function PropertyListingPage({
         locale={locale}
         placeholders={heroPlaceholders}
       >
-        {mode === "sale" ? (
-          <PropertyFilterBar
-            basePath={basePath}
-            values={{
-              keyword: filterValues.keyword ?? filterValues.q,
-              area:
-                filterValues.area ??
-                filterValues.location ??
-                filterValues.community,
-              type: filterValues.type,
-              bedrooms: filterValues.bedrooms ?? filterValues.beds,
-              min_price: filterValues.min_price ?? filterValues.price_min,
-            }}
-          />
-        ) : null}
+        <PropertyFilterBar
+          basePath={basePath}
+          values={{
+            keyword: filterValues.keyword ?? filterValues.q,
+            area:
+              filterValues.area ??
+              filterValues.location ??
+              filterValues.community,
+            type: filterValues.type,
+            bedrooms: filterValues.bedrooms ?? filterValues.beds,
+            min_price: filterValues.min_price ?? filterValues.price_min,
+          }}
+        />
       </CatalogHeroSection>
 
       <section className="bg-white pb-[72px] pt-10">

@@ -43,6 +43,16 @@ export type ApiPaymentPlanItem = {
   description?: string;
 };
 
+/** A named payment plan the buyer can choose between (e.g. "60/40 Post-Handover") */
+export type ApiPaymentPlanGroup = {
+  position?: number | null;
+  name?: string | null;
+  title?: string | null;
+  total_percentage?: number | null;
+  totalPercentage?: number | null;
+  stages?: ApiPaymentPlanItem[] | null;
+};
+
 /** Legacy unit shape (snake_case from older API) */
 export type ApiUnit = {
   unit_type: string;
@@ -90,6 +100,9 @@ export type ApiProperty = {
   area_sqft?: number | null;
   floors?: number | null;
   price?: number | null;
+  /** Resale only — what the unit originally sold for. Hero shows `price` (selling); facts strip shows this. */
+  original_price?: number | null;
+  originalPrice?: number | null;
   image?: string | null;
   image_url?: string | null;
   hero_title?: string | null;
@@ -124,8 +137,12 @@ export type ApiProperty = {
   /** Raw values behind the summary label, fixed length 4, unused slots are null */
   payment_plan_summary_parts?: (number | null)[] | null;
   paymentPlanSummaryParts?: (number | null)[] | null;
+  /** Deprecated — backend now returns the stages of payment_plans[0] here. */
   payment_plan?: ApiPaymentStep[] | null;
   paymentPlan?: ApiPaymentPlanItem[] | null;
+  /** Selectable plans; `paymentPlans` is the camelCase alias of the same list. */
+  payment_plans?: ApiPaymentPlanGroup[] | null;
+  paymentPlans?: ApiPaymentPlanGroup[] | null;
   units?: ApiUnit[] | null;
   available_units?: ApiAvailableUnit[] | null;
   availableUnits?: ApiAvailableUnit[] | null;

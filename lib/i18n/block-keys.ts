@@ -69,6 +69,11 @@ export const pageBlockKeys = {
     /** Shared bottom CTA heading rendered on every off-plan project detail page (/off-plan/{slug}) */
     detailCta: { title: "detail-cta-title" },
   },
+  resale: {
+    relUrl: "/resale",
+    /** Shared bottom CTA heading rendered on every resale detail page (/resale/{slug}) */
+    detailCta: { title: "detail-cta-title" },
+  },
   areas: {
     relUrl: "/areas",
     hero: { eyebrow: "hero-eyebrow", title: "hero-title", description: "hero-description" },

@@ -18,17 +18,45 @@ export const mainNavItems = allMainNavItems.filter(
   (item) => !(TEMP_HIDE_MAIN_NAV_CONCIERGE && item.key === "concierge"),
 );
 
-export const propertiesDropdownItems = [
-  { key: "apartments", href: "/properties?type=apartment" as const },
-  { key: "townhouses", href: "/properties?type=townhouse" as const },
-  { key: "villas", href: "/properties?type=villa" as const },
-] as const;
+export type NavDropdownLeaf = { key: string; href: string };
+export type NavDropdownItem = {
+  key: string;
+  href: string;
+  /** Optional second-level items (e.g. Sale / Resale under each property type). */
+  children?: readonly NavDropdownLeaf[];
+};
 
-export const offPlanDropdownItems = [
-  { key: "apartments", href: "/off-plan?type=apartment" as const },
-  { key: "townhouses", href: "/off-plan?type=townhouse" as const },
-  { key: "villas", href: "/off-plan?type=villa" as const },
-] as const;
+/** Sale / Resale sub-filters for a property type — both hit the backend via `listing_type`. */
+function saleResaleChildren(type: string): readonly NavDropdownLeaf[] {
+  return [
+    { key: "sale", href: `/properties?type=${type}&listing_type=sale` },
+    { key: "resale", href: `/properties?type=${type}&listing_type=resale` },
+  ];
+}
+
+export const propertiesDropdownItems: readonly NavDropdownItem[] = [
+  {
+    key: "apartments",
+    href: "/properties?type=apartment",
+    children: saleResaleChildren("apartment"),
+  },
+  {
+    key: "townhouses",
+    href: "/properties?type=townhouse",
+    children: saleResaleChildren("townhouse"),
+  },
+  {
+    key: "villas",
+    href: "/properties?type=villa",
+    children: saleResaleChildren("villa"),
+  },
+];
+
+export const offPlanDropdownItems: readonly NavDropdownItem[] = [
+  { key: "apartments", href: "/off-plan?type=apartment" },
+  { key: "townhouses", href: "/off-plan?type=townhouse" },
+  { key: "villas", href: "/off-plan?type=villa" },
+];
 
 export type NavDropdownKey = "properties" | "offPlan";
 

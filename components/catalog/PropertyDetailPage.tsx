@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { PropertyInquiryForm } from "@/components/forms/InquiryForms";
 import { SiteShell } from "@/components/SiteShell";
@@ -32,11 +32,12 @@ import { localizedHref } from "@/lib/i18n/helpers";
 import { getMemberToken } from "@/lib/member/auth.server";
 import {
   formatAedPrice,
-  formatFurnishing,
   isOffPlanProperty,
+  isResaleProperty,
   mapPropertyToCard,
   mapPropertyToOffPlanCard,
 } from "@/lib/mappers/property";
+import { propertyFactsFromApi } from "@/lib/mappers/property-facts";
 import type { ApiProperty, PropertyGalleryImage } from "@/types/api/property";
 
 type PropertyDetailPageProps = {
@@ -44,51 +45,6 @@ type PropertyDetailPageProps = {
   slug: string;
   detailBase: "properties" | "off-plan";
 };
-
-function propertyFactsFromApi(
-  property: ApiProperty,
-  labels: {
-    bedroomLabel: string;
-    bathroomLabel: string;
-    areaLabel: string;
-    typeLabel: string;
-    furnishingLabel: string;
-    referenceLabel: string;
-  },
-) {
-  return [
-    property.bedrooms != null
-      ? { label: labels.bedroomLabel, value: String(property.bedrooms), icon: "bed" as const }
-      : null,
-    property.bathrooms != null
-      ? { label: labels.bathroomLabel, value: String(property.bathrooms), icon: "bath" as const }
-      : null,
-    property.area_sqft != null
-      ? {
-          label: labels.areaLabel,
-          value: `${new Intl.NumberFormat("en-AE").format(property.area_sqft)} sq ft`,
-          icon: "area" as const,
-        }
-      : null,
-    property.type
-      ? { label: labels.typeLabel, value: property.type, icon: "building" as const }
-      : null,
-    {
-      label: labels.furnishingLabel,
-      value: property.furnishing ? formatFurnishing(property.furnishing) : "—",
-      icon: "sofa" as const,
-    },
-    {
-      label: labels.referenceLabel,
-      value: property.reference_no ?? "—",
-      icon: "reference" as const,
-    },
-  ].filter(Boolean) as Array<{
-    label: string;
-    value: string;
-    icon: "bed" | "bath" | "area" | "building" | "sofa" | "reference";
-  }>;
-}
 
 export async function PropertyDetailPage({
   locale,
@@ -99,6 +55,10 @@ export async function PropertyDetailPage({
   if (!property) notFound();
   if (detailBase === "off-plan" && !isOffPlanProperty(property)) notFound();
   if (detailBase === "properties" && isOffPlanProperty(property)) notFound();
+  // Resale moved to its own layout — keep already-indexed /properties URLs alive.
+  if (detailBase === "properties" && isResaleProperty(property)) {
+    redirect(localizedHref(locale, `/resale/${slug}`));
+  }
 
   const similar = await getSimilarPropertiesFor(
     property,

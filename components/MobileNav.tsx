@@ -148,16 +148,79 @@ export function MobileNav() {
                     >
                       <div className="overflow-hidden">
                         <div className="ms-3 mt-1 flex flex-col gap-[2px] border-s border-sapphire-100 ps-3">
-                          {dropdownItems.map((link) => (
-                            <LocalizedLink
-                              key={link.key}
-                              href={link.href}
-                              className="rounded-[var(--radius-field)] px-2 py-[6px] text-[13px] font-medium text-ink-secondary transition-colors hover:bg-sapphire-50 hover:text-brand"
-                              onClick={close}
-                            >
-                              {navT(link.key)}
-                            </LocalizedLink>
-                          ))}
+                          {dropdownItems.map((link) => {
+                            if (!link.children?.length) {
+                              return (
+                                <LocalizedLink
+                                  key={link.key}
+                                  href={link.href}
+                                  className="rounded-[var(--radius-field)] px-2 py-[6px] text-[13px] font-medium text-ink-secondary transition-colors hover:bg-sapphire-50 hover:text-brand"
+                                  onClick={close}
+                                >
+                                  {navT(link.key)}
+                                </LocalizedLink>
+                              );
+                            }
+
+                            const subKey = `${item.key}:${link.key}`;
+                            const isSubExpanded = Boolean(expanded[subKey]);
+                            const subPanelId = `mobile-nav-${item.key}-${link.key}`;
+
+                            return (
+                              <div key={link.key}>
+                                <div className="flex items-center">
+                                  <LocalizedLink
+                                    href={link.href}
+                                    className="flex-1 rounded-[var(--radius-field)] px-2 py-[6px] text-[13px] font-medium text-ink-secondary transition-colors hover:bg-sapphire-50 hover:text-brand"
+                                    onClick={close}
+                                  >
+                                    {navT(link.key)}
+                                  </LocalizedLink>
+                                  <button
+                                    type="button"
+                                    aria-expanded={isSubExpanded}
+                                    aria-controls={subPanelId}
+                                    aria-label={navT(link.key)}
+                                    className="inline-flex h-8 w-8 items-center justify-center rounded-[var(--radius-field)] text-brand transition-colors hover:bg-sapphire-50"
+                                    onClick={() => toggleExpanded(subKey)}
+                                  >
+                                    <Icon
+                                      name="chevronDown"
+                                      className={cn(
+                                        "h-4 w-4 transition-transform duration-300 ease-[var(--motion-ease-lux)] motion-reduce:transition-none",
+                                        isSubExpanded && "rotate-180",
+                                      )}
+                                    />
+                                  </button>
+                                </div>
+
+                                <div
+                                  id={subPanelId}
+                                  className={cn(
+                                    "grid transition-[grid-template-rows] duration-300 ease-[var(--motion-ease-lux)] motion-reduce:transition-none",
+                                    isSubExpanded
+                                      ? "grid-rows-[1fr]"
+                                      : "grid-rows-[0fr]",
+                                  )}
+                                >
+                                  <div className="overflow-hidden">
+                                    <div className="ms-2 mt-[2px] flex flex-col gap-[2px] border-s border-sapphire-100 ps-3">
+                                      {link.children.map((child) => (
+                                        <LocalizedLink
+                                          key={child.key}
+                                          href={child.href}
+                                          className="rounded-[var(--radius-field)] px-2 py-[6px] text-[13px] font-medium text-ink-tertiary transition-colors hover:bg-sapphire-50 hover:text-brand"
+                                          onClick={close}
+                                        >
+                                          {navT(child.key)}
+                                        </LocalizedLink>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     </div>

@@ -15,7 +15,10 @@ import { resolveMediaUrl } from "@/lib/api/media-url";
 import { getMemberToken } from "@/lib/member/auth.server";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
-import { mapMemberPropertyToCard } from "@/lib/mappers/member-property";
+import {
+  mapMemberPropertyToCard,
+  memberDetailBase,
+} from "@/lib/mappers/member-property";
 import type { PropertyCardModel } from "@/lib/mappers/property";
 import type { ApiCuratedItem, ApiMemberUser } from "@/types/api";
 
@@ -90,7 +93,9 @@ export function curatedToAdvisorCards(items: ApiCuratedItem[], locale: Locale = 
       href: slug
         ? localizedHref(
             locale,
-            item.type === "project" ? `/off-plan/${slug}` : `/properties/${slug}`,
+            item.type === "project"
+              ? `/off-plan/${slug}`
+              : `${memberDetailBase(item.property?.listingType)}/${slug}`,
           )
         : undefined,
       isAvailable:

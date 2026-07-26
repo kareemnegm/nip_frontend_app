@@ -1,11 +1,27 @@
 import { resolveMediaUrl } from "@/lib/api/media-url";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
-import { formatAedPrice, type PropertyCardModel } from "@/lib/mappers/property";
+import {
+  formatAedPrice,
+  listingTypeLabel,
+  type PropertyCardModel,
+} from "@/lib/mappers/property";
 import type {
   ApiMemberOffplanCard,
   ApiMemberPropertyCard,
 } from "@/types/api/member";
+
+/** Mirrors `propertyDetailHref` for the camelCase member API shape. */
+export function memberDetailBase(listingType?: string | null): string {
+  switch (listingType?.toLowerCase()) {
+    case "offplan":
+      return "/off-plan";
+    case "resale":
+      return "/resale";
+    default:
+      return "/properties";
+  }
+}
 
 export function mapMemberPropertyToCard(
   property: ApiMemberPropertyCard,
@@ -19,9 +35,7 @@ export function mapMemberPropertyToCard(
   const badges: string[] = [];
   if (property.propertyType) badges.push(property.propertyType);
   if (property.listingType) {
-    badges.push(
-      property.listingType === "offplan" ? "Off-Plan" : property.listingType,
-    );
+    badges.push(listingTypeLabel(property.listingType));
   }
 
   const meta: string[] = [];
@@ -39,8 +53,7 @@ export function mapMemberPropertyToCard(
     );
   }
 
-  const base =
-    property.listingType?.toLowerCase() === "offplan" ? "/off-plan" : "/properties";
+  const base = memberDetailBase(property.listingType);
 
   return {
     title: property.title,

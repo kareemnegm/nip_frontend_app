@@ -1,0 +1,24 @@
+import type { Metadata } from "next";
+import { buildPropertyMetadata } from "@/components/catalog/PropertyDetailPage";
+import { ResaleDetailPage } from "@/components/catalog/ResaleDetailPage";
+import { getPropertyBySlug } from "@/lib/api/properties";
+import { resolveLocale } from "@/lib/i18n/helpers";
+
+type PageProps = {
+  params: Promise<{ locale: string; slug: string }>;
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale: rawLocale, slug } = await params;
+  const locale = resolveLocale(rawLocale);
+  const property = await getPropertyBySlug(slug, locale);
+  if (!property) return { title: "Resale | NIP Reality" };
+  return buildPropertyMetadata(property);
+}
+
+export default async function ResalePropertyPage({ params }: PageProps) {
+  const { locale: rawLocale, slug } = await params;
+  const locale = resolveLocale(rawLocale);
+
+  return <ResaleDetailPage locale={locale} slug={slug} />;
+}

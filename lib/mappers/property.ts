@@ -16,6 +16,22 @@ export function isOffPlanProperty(property: ApiProperty): boolean {
   return property.listing_type?.toLowerCase() === "offplan";
 }
 
+export function isResaleProperty(property: ApiProperty): boolean {
+  return property.listing_type?.toLowerCase() === "resale";
+}
+
+/** Display label for a raw `listing_type` value, e.g. "offplan" -> "Off-Plan". */
+export function listingTypeLabel(listingType: string): string {
+  switch (listingType.toLowerCase()) {
+    case "offplan":
+      return "Off-Plan";
+    case "resale":
+      return "Resale";
+    default:
+      return listingType;
+  }
+}
+
 export function formatFurnishing(value: string): string {
   return value
     .split(/[-_]/)
@@ -23,11 +39,16 @@ export function formatFurnishing(value: string): string {
     .join(" ");
 }
 
+/** Single choke point for every property card link — resale gets its own detail layout. */
 export function propertyDetailHref(
   property: ApiProperty,
   locale: Locale,
 ): string {
-  const base = isOffPlanProperty(property) ? "/off-plan" : "/properties";
+  const base = isOffPlanProperty(property)
+    ? "/off-plan"
+    : isResaleProperty(property)
+      ? "/resale"
+      : "/properties";
   return localizedHref(locale, `${base}/${property.slug}`);
 }
 
@@ -54,9 +75,7 @@ export function propertyBadges(property: ApiProperty): string[] {
   if (property.type) badges.push(property.type);
   if (property.purpose) badges.push(property.purpose);
   else if (property.listing_type) {
-    badges.push(
-      property.listing_type === "offplan" ? "Off-Plan" : property.listing_type,
-    );
+    badges.push(listingTypeLabel(property.listing_type));
   }
   return badges.length > 0 ? badges : ["Property"];
 }
