@@ -22,70 +22,73 @@ export type AreaDetailLabels = {
   lifestyleLabel: string;
   toDowntownLabel: string;
   projectsCount: string;
+  defaultLifestyle: string;
+  defaultDistanceDowntown: string;
   formatToDowntownMinutes: (minutes: number) => string;
+  highlight1: string;
+  highlight2: string;
+  highlight3: string;
+  highlight4: string;
+  highlight5: string;
+  highlight6: string;
+  connectivity1: string;
+  connectivity2: string;
+  connectivity3: string;
+  connectivity4: string;
 };
+
+const DEFAULT_AVG_PRICE_SQFT = 2400;
+const DEFAULT_COMMUNITIES = 28;
+const DEFAULT_AVG_YIELD = 6.2;
 
 function formatOffPlanCount(total: number, projectsCountLabel: string): string {
   return `${total} ${projectsCountLabel}`;
 }
 
-/** Facts strip — uses API fields; omits tiles when value is null (counts always show). */
+/** Facts strip — API values when present; dummy defaults when null. */
 export function areaFactsFromApi(area: ApiArea, labels: AreaDetailLabels): FactItem[] {
-  const facts: FactItem[] = [];
+  const avgPrice = area.avg_price_sqft ?? DEFAULT_AVG_PRICE_SQFT;
+  const communities = area.communities_count ?? DEFAULT_COMMUNITIES;
+  const offplanCount = area.offplan_project_count ?? 0;
+  const avgYield = area.avg_yield ?? DEFAULT_AVG_YIELD;
+  const lifestyle = area.lifestyle?.trim() || labels.defaultLifestyle;
+  const downtown =
+    area.to_downtown_minutes != null ?
+      labels.formatToDowntownMinutes(area.to_downtown_minutes)
+    : area.distance_downtown?.trim() || labels.defaultDistanceDowntown;
 
-  if (area.avg_price_sqft != null) {
-    facts.push({
+  return [
+    {
       label: labels.avgPriceSqftLabel,
-      value: `AED ${new Intl.NumberFormat("en-AE", { maximumFractionDigits: 0 }).format(area.avg_price_sqft)}`,
+      value: `AED ${new Intl.NumberFormat("en-AE", { maximumFractionDigits: 0 }).format(avgPrice)}`,
       icon: "dirham-circle",
-    });
-  }
-
-  if (area.communities_count != null) {
-    facts.push({
+    },
+    {
       label: labels.communitiesLabel,
-      value: String(area.communities_count),
+      value: String(communities),
       icon: "communities",
-    });
-  }
-
-  facts.push({
-    label: labels.offPlanProjectsLabel,
-    value: formatOffPlanCount(area.offplan_project_count ?? 0, labels.projectsCount),
-    icon: "crane",
-  });
-
-  if (area.avg_yield != null) {
-    facts.push({
+    },
+    {
+      label: labels.offPlanProjectsLabel,
+      value: formatOffPlanCount(offplanCount, labels.projectsCount),
+      icon: "crane",
+    },
+    {
       label: labels.avgYieldLabel,
-      value: `${area.avg_yield}%`,
+      value: `${avgYield}%`,
       icon: "grow",
-    });
-  }
-
-  if (area.lifestyle?.trim()) {
-    facts.push({
+    },
+    {
       label: labels.lifestyleLabel,
-      value: area.lifestyle.trim(),
+      value: lifestyle,
       icon: "waterfront",
-    });
-  }
-
-  if (area.to_downtown_minutes != null) {
-    facts.push({
+    },
+    {
       label: labels.toDowntownLabel,
-      value: labels.formatToDowntownMinutes(area.to_downtown_minutes),
+      value: downtown,
       icon: "skyline",
-    });
-  } else if (area.distance_downtown?.trim()) {
-    facts.push({
-      label: labels.toDowntownLabel,
-      value: area.distance_downtown.trim(),
-      icon: "skyline",
-    });
-  }
-
-  return facts;
+    },
+  ];
 }
 
 export type AreaCardLabels = {
@@ -181,7 +184,10 @@ export function resolveAreaCardFacts(area: ApiArea, labels: AreaCardLabels): Are
   return defaultCardFacts(labels);
 }
 
-export function resolveAreaHighlights(area: ApiArea): AreaFeatureItem[] {
+export function resolveAreaHighlights(
+  area: ApiArea,
+  labels: AreaDetailLabels,
+): AreaFeatureItem[] {
   const fromFacilities = areaFacilitiesToFeatures(area);
   if (fromFacilities.length > 0) {
     return fromFacilities;
@@ -191,13 +197,28 @@ export function resolveAreaHighlights(area: ApiArea): AreaFeatureItem[] {
     return area.highlights.map((item) => mapAreaFeatureItem(item));
   }
 
-  return [];
+  return [
+    { label: labels.highlight1, ...resolveHighlightIcon(labels.highlight1) },
+    { label: labels.highlight2, ...resolveHighlightIcon(labels.highlight2) },
+    { label: labels.highlight3, ...resolveHighlightIcon(labels.highlight3) },
+    { label: labels.highlight4, ...resolveHighlightIcon(labels.highlight4) },
+    { label: labels.highlight5, ...resolveHighlightIcon(labels.highlight5) },
+    { label: labels.highlight6, ...resolveHighlightIcon(labels.highlight6) },
+  ];
 }
 
-export function resolveAreaConnectivity(area: ApiArea): AreaFeatureItem[] {
-  if (!area.connectivity?.length) {
-    return [];
+export function resolveAreaConnectivity(
+  area: ApiArea,
+  labels: AreaDetailLabels,
+): AreaFeatureItem[] {
+  if (area.connectivity?.length) {
+    return area.connectivity.map((item) => mapAreaFeatureItem(item));
   }
 
-  return area.connectivity.map((item) => mapAreaFeatureItem(item));
+  return [
+    { label: labels.connectivity1, ...resolveHighlightIcon(labels.connectivity1) },
+    { label: labels.connectivity2, ...resolveHighlightIcon(labels.connectivity2) },
+    { label: labels.connectivity3, ...resolveHighlightIcon(labels.connectivity3) },
+    { label: labels.connectivity4, ...resolveHighlightIcon(labels.connectivity4) },
+  ];
 }
