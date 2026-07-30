@@ -392,6 +392,7 @@
       "lifestyleLabel": "Lifestyle",
       "toDowntownLabel": "To Downtown",
       "projectsCount": "Projects",
+      "toDowntownMinutes": "{minutes} min",
       "defaultLifestyle": "Waterfront",
       "defaultDistanceDowntown": "20 min",
       "highlight1": "Private Beaches",

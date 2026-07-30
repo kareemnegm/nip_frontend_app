@@ -22,75 +22,70 @@ export type AreaDetailLabels = {
   lifestyleLabel: string;
   toDowntownLabel: string;
   projectsCount: string;
-  defaultLifestyle: string;
-  defaultDistanceDowntown: string;
-  highlight1: string;
-  highlight2: string;
-  highlight3: string;
-  highlight4: string;
-  highlight5: string;
-  highlight6: string;
-  connectivity1: string;
-  connectivity2: string;
-  connectivity3: string;
-  connectivity4: string;
+  formatToDowntownMinutes: (minutes: number) => string;
 };
-
-const DEFAULT_AVG_PRICE_SQFT = 2400;
-const DEFAULT_COMMUNITIES = 28;
-const DEFAULT_AVG_YIELD = 6.2;
-
-function formatAvgPriceSqft(value: number): string {
-  return `AED ${new Intl.NumberFormat("en-AE", { maximumFractionDigits: 0 }).format(value)}`;
-}
 
 function formatOffPlanCount(total: number, projectsCountLabel: string): string {
   return `${total} ${projectsCountLabel}`;
 }
 
-export function areaFactsFromApi(
-  area: ApiArea,
-  offPlanTotal: number,
-  labels: AreaDetailLabels,
-): FactItem[] {
-  const avgPrice = area.avg_price_sqft ?? DEFAULT_AVG_PRICE_SQFT;
-  const communities = area.communities_count ?? DEFAULT_COMMUNITIES;
-  const avgYield = area.avg_yield ?? DEFAULT_AVG_YIELD;
-  const lifestyle = area.lifestyle?.trim() || labels.defaultLifestyle;
-  const downtown = area.distance_downtown?.trim() || labels.defaultDistanceDowntown;
+/** Facts strip — uses API fields; omits tiles when value is null (counts always show). */
+export function areaFactsFromApi(area: ApiArea, labels: AreaDetailLabels): FactItem[] {
+  const facts: FactItem[] = [];
 
-  return [
-    {
+  if (area.avg_price_sqft != null) {
+    facts.push({
       label: labels.avgPriceSqftLabel,
-      value: formatAvgPriceSqft(avgPrice),
+      value: `AED ${new Intl.NumberFormat("en-AE", { maximumFractionDigits: 0 }).format(area.avg_price_sqft)}`,
       icon: "dirham-circle",
-    },
-    {
+    });
+  }
+
+  if (area.communities_count != null) {
+    facts.push({
       label: labels.communitiesLabel,
-      value: String(communities),
+      value: String(area.communities_count),
       icon: "communities",
-    },
-    {
-      label: labels.offPlanProjectsLabel,
-      value: formatOffPlanCount(offPlanTotal, labels.projectsCount),
-      icon: "crane",
-    },
-    {
+    });
+  }
+
+  facts.push({
+    label: labels.offPlanProjectsLabel,
+    value: formatOffPlanCount(area.offplan_project_count ?? 0, labels.projectsCount),
+    icon: "crane",
+  });
+
+  if (area.avg_yield != null) {
+    facts.push({
       label: labels.avgYieldLabel,
-      value: `${avgYield}%`,
+      value: `${area.avg_yield}%`,
       icon: "grow",
-    },
-    {
+    });
+  }
+
+  if (area.lifestyle?.trim()) {
+    facts.push({
       label: labels.lifestyleLabel,
-      value: lifestyle,
+      value: area.lifestyle.trim(),
       icon: "waterfront",
-    },
-    {
+    });
+  }
+
+  if (area.to_downtown_minutes != null) {
+    facts.push({
       label: labels.toDowntownLabel,
-      value: downtown,
+      value: labels.formatToDowntownMinutes(area.to_downtown_minutes),
       icon: "skyline",
-    },
-  ];
+    });
+  } else if (area.distance_downtown?.trim()) {
+    facts.push({
+      label: labels.toDowntownLabel,
+      value: area.distance_downtown.trim(),
+      icon: "skyline",
+    });
+  }
+
+  return facts;
 }
 
 export type AreaCardLabels = {
@@ -109,9 +104,15 @@ function mapAreaFeatureItem(item: { label: string; icon?: string | null }): Area
   };
 }
 
-/** Maps API `facilities[]` row to a card/detail feature with SVG, URL, icon_key, or label fallback. */
+/** Maps API `facilities[]` — icon_key first, then inline SVG, then label fallback. */
 export function mapFacilityToFeatureItem(facility: ApiFacility): AreaFeatureItem {
   const label = facility.facility?.trim() || "";
+
+  const amenityKey = resolveFigmaAmenityIconKey(facility.icon_key);
+  if (amenityKey) {
+    return { label, icon: "star", iconSvg: amenityIconSvgs[amenityKey] };
+  }
+
   const source = resolveAmenityIconSource({
     facilityIcon: facility.facility_icon,
     iconUrl: facility.icon_url,
@@ -123,11 +124,6 @@ export function mapFacilityToFeatureItem(facility: ApiFacility): AreaFeatureItem
 
   if (source?.kind === "backend-url") {
     return { label, icon: "star", iconUrl: source.url };
-  }
-
-  const amenityKey = resolveFigmaAmenityIconKey(facility.icon_key);
-  if (amenityKey) {
-    return { label, icon: "star", iconSvg: amenityIconSvgs[amenityKey] };
   }
 
   const resolved = resolveHighlightIcon(label);
@@ -185,59 +181,23 @@ export function resolveAreaCardFacts(area: ApiArea, labels: AreaCardLabels): Are
   return defaultCardFacts(labels);
 }
 
-export function resolveAreaHighlights(
-  area: ApiArea,
-  labels: AreaDetailLabels,
-): AreaFeatureItem[] {
+export function resolveAreaHighlights(area: ApiArea): AreaFeatureItem[] {
   const fromFacilities = areaFacilitiesToFeatures(area);
   if (fromFacilities.length > 0) {
     return fromFacilities;
   }
 
   if (area.highlights?.length) {
-    return area.highlights.map((item) => {
-      const resolved = resolveHighlightIcon(item.label);
-      return {
-        label: item.label,
-        icon: resolved.icon,
-        iconSvg: item.icon ?? resolved.iconSvg,
-      };
-    });
+    return area.highlights.map((item) => mapAreaFeatureItem(item));
   }
 
-  return [
-    { label: labels.highlight1, ...resolveHighlightIcon(labels.highlight1) },
-    { label: labels.highlight2, ...resolveHighlightIcon(labels.highlight2) },
-    { label: labels.highlight3, ...resolveHighlightIcon(labels.highlight3) },
-    { label: labels.highlight4, ...resolveHighlightIcon(labels.highlight4) },
-    { label: labels.highlight5, ...resolveHighlightIcon(labels.highlight5) },
-    { label: labels.highlight6, ...resolveHighlightIcon(labels.highlight6) },
-  ];
+  return [];
 }
 
-export function resolveAreaConnectivity(
-  area: ApiArea,
-  labels: AreaDetailLabels,
-): AreaFeatureItem[] {
-  if (areaFacilitiesToFeatures(area).length > 0) {
+export function resolveAreaConnectivity(area: ApiArea): AreaFeatureItem[] {
+  if (!area.connectivity?.length) {
     return [];
   }
 
-  if (area.connectivity?.length) {
-    return area.connectivity.map((item) => {
-      const resolved = resolveHighlightIcon(item.label);
-      return {
-        label: item.label,
-        icon: resolved.icon,
-        iconSvg: item.icon ?? resolved.iconSvg,
-      };
-    });
-  }
-
-  return [
-    { label: labels.connectivity1, ...resolveHighlightIcon(labels.connectivity1) },
-    { label: labels.connectivity2, ...resolveHighlightIcon(labels.connectivity2) },
-    { label: labels.connectivity3, ...resolveHighlightIcon(labels.connectivity3) },
-    { label: labels.connectivity4, ...resolveHighlightIcon(labels.connectivity4) },
-  ];
+  return area.connectivity.map((item) => mapAreaFeatureItem(item));
 }

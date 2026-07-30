@@ -13,10 +13,13 @@ export type ApiArea = {
   image_url?: string | null;
   photo_url?: string | null;
   project_count?: number;
+  offplan_project_count?: number;
   avg_price_sqft?: number | null;
   avg_yield?: number | null;
   lifestyle?: string | null;
   communities_count?: number | null;
+  to_downtown_minutes?: number | null;
+  /** @deprecated Prefer `to_downtown_minutes`. */
   distance_downtown?: string | null;
   map_image_url?: string | null;
   latitude?: number;
