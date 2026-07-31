@@ -87,7 +87,7 @@ export async function AreaDetailPage({ locale, slug }: AreaDetailPageProps) {
       <section className="bg-white py-10">
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
           <div className={sitePageInnerClassName}>
-            <FactsStrip items={facts} variant="property" />
+            <FactsStrip items={facts} variant="area" />
           </div>
         </div>
       </section>

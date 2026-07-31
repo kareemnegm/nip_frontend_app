@@ -79,6 +79,7 @@ export function areaFactsFromApi(area: ApiArea, labels: AreaDetailLabels): FactI
       label: labels.readyProjectsLabel,
       value: formatProjectCount(readyCount, labels.projectsCount),
       icon: "building",
+      areaFactIcon: "ready",
     },
     {
       label: labels.avgYieldLabel,

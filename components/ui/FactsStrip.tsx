@@ -1,5 +1,7 @@
 import { Fragment } from "react";
 import { cn } from "@/lib/cn";
+import { AreaFactIcon, isAreaFactIconName } from "./AreaFactIcon";
+import type { AreaFactIconName } from "./area-fact-icon-registry";
 import { Icon, type IconName } from "./Icon";
 import { isPropertyFactIconName, PropertyFactIcon } from "./PropertyFactIcon";
 
@@ -7,11 +9,13 @@ export type FactItem = {
   label: string;
   value: string;
   icon: IconName;
+  /** Area detail strip — 36×36 icon with matched stroke weight */
+  areaFactIcon?: AreaFactIconName;
 };
 
 export type FactsStripProps = {
   items: FactItem[];
-  variant?: "default" | "property" | "property-detail";
+  variant?: "default" | "property" | "property-detail" | "area";
   className?: string;
 };
 
@@ -20,7 +24,7 @@ export function FactsStrip({
   variant = "default",
   className,
 }: FactsStripProps) {
-  if (variant === "property" || variant === "property-detail") {
+  if (variant === "property" || variant === "property-detail" || variant === "area") {
     return (
       <div
         className={cn(
@@ -48,7 +52,9 @@ export function FactsStrip({
                 index % 2 === 0 ? "pl-4 pr-2 lg:px-0" : "pl-2 pr-4 lg:px-0",
               )}
             >
-              {variant === "property-detail" && isPropertyFactIconName(item.icon) ? (
+              {variant === "area" && item.areaFactIcon && isAreaFactIconName(item.areaFactIcon) ? (
+                <AreaFactIcon name={item.areaFactIcon} className="h-9 w-9" />
+              ) : variant === "property-detail" && isPropertyFactIconName(item.icon) ? (
                 <PropertyFactIcon name={item.icon} className="h-9 w-9" />
               ) : (
                 <Icon name={item.icon} className="h-9 w-9 shrink-0 text-sapphire-600" />
