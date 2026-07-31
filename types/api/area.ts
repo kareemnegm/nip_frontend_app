@@ -14,6 +14,7 @@ export type ApiArea = {
   photo_url?: string | null;
   project_count?: number;
   offplan_project_count?: number;
+  ready_project_count?: number;
   avg_price_sqft?: number | null;
   avg_yield?: number | null;
   lifestyle?: string | null;

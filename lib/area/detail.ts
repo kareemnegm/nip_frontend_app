@@ -18,6 +18,7 @@ export type AreaDetailLabels = {
   avgPriceSqftLabel: string;
   communitiesLabel: string;
   offPlanProjectsLabel: string;
+  readyProjectsLabel: string;
   avgYieldLabel: string;
   lifestyleLabel: string;
   toDowntownLabel: string;
@@ -41,7 +42,7 @@ const DEFAULT_AVG_PRICE_SQFT = 2400;
 const DEFAULT_COMMUNITIES = 28;
 const DEFAULT_AVG_YIELD = 6.2;
 
-function formatOffPlanCount(total: number, projectsCountLabel: string): string {
+function formatProjectCount(total: number, projectsCountLabel: string): string {
   return `${total} ${projectsCountLabel}`;
 }
 
@@ -50,6 +51,7 @@ export function areaFactsFromApi(area: ApiArea, labels: AreaDetailLabels): FactI
   const avgPrice = area.avg_price_sqft ?? DEFAULT_AVG_PRICE_SQFT;
   const communities = area.communities_count ?? DEFAULT_COMMUNITIES;
   const offplanCount = area.offplan_project_count ?? 0;
+  const readyCount = area.ready_project_count ?? 0;
   const avgYield = area.avg_yield ?? DEFAULT_AVG_YIELD;
   const lifestyle = area.lifestyle?.trim() || labels.defaultLifestyle;
   const downtown =
@@ -70,8 +72,13 @@ export function areaFactsFromApi(area: ApiArea, labels: AreaDetailLabels): FactI
     },
     {
       label: labels.offPlanProjectsLabel,
-      value: formatOffPlanCount(offplanCount, labels.projectsCount),
+      value: formatProjectCount(offplanCount, labels.projectsCount),
       icon: "crane",
+    },
+    {
+      label: labels.readyProjectsLabel,
+      value: formatProjectCount(readyCount, labels.projectsCount),
+      icon: "building",
     },
     {
       label: labels.avgYieldLabel,

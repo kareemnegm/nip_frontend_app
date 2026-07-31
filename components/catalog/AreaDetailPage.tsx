@@ -48,6 +48,7 @@ export async function AreaDetailPage({ locale, slug }: AreaDetailPageProps) {
     avgPriceSqftLabel: tAreas("avgPriceSqftLabel"),
     communitiesLabel: tAreas("communitiesLabel"),
     offPlanProjectsLabel: tAreas("offPlanProjectsLabel"),
+    readyProjectsLabel: tAreas("readyProjectsLabel"),
     avgYieldLabel: tAreas("avgYieldLabel"),
     lifestyleLabel: tAreas("lifestyleLabel"),
     toDowntownLabel: tAreas("toDowntownLabel"),
