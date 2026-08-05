@@ -85,7 +85,7 @@ export function SeoEditorForm({
         onChange={(e) => setMetaKeywords(e.target.value)}
         rows={2}
       />
-      <p className="text-body-sm text-ink-tertiary">Comma-separated, e.g. NIP Reality, Dubai real estate</p>
+      <p className="text-body-sm text-ink-tertiary">Comma-separated, e.g. Novel Insight Property, Dubai real estate</p>
       {error ? <p className="text-body-sm text-error">{error}</p> : null}
       <div className="flex flex-wrap gap-2">
         <Button type="submit" disabled={loading}>

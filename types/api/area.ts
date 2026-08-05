@@ -5,11 +5,22 @@ export type ApiAreaHighlight = {
   icon?: string | null;
 };
 
+/**
+ * A connectivity destination — an amenity-catalog entry (same shape and icon
+ * fields as `ApiFacility`) plus the travel time set per area. `minutes` is
+ * optional: null renders the destination name on its own.
+ */
+export type ApiAreaConnectivity = ApiFacility & {
+  minutes?: number | null;
+};
+
 export type ApiArea = {
   id: number;
   name: string;
   slug: string;
   description?: string | null;
+  /** Short hero intro. Null/empty means the hero shows no paragraph. */
+  hero_description?: string | null;
   image_url?: string | null;
   photo_url?: string | null;
   project_count?: number;
@@ -26,7 +37,7 @@ export type ApiArea = {
   latitude?: number;
   longitude?: number;
   highlights?: ApiAreaHighlight[] | null;
-  connectivity?: ApiAreaHighlight[] | null;
+  connectivity?: ApiAreaConnectivity[] | null;
   facilities?: ApiFacility[] | null;
   facility_ids?: number[] | null;
   properties?: unknown[];

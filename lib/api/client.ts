@@ -97,27 +97,56 @@ async function parseErrorResponse(response: Response): Promise<ApiError> {
   return new ApiError(message, response.status, errors, code);
 }
 
+/**
+ * A backend restart or a save that briefly locks a row makes one request fail.
+ * Without a retry that single blip becomes a rendered 500 for every visitor
+ * until the next revalidation, so retry idempotent reads once.
+ */
+const RETRYABLE_METHODS = new Set(["GET", "HEAD"]);
+const RETRY_DELAY_MS = 300;
+
+function isRetryableStatus(status: number): boolean {
+  return status >= 500 || status === 408 || status === 429;
+}
+
 export async function apiRequest<T>(
   path: string,
   { params, token, locale, revalidate, body, headers, ...init }: RequestOptions = {},
 ): Promise<T> {
   const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
   const queryParams = locale ? withLocaleParam(params, locale) : params;
+  const method = (init.method ?? "GET").toUpperCase();
+  const canRetry = RETRYABLE_METHODS.has(method);
 
-  const response = await fetch(buildUrl(path, queryParams), {
-    ...init,
-    headers: {
-      ...buildHeaders(token, !isFormData && body !== undefined, locale),
-      ...headers,
-    },
-    body:
-      body === undefined
-        ? undefined
-        : isFormData
-          ? (body as FormData)
-          : JSON.stringify(body),
-    ...resolveFetchCacheOptions(revalidate),
-  });
+  const send = () =>
+    fetch(buildUrl(path, queryParams), {
+      ...init,
+      headers: {
+        ...buildHeaders(token, !isFormData && body !== undefined, locale),
+        ...headers,
+      },
+      body:
+        body === undefined
+          ? undefined
+          : isFormData
+            ? (body as FormData)
+            : JSON.stringify(body),
+      ...resolveFetchCacheOptions(revalidate),
+    });
+
+  let response: Response;
+  try {
+    response = await send();
+  } catch (error) {
+    if (!canRetry) throw error;
+    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+    response = await send();
+  }
+
+  if (!response.ok && canRetry && isRetryableStatus(response.status)) {
+    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+    response = await send();
+  }
 
   if (!response.ok) {
     throw await parseErrorResponse(response);

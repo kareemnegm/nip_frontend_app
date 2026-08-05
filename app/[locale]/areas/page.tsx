@@ -36,12 +36,6 @@ export default async function AreasPage({ params, searchParams }: PageProps) {
   ]);
   const areas = data.map((area) =>
     mapAreaToCommunityCard(area, locale, {
-      cardLabels: {
-        highlight1: t("highlight1"),
-        highlight2: t("highlight2"),
-        connectivity1: t("connectivity1"),
-        connectivity2: t("connectivity2"),
-      },
       projectsAvailableLabel: (count) => tCatalog("projectsAvailable", { count }),
       exploreAreaLabel: tCatalog("exploreArea"),
     }),

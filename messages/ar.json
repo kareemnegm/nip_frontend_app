@@ -394,18 +394,7 @@
       "toDowntownLabel": "إلى وسط المدينة",
       "projectsCount": "مشاريع",
       "toDowntownMinutes": "{minutes} دقيقة",
-      "defaultLifestyle": "واجهة بحرية",
-      "defaultDistanceDowntown": "20 دقيقة",
-      "highlight1": "شواطئ خاصة",
-      "highlight2": "مساكن بعلامة تجارية",
-      "highlight3": "مطاعم فاخرة",
-      "highlight4": "مراسي بحرية",
-      "highlight5": "منتجعات خمس نجوم",
-      "highlight6": "فلل عائلية",
-      "connectivity1": "المطار · 25 دقيقة",
-      "connectivity2": "وسط المدينة · 20 دقيقة",
-      "connectivity3": "المارينا · 10 دقائق",
-      "connectivity4": "مترو · 8 دقائق",
+      "connectivityPill": "{label} · {minutes} دقيقة",
       "exploreEyebrow": "استكشف مع NIP",
       "exploreTitle": "تفكر في {name}؟"
     },
@@ -741,80 +730,80 @@
   },
   "meta": {
     "home": {
-      "title": "NIP Reality | استشارات عقارات دبي",
+      "title": "استشارات عقارات دبي - Novel Insight Property",
       "description": "استشارة خاصة ورؤى السوق وذكاء عقاري منسق في جميع أنحاء دبي."
     },
     "properties": {
-      "title": "العقارات | NIP Reality",
-      "description": "ابحث واكتشف عقارات منسقة في جميع أنحاء دبي مع NIP Reality."
+      "title": "العقارات - Novel Insight Property",
+      "description": "ابحث واكتشف عقارات منسقة في جميع أنحاء دبي مع Novel Insight Property."
     },
     "offPlan": {
-      "title": "على الخارطة | NIP Reality",
+      "title": "عقارات على الخارطة - Novel Insight Property",
       "description": "استكشف فرص على الخارطة في أكثر مجتمعات دبي جاذبية."
     },
     "areas": {
-      "title": "المناطق | NIP Reality",
-      "description": "استكشف مجتمعات وأحياء دبي مع NIP Reality."
+      "title": "المناطق - Novel Insight Property",
+      "description": "استكشف مجتمعات وأحياء دبي مع Novel Insight Property."
     },
     "developers": {
-      "title": "المطورون | NIP Reality",
-      "description": "اكتشف أبرز مطوري العقارات في دبي مع NIP Reality."
+      "title": "المطورون - Novel Insight Property",
+      "description": "اكتشف أبرز مطوري العقارات في دبي مع Novel Insight Property."
     },
     "insights": {
-      "title": "رؤى السوق | NIP Reality",
-      "description": "ذكاء تحريري عن عقارات دبي من NIP Reality."
+      "title": "رؤى السوق - Novel Insight Property",
+      "description": "ذكاء تحريري عن عقارات دبي من Novel Insight Property."
     },
     "about": {
-      "title": "عن NIP | NIP Reality",
+      "title": "من نحن - Novel Insight Property",
       "description": "تعرف على NIP — استشارة خاصة لعقارات دبي."
     },
     "contact": {
-      "title": "تواصل | NIP Reality",
+      "title": "تواصل معنا - Novel Insight Property",
       "description": "تحدث مع فريق NIP الاستشاري."
     },
     "faq": {
-      "title": "الأسئلة الشائعة | NIP Reality",
+      "title": "الأسئلة الشائعة - Novel Insight Property",
       "description": "أسئلة شائعة عن العمل مع NIP."
     },
     "concierge": {
-      "title": "الاستشاري | NIP Reality",
+      "title": "الاستشاري الذكي - Novel Insight Property",
       "description": "اسأل استشاري NIP عن عقارات دبي."
     },
     "contribute": {
-      "title": "المساهمة | NIP Reality",
+      "title": "المساهمة - Novel Insight Property",
       "description": "ساهم بمنظور السوق في رؤى NIP."
     },
     "legal": {
-      "title": "قانوني | NIP Reality",
-      "description": "الشروط والخصوصية وسياسات NIP Reality."
+      "title": "قانوني - Novel Insight Property",
+      "description": "الشروط والخصوصية وسياسات Novel Insight Property."
     },
     "curated": {
-      "title": "الاختيار المنسق | NIP Private Office",
+      "title": "الاختيار المنسق - NIP Private Office",
       "description": "اختيار العقارات المنسق من مستشارك."
     },
     "privateOffice": {
-      "title": "المكتب الخاص | NIP Reality",
+      "title": "المكتب الخاص - Novel Insight Property",
       "description": "سجّل الدخول إلى NIP Private Office."
     },
     "privateOfficeMember": {
-      "title": "المكتب الخاص | NIP Reality",
+      "title": "المكتب الخاص - Novel Insight Property",
       "description": "لوحة تحكم NIP Private Office."
     },
     "thankYou": {
-      "title": "شكراً | NIP Reality",
+      "title": "شكراً - Novel Insight Property",
       "description": "تم استلام طلبك."
     },
     "notFound": {
-      "title": "الصفحة غير موجودة | NIP Reality",
+      "title": "الصفحة غير موجودة - Novel Insight Property",
       "description": "الصفحة التي تبحث عنها غير موجودة."
     },
     "serverError": {
-      "title": "خطأ | NIP Reality",
+      "title": "خطأ - Novel Insight Property",
       "description": "حدث خطأ ما."
     },
     "adminLogin": {
-      "title": "دخول الموظفين | NIP Reality",
-      "description": "تسجيل دخول موظفي نظام إدارة المحتوى في NIP Reality."
+      "title": "دخول الموظفين - Novel Insight Property",
+      "description": "تسجيل دخول موظفي نظام إدارة المحتوى في Novel Insight Property."
     }
   },
   "cms": {

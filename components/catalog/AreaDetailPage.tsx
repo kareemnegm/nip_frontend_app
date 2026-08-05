@@ -37,9 +37,12 @@ export async function AreaDetailPage({ locale, slug }: AreaDetailPageProps) {
   const area = await getAreaBySlug(slug, locale);
   if (!area) notFound();
 
+  // Every project the facts strip counts has to be reachable in the carousel
+  // below it, so fetch the whole set rather than one grid row's worth. The cap
+  // is a guard against an outlier area, not a display choice.
   const [offPlanListings, saleListings, tAreas, tCommon] = await Promise.all([
-    getProperties({ area: slug, listing_type: "offplan", per_page: 3, locale }),
-    getProperties({ area: slug, listing_type: "sale", per_page: 3, locale }),
+    getProperties({ area: slug, listing_type: "offplan", per_page: 24, locale }),
+    getProperties({ area: slug, listing_type: "sale", per_page: 24, locale }),
     getTranslations({ locale, namespace: "pages.areas" }),
     getTranslations({ locale, namespace: "common" }),
   ]);
@@ -53,44 +56,39 @@ export async function AreaDetailPage({ locale, slug }: AreaDetailPageProps) {
     lifestyleLabel: tAreas("lifestyleLabel"),
     toDowntownLabel: tAreas("toDowntownLabel"),
     projectsCount: tAreas("projectsCount"),
-    defaultLifestyle: tAreas("defaultLifestyle"),
-    defaultDistanceDowntown: tAreas("defaultDistanceDowntown"),
     formatToDowntownMinutes: (minutes) => tAreas("toDowntownMinutes", { minutes }),
-    highlight1: tAreas("highlight1"),
-    highlight2: tAreas("highlight2"),
-    highlight3: tAreas("highlight3"),
-    highlight4: tAreas("highlight4"),
-    highlight5: tAreas("highlight5"),
-    highlight6: tAreas("highlight6"),
-    connectivity1: tAreas("connectivity1"),
-    connectivity2: tAreas("connectivity2"),
-    connectivity3: tAreas("connectivity3"),
-    connectivity4: tAreas("connectivity4"),
   };
 
   const facts = areaFactsFromApi(area, labels);
-  const highlights = resolveAreaHighlights(area, labels);
-  const connectivity = resolveAreaConnectivity(area, labels);
+  const highlights = resolveAreaHighlights(area);
+  const connectivity = resolveAreaConnectivity(area, (label, minutes) =>
+    tAreas("connectivityPill", { label, minutes }),
+  );
   const heroImageUrl = resolveMediaUrl(area.image_url ?? area.photo_url);
   const mapImageUrl = resolveMediaUrl(area.map_image_url);
   const description = area.description ?? tAreas("exploreFallback");
+  // Two separate fields: the hero shows its own short intro (blank until an
+  // admin writes one), the About section below shows the full description.
+  const heroDescription = area.hero_description?.trim() ?? "";
 
   return (
     <SiteShell>
       <AreaHero
         eyebrow={tAreas("areaEyebrow")}
         title={area.name}
-        description={description}
+        description={heroDescription}
         imageUrl={heroImageUrl}
       />
 
-      <section className="bg-white py-10">
-        <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-          <div className={sitePageInnerClassName}>
-            <FactsStrip items={facts} variant="area" />
+      {facts.length > 0 ? (
+        <section className="bg-white py-10">
+          <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
+            <div className={sitePageInnerClassName}>
+              <FactsStrip items={facts} variant="area" />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section className="bg-white pb-16">
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
@@ -107,6 +105,7 @@ export async function AreaDetailPage({ locale, slug }: AreaDetailPageProps) {
           eyebrow={tAreas("offPlanInArea", { name: area.name.toUpperCase() })}
           title={tAreas("projectsInArea")}
           variant="wide"
+          layout="carousel"
         >
           {offPlanListings.data.map((property) => {
             const card = mapPropertyToOffPlanCard(property, locale);
@@ -131,6 +130,7 @@ export async function AreaDetailPage({ locale, slug }: AreaDetailPageProps) {
           eyebrow={tAreas("forSaleInArea", { name: area.name.toUpperCase() })}
           title={tAreas("availableProperties")}
           variant="standard"
+          layout="carousel"
         >
           {saleListings.data.map((property) => {
             const card = mapPropertyToCard(property, locale);

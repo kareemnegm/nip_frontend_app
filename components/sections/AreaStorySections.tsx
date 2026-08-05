@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
 import { AmenityIcon } from "@/components/ui/AmenityIcon";
+import { CardCarousel } from "@/components/ui/CardCarousel";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { PropertyMap } from "@/components/ui/PropertyMap";
 import {
@@ -16,7 +17,8 @@ import type { AreaFeatureItem } from "@/lib/area/detail";
 export type AreaHeroProps = {
   eyebrow?: string;
   title: string;
-  description: string;
+  /** Short hero intro — distinct from the About copy. Omitted when blank. */
+  description?: string | null;
   imageUrl?: string;
 };
 
@@ -51,7 +53,9 @@ export function AreaHero({
           <h1 className="font-display text-display-sm uppercase text-white sm:text-display-hero">
             {title}
           </h1>
-          <p className="max-w-[398px] text-body-sm text-sapphire-100">{description}</p>
+          {description?.trim() ? (
+            <p className="max-w-[398px] text-body-sm text-sapphire-100">{description}</p>
+          ) : null}
         </div>
       </div>
     </section>
@@ -204,11 +208,18 @@ export function AreaCardSection({
   eyebrow,
   title,
   variant,
+  layout = "grid",
   children,
 }: {
   eyebrow: string;
   title: string;
   variant: "wide" | "standard";
+  /**
+   * "carousel" keeps every project reachable in one row, so the section can show
+   * all of them instead of the three a grid row fits — which is what made the
+   * facts-strip count disagree with the cards below it.
+   */
+  layout?: "grid" | "carousel";
   children: React.ReactNode;
 }) {
   const isWide = variant === "wide";
@@ -224,7 +235,15 @@ export function AreaCardSection({
       >
         <div className={isWide ? siteWideCardInnerClassName : sitePageInnerClassName}>
           <AreaSectionHeading eyebrow={eyebrow} title={title} />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">{children}</div>
+          {layout === "carousel" ? (
+            // Same slide geometry as the home Featured Selection carousel, and the
+            // 24px gap the grid used — the cards look and measure identically.
+            <CardCarousel className="mt-10 w-full" slideWidth={408} gap={24} trackHeight={480}>
+              {children}
+            </CardCarousel>
+          ) : (
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">{children}</div>
+          )}
         </div>
       </div>
     </section>

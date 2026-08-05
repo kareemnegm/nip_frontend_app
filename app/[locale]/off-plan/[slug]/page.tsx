@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale: rawLocale, slug } = await params;
   const locale = resolveLocale(rawLocale);
   const property = await getPropertyBySlug(slug, locale);
-  if (!property) return { title: "Off-Plan | NIP Reality" };
+  if (!property) return { title: "Off-Plan Properties - Novel Insight Property" };
   return buildPropertyMetadata(property);
 }
 

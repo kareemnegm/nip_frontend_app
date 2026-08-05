@@ -3,6 +3,8 @@ export type ApiDeveloper = {
   name: string;
   slug: string;
   description?: string | null;
+  /** Short hero intro. Null/empty means the hero shows no paragraph. */
+  hero_description?: string | null;
   logo_url?: string | null;
   photo_url?: string | null;
   properties_count?: number;

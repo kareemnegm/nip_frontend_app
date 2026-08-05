@@ -285,7 +285,7 @@ export async function PropertyDetailPage({
 }
 
 export function buildPropertyMetadata(property: ApiProperty) {
-  const title = `${property.title} | NIP Reality`;
+  const title = `${property.title} - Novel Insight Property`;
   const description =
     property.description?.slice(0, 160) ??
     `Property details for ${property.title} in Dubai.`;
@@ -318,7 +318,7 @@ export function buildPropertyMetadata(property: ApiProperty) {
     property.location,
     property.area?.name,
     property.bedrooms ? `${property.bedrooms} bedroom` : null,
-    "NIP Reality",
+    "Novel Insight Property",
   ]
     .filter(Boolean)
     .join(", ");

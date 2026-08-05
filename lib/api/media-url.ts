@@ -3,6 +3,27 @@ import { API_BASE_URL } from "./client";
 const apiOrigin = () => API_BASE_URL.replace(/\/$/, "");
 
 /**
+ * Hosts `next/image` is allowed to optimize — must stay in sync with
+ * `images.remotePatterns` in next.config.ts. A src on any other host makes
+ * next/image THROW, which turns one bad record into a 500 for the whole page,
+ * so unknown hosts are dropped and the card renders its placeholder instead.
+ */
+const STATIC_ALLOWED_HOSTS = new Set([
+  "127.0.0.1",
+  "localhost",
+  "nip_reality_backend.test",
+]);
+
+function isOptimizableHost(hostname: string): boolean {
+  if (STATIC_ALLOWED_HOSTS.has(hostname)) return true;
+  try {
+    return new URL(apiOrigin()).hostname === hostname;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Resolve API media paths for `<img>` / `next/image` `src`.
  *
  * The API returns root-relative `*_url` values (e.g. `/storage/properties/…`).
@@ -17,15 +38,16 @@ export function resolveMediaUrl(
   const trimmed = path.trim();
 
   if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    let parsed: URL;
     try {
-      const parsed = new URL(trimmed);
-      if (parsed.pathname.startsWith("/storage/")) {
-        return `${apiOrigin()}${parsed.pathname}${parsed.search}`;
-      }
+      parsed = new URL(trimmed);
     } catch {
-      return trimmed;
+      return undefined;
     }
-    return trimmed;
+    if (parsed.pathname.startsWith("/storage/")) {
+      return `${apiOrigin()}${parsed.pathname}${parsed.search}`;
+    }
+    return isOptimizableHost(parsed.hostname) ? trimmed : undefined;
   }
 
   if (trimmed.startsWith("/")) {

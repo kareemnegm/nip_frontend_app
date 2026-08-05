@@ -47,6 +47,22 @@ const metaNamespaces: Record<MetaPage, `meta.${MetaPage}`> = {
   adminLogin: "meta.adminLogin",
 };
 
+/**
+ * Next does NOT deep-merge `openGraph` — a page that defines it replaces the
+ * root layout's block entirely. Without this every main page shipped without an
+ * og:image and previewed as a bare link in WhatsApp/Facebook, while property
+ * pages (which build their own metadata) rendered a card.
+ *
+ * 1200×630 is the size Facebook/WhatsApp/X expect; keep the file small (~100KB)
+ * or scrapers time out before fetching it.
+ */
+const DEFAULT_OG_IMAGE = {
+  url: "/images/og-default.jpg",
+  width: 1200,
+  height: 630,
+  alt: "Novel Insight Property — Dubai real estate advisory",
+} as const;
+
 function parseKeywords(raw?: string | null): string[] | undefined {
   if (!raw?.trim()) return undefined;
   const keywords = raw
@@ -78,12 +94,16 @@ export async function localizedMetadata(
       title: ogTitle,
       description: ogDescription,
       type: "website",
+      siteName: "Novel Insight Property",
       locale: locale === "ar" ? "ar_AE" : "en_AE",
+      url: path,
+      images: [{ ...DEFAULT_OG_IMAGE, alt: ogTitle }],
     },
     twitter: {
       card: "summary_large_image",
       title: ogTitle,
       description: ogDescription,
+      images: [DEFAULT_OG_IMAGE.url],
     },
   };
 

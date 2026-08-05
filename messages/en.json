@@ -394,18 +394,7 @@
       "toDowntownLabel": "To Downtown",
       "projectsCount": "Projects",
       "toDowntownMinutes": "{minutes} min",
-      "defaultLifestyle": "Waterfront",
-      "defaultDistanceDowntown": "20 min",
-      "highlight1": "Private Beaches",
-      "highlight2": "Branded Residences",
-      "highlight3": "Fine Dining",
-      "highlight4": "Marina Berths",
-      "highlight5": "Five-Star Resorts",
-      "highlight6": "Family Villas",
-      "connectivity1": "Airport · 25 min",
-      "connectivity2": "Downtown · 20 min",
-      "connectivity3": "Marina · 10 min",
-      "connectivity4": "Metro link · 8 min",
+      "connectivityPill": "{label} · {minutes} min",
       "exploreEyebrow": "EXPLORE WITH NIP",
       "exploreTitle": "Considering {name}?"
     },
@@ -741,80 +730,80 @@
   },
   "meta": {
     "home": {
-      "title": "NIP Reality | Dubai Real Estate Advisory",
+      "title": "Dubai Real Estate Advisory - Novel Insight Property",
       "description": "Private advisory, market insight, and curated property intelligence across Dubai."
     },
     "properties": {
-      "title": "Properties | NIP Reality",
-      "description": "Search and discover curated properties across Dubai with NIP Reality."
+      "title": "Properties - Novel Insight Property",
+      "description": "Search and discover curated properties across Dubai with Novel Insight Property."
     },
     "offPlan": {
-      "title": "Off-Plan | NIP Reality",
+      "title": "Off-Plan Properties - Novel Insight Property",
       "description": "Explore off-plan opportunities across Dubai's most compelling communities."
     },
     "areas": {
-      "title": "Areas | NIP Reality",
-      "description": "Explore Dubai's communities and neighbourhoods with NIP Reality."
+      "title": "Areas - Novel Insight Property",
+      "description": "Explore Dubai's communities and neighbourhoods with Novel Insight Property."
     },
     "developers": {
-      "title": "Developers | NIP Reality",
-      "description": "Discover Dubai's leading property developers with NIP Reality."
+      "title": "Developers - Novel Insight Property",
+      "description": "Discover Dubai's leading property developers with Novel Insight Property."
     },
     "insights": {
-      "title": "Insights | NIP Reality",
-      "description": "Editorial intelligence on Dubai real estate from NIP Reality."
+      "title": "Insights - Novel Insight Property",
+      "description": "Editorial intelligence on Dubai real estate from Novel Insight Property."
     },
     "about": {
-      "title": "About | NIP Reality",
+      "title": "About us - Novel Insight Property",
       "description": "Learn about NIP — private advisory for Dubai real estate."
     },
     "contact": {
-      "title": "Contact | NIP Reality",
+      "title": "Contact us - Novel Insight Property",
       "description": "Speak with NIP's private advisory team."
     },
     "faq": {
-      "title": "FAQ | NIP Reality",
+      "title": "FAQ - Novel Insight Property",
       "description": "Frequently asked questions about working with NIP."
     },
     "concierge": {
-      "title": "Concierge | NIP Reality",
+      "title": "AI Concierge - Novel Insight Property",
       "description": "Ask the NIP Concierge about Dubai real estate."
     },
     "contribute": {
-      "title": "Contribute | NIP Reality",
+      "title": "Contribute - Novel Insight Property",
       "description": "Contribute market perspective to NIP Insights."
     },
     "legal": {
-      "title": "Legal | NIP Reality",
-      "description": "Terms, privacy, and policies for NIP Reality."
+      "title": "Legal - Novel Insight Property",
+      "description": "Terms, privacy, and policies for Novel Insight Property."
     },
     "curated": {
-      "title": "Curated Selection | NIP Private Office",
+      "title": "Curated Selection - NIP Private Office",
       "description": "Your advisor's curated property selection."
     },
     "privateOffice": {
-      "title": "Private Office | NIP Reality",
+      "title": "Private Office - Novel Insight Property",
       "description": "Sign in to NIP Private Office."
     },
     "privateOfficeMember": {
-      "title": "Private Office | NIP Reality",
+      "title": "Private Office - Novel Insight Property",
       "description": "Your NIP Private Office dashboard."
     },
     "thankYou": {
-      "title": "Thank You | NIP Reality",
+      "title": "Thank You - Novel Insight Property",
       "description": "Your submission has been received."
     },
     "notFound": {
-      "title": "Page Not Found | NIP Reality",
+      "title": "Page Not Found - Novel Insight Property",
       "description": "The page you are looking for does not exist."
     },
     "serverError": {
-      "title": "Error | NIP Reality",
+      "title": "Error - Novel Insight Property",
       "description": "Something went wrong."
     },
     "adminLogin": {
-      "title": "Staff Login | NIP Reality",
-      "description": "CMS staff sign-in for NIP Reality."
+      "title": "Staff Login - Novel Insight Property",
+      "description": "CMS staff sign-in for Novel Insight Property."
     }
   },
   "cms": {

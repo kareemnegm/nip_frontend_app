@@ -47,12 +47,14 @@ const almarai = Almarai({
 });
 
 export const metadata: Metadata = {
+  // Relative og:image paths are resolved against this — a wrong host here makes
+  // every social preview image unfetchable. The live domain is niprealty.com.
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://nipreality.com",
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://niprealty.com",
   ),
   title: {
-    default: "NIP Reality | Novel Insight Property",
-    template: "%s | NIP Reality",
+    default: "Dubai Real Estate Advisory - Novel Insight Property",
+    template: "%s - Novel Insight Property",
   },
   description:
     "Prudent, knowledge-first global real estate advisory for elevated living in Dubai.",
@@ -60,15 +62,21 @@ export const metadata: Metadata = {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     shortcut: "/favicon.svg",
   },
+  // Google Search Console — renders <meta name="google-site-verification" …>.
+  // Must stay in place for as long as the property is verified.
+  verification: {
+    google: "ywaooa3OraOvKyx6tnSbU3IRcjnnj1Czo4dkORX1mf8",
+  },
   openGraph: {
-    siteName: "NIP Reality",
+    siteName: "Novel Insight Property",
     type: "website",
     images: [
       {
-        url: "/images/hero-bg.jpg",
+        // 1200×630, ~100KB. hero-bg.jpg is 4096px/14MB — scrapers time out on it.
+        url: "/images/og-default.jpg",
         width: 1200,
         height: 630,
-        alt: "NIP Reality — Novel Insight Property",
+        alt: "Novel Insight Property",
       },
     ],
   },

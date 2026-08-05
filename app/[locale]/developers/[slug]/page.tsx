@@ -12,11 +12,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug, locale: rawLocale } = await params;
   const locale = resolveLocale(rawLocale);
   const developer = await getDeveloperBySlug(slug, locale);
-  if (!developer) return { title: "Developer | NIP Reality" };
+  if (!developer) return { title: "Developer - Novel Insight Property" };
 
-  const title = `${developer.name} | Developers | NIP Reality`;
+  const title = `${developer.name} - Novel Insight Property`;
   const description = developer.description?.slice(0, 160);
-  const keywords = `${developer.name}, Dubai developer, properties by ${developer.name}, NIP Reality`;
+  const keywords = `${developer.name}, Dubai developer, properties by ${developer.name}, Novel Insight Property`;
   const ogImageUrl = resolveMediaUrl(developer.photo_url ?? developer.logo_url);
   const ogImages = ogImageUrl
     ? [{ url: ogImageUrl, width: 1200, height: 630, alt: developer.name }]

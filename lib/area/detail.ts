@@ -3,7 +3,7 @@ import type { IconName } from "@/components/ui/Icon";
 import { amenityIconSvgs } from "@/components/ui/amenity-icon-registry";
 import { resolveFigmaAmenityIconKey } from "@/lib/amenities/amenity-icon-keys";
 import { resolveAmenityIconSource } from "@/lib/amenities/resolve-amenity-icon";
-import type { ApiArea } from "@/types/api/area";
+import type { ApiArea, ApiAreaConnectivity } from "@/types/api/area";
 import type { ApiFacility } from "@/types/api/property";
 import { resolveHighlightIcon } from "./resolve-highlight-icon";
 
@@ -23,88 +23,104 @@ export type AreaDetailLabels = {
   lifestyleLabel: string;
   toDowntownLabel: string;
   projectsCount: string;
-  defaultLifestyle: string;
-  defaultDistanceDowntown: string;
   formatToDowntownMinutes: (minutes: number) => string;
-  highlight1: string;
-  highlight2: string;
-  highlight3: string;
-  highlight4: string;
-  highlight5: string;
-  highlight6: string;
-  connectivity1: string;
-  connectivity2: string;
-  connectivity3: string;
-  connectivity4: string;
 };
 
-const DEFAULT_AVG_PRICE_SQFT = 2400;
-const DEFAULT_COMMUNITIES = 28;
-const DEFAULT_AVG_YIELD = 6.2;
+/** Formats a connectivity pill, e.g. ("Airport", 25) → "Airport · 25 min". */
+export type ConnectivityLabelFormatter = (label: string, minutes: number) => string;
+
+/**
+ * Curated numeric stats only count when a real value was entered. Blank, junk
+ * and zero all mean "nothing to show" — no area has an AED 0/sqft price, a 0%
+ * yield or 0 communities worth printing.
+ */
+function positiveNumber(value: number | string | null | undefined): number | null {
+  if (value == null || value === "") return null;
+  const n = typeof value === "number" ? value : Number(String(value).trim());
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
 
 function formatProjectCount(total: number, projectsCountLabel: string): string {
   return `${total} ${projectsCountLabel}`;
 }
 
-/** Facts strip — API values when present; dummy defaults when null. */
-export function areaFactsFromApi(area: ApiArea, labels: AreaDetailLabels): FactItem[] {
-  const avgPrice = area.avg_price_sqft ?? DEFAULT_AVG_PRICE_SQFT;
-  const communities = area.communities_count ?? DEFAULT_COMMUNITIES;
-  const offplanCount = area.offplan_project_count ?? 0;
-  const readyCount = area.ready_project_count ?? 0;
-  const avgYield = area.avg_yield ?? DEFAULT_AVG_YIELD;
-  const lifestyle = area.lifestyle?.trim() || labels.defaultLifestyle;
-  const downtown =
-    area.to_downtown_minutes != null ?
-      labels.formatToDowntownMinutes(area.to_downtown_minutes)
-    : area.distance_downtown?.trim() || labels.defaultDistanceDowntown;
+type OptionalFact = Omit<FactItem, "value"> & { value: string | null };
 
-  return [
-    {
-      label: labels.avgPriceSqftLabel,
-      value: `AED ${new Intl.NumberFormat("en-AE", { maximumFractionDigits: 0 }).format(avgPrice)}`,
-      icon: "dirham-circle",
-    },
-    {
-      label: labels.communitiesLabel,
-      value: String(communities),
-      icon: "communities",
-    },
-    {
-      label: labels.offPlanProjectsLabel,
-      value: formatProjectCount(offplanCount, labels.projectsCount),
-      icon: "crane",
-    },
-    {
-      label: labels.readyProjectsLabel,
-      value: formatProjectCount(readyCount, labels.projectsCount),
-      icon: "building",
-      areaFactIcon: "ready",
-    },
-    {
-      label: labels.avgYieldLabel,
-      value: `${avgYield}%`,
-      icon: "grow",
-    },
-    {
-      label: labels.lifestyleLabel,
-      value: lifestyle,
-      icon: "waterfront",
-    },
-    {
-      label: labels.toDowntownLabel,
-      value: downtown,
-      icon: "skyline",
-    },
-  ];
+function pushFact(facts: FactItem[], fact: OptionalFact) {
+  if (fact.value == null) return;
+  facts.push({ ...fact, value: fact.value });
 }
 
-export type AreaCardLabels = {
-  highlight1: string;
-  highlight2: string;
-  connectivity1: string;
-  connectivity2: string;
-};
+/**
+ * Facts strip — API values only. Every stat is optional in the admin panel, so a
+ * field left blank is omitted entirely rather than filled with an invented
+ * number. An area with no stats at all renders no strip.
+ */
+export function areaFactsFromApi(area: ApiArea, labels: AreaDetailLabels): FactItem[] {
+  const facts: FactItem[] = [];
+
+  const avgPrice = positiveNumber(area.avg_price_sqft);
+  pushFact(facts, {
+    label: labels.avgPriceSqftLabel,
+    value:
+      avgPrice == null ?
+        null
+      : `AED ${new Intl.NumberFormat("en-AE", { maximumFractionDigits: 0 }).format(avgPrice)}`,
+    icon: "dirham-circle",
+  });
+
+  const communities = positiveNumber(area.communities_count);
+  pushFact(facts, {
+    label: labels.communitiesLabel,
+    value: communities == null ? null : String(communities),
+    icon: "communities",
+  });
+
+  const offplanCount = positiveNumber(area.offplan_project_count);
+  pushFact(facts, {
+    label: labels.offPlanProjectsLabel,
+    value:
+      offplanCount == null ?
+        null
+      : formatProjectCount(offplanCount, labels.projectsCount),
+    icon: "crane",
+  });
+
+  const readyCount = positiveNumber(area.ready_project_count);
+  pushFact(facts, {
+    label: labels.readyProjectsLabel,
+    value:
+      readyCount == null ?
+        null
+      : formatProjectCount(readyCount, labels.projectsCount),
+    icon: "building",
+    areaFactIcon: "ready",
+  });
+
+  const avgYield = positiveNumber(area.avg_yield);
+  pushFact(facts, {
+    label: labels.avgYieldLabel,
+    value: avgYield == null ? null : `${avgYield}%`,
+    icon: "grow",
+  });
+
+  pushFact(facts, {
+    label: labels.lifestyleLabel,
+    value: area.lifestyle?.trim() || null,
+    icon: "waterfront",
+  });
+
+  pushFact(facts, {
+    label: labels.toDowntownLabel,
+    value:
+      area.to_downtown_minutes != null ?
+        labels.formatToDowntownMinutes(area.to_downtown_minutes)
+      : area.distance_downtown?.trim() || null,
+    icon: "skyline",
+  });
+
+  return facts;
+}
 
 function mapAreaFeatureItem(item: { label: string; icon?: string | null }): AreaFeatureItem {
   const resolved = resolveHighlightIcon(item.label);
@@ -141,92 +157,68 @@ export function mapFacilityToFeatureItem(facility: ApiFacility): AreaFeatureItem
   return { label, icon: resolved.icon, iconSvg: resolved.iconSvg };
 }
 
+/**
+ * A connectivity destination reuses the amenity icon resolution, then gains its
+ * travel time in the label ("Airport" + 25 → "Airport · 25 min"). Without
+ * minutes the destination stands on its own.
+ */
+function mapConnectivityItem(
+  item: ApiAreaConnectivity,
+  formatLabel?: ConnectivityLabelFormatter,
+): AreaFeatureItem {
+  const feature = mapFacilityToFeatureItem(item);
+  const minutes = item.minutes;
+
+  if (minutes == null || !Number.isFinite(minutes) || !formatLabel) {
+    return feature;
+  }
+
+  return { ...feature, label: formatLabel(feature.label, minutes) };
+}
+
 function areaFacilitiesToFeatures(area: ApiArea): AreaFeatureItem[] {
   return (area.facilities ?? [])
     .filter((item) => item.facility?.trim())
     .map(mapFacilityToFeatureItem);
 }
 
-function defaultCardFacts(labels: AreaCardLabels): AreaFeatureItem[] {
-  return [
-    { label: labels.highlight1, ...resolveHighlightIcon(labels.highlight1) },
-    { label: labels.highlight2, ...resolveHighlightIcon(labels.highlight2) },
-    { label: labels.connectivity1, ...resolveHighlightIcon(labels.connectivity1) },
-    { label: labels.connectivity2, ...resolveHighlightIcon(labels.connectivity2) },
-  ];
-}
-
-function padCardFacts(items: AreaFeatureItem[], labels: AreaCardLabels): AreaFeatureItem[] {
-  if (items.length >= 4) return items.slice(0, 4);
-  const fallbacks = defaultCardFacts(labels);
-  return [...items, ...fallbacks].slice(0, 4);
-}
-
-/** Figma Card / Area (1054:1280) — 2×2 grid from API facilities, padded with dummy labels when needed. */
-export function resolveAreaCardFacts(area: ApiArea, labels: AreaCardLabels): AreaFeatureItem[] {
+/**
+ * Figma Card / Area (1054:1280) — up to a 2×2 grid built from the area's own
+ * amenities. No padding with invented labels: an area with two amenities shows
+ * two chips, one with none shows none.
+ */
+export function resolveAreaCardFacts(area: ApiArea): AreaFeatureItem[] {
   const fromFacilities = areaFacilitiesToFeatures(area);
   if (fromFacilities.length > 0) {
-    return padCardFacts(fromFacilities, labels);
+    return fromFacilities.slice(0, 4);
   }
 
-  if (area.highlights?.length || area.connectivity?.length) {
-    const left =
-      area.highlights?.length ?
-        area.highlights.slice(0, 2).map(mapAreaFeatureItem)
-      : [
-          { label: labels.highlight1, ...resolveHighlightIcon(labels.highlight1) },
-          { label: labels.highlight2, ...resolveHighlightIcon(labels.highlight2) },
-        ];
+  const left = (area.highlights ?? []).slice(0, 2).map(mapAreaFeatureItem);
+  const right = (area.connectivity ?? []).slice(0, 2).map((item) => mapConnectivityItem(item));
 
-    const right =
-      area.connectivity?.length ?
-        area.connectivity.slice(0, 2).map(mapAreaFeatureItem)
-      : [
-          { label: labels.connectivity1, ...resolveHighlightIcon(labels.connectivity1) },
-          { label: labels.connectivity2, ...resolveHighlightIcon(labels.connectivity2) },
-        ];
-
-    return [...left, ...right].slice(0, 4);
-  }
-
-  return defaultCardFacts(labels);
+  return [...left, ...right].slice(0, 4);
 }
 
-export function resolveAreaHighlights(
-  area: ApiArea,
-  labels: AreaDetailLabels,
-): AreaFeatureItem[] {
+export function resolveAreaHighlights(area: ApiArea): AreaFeatureItem[] {
   const fromFacilities = areaFacilitiesToFeatures(area);
   if (fromFacilities.length > 0) {
     return fromFacilities;
   }
 
-  if (area.highlights?.length) {
-    return area.highlights.map((item) => mapAreaFeatureItem(item));
-  }
-
-  return [
-    { label: labels.highlight1, ...resolveHighlightIcon(labels.highlight1) },
-    { label: labels.highlight2, ...resolveHighlightIcon(labels.highlight2) },
-    { label: labels.highlight3, ...resolveHighlightIcon(labels.highlight3) },
-    { label: labels.highlight4, ...resolveHighlightIcon(labels.highlight4) },
-    { label: labels.highlight5, ...resolveHighlightIcon(labels.highlight5) },
-    { label: labels.highlight6, ...resolveHighlightIcon(labels.highlight6) },
-  ];
+  return (area.highlights ?? []).map(mapAreaFeatureItem);
 }
 
+/**
+ * Connectivity pills — amenity-catalog destinations with an optional travel
+ * time. Icons resolve exactly like the amenity chips (`mapFacilityToFeatureItem`);
+ * the minutes are appended to the label when the admin set them.
+ */
 export function resolveAreaConnectivity(
   area: ApiArea,
-  labels: AreaDetailLabels,
+  formatLabel?: ConnectivityLabelFormatter,
 ): AreaFeatureItem[] {
-  if (area.connectivity?.length) {
-    return area.connectivity.map((item) => mapAreaFeatureItem(item));
-  }
-
-  return [
-    { label: labels.connectivity1, ...resolveHighlightIcon(labels.connectivity1) },
-    { label: labels.connectivity2, ...resolveHighlightIcon(labels.connectivity2) },
-    { label: labels.connectivity3, ...resolveHighlightIcon(labels.connectivity3) },
-    { label: labels.connectivity4, ...resolveHighlightIcon(labels.connectivity4) },
-  ];
+  return (area.connectivity ?? [])
+    .filter((item) => item.facility?.trim())
+    .map((item) => mapConnectivityItem(item, formatLabel));
 }
+

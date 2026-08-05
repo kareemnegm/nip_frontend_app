@@ -18,7 +18,8 @@ const developerSectionTitleClassName =
 export type DeveloperHeroProps = {
   eyebrow?: string;
   title: string;
-  description: string;
+  /** Short hero intro — distinct from the About copy. Omitted when blank. */
+  description?: string | null;
   logoUrl?: string;
   logoText?: string;
 };
@@ -48,9 +49,11 @@ export function DeveloperHero({
             <h1 className="font-display font-normal text-display-sm uppercase text-brand sm:text-display-lg">
               {title}
             </h1>
-            <p className="font-sans font-normal text-body-sm text-ink-tertiary">
-              {description}
-            </p>
+            {description?.trim() ? (
+              <p className="font-sans font-normal text-body-sm text-ink-tertiary">
+                {description}
+              </p>
+            ) : null}
           </div>
 
           {/* Mobile: logo + CTA side by side. Desktop: stacked (logo above button).

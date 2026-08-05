@@ -12,11 +12,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug, locale: rawLocale } = await params;
   const locale = resolveLocale(rawLocale);
   const area = await getAreaBySlug(slug, locale);
-  if (!area) return { title: "Area | NIP Reality" };
+  if (!area) return { title: "Area - Novel Insight Property" };
 
-  const title = `${area.name} | Areas | NIP Reality`;
+  const title = `${area.name} - Novel Insight Property`;
   const description = area.description?.slice(0, 160);
-  const keywords = `${area.name}, Dubai area, property in ${area.name}, NIP Reality`;
+  const keywords = `${area.name}, Dubai area, property in ${area.name}, Novel Insight Property`;
   const ogImageUrl = resolveMediaUrl(area.image_url ?? area.photo_url);
   const ogImages = ogImageUrl
     ? [{ url: ogImageUrl, width: 1200, height: 630, alt: area.name }]

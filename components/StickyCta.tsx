@@ -115,7 +115,7 @@ export function StickyCta() {
         <LocalizedLink
           href="/"
           className="shrink-0 rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40 focus-visible:ring-offset-2 focus-visible:ring-offset-sapphire-800"
-          aria-label="NIP Reality — Home"
+          aria-label="Novel Insight Property — Home"
         >
           <Logo inverted className="shrink-0" />
         </LocalizedLink>

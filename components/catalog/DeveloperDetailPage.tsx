@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/SiteChrome";
 import { getAreaBySlug } from "@/lib/api/areas";
 import { getDeveloperBySlug } from "@/lib/api/developers";
+import { logApiFallback } from "@/lib/api/fallbacks";
 import { resolveMediaUrl } from "@/lib/api/media-url";
 import { getProperties } from "@/lib/api/properties";
 import { cn } from "@/lib/cn";
@@ -48,10 +49,9 @@ export async function DeveloperDetailPage({ locale, slug }: DeveloperDetailPageP
   const developer = await getDeveloperBySlug(slug, locale);
   if (!developer) notFound();
 
-  const [{ data: properties }, t, tAreas, tCatalog] = await Promise.all([
+  const [{ data: properties }, t, tCatalog] = await Promise.all([
     getProperties({ developer: slug, per_page: 9, locale }),
     getTranslations({ locale, namespace: "pages.developers" }),
-    getTranslations({ locale, namespace: "pages.areas" }),
     getTranslations({ locale, namespace: "catalog" }),
   ]);
 
@@ -73,20 +73,26 @@ export async function DeveloperDetailPage({ locale, slug }: DeveloperDetailPageP
   const facts = developerFactsFromApi(developer, labels);
   const strengths = defaultDeveloperStrengths(labels);
   const description = developer.description ?? t("portfolioFallback");
+  // Two separate fields: the hero shows its own short intro (blank until an
+  // admin writes one), the About section below shows the full description.
+  const heroDescription = developer.hero_description?.trim() ?? "";
   const logoUrl = resolveMediaUrl(developer.logo_url ?? developer.photo_url);
 
   const areaSlugs = uniqueAreaSlugsFromProperties(properties).slice(0, 3);
+  // Communities are decorative — a failing area lookup must drop the strip,
+  // not take down the developer page.
   const resolvedAreas = (
-    await Promise.all(areaSlugs.map((areaSlug) => getAreaBySlug(areaSlug, locale)))
+    await Promise.all(
+      areaSlugs.map((areaSlug) =>
+        getAreaBySlug(areaSlug, locale).catch((error) => {
+          logApiFallback(`GET /areas/${areaSlug}`, error);
+          return null;
+        }),
+      ),
+    )
   ).filter((area): area is NonNullable<typeof area> => area != null);
   const communityCards = resolvedAreas.map((area) =>
     mapAreaToCommunityCard(area, locale, {
-      cardLabels: {
-        highlight1: tAreas("highlight1"),
-        highlight2: tAreas("highlight2"),
-        connectivity1: tAreas("connectivity1"),
-        connectivity2: tAreas("connectivity2"),
-      },
       projectsAvailableLabel: (count) => tCatalog("projectsAvailable", { count }),
       exploreAreaLabel: tCatalog("exploreArea"),
     }),
@@ -97,7 +103,7 @@ export async function DeveloperDetailPage({ locale, slug }: DeveloperDetailPageP
       <DeveloperHero
         eyebrow={t("masterDeveloperEyebrow")}
         title={developer.name}
-        description={description}
+        description={heroDescription}
         logoUrl={logoUrl}
       />
 

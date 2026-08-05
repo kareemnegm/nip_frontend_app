@@ -31,17 +31,17 @@ export function metaPageToPath(page: MetaPage): string {
 }
 
 const DEFAULT_KEYWORDS: Partial<Record<MetaPage, string>> = {
-  home: "NIP Reality, Dubai real estate, property advisory",
-  about: "NIP Reality, about, Dubai real estate advisory",
-  properties: "Dubai properties, buy property Dubai, NIP Reality",
-  offPlan: "Dubai off-plan, new launches, NIP Reality",
-  areas: "Dubai areas, communities, NIP Reality",
-  developers: "Dubai developers, NIP Reality",
-  insights: "Dubai real estate insights, market intelligence, NIP Reality",
+  home: "Novel Insight Property, Dubai real estate, property advisory",
+  about: "Novel Insight Property, about, Dubai real estate advisory",
+  properties: "Dubai properties, buy property Dubai, Novel Insight Property",
+  offPlan: "Dubai off-plan, new launches, Novel Insight Property",
+  areas: "Dubai areas, communities, Novel Insight Property",
+  developers: "Dubai developers, Novel Insight Property",
+  insights: "Dubai real estate insights, market intelligence, Novel Insight Property",
   contact: "contact NIP, Dubai real estate advisory",
   faq: "NIP FAQ, Dubai real estate questions",
-  concierge: "AI concierge, Dubai property search, NIP Reality",
-  legal: "privacy, terms, NIP Reality policies",
+  concierge: "AI concierge, Dubai property search, Novel Insight Property",
+  legal: "privacy, terms, Novel Insight Property policies",
 };
 
 function metaCatalog(locale: Locale) {

@@ -28,15 +28,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug, locale: rawLocale } = await params;
   const locale = resolveLocale(rawLocale);
   const blog = await getBlogBySlug(slug, locale);
-  if (!blog) return { title: "Insight | NIP Reality" };
+  if (!blog) return { title: "Insight - Novel Insight Property" };
 
-  const title = `${blog.title} | NIP Reality`;
+  const title = `${blog.title} - Novel Insight Property`;
   const description = resolveBlogExcerpt(blog) || blog.content?.slice(0, 160);
   const keywords = [
     blog.title,
     blog.category?.name,
     "Dubai real estate",
-    "NIP Reality",
+    "Novel Insight Property",
   ]
     .filter(Boolean)
     .join(", ");

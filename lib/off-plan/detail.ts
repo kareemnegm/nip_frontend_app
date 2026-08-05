@@ -137,8 +137,8 @@ export function resolvePaymentPlan(
   labels: PaymentPlanLabels,
 ): PaymentPlanStep[] {
   // Figma card order: muted caption on top, big %, bold stage/timing on bottom
-  // (e.g. "Reservation / EOI" / "10%" / "On Booking"). The backend `description` carries
-  // that caption; the fixed design copy only fills in when it is missing.
+  // (e.g. "Reservation / EOI" / "10%" / "On Booking"). See stagesToSteps for who
+  // owns the caption.
   const captions = paymentPlanCaptions(labels);
   const groups = backendPaymentPlanGroups(property);
   if (groups) {
@@ -150,20 +150,40 @@ export function resolvePaymentPlan(
   }
   // Fallback to snake_case shape
   if (property.payment_plan?.length) {
+    const isStandardPlan = property.payment_plan.length === captions.length;
     return property.payment_plan.map((step, index) => ({
       ...step,
-      caption: step.caption ?? captions[index] ?? null,
+      caption: isStandardPlan
+        ? (captions[index] ?? null)
+        : (step.caption ?? captions[index] ?? null),
     }));
   }
   return defaultPaymentPlan(labels);
 }
 
+/**
+ * Caption ownership:
+ *
+ * - The standard 4-stage plan is a fixed design layout, so its top labels are
+ *   frontend copy (localized, and identical on every property). The backend's
+ *   `description` is ignored there — stored values have repeatedly been wrong
+ *   ("Reservation& Spa", "keys&completeions") and there is no Arabic for them.
+ * - Any other plan shape (e.g. a 2-stage post-handover plan) is bespoke per
+ *   property, so its captions come from the backend, falling back to the design
+ *   copy when a description is blank.
+ *
+ * The backend always owns `percentage` and `stage` — those are the real data.
+ */
 function stagesToSteps(
   stages: { stage: string; percentage: number; description?: string }[],
   captions: string[],
 ): PaymentPlanStep[] {
+  const isStandardPlan = stages.length === captions.length;
+
   return stages.map((item, index) => ({
-    caption: item.description?.trim() || captions[index] || null,
+    caption: isStandardPlan
+      ? (captions[index] ?? null)
+      : item.description?.trim() || captions[index] || null,
     percentage: `${item.percentage}%`,
     label: item.stage,
   }));
