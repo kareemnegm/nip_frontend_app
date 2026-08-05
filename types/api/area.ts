@@ -26,10 +26,18 @@ export type ApiArea = {
   project_count?: number;
   offplan_project_count?: number;
   ready_project_count?: number;
-  avg_price_sqft?: number | null;
-  avg_yield?: number | null;
+  /**
+   * Curated display values — a plain number ("2900") or a range/open-ended
+   * string as typed in admin ("2,200 - 4,500", "8+"). Units (AED, %) are added
+   * by the frontend, never stored.
+   */
+  avg_price_sqft?: number | string | null;
+  avgPriceSqft?: number | string | null;
+  avg_yield?: number | string | null;
+  avgYield?: number | string | null;
   lifestyle?: string | null;
-  communities_count?: number | null;
+  communities_count?: number | string | null;
+  communitiesCount?: number | string | null;
   to_downtown_minutes?: number | null;
   /** @deprecated Prefer `to_downtown_minutes`. */
   distance_downtown?: string | null;

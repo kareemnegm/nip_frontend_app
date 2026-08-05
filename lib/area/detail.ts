@@ -40,6 +40,40 @@ function positiveNumber(value: number | string | null | undefined): number | nul
   return Number.isFinite(n) && n > 0 ? n : null;
 }
 
+/**
+ * Price, communities and yield are curated *display* values: staff enter a
+ * range ("2,200 - 4,500") or an open-ended count ("8+") because these numbers
+ * depend on the developer and the project tier. Plain numbers still arrive from
+ * older records, so both shapes are handled:
+ *
+ * - numeric  → `format` it (thousands grouping, trailing-zero trim)
+ * - anything else → print exactly as typed
+ *
+ * Returns null for blanks and non-positive numbers — no area has an AED 0/sqft
+ * price, a 0% yield or 0 communities worth printing.
+ */
+function displayStat(
+  value: number | string | null | undefined,
+  format: (n: number) => string = String,
+): string | null {
+  if (value == null) return null;
+
+  if (typeof value === "number") {
+    return Number.isFinite(value) && value > 0 ? format(value) : null;
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+
+  // Laravel serializes DECIMAL columns as strings ("2400.00") — still numeric.
+  const numeric = Number(trimmed);
+  if (Number.isFinite(numeric)) {
+    return numeric > 0 ? format(numeric) : null;
+  }
+
+  return trimmed;
+}
+
 function formatProjectCount(total: number, projectsCountLabel: string): string {
   return `${total} ${projectsCountLabel}`;
 }
@@ -59,20 +93,20 @@ function pushFact(facts: FactItem[], fact: OptionalFact) {
 export function areaFactsFromApi(area: ApiArea, labels: AreaDetailLabels): FactItem[] {
   const facts: FactItem[] = [];
 
-  const avgPrice = positiveNumber(area.avg_price_sqft);
+  const avgPrice = displayStat(
+    area.avgPriceSqft ?? area.avg_price_sqft,
+    (n) => new Intl.NumberFormat("en-AE", { maximumFractionDigits: 0 }).format(n),
+  );
   pushFact(facts, {
     label: labels.avgPriceSqftLabel,
-    value:
-      avgPrice == null ?
-        null
-      : `AED ${new Intl.NumberFormat("en-AE", { maximumFractionDigits: 0 }).format(avgPrice)}`,
+    value: avgPrice == null ? null : `AED ${avgPrice}`,
     icon: "dirham-circle",
   });
 
-  const communities = positiveNumber(area.communities_count);
+  const communities = displayStat(area.communitiesCount ?? area.communities_count);
   pushFact(facts, {
     label: labels.communitiesLabel,
-    value: communities == null ? null : String(communities),
+    value: communities,
     icon: "communities",
   });
 
@@ -97,7 +131,7 @@ export function areaFactsFromApi(area: ApiArea, labels: AreaDetailLabels): FactI
     areaFactIcon: "ready",
   });
 
-  const avgYield = positiveNumber(area.avg_yield);
+  const avgYield = displayStat(area.avgYield ?? area.avg_yield);
   pushFact(facts, {
     label: labels.avgYieldLabel,
     value: avgYield == null ? null : `${avgYield}%`,

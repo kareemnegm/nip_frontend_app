@@ -29,6 +29,42 @@ function buildHref(
   return qs ? `${basePath}?${qs}` : basePath;
 }
 
+/** Beyond this many pages the list is windowed with ellipses. */
+const MAX_INLINE_PAGES = 7;
+
+type PageItem = number | "ellipsis";
+
+/**
+ * Always renders the first and last page so the total is visible at a glance —
+ * a plain sliding window hid the last page until you were nearly on it.
+ * Short lists (≤ 7) render in full; longer ones keep a 3-wide window around the
+ * current page, nudged inward at the edges so the row keeps a stable width.
+ */
+function buildPageItems(currentPage: number, lastPage: number): PageItem[] {
+  if (lastPage <= MAX_INLINE_PAGES) {
+    return Array.from({ length: lastPage }, (_, index) => index + 1);
+  }
+
+  let start = Math.max(2, currentPage - 1);
+  let end = Math.min(lastPage - 1, currentPage + 1);
+
+  if (currentPage <= 3) {
+    start = 2;
+    end = 4;
+  } else if (currentPage >= lastPage - 2) {
+    start = lastPage - 3;
+    end = lastPage - 1;
+  }
+
+  const items: PageItem[] = [1];
+  if (start > 2) items.push("ellipsis");
+  for (let page = start; page <= end; page++) items.push(page);
+  if (end < lastPage - 1) items.push("ellipsis");
+  items.push(lastPage);
+
+  return items;
+}
+
 export function ApiPagination({
   currentPage,
   lastPage,
@@ -43,10 +79,7 @@ export function ApiPagination({
   const cellClasses =
     "inline-flex min-h-[34px] min-w-[34px] items-center justify-center rounded-[var(--radius-field)] border border-border-default bg-white px-3.5 py-2 text-body-sm font-medium text-ink-secondary transition-colors hover:border-brand hover:text-brand";
 
-  const pages: number[] = [];
-  const start = Math.max(1, currentPage - 2);
-  const end = Math.min(lastPage, currentPage + 2);
-  for (let i = start; i <= end; i++) pages.push(i);
+  const pageItems = buildPageItems(currentPage, lastPage);
 
   return (
     <nav
@@ -67,20 +100,30 @@ export function ApiPagination({
         </span>
       )}
 
-      {pages.map((page) => (
-        <Link
-          key={page}
-          href={buildHref(basePath, page, query)}
-          aria-current={page === currentPage ? "page" : undefined}
-          className={cn(
-            cellClasses,
-            page === currentPage &&
-              "border-brand bg-brand text-white hover:border-brand hover:text-white",
-          )}
-        >
-          {page}
-        </Link>
-      ))}
+      {pageItems.map((item, index) =>
+        item === "ellipsis" ? (
+          <span
+            key={`ellipsis-${index}`}
+            aria-hidden
+            className="inline-flex min-h-[34px] min-w-[20px] items-center justify-center text-body-sm text-ink-tertiary"
+          >
+            …
+          </span>
+        ) : (
+          <Link
+            key={item}
+            href={buildHref(basePath, item, query)}
+            aria-current={item === currentPage ? "page" : undefined}
+            className={cn(
+              cellClasses,
+              item === currentPage &&
+                "border-brand bg-brand text-white hover:border-brand hover:text-white",
+            )}
+          >
+            {item}
+          </Link>
+        ),
+      )}
 
       {currentPage < lastPage ? (
         <Link
