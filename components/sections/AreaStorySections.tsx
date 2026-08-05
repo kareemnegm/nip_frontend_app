@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
 import { AmenityIcon } from "@/components/ui/AmenityIcon";
-import { CardCarousel } from "@/components/ui/CardCarousel";
+import { PaginatedCards } from "@/components/ui/PaginatedCards";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { PropertyMap } from "@/components/ui/PropertyMap";
 import {
@@ -136,7 +136,8 @@ export function AreaAboutSection({
       <h2 className="font-display text-heading-h1 uppercase text-brand">
         {title}
       </h2>
-      <p className="max-w-[900px] text-body-lg text-ink">{body}</p>
+      {/* Full inner width so each line ends flush with the facts strip above. */}
+      <p className="text-body-lg text-ink">{body}</p>
       <div className="flex flex-wrap items-center gap-2.5">
         {highlights.map((item) => (
           <AreaFeaturePill key={item.label} {...item} />
@@ -215,11 +216,11 @@ export function AreaCardSection({
   title: string;
   variant: "wide" | "standard";
   /**
-   * "carousel" keeps every project reachable in one row, so the section can show
-   * all of them instead of the three a grid row fits — which is what made the
-   * facts-strip count disagree with the cards below it.
+   * "paginated" keeps every project reachable — a plain grid row showed only
+   * three, which is what made the facts-strip count disagree with the cards
+   * below it. Pages swap in place using the same control as the catalog lists.
    */
-  layout?: "grid" | "carousel";
+  layout?: "grid" | "paginated";
   children: React.ReactNode;
 }) {
   const isWide = variant === "wide";
@@ -235,12 +236,12 @@ export function AreaCardSection({
       >
         <div className={isWide ? siteWideCardInnerClassName : sitePageInnerClassName}>
           <AreaSectionHeading eyebrow={eyebrow} title={title} />
-          {layout === "carousel" ? (
-            // Same slide geometry as the home Featured Selection carousel, and the
-            // 24px gap the grid used — the cards look and measure identically.
-            <CardCarousel className="mt-10 w-full" slideWidth={408} gap={24} trackHeight={480}>
+          {layout === "paginated" ? (
+            // One grid row per page — same three-across layout as before, with
+            // numbered pages taking over from the carousel arrows.
+            <PaginatedCards className="mt-10" perPage={3}>
               {children}
-            </CardCarousel>
+            </PaginatedCards>
           ) : (
             <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">{children}</div>
           )}

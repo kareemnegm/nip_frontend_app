@@ -14,6 +14,7 @@ export {
   PropertyCard,
 } from "./Cards";
 export { CardCarousel } from "./CardCarousel";
+export { PaginatedCards } from "./PaginatedCards";
 export { Container } from "./Container";
 export type { ContainerProps } from "./Container";
 export { Modal } from "./Modal";

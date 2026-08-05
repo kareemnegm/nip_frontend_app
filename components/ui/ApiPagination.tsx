@@ -32,7 +32,17 @@ function buildHref(
 /** Beyond this many pages the list is windowed with ellipses. */
 const MAX_INLINE_PAGES = 7;
 
-type PageItem = number | "ellipsis";
+export type PageItem = number | "ellipsis";
+
+/**
+ * Shared with the in-page paginator so both controls look identical — one place
+ * to change the cell styling.
+ */
+export const paginationCellClasses =
+  "inline-flex min-h-[34px] min-w-[34px] items-center justify-center rounded-[var(--radius-field)] border border-border-default bg-white px-3.5 py-2 text-body-sm font-medium text-ink-secondary transition-colors hover:border-brand hover:text-brand";
+
+export const paginationActiveClasses =
+  "border-brand bg-brand text-white hover:border-brand hover:text-white";
 
 /**
  * Always renders the first and last page so the total is visible at a glance —
@@ -40,7 +50,7 @@ type PageItem = number | "ellipsis";
  * Short lists (≤ 7) render in full; longer ones keep a 3-wide window around the
  * current page, nudged inward at the edges so the row keeps a stable width.
  */
-function buildPageItems(currentPage: number, lastPage: number): PageItem[] {
+export function buildPageItems(currentPage: number, lastPage: number): PageItem[] {
   if (lastPage <= MAX_INLINE_PAGES) {
     return Array.from({ length: lastPage }, (_, index) => index + 1);
   }
@@ -76,9 +86,7 @@ export function ApiPagination({
 
   if (lastPage <= 1) return null;
 
-  const cellClasses =
-    "inline-flex min-h-[34px] min-w-[34px] items-center justify-center rounded-[var(--radius-field)] border border-border-default bg-white px-3.5 py-2 text-body-sm font-medium text-ink-secondary transition-colors hover:border-brand hover:text-brand";
-
+  const cellClasses = paginationCellClasses;
   const pageItems = buildPageItems(currentPage, lastPage);
 
   return (
@@ -114,11 +122,7 @@ export function ApiPagination({
             key={item}
             href={buildHref(basePath, item, query)}
             aria-current={item === currentPage ? "page" : undefined}
-            className={cn(
-              cellClasses,
-              item === currentPage &&
-                "border-brand bg-brand text-white hover:border-brand hover:text-white",
-            )}
+            className={cn(cellClasses, item === currentPage && paginationActiveClasses)}
           >
             {item}
           </Link>

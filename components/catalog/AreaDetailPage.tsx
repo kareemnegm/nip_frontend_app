@@ -37,9 +37,9 @@ export async function AreaDetailPage({ locale, slug }: AreaDetailPageProps) {
   const area = await getAreaBySlug(slug, locale);
   if (!area) notFound();
 
-  // Every project the facts strip counts has to be reachable in the carousel
-  // below it, so fetch the whole set rather than one grid row's worth. The cap
-  // is a guard against an outlier area, not a display choice.
+  // Every project the facts strip counts has to be reachable in the paginated
+  // section below it, so fetch the whole set rather than one grid row's worth.
+  // The cap is a guard against an outlier area, not a display choice.
   const [offPlanListings, saleListings, tAreas, tCommon] = await Promise.all([
     getProperties({ area: slug, listing_type: "offplan", per_page: 24, locale }),
     getProperties({ area: slug, listing_type: "sale", per_page: 24, locale }),
@@ -105,7 +105,7 @@ export async function AreaDetailPage({ locale, slug }: AreaDetailPageProps) {
           eyebrow={tAreas("offPlanInArea", { name: area.name.toUpperCase() })}
           title={tAreas("projectsInArea")}
           variant="wide"
-          layout="carousel"
+          layout="paginated"
         >
           {offPlanListings.data.map((property) => {
             const card = mapPropertyToOffPlanCard(property, locale);
@@ -130,7 +130,7 @@ export async function AreaDetailPage({ locale, slug }: AreaDetailPageProps) {
           eyebrow={tAreas("forSaleInArea", { name: area.name.toUpperCase() })}
           title={tAreas("availableProperties")}
           variant="standard"
-          layout="carousel"
+          layout="paginated"
         >
           {saleListings.data.map((property) => {
             const card = mapPropertyToCard(property, locale);
