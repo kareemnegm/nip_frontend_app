@@ -1,5 +1,3 @@
-import Script from "next/script";
-
 /**
  * Direct GA4 (gtag.js) tag. Measurement IDs are public by design, so the live
  * property is committed here rather than kept in .env.production — same as the
@@ -27,6 +25,13 @@ export function resolveGaId() {
 }
 
 /**
+ * Google's gtag.js snippet, rendered inline so it is present in the HTML the
+ * server sends — the same reason the GTM snippet is inline (see
+ * GoogleTagManager.tsx). `next/script` with `afterInteractive` is injected by
+ * the client runtime after hydration, so the tag never appeared in <head>.
+ *
+ * The loader is `async`, so this does not block rendering.
+ *
  * `send_page_view: true` covers the initial view; SPA navigations are reported
  * by AnalyticsRouteTracker.
  */
@@ -39,17 +44,16 @@ export function GoogleAnalytics() {
 
   return (
     <>
-      <Script
-        id="ga4-src"
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-      />
-      <Script id="ga4-init" strategy="afterInteractive">
-        {`window.dataLayer = window.dataLayer || [];
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} />
+      <script
+        id="ga4-init"
+        dangerouslySetInnerHTML={{
+          __html: `window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', '${gaId}', { send_page_view: true });`}
-      </Script>
+gtag('config', '${gaId}', { send_page_view: true });`,
+        }}
+      />
     </>
   );
 }
