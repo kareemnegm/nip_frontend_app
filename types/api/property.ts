@@ -42,6 +42,9 @@ export type ApiPaymentPlanItem = {
   stage: string;
   percentage: number;
   description?: string;
+  /** Fixed EOI/booking amount in AED when the stage is currency-based. */
+  amount?: number | null;
+  amount_aed?: number | null;
 };
 
 /** A named payment plan the buyer can choose between (e.g. "60/40 Post-Handover") */

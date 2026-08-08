@@ -374,6 +374,8 @@
   "pages": {
     "areas": {
       "empty": "Communities will appear here once areas are published on the backend.",
+      "searchPlaceholder": "Search communities by name",
+      "searchAria": "Search communities by name",
       "ctaTitle": "Considering a Move to Dubai?",
       "exploreFallback": "Explore this community and discover properties aligned with your priorities.",
       "noListings": "No published listings in this community yet.",

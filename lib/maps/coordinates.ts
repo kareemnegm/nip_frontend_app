@@ -50,6 +50,15 @@ export function buildGoogleMapsQuery(options: {
   return `${options.latitude},${options.longitude}`;
 }
 
+/**
+ * Embed URL for the no-API-key fallback.
+ *
+ * `q` MUST be the coordinates, not the property/area name: in an embed `q` is a
+ * search query and the pin lands wherever Google geocodes that text — `ll` only
+ * moves the centre. A project name ("Bayz 101") or an area Google places
+ * elsewhere geocodes to nothing, so the map rendered with no pin at all.
+ * Coordinates always drop a pin on the exact spot.
+ */
 export function getGoogleMapsEmbedUrl(options: {
   latitude: number;
   longitude: number;
@@ -58,7 +67,6 @@ export function getGoogleMapsEmbedUrl(options: {
   locale?: string;
 }): string {
   const { latitude, longitude, locale = "en" } = options;
-  const query = encodeURIComponent(buildGoogleMapsQuery(options));
 
-  return `https://maps.google.com/maps?q=${query}&ll=${latitude},${longitude}&hl=${locale}&z=14&output=embed`;
+  return `https://maps.google.com/maps?q=${latitude},${longitude}&hl=${locale}&z=14&output=embed`;
 }

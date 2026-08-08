@@ -6,7 +6,7 @@ import { emptyPaginated, isOfflineError, logApiFallback } from "./fallbacks";
 import { apiGet, unwrapData } from "./client";
 
 export async function getAreas(
-  params: { page?: number; per_page?: number; locale?: Locale } = {},
+  params: { page?: number; per_page?: number; keyword?: string; locale?: Locale } = {},
 ) {
   const { locale = defaultLocale, ...query } = params;
   try {

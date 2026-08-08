@@ -9,6 +9,7 @@ import type {
 /** Normalized payment step for UI rendering */
 export type PaymentPlanStep = {
   caption?: string | null;
+  /** Big card value — percentage (e.g. "20%") or EOI currency (e.g. "AED 196,000"). */
   percentage: string;
   label: string;
 };
@@ -88,30 +89,79 @@ function paymentPlanCaptions(labels: PaymentPlanLabels): string[] {
   ];
 }
 
-export function defaultPaymentPlan(labels: PaymentPlanLabels): PaymentPlanStep[] {
+function isEoiPaymentStage(
+  stage: string,
+  caption?: string | null,
+  description?: string | null,
+): boolean {
+  if (stage.trim().toLowerCase() === "eoi") {
+    return true;
+  }
+
+  const haystack = `${caption ?? ""} ${description ?? ""}`.toLowerCase();
+  return haystack.includes("eoi") || haystack.includes("expression of interest");
+}
+
+function parseStepPercentage(value: string | number): number {
+  if (typeof value === "number") {
+    return value;
+  }
+
+  const parsed = Number.parseInt(String(value).replace(/[^\d]/g, ""), 10);
+  return Number.isNaN(parsed) ? 0 : parsed;
+}
+
+function formatPaymentPlanDisplayValue(
+  stage: string,
+  percentage: number,
+  propertyPrice?: number | null,
+  caption?: string | null,
+  description?: string | null,
+  amount?: number | null,
+): string {
+  if (!isEoiPaymentStage(stage, caption, description)) {
+    return `${percentage}%`;
+  }
+
+  if (amount != null && amount > 0) {
+    return formatUnitPrice(amount);
+  }
+
+  // EOI rows may store the fixed booking fee directly (AED) when >= 100.
+  if (percentage >= 100) {
+    return formatUnitPrice(percentage);
+  }
+
+  // Otherwise derive the booking amount from the published starting price.
+  if (propertyPrice != null && propertyPrice > 0) {
+    return formatUnitPrice(Math.round((propertyPrice * percentage) / 100));
+  }
+
+  return formatUnitPrice(percentage);
+}
+
+export function defaultPaymentPlan(
+  labels: PaymentPlanLabels,
+  propertyPrice?: number | null,
+): PaymentPlanStep[] {
   const captions = paymentPlanCaptions(labels);
-  return [
-    {
-      caption: captions[0],
-      percentage: "10%",
-      label: labels.paymentStep1Label,
-    },
-    {
-      caption: captions[1],
-      percentage: "20%",
-      label: labels.paymentStep2Label,
-    },
-    {
-      caption: captions[2],
-      percentage: "30%",
-      label: labels.paymentStep3Label,
-    },
-    {
-      caption: captions[3],
-      percentage: "40%",
-      label: labels.paymentStep4Label,
-    },
+  const stageDefs = [
+    { caption: captions[0], percentage: 10, label: labels.paymentStep1Label },
+    { caption: captions[1], percentage: 20, label: labels.paymentStep2Label },
+    { caption: captions[2], percentage: 30, label: labels.paymentStep3Label },
+    { caption: captions[3], percentage: 40, label: labels.paymentStep4Label },
   ];
+
+  return stageDefs.map(({ caption, percentage, label }) => ({
+    caption,
+    percentage: formatPaymentPlanDisplayValue(
+      label,
+      percentage,
+      propertyPrice,
+      caption,
+    ),
+    label,
+  }));
 }
 
 function backendPaymentPlanGroups(
@@ -136,29 +186,38 @@ export function resolvePaymentPlan(
   property: ApiProperty,
   labels: PaymentPlanLabels,
 ): PaymentPlanStep[] {
-  // Figma card order: muted caption on top, big %, bold stage/timing on bottom
-  // (e.g. "Reservation / EOI" / "10%" / "On Booking"). See stagesToSteps for who
-  // owns the caption.
+  const propertyPrice = property.price ?? null;
   const captions = paymentPlanCaptions(labels);
   const groups = backendPaymentPlanGroups(property);
   if (groups) {
-    return stagesToSteps(groups[0].stages ?? [], captions);
+    return stagesToSteps(groups[0].stages ?? [], captions, propertyPrice);
   }
   // Prefer new camelCase shape from backend.
   if (property.paymentPlan?.length) {
-    return stagesToSteps(property.paymentPlan, captions);
+    return stagesToSteps(property.paymentPlan, captions, propertyPrice);
   }
   // Fallback to snake_case shape
   if (property.payment_plan?.length) {
     const isStandardPlan = property.payment_plan.length === captions.length;
-    return property.payment_plan.map((step, index) => ({
-      ...step,
-      caption: isStandardPlan
+    return property.payment_plan.map((step, index) => {
+      const caption = isStandardPlan
         ? (captions[index] ?? null)
-        : (step.caption ?? captions[index] ?? null),
-    }));
+        : (step.caption ?? captions[index] ?? null);
+      const percentage = parseStepPercentage(step.percentage);
+      return {
+        caption,
+        percentage: formatPaymentPlanDisplayValue(
+          step.label,
+          percentage,
+          propertyPrice,
+          caption,
+          step.caption,
+        ),
+        label: step.label,
+      };
+    });
   }
-  return defaultPaymentPlan(labels);
+  return defaultPaymentPlan(labels, propertyPrice);
 }
 
 /**
@@ -172,21 +231,41 @@ export function resolvePaymentPlan(
  *   property, so its captions come from the backend, falling back to the design
  *   copy when a description is blank.
  *
- * The backend always owns `percentage` and `stage` — those are the real data.
+ * The backend always owns `stage` and the numeric share/amount input. EOI stages
+ * render as AED (see formatPaymentPlanDisplayValue), not as a percentage.
  */
 function stagesToSteps(
-  stages: { stage: string; percentage: number; description?: string }[],
+  stages: {
+    stage: string;
+    percentage: number;
+    description?: string;
+    amount?: number | null;
+    amount_aed?: number | null;
+  }[],
   captions: string[],
+  propertyPrice?: number | null,
 ): PaymentPlanStep[] {
   const isStandardPlan = stages.length === captions.length;
 
-  return stages.map((item, index) => ({
-    caption: isStandardPlan
+  return stages.map((item, index) => {
+    const caption = isStandardPlan
       ? (captions[index] ?? null)
-      : item.description?.trim() || captions[index] || null,
-    percentage: `${item.percentage}%`,
-    label: item.stage,
-  }));
+      : item.description?.trim() || captions[index] || null;
+    const amount = item.amount ?? item.amount_aed ?? null;
+
+    return {
+      caption,
+      percentage: formatPaymentPlanDisplayValue(
+        item.stage,
+        item.percentage,
+        propertyPrice,
+        caption,
+        item.description,
+        amount,
+      ),
+      label: item.stage,
+    };
+  });
 }
 
 /**
@@ -197,6 +276,7 @@ export function resolvePaymentPlanGroups(
   property: ApiProperty,
   labels: PaymentPlanLabels,
 ): PaymentPlanGroup[] {
+  const propertyPrice = property.price ?? null;
   const captions = paymentPlanCaptions(labels);
   const groups = backendPaymentPlanGroups(property);
   if (groups) {
@@ -204,7 +284,7 @@ export function resolvePaymentPlanGroups(
       .map((group, index) => ({
         position: group.position ?? index + 1,
         title: (group.title ?? group.name ?? "").trim(),
-        steps: stagesToSteps(group.stages ?? [], captions),
+        steps: stagesToSteps(group.stages ?? [], captions, propertyPrice),
       }))
       .sort((a, b) => a.position - b.position)
       .map(({ title, steps }) => ({ title, steps }));

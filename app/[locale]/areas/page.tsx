@@ -3,10 +3,11 @@ import { getTranslations } from "next-intl/server";
 import { SiteShell } from "@/components/SiteShell";
 import { CatalogHeroSection } from "@/components/sections/CatalogHeroSection";
 import { EditableCtaBand } from "@/components/sections/EditableCtaBand";
-import { ApiPagination, CatalogEmptyState, CommunityCard } from "@/components/ui";
+import { ApiPagination, AreaSearchBar, CatalogEmptyState, CommunityCard } from "@/components/ui";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui";
 import { getAreas } from "@/lib/api/areas";
+import { buildAreaListParams } from "@/lib/catalog/helpers";
 import { mapAreaToCommunityCard } from "@/lib/mappers/area";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
@@ -27,9 +28,12 @@ export default async function AreasPage({ params, searchParams }: PageProps) {
   const { locale: rawLocale } = await params;
   const locale = resolveLocale(rawLocale);
   const sp = await searchParams;
-  const page = sp.page ? Number(Array.isArray(sp.page) ? sp.page[0] : sp.page) : 1;
+  const listParams = buildAreaListParams(sp, { per_page: 9, locale });
+  const keyword = listParams.keyword?.trim() || undefined;
+  const basePath = localizedHref(locale, "/areas");
+
   const [{ data, meta }, t, tc, tCatalog] = await Promise.all([
-    getAreas({ page, per_page: 9, locale }),
+    getAreas(listParams),
     getTranslations({ locale, namespace: "pages.areas" }),
     getTranslations({ locale, namespace: "common" }),
     getTranslations({ locale, namespace: "catalog" }),
@@ -52,12 +56,21 @@ export default async function AreasPage({ params, searchParams }: PageProps) {
           title: await getCmsPlaceholder("placeholders.areas.hero", "title", locale),
           description: await getCmsPlaceholder("placeholders.areas.hero", "description", locale),
         }}
-      />
+      >
+        <AreaSearchBar basePath={basePath} values={{ keyword }} />
+      </CatalogHeroSection>
 
       <section className="w-full bg-surface">
         <Container className="py-12 sm:py-16">
           {areas.length === 0 ? (
-            <CatalogEmptyState message={t("empty")} />
+            keyword ? (
+              <div className="space-y-2 text-center">
+                <CatalogEmptyState message={tCatalog("noResults")} />
+                <p className="text-body-sm text-ink-secondary">{tCatalog("noResultsDescription")}</p>
+              </div>
+            ) : (
+              <CatalogEmptyState message={t("empty")} />
+            )
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {areas.map((area) => (
@@ -68,7 +81,8 @@ export default async function AreasPage({ params, searchParams }: PageProps) {
           <ApiPagination
             currentPage={meta.current_page}
             lastPage={meta.last_page}
-            basePath={localizedHref(locale, "/areas")}
+            basePath={basePath}
+            query={keyword ? { keyword } : undefined}
           />
         </Container>
       </section>

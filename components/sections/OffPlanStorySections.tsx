@@ -16,6 +16,28 @@ import type { Locale } from "@/lib/i18n/config";
 import type { AvailableUnitRow } from "@/lib/off-plan/detail";
 import type { ApiFacility } from "@/types/api/property";
 
+export function OffPlanDescriptionSection({
+  title,
+  description,
+  className,
+}: {
+  title: string;
+  description?: string | null;
+  className?: string;
+}) {
+  const text = description?.trim();
+  if (!text) return null;
+
+  return (
+    <section className={cn("space-y-7", className)}>
+      <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
+        {title}
+      </h2>
+      <p className="max-w-[672px] whitespace-pre-line text-body-sm text-ink">{text}</p>
+    </section>
+  );
+}
+
 export function AvailableUnitsTable({
   title,
   unitTypeLabel,

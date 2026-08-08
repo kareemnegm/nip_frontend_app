@@ -58,6 +58,8 @@ export { Logo } from "./Logo";
 export type { LogoProps } from "./Logo";
 export { PropertyFilterBar } from "./PropertyFilterBar";
 export type { PropertyFilterValues } from "./PropertyFilterBar";
+export { AreaSearchBar } from "./AreaSearchBar";
+export type { AreaSearchValues } from "./AreaSearchBar";
 export { PropertyMap } from "./PropertyMap";
 export { GenericSearchBar } from "./SearchBars";
 export { PropertyResultsToolbar } from "./PropertyResultsToolbar";

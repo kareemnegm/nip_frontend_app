@@ -354,16 +354,18 @@ export function OffPlanCard({
           <Icon name="mapPin" className={cardTypography.locationIcon} />
           <span className={cn(cardTypography.locationOneLine, "min-w-0")}>{location}</span>
         </p>
-        <div className="flex w-full shrink-0 items-center justify-between pt-2">
-          <div className="flex flex-col items-start gap-2">
+        {/* min-w-0 on both columns so a long handover or price wraps instead of
+            pushing into the other column. No effect while the text fits. */}
+        <div className="flex w-full shrink-0 items-center justify-between gap-3 pt-2">
+          <div className="flex min-w-0 flex-col items-start gap-2">
             <p className={cardTypography.startingFrom}>{t("handoverLabel")}</p>
             {/* Figma 1525:27936 — value keeps its normal 22px line-height + text-box trim (matches Figma
                 Dev Mode code exactly); forcing leading-none clips glyphs where text-box is unsupported. */}
-            <p className="text-body-regular font-semibold tracking-[-0.01em] text-brand [text-box:trim-both_cap_alphabetic]">
+            <p className="break-words text-body-regular font-semibold tracking-[-0.01em] text-brand [text-box:trim-both_cap_alphabetic]">
               {handover}
             </p>
           </div>
-          <div className="flex flex-col items-end gap-2 text-right">
+          <div className="flex min-w-0 flex-col items-end gap-2 text-right">
             <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
             <p className={cn("justify-end", cardTypography.price)}>
               <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />

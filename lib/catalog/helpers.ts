@@ -38,6 +38,26 @@ export function buildPropertyListParams(
   };
 }
 
+export type AreaListParams = {
+  page?: number;
+  per_page?: number;
+  keyword?: string;
+  locale?: Locale;
+};
+
+export function buildAreaListParams(
+  searchParams: Record<string, string | string[] | undefined>,
+  defaults: AreaListParams = {},
+): AreaListParams {
+  const sp = searchParamsToObject(searchParams);
+  return {
+    page: sp.page ? Number(sp.page) : defaults.page,
+    per_page: defaults.per_page ?? 9,
+    keyword: sp.keyword ?? sp.q,
+    locale: defaults.locale,
+  };
+}
+
 export function listingBasePath(
   locale: Locale,
   listingType?: string,

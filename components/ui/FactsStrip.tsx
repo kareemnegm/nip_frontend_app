@@ -53,19 +53,24 @@ export function FactsStrip({
               )}
             >
               {variant === "area" && item.areaFactIcon && isAreaFactIconName(item.areaFactIcon) ? (
-                <AreaFactIcon name={item.areaFactIcon} className="h-9 w-9" />
+                <AreaFactIcon name={item.areaFactIcon} className="h-9 w-9 shrink-0" />
               ) : variant === "property-detail" && isPropertyFactIconName(item.icon) ? (
-                <PropertyFactIcon name={item.icon} className="h-9 w-9" />
+                <PropertyFactIcon name={item.icon} className="h-9 w-9 shrink-0" />
               ) : (
                 <Icon name={item.icon} className="h-9 w-9 shrink-0 text-sapphire-600" />
               )}
               {/* Figma: gap 4px; label 11/14 inactive; value 15/22 brand + text-box trim */}
-              <div className="nip-facts-strip-stack">
+              <div className="nip-facts-strip-stack min-w-0">
                 <p className="nip-facts-strip-stack__label text-label-muted font-medium text-text-inactive">
                   {item.label}
                 </p>
-                {/* No `truncate` here: its overflow-hidden clips descenders once text-box trims the line box */}
-                <p className="nip-facts-strip-stack__value whitespace-nowrap text-body-regular font-semibold tracking-[-0.01em] text-brand">
+                {/* Wraps rather than truncating: values are admin-entered and can
+                    be long ("EMAAR PROPERTIES", "2,200 - 4,500"). `whitespace-nowrap`
+                    used to push them past the cell divider, and `truncate` is no
+                    good either — its overflow-hidden clips descenders once
+                    text-box trims the line box. `break-words` catches a long
+                    unbroken word so it can never overflow. */}
+                <p className="nip-facts-strip-stack__value break-words text-body-regular font-semibold tracking-[-0.01em] text-brand">
                   {item.value}
                 </p>
               </div>
@@ -96,7 +101,9 @@ export function FactsStrip({
             <p className="text-[10px] font-medium uppercase tracking-wide text-ink-tertiary">
               {item.label}
             </p>
-            <p className="truncate text-sm font-bold text-ink">{item.value}</p>
+            {/* Wraps instead of truncating — a long value is better on two
+                lines than silently cut off with an ellipsis. */}
+            <p className="break-words text-sm font-bold text-ink">{item.value}</p>
           </div>
         </div>
       ))}

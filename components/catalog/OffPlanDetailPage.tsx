@@ -9,6 +9,7 @@ import {
 import {
   AvailableUnitsTable,
   MasterplanLocationSection,
+  OffPlanDescriptionSection,
 } from "@/components/sections/OffPlanStorySections";
 import { PaymentPlanSection } from "@/components/sections/PaymentPlanSection";
 import { PropertyGallery } from "@/components/sections/PropertyStorySections";
@@ -185,6 +186,10 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
       <section className="bg-white pb-[72px]">
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
           <div className={cn(sitePageInnerClassName, "space-y-16")}>
+            <OffPlanDescriptionSection
+              title={t("storyTitle")}
+              description={property.description}
+            />
             <PaymentPlanSection title={t("paymentPlanTitle")} plans={paymentPlans} />
             <AvailableUnitsTable
               title={t("availableUnitsTitle")}
