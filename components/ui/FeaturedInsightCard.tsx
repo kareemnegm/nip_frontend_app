@@ -49,10 +49,10 @@ export function FeaturedInsightCard({
         <p className="text-overline font-semibold uppercase text-accent">
           {featuredPrefix} | {category}
         </p>
-        <h2 className="line-clamp-2 w-full max-w-[426px] font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
+        <h2 className="line-clamp-2 w-full max-w-[426px] font-[family-name:var(--font-display)] text-heading-h1 uppercase text-brand">
           {title}
         </h2>
-        <p className="line-clamp-3 w-full max-w-[426px] text-[13px] leading-[18px] text-ink-secondary">
+        <p className="line-clamp-3 w-full max-w-[426px] text-body-sm text-ink-secondary">
           {excerpt}
         </p>
         <p className="text-body-xs text-basalt-300">

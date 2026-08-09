@@ -62,7 +62,7 @@ export async function InsightArticleHero({
       <div className="mx-auto flex max-w-[916px] flex-col items-center gap-[18px] pb-9 pt-14 text-center lg:pt-[56px]">
         <Breadcrumbs
           format="property"
-          className="justify-center text-[12px] leading-4 text-basalt-300"
+          className="justify-center text-body-xs text-basalt-300"
           items={[
             {
               label: tNav("insights"),
@@ -72,19 +72,19 @@ export async function InsightArticleHero({
           ]}
         />
 
-        <p className="text-[12px] font-semibold uppercase leading-4 tracking-normal text-accent">
+        <p className="text-overline font-semibold uppercase text-accent">
           {category}
         </p>
 
-        <h1 className="font-[family-name:var(--font-display)] text-[32px] uppercase leading-[38px] tracking-[-0.88px] text-brand sm:text-[44px] sm:leading-[42px]">
+        <h1 className="font-[family-name:var(--font-display)] text-display-sm uppercase text-brand sm:text-display-lg">
           {title}
         </h1>
 
         {excerpt ? (
-          <p className="max-w-[720px] text-[17px] leading-7 text-ink-secondary">{excerpt}</p>
+          <p className="max-w-[720px] text-body-lg text-ink-secondary">{excerpt}</p>
         ) : null}
 
-        <div className="flex flex-wrap items-center justify-center gap-2.5 text-[13px] leading-[18px]">
+        <div className="flex flex-wrap items-center justify-center gap-2.5 text-body-sm">
           <span className="font-medium text-ink-secondary">{authorLabel}</span>
           {formattedDate ? (
             <>
@@ -184,10 +184,10 @@ export async function InsightArticleAdvisoryCta({ locale }: InsightArticleAdviso
           "flex flex-col items-center gap-6 rounded-[12px] bg-sapphire-100 px-6 py-11 text-center",
         )}
       >
-        <p className="text-[12px] font-semibold uppercase leading-4 text-accent">
+        <p className="text-overline font-semibold uppercase text-accent">
           {t("advisoryEyebrow")}
         </p>
-        <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-1.2px] text-brand">
+        <h2 className="font-[family-name:var(--font-display)] text-heading-h1 uppercase text-brand">
           {t("advisoryTitle")}
         </h2>
         <Button href={localizedHref(locale, "/contact")} variant="primary">

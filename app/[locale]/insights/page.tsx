@@ -88,7 +88,7 @@ export default async function InsightsPage({ params, searchParams }: PageProps) 
       <section className="bg-white pb-20 pt-6">
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
           <div className={cn(sitePageInnerClassName, "flex flex-col gap-7")}>
-            <p className="text-center text-overline font-semibold text-accent">
+            <p className="text-center text-overline font-semibold uppercase text-accent">
               {t("latest")}
             </p>
 

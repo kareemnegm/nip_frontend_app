@@ -266,7 +266,45 @@ textarea {
   font-size: 13px;
   font-weight: 500;
   line-height: 18px;
-  color: var(--color-sapphire-600);
+  color: var(--color-sapphire-600) !important;
+}
+
+.insight-article-body blockquote *,
+.insight-article-body blockquote p,
+.insight-article-body blockquote span {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit !important;
+}
+
+/* CMS may output blockquotes as various elements with inline border styling */
+.insight-article-body [style*="border-left"],
+.insight-article-body [style*="border:"],
+.insight-article-body p[style*="border"],
+.insight-article-body div[style*="border"] {
+  margin-block: 0;
+  padding-block: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 18px;
+  color: var(--color-sapphire-600) !important;
+}
+
+.insight-article-body [style*="border-left"] *,
+.insight-article-body [style*="border-left"] p,
+.insight-article-body [style*="border-left"] span,
+.insight-article-body [style*="border-left"] [style],
+.insight-article-body [style*="border:"] *,
+.insight-article-body [style*="border:"] p,
+.insight-article-body div[style*="border"] *,
+.insight-article-body div[style*="border"] p,
+.insight-article-body div[style*="border"] span,
+.insight-article-body div[style*="border"] [style] {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: var(--color-sapphire-600) !important;
 }
 
 /* Figma: inline image + caption, gap-8 between them */
