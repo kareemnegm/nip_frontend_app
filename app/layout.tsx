@@ -59,10 +59,7 @@ export const metadata: Metadata = {
   description:
     "Novel Insight Property — NIP brings together market insight, editorial perspective, and private advisory for clients who want to move with judgment.",
   icons: {
-    icon: [
-      { url: "/brand/logo-small.png", type: "image/png", sizes: "512x512" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
+    icon: [{ url: "/brand/logo-small.png", type: "image/png", sizes: "512x512" }],
     shortcut: "/brand/logo-small.png",
     apple: "/brand/logo-square-rounded.png",
   },
