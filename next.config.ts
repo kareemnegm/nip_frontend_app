@@ -36,6 +36,18 @@ const nextConfig: NextConfig = {
         destination: "/brand/logo-small.png",
         permanent: true,
       },
+      // Pre-relaunch WordPress URLs that Google still has indexed. Without these
+      // they fall through to the locale redirect and 404 (/about-us -> /en/about-us).
+      { source: "/about-us", destination: "/en/about", permanent: true },
+      { source: "/contact-us", destination: "/en/contact", permanent: true },
+      { source: "/faqs", destination: "/en/faq", permanent: true },
+      { source: "/careers", destination: "/en/about", permanent: true },
+      { source: "/blog", destination: "/en/insights", permanent: true },
+      {
+        source: "/blog/:slug",
+        destination: "/en/insights/:slug",
+        permanent: true,
+      },
     ];
   },
   images: {
