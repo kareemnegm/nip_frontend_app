@@ -127,7 +127,9 @@ export async function localizedMetadata(
   const ogDescription = cms?.og_description?.trim() || resolvedDescription;
 
   const metadata: Metadata = {
-    title: resolvedTitle,
+    // Titles from CMS/i18n already include the brand — do not apply the root
+    // layout template ("%s - Novel Insight Property") or Google shows it twice.
+    title: { absolute: resolvedTitle },
     description: resolvedDescription,
     keywords,
     openGraph: {
