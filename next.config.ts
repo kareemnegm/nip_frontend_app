@@ -28,6 +28,16 @@ function apiImageHosts(): { protocol: "http" | "https"; hostname: string }[] {
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  async redirects() {
+    return [
+      // Browsers request /favicon.ico — send them to the real PNG (never serve PNG bytes at .ico).
+      {
+        source: "/favicon.ico",
+        destination: "/brand/logo-small.png",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: apiImageHosts(),
     // Media is served from NEXT_PUBLIC_API_URL (see lib/api/media-url.ts).
