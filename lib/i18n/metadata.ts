@@ -63,6 +63,43 @@ const DEFAULT_OG_IMAGE = {
   alt: "Novel Insight Property — Dubai real estate advisory",
 } as const;
 
+const SITE_BRAND = "Novel Insight Property";
+
+/** Home SEO: company name first, then page descriptor / body copy. */
+function formatHomeSeoTitle(raw: string): string {
+  const title = raw.trim();
+  if (!title) return `${SITE_BRAND} - Dubai Real Estate Advisory`;
+
+  const brandSuffix = ` - ${SITE_BRAND}`;
+  if (title.endsWith(brandSuffix)) {
+    return `${SITE_BRAND} - ${title.slice(0, -brandSuffix.length).trim()}`;
+  }
+
+  const brandPrefix = `${SITE_BRAND} - `;
+  if (title.startsWith(brandPrefix) || title.startsWith(`${SITE_BRAND} | `)) {
+    return title.replace(`${SITE_BRAND} | `, `${SITE_BRAND} - `);
+  }
+
+  return `${SITE_BRAND} - ${title.replace(/\s*\|\s*/, " - ")}`;
+}
+
+function formatHomeSeoDescription(raw: string): string {
+  const description = raw.trim();
+  if (!description) {
+    return `${SITE_BRAND} — NIP brings together market insight, editorial perspective, and private advisory for clients who want to move with judgment.`;
+  }
+
+  if (
+    description.startsWith(`${SITE_BRAND} —`) ||
+    description.startsWith(`${SITE_BRAND} -`) ||
+    description.startsWith(`${SITE_BRAND} |`)
+  ) {
+    return description;
+  }
+
+  return `${SITE_BRAND} — ${description}`;
+}
+
 function parseKeywords(raw?: string | null): string[] | undefined {
   if (!raw?.trim()) return undefined;
   const keywords = raw
@@ -83,12 +120,15 @@ export async function localizedMetadata(
   const title = cms?.meta_title?.trim() || t("title");
   const description = cms?.meta_description?.trim() || t("description");
   const keywords = parseKeywords(cms?.meta_keywords);
-  const ogTitle = cms?.og_title?.trim() || title;
-  const ogDescription = cms?.og_description?.trim() || description;
+  const resolvedTitle = page === "home" ? formatHomeSeoTitle(title) : title;
+  const resolvedDescription =
+    page === "home" ? formatHomeSeoDescription(description) : description;
+  const ogTitle = cms?.og_title?.trim() || resolvedTitle;
+  const ogDescription = cms?.og_description?.trim() || resolvedDescription;
 
   const metadata: Metadata = {
-    title,
-    description,
+    title: resolvedTitle,
+    description: resolvedDescription,
     keywords,
     openGraph: {
       title: ogTitle,

@@ -53,14 +53,18 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://niprealty.com",
   ),
   title: {
-    default: "Dubai Real Estate Advisory - Novel Insight Property",
+    default: "Novel Insight Property - Dubai Real Estate Advisory",
     template: "%s - Novel Insight Property",
   },
   description:
-    "Prudent, knowledge-first global real estate advisory for elevated living in Dubai.",
+    "Novel Insight Property — NIP brings together market insight, editorial perspective, and private advisory for clients who want to move with judgment.",
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
-    shortcut: "/favicon.svg",
+    icon: [
+      { url: "/brand/logo-small.png", type: "image/png", sizes: "512x512" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/brand/logo-small.png",
+    apple: "/brand/logo-square-rounded.png",
   },
   // Google Search Console — renders <meta name="google-site-verification" …>.
   // Must stay in place for as long as the property is verified.
