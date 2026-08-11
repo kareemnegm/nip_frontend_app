@@ -43,6 +43,7 @@ import {
   type PaymentPlanLabels,
 } from "@/lib/off-plan/detail";
 import { resaleFactsFromApi, type ResaleDetailLabels } from "@/lib/resale/detail";
+import { getSiteUrl } from "@/lib/site-url";
 import type { PropertyGalleryImage } from "@/types/api/property";
 
 type ResaleDetailPageProps = {
@@ -106,7 +107,7 @@ export async function ResaleDetailPage({ locale, slug }: ResaleDetailPageProps) 
 
   const locationImageUrl = resolveMediaUrl(property.location_image_url);
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const pageUrl = `${siteUrl}${localizedHref(locale, `/resale/${slug}`)}`;
   const areaLabel = property.area?.name ?? property.location ?? property.title;
 

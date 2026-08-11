@@ -8,6 +8,7 @@ import {
   GoogleTagManagerNoScript,
 } from "@/components/analytics/GoogleTagManager";
 import { defaultLocale, getDirection, isLocale, LOCALE_COOKIE } from "@/lib/i18n/config";
+import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -49,9 +50,7 @@ const almarai = Almarai({
 export const metadata: Metadata = {
   // Relative og:image paths are resolved against this — a wrong host here makes
   // every social preview image unfetchable. The live domain is niprealty.com.
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://niprealty.com",
-  ),
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "Novel Insight Property - Dubai Real Estate Advisory",
     template: "%s - Novel Insight Property",

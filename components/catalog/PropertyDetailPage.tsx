@@ -38,6 +38,7 @@ import {
   mapPropertyToOffPlanCard,
 } from "@/lib/mappers/property";
 import { propertyFactsFromApi } from "@/lib/mappers/property-facts";
+import { getSiteUrl } from "@/lib/site-url";
 import type { ApiProperty, PropertyGalleryImage } from "@/types/api/property";
 
 type PropertyDetailPageProps = {
@@ -89,7 +90,7 @@ export async function PropertyDetailPage({
     return fallback ? [{ url: fallback }] : [];
   })();
   const locationImageUrl = resolveMediaUrl(property.location_image_url);
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const pageUrl = `${siteUrl}${localizedHref(locale, `/${detailBase}/${slug}`)}`;
 
   const memberToken = await getMemberToken();

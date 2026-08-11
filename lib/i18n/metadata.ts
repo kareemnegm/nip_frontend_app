@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getPageSeo } from "@/lib/api/page-seo";
 import { metaPageToPath } from "@/lib/navigation/page-seo-defaults";
-import type { Locale } from "./config";
+import { locales, type Locale } from "./config";
 
 export type MetaPage =
   | "home"
@@ -100,6 +100,14 @@ function formatHomeSeoDescription(raw: string): string {
   return `${SITE_BRAND} — ${description}`;
 }
 
+/**
+ * Pages live under /<locale>, so a bare path (`/insights`) points at a URL that
+ * only redirects. Social scrapers and canonical tags need the real one.
+ */
+function localizedPath(locale: Locale, path: string): string {
+  return path === "/" ? `/${locale}` : `/${locale}${path}`;
+}
+
 function parseKeywords(raw?: string | null): string[] | undefined {
   if (!raw?.trim()) return undefined;
   const keywords = raw
@@ -126,19 +134,27 @@ export async function localizedMetadata(
   const ogTitle = cms?.og_title?.trim() || resolvedTitle;
   const ogDescription = cms?.og_description?.trim() || resolvedDescription;
 
+  const canonicalPath = localizedPath(locale, path);
+
   const metadata: Metadata = {
     // Titles from CMS/i18n already include the brand — do not apply the root
     // layout template ("%s - Novel Insight Property") or Google shows it twice.
     title: { absolute: resolvedTitle },
     description: resolvedDescription,
     keywords,
+    alternates: {
+      canonical: canonicalPath,
+      languages: Object.fromEntries(
+        locales.map((code) => [code, localizedPath(code, path)]),
+      ),
+    },
     openGraph: {
       title: ogTitle,
       description: ogDescription,
       type: "website",
       siteName: "Novel Insight Property",
       locale: locale === "ar" ? "ar_AE" : "en_AE",
-      url: path,
+      url: canonicalPath,
       images: [{ ...DEFAULT_OG_IMAGE, alt: ogTitle }],
     },
     twitter: {

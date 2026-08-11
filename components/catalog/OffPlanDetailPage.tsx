@@ -32,6 +32,7 @@ import { cn } from "@/lib/cn";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
+import { getSiteUrl } from "@/lib/site-url";
 import {
   formatAedPrice,
   isOffPlanProperty,
@@ -103,7 +104,7 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
   // must not stand in for the plan.
   const masterPlanImageUrl = resolveMediaUrl(property.master_plan_image_url);
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const pageUrl = `${siteUrl}${localizedHref(locale, `/off-plan/${slug}`)}`;
   const areaLabel = property.area?.name ?? property.location ?? property.title;
   const handoverBadge = property.handover_quarter
