@@ -14,7 +14,7 @@ import {
 import { getBlogs } from "@/lib/api/blogs";
 import { getHome } from "@/lib/api/home";
 import { mapBlogToInsightCard } from "@/lib/mappers/blog";
-import { mapPropertyToCard } from "@/lib/mappers/property";
+import { isOffPlanProperty, mapPropertyToCard } from "@/lib/mappers/property";
 import { resolveLocale } from "@/lib/i18n/helpers";
 
 type HomePageProps = {
@@ -35,9 +35,12 @@ export default async function HomePage({ params }: HomePageProps) {
     getBlogs({ per_page: 5, locale }),
   ]);
 
-  const featuredProperties = home.featured_properties.map((property) =>
-    mapPropertyToCard(property, locale),
-  );
+  // Off-plan projects are sold as unit ranges, so the backend sends 0 bedrooms
+  // and 0 bathrooms — they render as "0 Beds · 0 Baths" in a property card.
+  // The home selections show ready listings only; off-plan has its own pages.
+  const featuredProperties = home.featured_properties
+    .filter((property) => !isOffPlanProperty(property))
+    .map((property) => mapPropertyToCard(property, locale));
   const insightCards = blogs.data.map((blog) => mapBlogToInsightCard(blog, locale));
 
   return (

@@ -33,7 +33,7 @@ export function OffPlanDescriptionSection({
       <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
         {title}
       </h2>
-      <p className="max-w-[672px] whitespace-pre-line text-body-sm text-ink">{text}</p>
+      <p className="whitespace-pre-line text-body-sm text-ink">{text}</p>
     </section>
   );
 }

@@ -9,6 +9,7 @@ import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { getRequestLocale } from "@/lib/i18n/server";
+import { HomeHeroVideo } from "./HomeHeroVideo";
 import { HOME_REL_URL } from "./home-editable";
 
 const heroBlocks = pageBlockKeys.home.hero;
@@ -38,6 +39,7 @@ export async function HomeHeroSection() {
           className="absolute inset-0"
           imageClassName="object-cover object-center"
         />
+        <HomeHeroVideo />
       </div>
 
       {/* Figma 1525:28266 — display:flex; flex-direction:column; align-items:flex-start; gap:36px; padding:200px 180px */}

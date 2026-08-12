@@ -188,7 +188,7 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
           <div className={cn(sitePageInnerClassName, "space-y-16")}>
             <OffPlanDescriptionSection
-              title={t("storyTitle")}
+              title={t("overviewTitle")}
               description={property.description}
             />
             <PaymentPlanSection title={t("paymentPlanTitle")} plans={paymentPlans} />
