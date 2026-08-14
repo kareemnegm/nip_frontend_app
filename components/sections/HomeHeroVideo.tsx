@@ -1,59 +1,34 @@
-"use client";
-
-import { useState, useSyncExternalStore } from "react";
-import { cn } from "@/lib/cn";
-
-const DESKTOP_SRC = "/video/home-hero.mp4";
-const MOBILE_SRC = "/video/home-hero-mobile.mp4";
-
-const noopSubscribe = () => () => {};
-
-/** False during SSR and hydration, true afterwards — no hydration mismatch. */
-function useIsHydrated(): boolean {
-  return useSyncExternalStore(
-    noopSubscribe,
-    () => true,
-    () => false,
-  );
-}
+const DESKTOP_SRC = "/video/night-hero.mp4";
+const MOBILE_SRC = "/video/night-hero-mobile.mp4";
+const POSTER_SRC = "/video/night-hero-poster.jpg";
 
 /**
- * Hero background video layered over the still hero image.
+ * Hero background video (Figma 1525:28266).
  *
- * The source is picked in the browser rather than with <source media> —
- * browsers evaluate those inconsistently and can fetch both files, doubling the
- * cost of the heaviest asset on the page. Rendering nothing until hydration
- * also keeps the video off the critical path, so the still image paints first,
- * and it never downloads at all for reduced-motion or no-JS visitors.
+ * Rendered server-side rather than mounted after hydration so the browser
+ * starts fetching it with the document and playback begins on first paint —
+ * the files are encoded with faststart, so playing does not wait for the full
+ * download. The poster is the video's own first frame, which means there is no
+ * visible swap between the still and the moving footage.
+ *
+ * The <source media> pair keeps phones on the lighter encode. Browsers that
+ * ignore `media` fall back to the first source, which still plays correctly.
  */
 export function HomeHeroVideo() {
-  const hydrated = useIsHydrated();
-  const [visible, setVisible] = useState(false);
-
-  if (!hydrated) return null;
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
-
-  const src = window.matchMedia("(min-width: 768px)").matches
-    ? DESKTOP_SRC
-    : MOBILE_SRC;
-
   return (
     <video
-      src={src}
       autoPlay
       muted
       loop
       playsInline
       preload="auto"
+      poster={POSTER_SRC}
       aria-hidden="true"
       tabIndex={-1}
-      onCanPlay={() => setVisible(true)}
-      // Fades in over the still image so a slow connection shows the photo
-      // rather than an empty sapphire block.
-      className={cn(
-        "absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-700 ease-out",
-        visible ? "opacity-100" : "opacity-0",
-      )}
-    />
+      className="absolute inset-0 h-full w-full object-cover object-center motion-reduce:hidden"
+    >
+      <source src={DESKTOP_SRC} media="(min-width: 768px)" type="video/mp4" />
+      <source src={MOBILE_SRC} type="video/mp4" />
+    </video>
   );
 }

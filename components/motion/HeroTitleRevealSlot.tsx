@@ -2,8 +2,17 @@
 
 import { useEffect, useRef } from "react";
 
-function splitWords(text: string) {
-  return text.trim().split(/\s+/).filter(Boolean);
+/**
+ * Words grouped per authored line. Splitting the whole title on `\s+` would
+ * swallow the newlines the copy uses to control where the headline breaks
+ * (Figma 1525:28268 breaks after "For Those Who"), leaving the browser to
+ * re-wrap it wherever the container happens to end.
+ */
+function splitLines(text: string) {
+  return text
+    .split(/\r?\n/)
+    .map((line) => line.trim().split(/\s+/).filter(Boolean))
+    .filter((words) => words.length > 0);
 }
 
 function applyWordReveal(heading: HTMLHeadingElement) {
@@ -11,9 +20,8 @@ function applyWordReveal(heading: HTMLHeadingElement) {
     return;
   }
 
-  const text = heading.textContent ?? "";
-  const words = splitWords(text);
-  if (words.length === 0) {
+  const lines = splitLines(heading.textContent ?? "");
+  if (lines.length === 0) {
     return;
   }
 
@@ -21,16 +29,22 @@ function applyWordReveal(heading: HTMLHeadingElement) {
   heading.dataset.heroTitle = "";
   heading.textContent = "";
 
-  words.forEach((word, index) => {
-    const wordWrap = document.createElement("span");
-    wordWrap.className = "hero-word";
-    const inner = document.createElement("span");
-    inner.textContent = word;
-    wordWrap.appendChild(inner);
-    heading.appendChild(wordWrap);
-    if (index < words.length - 1) {
-      heading.appendChild(document.createTextNode(" "));
+  lines.forEach((words, lineIndex) => {
+    if (lineIndex > 0) {
+      heading.appendChild(document.createElement("br"));
     }
+
+    words.forEach((word, index) => {
+      const wordWrap = document.createElement("span");
+      wordWrap.className = "hero-word";
+      const inner = document.createElement("span");
+      inner.textContent = word;
+      wordWrap.appendChild(inner);
+      heading.appendChild(wordWrap);
+      if (index < words.length - 1) {
+        heading.appendChild(document.createTextNode(" "));
+      }
+    });
   });
 }
 

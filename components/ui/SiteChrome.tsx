@@ -6,11 +6,11 @@ export const siteMaxWidth = "max-w-[1440px]";
 /** Horizontal padding — Figma px-[80px] on header, footer, and most sections. */
 export const siteGutterX = "px-5 sm:px-8 lg:px-20";
 
-/** Home hero frame — Figma 1525:28266: flex col, items-start, gap 36px, padding 200px 180px */
+/** Home hero frame — Figma 1525:28266: flex col, items-start, gap 36px, padding 120px 180px 260px */
 export const siteHeroLayoutClassName = cn(
   "relative mx-auto flex w-full max-w-[1440px] flex-col items-start gap-9 self-stretch",
-  "px-5 py-16 sm:px-8 sm:py-24",
-  "lg:px-[180px] lg:py-[200px]",
+  "px-5 pb-24 pt-16 sm:px-8 sm:pb-32 sm:pt-20",
+  "lg:px-[180px] lg:pb-[260px] lg:pt-[120px]",
 );
 
 /** Home hero copy inset — Figma hero text at x=180 inside the 1440 frame. */

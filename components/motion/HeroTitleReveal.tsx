@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { cn } from "@/lib/cn";
 
 export type HeroTitleRevealProps = {
@@ -9,8 +9,12 @@ export type HeroTitleRevealProps = {
   as?: "h1" | "h2" | "h3";
 };
 
-function splitWords(text: string) {
-  return text.trim().split(/\s+/).filter(Boolean);
+/** Words grouped per authored line, so newlines in the copy still break the title. */
+function splitLines(text: string) {
+  return text
+    .split(/\r?\n/)
+    .map((line) => line.trim().split(/\s+/).filter(Boolean))
+    .filter((words) => words.length > 0);
 }
 
 export function HeroTitleReveal({
@@ -19,7 +23,7 @@ export function HeroTitleReveal({
   as: Tag = "h1",
 }: HeroTitleRevealProps) {
   const ref = useRef<HTMLHeadingElement>(null);
-  const words = splitWords(children);
+  const lines = splitLines(children);
 
   useEffect(() => {
     const el = ref.current;
@@ -46,10 +50,15 @@ export function HeroTitleReveal({
 
   return (
     <Tag ref={ref} data-hero-title className={cn(className)}>
-      {words.map((word, index) => (
-        <span key={`${word}-${index}`} className="hero-word">
-          <span>{word}</span>
-        </span>
+      {lines.map((words, lineIndex) => (
+        <Fragment key={`line-${lineIndex}`}>
+          {lineIndex > 0 ? <br /> : null}
+          {words.map((word, index) => (
+            <span key={`${word}-${index}`} className="hero-word">
+              <span>{word}</span>
+            </span>
+          ))}
+        </Fragment>
       ))}
     </Tag>
   );

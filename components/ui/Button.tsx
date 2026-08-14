@@ -30,6 +30,7 @@ export type ButtonVariant =
   | "muted"
   | "outline"
   | "outlineInverse"
+  | "white"
   | "link";
 
 export type ButtonSize = "sm" | "md" | "lg";
@@ -60,6 +61,8 @@ const variantClasses: Record<ButtonVariant, string> = {
     "border border-brand bg-transparent text-brand hover:bg-sapphire-50 active:bg-sapphire-100",
   outlineInverse:
     "border border-white bg-transparent text-white hover:bg-white/10 active:bg-white/20",
+  /** Solid white on dark imagery — Figma "Button / Secondary" (1381:11540). */
+  white: "bg-white text-brand hover:bg-sapphire-50 active:bg-sapphire-100",
   link: "bg-transparent px-0 text-brand hover:text-brand-hover active:text-brand-pressed",
 };
 

@@ -3,7 +3,6 @@ import { EditableImage } from "@/components/EditableImage";
 import { EditableText } from "@/components/EditableText";
 import { HeroTitleRevealSlot } from "@/components/motion";
 import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
 import { siteHeroLayoutClassName } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
@@ -26,7 +25,9 @@ export async function HomeHeroSection() {
     >
       {/* Figma: background 50% / cover no-repeat.
           Oversize the parallax layer (±40px) so MotionRoot's translate
-          never reveals the sapphire fallback as a strip under the header. */}
+          never reveals the sapphire fallback as a strip under the header.
+          The still sits under the video as the fallback for browsers that
+          refuse autoplay, so it is no longer the priority image. */}
       <div data-parallax className="absolute -inset-10 bg-sapphire-800">
         <EditableImage
           relUrl={HOME_REL_URL}
@@ -35,23 +36,23 @@ export async function HomeHeroSection() {
           placeholderUrl="/images/hero-bg.jpg"
           placeholderAlt="Dubai aerial view"
           fill
-          priority
           className="absolute inset-0"
           imageClassName="object-cover object-center"
         />
         <HomeHeroVideo />
       </div>
 
-      {/* Figma 1525:28266 — display:flex; flex-direction:column; align-items:flex-start; gap:36px; padding:200px 180px */}
+      {/* Figma 1525:28266 — display:flex; flex-direction:column; align-items:flex-start; gap:36px; padding:120px 180px 260px */}
       <div className={siteHeroLayoutClassName}>
         <div data-hero-eyebrow>
+          {/* Figma 1525:28267 — "04 Label/Small" Archivo Medium 11/14, sapphire-200 */}
           <EditableText
             relUrl={HOME_REL_URL}
             blockKey={heroBlocks.eyebrow}
             locale={locale}
             placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "eyebrow", locale)}
             placeholderTag="p"
-            className="text-overline font-semibold uppercase text-sapphire-200"
+            className="text-label-muted font-medium uppercase text-sapphire-200"
           />
         </div>
 
@@ -63,40 +64,51 @@ export async function HomeHeroSection() {
             placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "title", locale)}
             placeholderTag="h1"
             className={cn(
+              // Figma 1525:28268 — "01 Display/Large" Didot 44/42, -0.02em, uppercase
               "whitespace-pre-line font-display font-normal uppercase text-white",
-              "max-w-[620px]",
-              "text-display-sm",
-              "sm:text-display-hero-sm sm:leading-[4rem]",
-              "lg:text-display-hero lg:leading-[4.5rem] lg:tracking-[-0.04em]",
+              // Figma reports the two-line box as 74px, not the 84px two 42px
+              // lines produce, because it trims the half-leading down to the cap
+              // height. Without this the whole hero runs 10px tall. Browsers
+              // without text-box support simply keep the untrimmed box.
+              "[text-box:trim-both_cap_alphabetic]",
+              // Figma breaks after "For Those Who" and its text box is 387px wide.
+              // The break survives three ways because the copy is CMS-editable and
+              // the display face differs per platform (real Didot on macOS, Bodoni
+              // Moda elsewhere): the newline in the default copy, a cap narrow
+              // enough that "FOR THOSE WHO EXPECT" cannot fit on one line, and
+              // balancing so any other wording still splits into even lines.
+              "max-w-[480px] text-balance",
+              "text-display-sm sm:text-display-lg",
             )}
           />
         </HeroTitleRevealSlot>
 
         <div data-hero-sub>
+          {/* Figma 1525:28269 — "03 Body/X-Small" Archivo 12/16, white, 410px column */}
           <EditableText
             relUrl={HOME_REL_URL}
             blockKey={heroBlocks.body}
             locale={locale}
             placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "body", locale)}
             placeholderTag="p"
-            className="max-w-[452px] text-body-sm font-normal text-white"
+            className="max-w-[410px] text-body-xs font-normal text-white"
           />
         </div>
 
-        <div className="flex w-full max-w-[452px] flex-row items-stretch gap-2 sm:gap-3">
+        {/* Figma 1525:28270 "Hero CTA Row" — 406px wide, 12px gap, equal-width buttons */}
+        <div className="flex w-full max-w-[406px] flex-row items-stretch gap-2 sm:gap-3">
           <Button
             href="/insights"
             variant="accent"
             size="lg"
-            className="min-w-0 flex-1 basis-0 justify-center gap-1"
+            className="min-w-0 flex-1 basis-0 justify-center sm:px-4"
           >
-            {t("readInsights")}{" "}
-            <Icon name="arrowRight" className="h-4 w-4 shrink-0 rtl:rotate-180" />
+            {t("readInsights")}
           </Button>
           <Button
             href="/contact"
-            variant="outlineInverse"
-            size="lg"
+            variant="white"
+            size="md"
             className="min-w-0 flex-1 basis-0 justify-center gap-[3px]"
           >
             <span className="font-semibold">{tc("speakWith")}</span>
