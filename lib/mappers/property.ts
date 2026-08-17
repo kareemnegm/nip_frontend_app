@@ -1,4 +1,5 @@
 import type { Locale } from "@/lib/i18n/config";
+import { offPlanCardLocationLine } from "@/lib/off-plan/detail";
 import { localizedHref } from "@/lib/i18n/helpers";
 import { resolveMediaUrl } from "@/lib/api/media-url";
 import type { ApiProperty } from "@/types/api";
@@ -118,5 +119,9 @@ export function mapPropertyToOffPlanCard(
   property: ApiProperty,
   locale: Locale,
 ): PropertyCardModel {
-  return mapPropertyToCard(property, locale);
+  const card = mapPropertyToCard(property, locale);
+  return {
+    ...card,
+    location: offPlanCardLocationLine(property),
+  };
 }

@@ -522,6 +522,16 @@ export function offPlanLocationLine(property: ApiProperty): string {
   return location;
 }
 
+/** Off-plan listing card — Figma 1525:28104: `{area} | {developer}`. */
+export function offPlanCardLocationLine(property: ApiProperty): string {
+  const place = property.area?.name ?? property.location ?? "Dubai";
+  const developer = property.developers?.[0]?.name;
+  if (developer) {
+    return `${place} | ${developer}`;
+  }
+  return place;
+}
+
 export function offPlanFactsFromApi(
   property: ApiProperty,
   labels: OffPlanDetailLabels,
