@@ -14,6 +14,13 @@ export type ApiBlog = {
   body?: string | null;
   featured_image?: string | null;
   featured_image_url?: string | null;
+  /**
+   * Mid-article image — a separate upload, never embedded in `body`.
+   * Rendered in the slot Figma reserves for it (1525:27600).
+   */
+  content_image?: string | null;
+  content_image_url?: string | null;
+  content_image_caption?: string | null;
   /** Backend list/detail field (preferred). */
   author?: string | null;
   author_name?: string | null;
@@ -23,6 +30,8 @@ export type ApiBlog = {
   /** API returns minutes as a number; legacy string values supported. */
   read_time?: string | number | null;
   views?: number;
+  /** Detail endpoint's publication date; `created_at` is the legacy fallback. */
+  published_date?: string | null;
   created_at?: string;
 };
 

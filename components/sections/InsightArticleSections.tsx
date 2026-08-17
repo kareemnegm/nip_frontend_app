@@ -11,7 +11,10 @@ import {
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
-import { prepareInsightArticleHtml } from "@/lib/sanitize/insight-article-html";
+import {
+  prepareInsightArticleHtml,
+  splitInsightArticleHtml,
+} from "@/lib/sanitize/insight-article-html";
 
 export type InsightArticleHeroProps = {
   locale: Locale;
@@ -142,25 +145,65 @@ export function InsightArticleFeaturedImage({ src, alt }: InsightArticleFeatured
 
 export type InsightArticleBodyProps = {
   html: string;
+  /** Standalone mid-article upload — not parsed out of `html`. */
+  contentImageSrc?: string | null;
+  contentImageCaption?: string | null;
+  contentImageAlt: string;
 };
 
-export function InsightArticleBody({ html }: InsightArticleBodyProps) {
+export function InsightArticleBody({
+  html,
+  contentImageSrc,
+  contentImageCaption,
+  contentImageAlt,
+}: InsightArticleBodyProps) {
   const prepared = prepareInsightArticleHtml(html);
-  if (!prepared) return null;
+  if (!prepared && !contentImageSrc) return null;
+
+  const [beforeImage, afterImage] = contentImageSrc
+    ? splitInsightArticleHtml(prepared)
+    : [prepared, ""];
+  const caption = contentImageCaption?.trim();
 
   return (
     <section
       data-no-reveal
       className={cn("mx-auto w-full bg-white pb-16", siteMaxWidth, sitePageGutterX)}
     >
-      {/* dangerouslySetInnerHTML directly on .insight-article-body so CMS blocks
-          are its direct children and the flex-col gap-24 applies to each of them.
+      {/* .insight-article-body lays its direct children out with a 24px gap, and
+          gives the same treatment to a <div> child so each half of the split CMS
+          markup keeps that rhythm internally. The <figure> deliberately stays a
+          figure so it opts out of that rule and keeps Figma's tighter 8px gap
+          between image and caption.
           data-no-reveal: never hide this behind scroll-reveal — iOS Safari can
           leave opacity:0 sections blank forever. */}
-      <div
-        className="insight-article-body mx-auto max-w-[720px]"
-        dangerouslySetInnerHTML={{ __html: prepared }}
-      />
+      <div className="insight-article-body mx-auto max-w-[720px]">
+        {beforeImage ? (
+          <div dangerouslySetInnerHTML={{ __html: beforeImage }} />
+        ) : null}
+
+        {contentImageSrc ? (
+          /* Figma 1525:27600 — 720x380 cover, 8px radius, 8px gap, caption 12/16 */
+          <figure className="flex flex-col gap-2">
+            <div className="relative h-[280px] w-full overflow-hidden rounded-[var(--radius-card)] bg-basalt-100 sm:h-[380px]">
+              <Image
+                src={contentImageSrc}
+                alt={caption ? "" : contentImageAlt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 720px"
+              />
+            </div>
+            {caption ? (
+              <figcaption className="text-body-xs text-basalt-300">{caption}</figcaption>
+            ) : null}
+          </figure>
+        ) : null}
+
+        {afterImage ? (
+          <div dangerouslySetInnerHTML={{ __html: afterImage }} />
+        ) : null}
+      </div>
     </section>
   );
 }

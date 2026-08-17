@@ -26,6 +26,7 @@ export type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement> & {
   label?: string;
   labelClassName?: string;
   options: Array<{ label: string; value: string }>;
+  error?: string;
 };
 
 export type CheckboxProps = React.InputHTMLAttributes<HTMLInputElement> & {
@@ -69,7 +70,7 @@ export function Textarea({ label, labelClassName, className, error, ...props }: 
   );
 }
 
-export function Select({ label, labelClassName, options, className, value, defaultValue, onChange, ...props }: SelectProps) {
+export function Select({ label, labelClassName, options, className, value, defaultValue, onChange, error, ...props }: SelectProps) {
   // Placeholder options (empty value) render in the same muted color as other
   // fields' placeholder text — the browser default paints select text black
   // regardless of whether a real value was picked, so we track it ourselves.
@@ -92,6 +93,7 @@ export function Select({ label, labelClassName, options, className, value, defau
           fieldClasses,
           "appearance-auto",
           isPlaceholder && "text-text-inactive",
+          error && "border-error",
           className,
         )}
         onChange={(event) => {
@@ -109,6 +111,7 @@ export function Select({ label, labelClassName, options, className, value, defau
           </option>
         ))}
       </select>
+      {error ? <span className="text-body-xs font-normal text-error">{error}</span> : null}
     </FieldShell>
   );
 }

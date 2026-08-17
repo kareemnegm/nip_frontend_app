@@ -34,6 +34,27 @@ export type NewsletterPayload = {
   email: string;
 };
 
+/**
+ * `POST /insight-submissions` — sent as multipart/form-data because of the
+ * optional draft file, so these are the FormData keys rather than a JSON body.
+ */
+export type InsightSubmissionResponse = {
+  message?: string;
+  /** `null` when the honeypot was tripped — nothing was stored. */
+  data?: {
+    id: number;
+    reference: string;
+    status: string;
+    title: string;
+    author: string;
+    email: string;
+    abstract: string;
+    draft_filename: string | null;
+    created_at: string;
+    category?: import("./blog").ApiBlogCategory | null;
+  } | null;
+};
+
 export type SupportInquiryPayload = {
   name: string;
   email: string;

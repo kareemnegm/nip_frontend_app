@@ -2,6 +2,7 @@ import type { Locale } from "@/lib/i18n/config";
 import type {
   ConsultationPayload,
   ContactInquiryPayload,
+  InsightSubmissionResponse,
   NewsletterPayload,
   PropertyInquiryPayload,
   SupportInquiryPayload,
@@ -57,6 +58,19 @@ export async function submitSupportInquiry(
   options: FormSubmitOptions = {},
 ) {
   return apiPost<{ message?: string }>("/support-inquiries", payload, {
+    revalidate: false,
+    locale: options.locale,
+  });
+}
+
+/** "Contribute an Insight" pitch — always multipart, draft file optional. */
+export async function submitInsightSubmission(
+  formData: FormData,
+  options: FormSubmitOptions = {},
+) {
+  return apiRequest<InsightSubmissionResponse>("/insight-submissions", {
+    method: "POST",
+    body: formData,
     revalidate: false,
     locale: options.locale,
   });

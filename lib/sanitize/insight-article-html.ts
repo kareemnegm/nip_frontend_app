@@ -113,3 +113,23 @@ export function prepareInsightArticleHtml(raw: string): string {
 
   return html.trim();
 }
+
+/**
+ * Split prepared article HTML at the point Figma reserves for the standalone
+ * content image (1525:27600): after the first paragraph that follows the first
+ * blockquote. Falls back to immediately after the blockquote when nothing
+ * follows it, and to the end of the article when there is no blockquote at all,
+ * so an uploaded image is never silently dropped.
+ */
+export function splitInsightArticleHtml(html: string): [string, string] {
+  const quoteEnd = /<\/blockquote\s*>/i.exec(html);
+  if (!quoteEnd) return [html, ""];
+
+  const afterQuote = quoteEnd.index + quoteEnd[0].length;
+  const paragraphEnd = /<\/p\s*>/i.exec(html.slice(afterQuote));
+  const cut = paragraphEnd
+    ? afterQuote + paragraphEnd.index + paragraphEnd[0].length
+    : afterQuote;
+
+  return [html.slice(0, cut), html.slice(cut)];
+}

@@ -60,14 +60,15 @@ export function resolveMediaUrl(
 /** Alias for docs / parity with backend handoff examples. */
 export const mediaUrl = resolveMediaUrl;
 
-/** Build a public URL for blog featured/author images when the API omits `*_url`. */
-export function resolveBlogFeaturedImage(
-  blog: { featured_image_url?: string | null; featured_image?: string | null },
+/** Build a public URL for a blog image when the API omits its `*_url` companion. */
+function resolveBlogImage(
+  urlField: string | null | undefined,
+  rawField: string | null | undefined,
 ): string | undefined {
-  const fromApi = resolveMediaUrl(blog.featured_image_url);
+  const fromApi = resolveMediaUrl(urlField);
   if (fromApi) return fromApi;
 
-  const raw = blog.featured_image?.trim();
+  const raw = rawField?.trim();
   if (!raw) return undefined;
 
   if (raw.startsWith("http://") || raw.startsWith("https://") || raw.startsWith("/")) {
@@ -80,4 +81,17 @@ export function resolveBlogFeaturedImage(
 
   const relative = raw.includes("/") ? raw : `blogs/${raw}`;
   return resolveMediaUrl(`/storage/${relative}`);
+}
+
+export function resolveBlogFeaturedImage(
+  blog: { featured_image_url?: string | null; featured_image?: string | null },
+): string | undefined {
+  return resolveBlogImage(blog.featured_image_url, blog.featured_image);
+}
+
+/** Mid-article image — its own upload, never scraped out of the body HTML. */
+export function resolveBlogContentImage(
+  blog: { content_image_url?: string | null; content_image?: string | null },
+): string | undefined {
+  return resolveBlogImage(blog.content_image_url, blog.content_image);
 }

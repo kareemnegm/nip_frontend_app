@@ -10,7 +10,7 @@ import {
   RelatedInsightsSection,
 } from "@/components/sections/InsightArticleSections";
 import { getBlogBySlug, getBlogs } from "@/lib/api/blogs";
-import { resolveBlogFeaturedImage } from "@/lib/api/media-url";
+import { resolveBlogContentImage, resolveBlogFeaturedImage } from "@/lib/api/media-url";
 import { resolveLocale } from "@/lib/i18n/helpers";
 import {
   formatBlogReadTime,
@@ -78,6 +78,7 @@ export default async function InsightArticlePage({ params }: PageProps) {
 
   const body = blog.body ?? blog.source_code ?? blog.content ?? "";
   const featuredImage = resolveBlogFeaturedImage(blog);
+  const contentImage = resolveBlogContentImage(blog);
   const t = await getTranslations({ locale, namespace: "pages.insights" });
 
   return (
@@ -91,7 +92,7 @@ export default async function InsightArticlePage({ params }: PageProps) {
           title={blog.title}
           excerpt={resolveBlogLeadParagraph(blog)}
           author={resolveBlogAuthor(blog)}
-          publishedAt={blog.created_at}
+          publishedAt={blog.published_date ?? blog.created_at}
           readTime={formatBlogReadTime(blog.read_time)}
         />
 
@@ -100,7 +101,12 @@ export default async function InsightArticlePage({ params }: PageProps) {
           alt={blog.title}
         />
 
-        <InsightArticleBody html={body} />
+        <InsightArticleBody
+          html={body}
+          contentImageSrc={contentImage}
+          contentImageCaption={blog.content_image_caption}
+          contentImageAlt={blog.title}
+        />
         <InsightArticleAdvisoryCta locale={locale} />
       </div>
 

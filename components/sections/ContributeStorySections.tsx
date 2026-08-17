@@ -1,5 +1,6 @@
 import { EditableText } from "@/components/EditableText";
 import { ContributeInsightForm } from "@/components/ui/LeadForms";
+import { getContributorCategories } from "@/lib/api/blogs";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
@@ -68,6 +69,9 @@ export async function ContributeHeroSection() {
 
 export async function ContributeFormSection() {
   const locale = await getRequestLocale();
+  // Read the dropdown from the live category list so a slug renamed in the CMS
+  // can never leave the form posting a category the API will reject.
+  const categories = await getContributorCategories(locale);
 
   return (
     <section className="bg-white pt-10 pb-20">
@@ -105,7 +109,12 @@ export async function ContributeFormSection() {
               ))}
             </ul>
           </div>
-          <ContributeInsightForm />
+          <ContributeInsightForm
+            categories={categories.map((category) => ({
+              label: category.name,
+              value: category.slug,
+            }))}
+          />
         </div>
       </div>
     </section>

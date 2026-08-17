@@ -23,6 +23,29 @@ export async function getBlogCategories(locale: Locale = defaultLocale) {
   }
 }
 
+/**
+ * Categories a contributor may pitch into on `/contribute`, in the order the
+ * dropdown should list them. `/blog-categories` also returns legacy slugs left
+ * over from the old-site import (`market-insights`, `investment-guide`,
+ * `lifestyle`, `news`, `tips`) which are not editorial destinations for new
+ * submissions — note `investment-guide` singular is an older, different
+ * category to the plural one below.
+ */
+const CONTRIBUTOR_CATEGORY_SLUGS = [
+  "market-intelligence",
+  "investment-guides",
+  "community-guides",
+];
+
+export async function getContributorCategories(locale: Locale = defaultLocale) {
+  const categories = await getBlogCategories(locale);
+  const bySlug = new Map(categories.map((category) => [category.slug, category]));
+
+  return CONTRIBUTOR_CATEGORY_SLUGS.map((slug) => bySlug.get(slug)).filter(
+    (category): category is ApiBlogCategory => Boolean(category),
+  );
+}
+
 export async function getBlogs(params: BlogListParams = {}) {
   const { locale = defaultLocale, ...query } = params;
   try {
