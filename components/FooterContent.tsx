@@ -5,8 +5,11 @@ import {
   type NewsletterFormLabels,
 } from "@/components/forms/InquiryForms";
 import { getBlogCategories } from "@/lib/api/blogs";
+import { getNavigation } from "@/lib/api/navigation";
 import { cn } from "@/lib/cn";
 import { getRequestLocale } from "@/lib/i18n/server";
+import { extraNavLinksForZone } from "@/lib/page-builder/nav-placement";
+import { NAV_ZONE_KEYS } from "@/lib/navigation/zone-keys";
 import { FooterIcon, FooterSocialIcon, type FooterSocialIconName } from "./ui/FooterIcon";
 import { Logo } from "./ui/Logo";
 import { siteChromeClassName } from "./ui/SiteChrome";
@@ -226,6 +229,7 @@ export async function FooterContent({
   const isRtl = locale === "ar";
   const t = await getTranslations("footer");
   const tNewsletter = await getTranslations("footer.newsletter");
+  const navigation = await getNavigation(locale);
 
   const newsletterLabels: NewsletterFormLabels = {
     emailPlaceholder: tNewsletter("emailPlaceholder"),
@@ -289,6 +293,22 @@ export async function FooterContent({
 
   const aboutLinks: FooterLink[] = [{ label: t("aboutUs"), href: "/about" }];
 
+  const withBuilderLinks = (zoneKey: string, links: FooterLink[]): FooterLink[] => [
+    ...links,
+    ...extraNavLinksForZone(
+      navigation.items,
+      zoneKey,
+      links.map((link) => link.href),
+    ),
+  ];
+
+  const propertiesColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_PROPERTIES, propertiesLinks);
+  const areasColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_AREAS, areasLinks);
+  const offPlanColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_OFF_PLAN, offPlanLinks);
+  const resourcesColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_RESOURCES, resourcesLinks);
+  const insightsColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_INSIGHTS, insightsLinks);
+  const aboutColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_ABOUT, aboutLinks);
+
   const socialLinks: SocialLink[] = [
     { label: t("instagram"), icon: "instagram", href: "https://www.instagram.com/niprealty/" },
     {
@@ -333,12 +353,12 @@ export async function FooterContent({
           <FooterBrandBlock {...brandProps} />
 
           <div className="grid w-full grid-cols-2 gap-x-6 gap-y-8 sm:gap-x-8 sm:gap-y-10">
-            <FooterLinkGroup title={t("properties")} links={propertiesLinks} />
-            <FooterLinkGroup title={t("offPlan")} links={offPlanLinks} />
-            <FooterLinkGroup title={t("areas")} links={areasLinks} />
-            <FooterLinkGroup title={t("resources")} links={resourcesLinks} />
-            <FooterLinkGroup title={t("insights")} links={insightsLinks} />
-            <FooterLinkGroup title={t("aboutNip")} links={aboutLinks} />
+            <FooterLinkGroup title={t("properties")} links={propertiesColumn} />
+            <FooterLinkGroup title={t("offPlan")} links={offPlanColumn} />
+            <FooterLinkGroup title={t("areas")} links={areasColumn} />
+            <FooterLinkGroup title={t("resources")} links={resourcesColumn} />
+            <FooterLinkGroup title={t("insights")} links={insightsColumn} />
+            <FooterLinkGroup title={t("aboutNip")} links={aboutColumn} />
           </div>
 
           <FooterContactBlock {...contactProps} socialLayout="icons" />
@@ -354,18 +374,18 @@ export async function FooterContent({
           </div>
 
           <div className="flex min-w-0 flex-col gap-12">
-            <FooterLinkGroup title={t("properties")} links={propertiesLinks} />
-            <FooterLinkGroup title={t("areas")} links={areasLinks} />
+            <FooterLinkGroup title={t("properties")} links={propertiesColumn} />
+            <FooterLinkGroup title={t("areas")} links={areasColumn} />
           </div>
 
           <div className="flex min-w-0 flex-col gap-12">
-            <FooterLinkGroup title={t("offPlan")} links={offPlanLinks} />
-            <FooterLinkGroup title={t("resources")} links={resourcesLinks} />
+            <FooterLinkGroup title={t("offPlan")} links={offPlanColumn} />
+            <FooterLinkGroup title={t("resources")} links={resourcesColumn} />
           </div>
 
           <div className="flex min-w-0 flex-col gap-12">
-            <FooterLinkGroup title={t("insights")} links={insightsLinks} />
-            <FooterLinkGroup title={t("aboutNip")} links={aboutLinks} />
+            <FooterLinkGroup title={t("insights")} links={insightsColumn} />
+            <FooterLinkGroup title={t("aboutNip")} links={aboutColumn} />
           </div>
 
           <div className="shrink-0">

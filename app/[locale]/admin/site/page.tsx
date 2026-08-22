@@ -7,6 +7,12 @@ import { localizedHref } from "@/lib/i18n/helpers";
 
 const cards = [
   {
+    href: "/admin/site/pages",
+    title: "Pages",
+    description:
+      "Build new marketing pages from reusable sections — hero, property cards, insights, CTA bands, and more.",
+  },
+  {
     href: "/admin/site/seo",
     title: "Page SEO",
     description:

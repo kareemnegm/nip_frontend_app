@@ -7,6 +7,10 @@ import {
   type Locale,
 } from "@/lib/i18n/config";
 import { localizedHref, toLocaleAgnosticPath } from "@/lib/i18n/helpers";
+import {
+  normalizeBuilderPath,
+  shouldRewriteToBuilderPage,
+} from "@/lib/page-builder/reserved-paths";
 
 const PUBLIC_FILE = /\.[^/]+$/;
 
@@ -86,6 +90,22 @@ export function proxy(request: NextRequest) {
         sameSite: "lax",
       });
       return response;
+    }
+
+    const rest = segments.slice(1);
+    if (rest.length > 0) {
+      const path = normalizeBuilderPath(`/${rest.join("/")}`);
+      if (shouldRewriteToBuilderPage(path)) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/${maybeLocale}/builder/${rest.join("/")}`;
+        const response = NextResponse.rewrite(url);
+        response.cookies.set(LOCALE_COOKIE, maybeLocale, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 365,
+          sameSite: "lax",
+        });
+        return response;
+      }
     }
 
     const response = NextResponse.next();

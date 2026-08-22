@@ -6,7 +6,15 @@ import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { homeEditable } from "./home-editable";
+import type { SectionCms } from "./section-cms";
+import { toSectionHeadingEditable } from "./section-cms";
 import { SectionHeading } from "./SectionHeading";
+
+const defaultCms: SectionCms = {
+  relUrl: homeEditable.relUrl,
+  titleKey: homeEditable.marketPulse.titleKey,
+  descKey: homeEditable.marketPulse.descKey,
+};
 
 /**
  * Figma 1525:28295/28300/28301 — 1056px inner (192px gutters), 4 stat cards
@@ -21,7 +29,13 @@ import { SectionHeading } from "./SectionHeading";
 const cardBg = ["bg-sapphire-400", "bg-sapphire-500", "bg-sapphire-600", "bg-sapphire-700"] as const;
 const cardContext = ["text-sapphire-100", "text-sapphire-200", "text-sapphire-200", "text-sapphire-200"] as const;
 
-export async function MarketPulseSection() {
+export async function MarketPulseSection({
+  cms = defaultCms,
+  placeholderNamespace = "placeholders.home.marketPulse",
+}: {
+  cms?: SectionCms;
+  placeholderNamespace?: string;
+} = {}) {
   const locale = await getRequestLocale();
   const t = await getTranslations({ locale, namespace: "home" });
 
@@ -36,14 +50,10 @@ export async function MarketPulseSection() {
     <section className={cn("bg-white", siteSectionY)}>
       <div className={siteMarketPulseLayoutClassName}>
         <SectionHeading
-          title={await getCmsPlaceholder("placeholders.home.marketPulse", "title", locale)}
-          description={await getCmsPlaceholder("placeholders.home.marketPulse", "desc", locale)}
+          title={await getCmsPlaceholder(placeholderNamespace, "title", locale)}
+          description={await getCmsPlaceholder(placeholderNamespace, "desc", locale)}
           descriptionMaxWidth="max-w-[464px]"
-          editable={{
-            relUrl: homeEditable.relUrl,
-            titleKey: homeEditable.marketPulse.titleKey,
-            descKey: homeEditable.marketPulse.descKey,
-          }}
+          editable={toSectionHeadingEditable(cms)}
         />
 
         <div className="grid w-full grid-cols-2 gap-4 lg:grid-cols-4">

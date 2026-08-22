@@ -8,12 +8,24 @@ import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { homeEditable } from "./home-editable";
+import type { SectionCms } from "./section-cms";
+import { toSectionHeadingEditable } from "./section-cms";
 import { SectionHeading } from "./SectionHeading";
+
+const defaultCms: SectionCms = {
+  relUrl: homeEditable.relUrl,
+  titleKey: homeEditable.featuredSelection.titleKey,
+  descKey: homeEditable.featuredSelection.descKey,
+};
 
 export async function FeaturedSelectionSection({
   properties = [],
+  cms = defaultCms,
+  placeholderNamespace = "placeholders.home.featuredSelection",
 }: {
   properties?: PropertyCardProps[];
+  cms?: SectionCms;
+  placeholderNamespace?: string;
 }) {
   const locale = await getRequestLocale();
   const t = await getTranslations({ locale, namespace: "home.empty" });
@@ -26,14 +38,10 @@ export async function FeaturedSelectionSection({
       {/* 80px gutters → 1280px inner at 1440px → each card ≈ 410px (Figma: 408px) */}
       <div className={siteCardSectionLayoutClassName}>
         <SectionHeading
-          title={await getCmsPlaceholder("placeholders.home.featuredSelection", "title", locale)}
-          description={await getCmsPlaceholder("placeholders.home.featuredSelection", "desc", locale)}
+          title={await getCmsPlaceholder(placeholderNamespace, "title", locale)}
+          description={await getCmsPlaceholder(placeholderNamespace, "desc", locale)}
           descriptionMaxWidth="max-w-[400px]"
-          editable={{
-            relUrl: homeEditable.relUrl,
-            titleKey: homeEditable.featuredSelection.titleKey,
-            descKey: homeEditable.featuredSelection.descKey,
-          }}
+          editable={toSectionHeadingEditable(cms)}
         />
         {properties.length === 0 ? (
           <CatalogEmptyState message={t("featured")} />
