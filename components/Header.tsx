@@ -11,6 +11,7 @@ import { mainNavItems } from "@/lib/i18n/nav-config";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { extraNavLinksForZone } from "@/lib/page-builder/nav-placement";
 import { NAV_ZONE_KEYS } from "@/lib/navigation/zone-keys";
+import { TEMP_HIDE_MAIN_NAV_CONCIERGE } from "@/lib/temporary-ui-flags";
 
 export async function Header() {
   const locale = await getRequestLocale();
@@ -19,6 +20,9 @@ export async function Header() {
     navigation.items,
     NAV_ZONE_KEYS.HEADER_MAIN,
     mainNavItems.map((item) => item.href),
+  ).filter(
+    (link) =>
+      !(TEMP_HIDE_MAIN_NAV_CONCIERGE && link.href.split("?")[0] === "/concierge"),
   );
 
   return (
