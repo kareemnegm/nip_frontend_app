@@ -579,6 +579,45 @@
         "desc": "Speak with NIP before you search. Our advisory team can help you understand the market, define your priorities, and identify what is worth your attention."
       }
     },
+    "builder": {
+      "hero": {
+        "eyebrow": "A Private Advisory View | Dubai Real Estate",
+        "title": "Your Page\nHeadline Here",
+        "body": "Introduce this page with a short paragraph. Staff can edit all copy on the live page after publishing."
+      },
+      "featuredInsight": {
+        "title": "Featured Insights",
+        "desc": "Articles and market perspective selected for this page."
+      },
+      "curatedCollection": {
+        "title": "Selected Properties",
+        "desc": "A curated grid of properties relevant to this page."
+      },
+      "featuredSelection": {
+        "title": "Featured Selection",
+        "desc": "Highlighted properties in a grid or carousel."
+      },
+      "marketPulse": {
+        "title": "Market Pulse",
+        "desc": "Key market signals at a glance."
+      },
+      "privateOffice": {
+        "title": "Private Office",
+        "desc": "Private advisory access for introduced clients."
+      },
+      "cta": {
+        "title": "Ready to Talk",
+        "desc": "Speak with NIP or ask the concierge for guidance."
+      },
+      "ctaBand": {
+        "title": "Speak with a NIP Advisor"
+      },
+      "communities": {
+        "title": "Explore Communities",
+        "desc": "Areas and neighbourhoods featured on this page."
+      },
+      "searchStrip": {}
+    },
     "properties": {
       "hero": {
         "eyebrow": "PROPERTIES | DISCOVERY",

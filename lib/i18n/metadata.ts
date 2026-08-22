@@ -175,3 +175,56 @@ export async function localizedMetadata(
 
   return metadata;
 }
+
+export async function builderPageMetadata(
+  path: string,
+  locale: Locale,
+  pageTitle: string,
+): Promise<Metadata> {
+  const cms = await getPageSeo(path, locale);
+  const title = cms?.meta_title?.trim() || `${pageTitle} | Novel Insight Property`;
+  const description =
+    cms?.meta_description?.trim() ||
+    `${pageTitle} — Novel Insight Property Dubai real estate advisory.`;
+  const keywords = parseKeywords(cms?.meta_keywords);
+  const ogTitle = cms?.og_title?.trim() || title;
+  const ogDescription = cms?.og_description?.trim() || description;
+  const canonicalPath = localizedPath(locale, path);
+
+  const metadata: Metadata = {
+    title: { absolute: title },
+    description,
+    keywords,
+    alternates: {
+      canonical: canonicalPath,
+      languages: Object.fromEntries(
+        locales.map((code) => [code, localizedPath(code, path)]),
+      ),
+    },
+    openGraph: {
+      title: ogTitle,
+      description: ogDescription,
+      type: "website",
+      siteName: "Novel Insight Property",
+      locale: locale === "ar" ? "ar_AE" : "en_AE",
+      url: canonicalPath,
+      images: [{ ...DEFAULT_OG_IMAGE, alt: ogTitle }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: ogTitle,
+      description: ogDescription,
+      images: [DEFAULT_OG_IMAGE.url],
+    },
+  };
+
+  if (cms?.robots) {
+    const parts = cms.robots.split(",").map((part) => part.trim());
+    metadata.robots = {
+      index: !parts.includes("noindex"),
+      follow: !parts.includes("nofollow"),
+    };
+  }
+
+  return metadata;
+}

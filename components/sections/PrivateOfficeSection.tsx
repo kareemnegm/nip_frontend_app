@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
-import { HOME_REL_URL } from "./home-editable";
+import { homeEditable } from "./home-editable";
+import type { SectionCms } from "./section-cms";
 
 /**
  * Figma 1525:28321 — 60px circle (sapphire-600), privacy lock 44px inside.
@@ -20,7 +21,19 @@ function OfficeCrest() {
   );
 }
 
-export async function PrivateOfficeSection() {
+const defaultCms: SectionCms = {
+  relUrl: homeEditable.relUrl,
+  titleKey: homeEditable.privateOffice.titleKey,
+  descKey: homeEditable.privateOffice.descKey,
+};
+
+export async function PrivateOfficeSection({
+  cms = defaultCms,
+  placeholderNamespace = "placeholders.home.privateOffice",
+}: {
+  cms?: SectionCms;
+  placeholderNamespace?: string;
+} = {}) {
   const locale = await getRequestLocale();
   const tHome = await getTranslations({ locale, namespace: "home" });
   const tCommon = await getTranslations({ locale, namespace: "common" });
@@ -44,20 +57,20 @@ export async function PrivateOfficeSection() {
           <div className="flex flex-col items-center gap-4">
             {/* Title — Figma: Didot Regular 44/42 -0.02em uppercase white */}
             <EditableText
-              relUrl={HOME_REL_URL}
-              blockKey="private-office-title"
+              relUrl={cms.relUrl}
+              blockKey={cms.titleKey}
               locale={locale}
-              placeholderContent={await getCmsPlaceholder("placeholders.home.privateOffice", "title", locale)}
+              placeholderContent={await getCmsPlaceholder(placeholderNamespace, "title", locale)}
               placeholderTag="h2"
               className="font-display font-normal uppercase text-white text-display-sm sm:whitespace-nowrap sm:text-display-lg"
             />
 
             {/* Body — Figma: Archivo Regular 13/18 accent-on-dark (#8fb0dc), w-464 */}
             <EditableText
-              relUrl={HOME_REL_URL}
-              blockKey="private-office-desc"
+              relUrl={cms.relUrl}
+              blockKey={cms.descKey ?? `${cms.titleKey}-desc`}
               locale={locale}
-              placeholderContent={await getCmsPlaceholder("placeholders.home.privateOffice", "desc", locale)}
+              placeholderContent={await getCmsPlaceholder(placeholderNamespace, "desc", locale)}
               placeholderTag="p"
               className="max-w-[464px] text-body-sm font-normal text-accent-on-dark"
             />

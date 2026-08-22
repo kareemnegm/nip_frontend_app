@@ -15,11 +15,12 @@ import {
   type NavDropdownKey,
 } from "@/lib/i18n/nav-config";
 import { isLanguageSwitcherVisible } from "@/lib/temporary-ui-flags";
+import type { ExtraNavLink } from "@/lib/page-builder/nav-placement";
 
 const navLinkClass =
   "rounded-[var(--radius-field)] px-3 py-3 text-base font-semibold text-ink transition-colors hover:bg-sapphire-50 hover:text-brand";
 
-export function MobileNav() {
+export function MobileNav({ extraLinks = [] }: { extraLinks?: ExtraNavLink[] }) {
   const localeContext = useOptionalLocale();
   const isRtl = localeContext?.locale === "ar";
   const navT = (key: string) => clientT(localeContext?.locale, "nav", key);
@@ -239,6 +240,16 @@ export function MobileNav() {
                 </LocalizedLink>
               );
             })}
+            {extraLinks.map((link) => (
+              <LocalizedLink
+                key={`builder-${link.href}`}
+                href={link.href}
+                className={navLinkClass}
+                onClick={close}
+              >
+                {link.label}
+              </LocalizedLink>
+            ))}
           </nav>
 
           <div className="shrink-0 space-y-4 border-t border-line px-6 py-6">

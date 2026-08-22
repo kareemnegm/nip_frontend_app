@@ -84,7 +84,7 @@ export async function EditableText({
         relUrl={relUrl}
         blockKey={blockKey}
         locale={locale}
-        initialContent={hasDbContent ? (dbContent ?? "") : ""}
+        initialContent={hasDbContent ? (dbContent ?? "") : (placeholderContent ?? "")}
         initialTag={tag as EditableTag}
       />
     </TagComponent>

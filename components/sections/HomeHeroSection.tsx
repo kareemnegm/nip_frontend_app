@@ -10,10 +10,25 @@ import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { HomeHeroVideo } from "./HomeHeroVideo";
 import { HOME_REL_URL } from "./home-editable";
+import type { SectionCms } from "./section-cms";
 
 const heroBlocks = pageBlockKeys.home.hero;
 
-export async function HomeHeroSection() {
+const defaultCms: SectionCms = {
+  relUrl: HOME_REL_URL,
+  eyebrowKey: heroBlocks.eyebrow,
+  titleKey: heroBlocks.title,
+  bodyKey: heroBlocks.body,
+  imageKey: heroBlocks.image,
+};
+
+export async function HomeHeroSection({
+  cms = defaultCms,
+  placeholderNamespace = "placeholders.home.hero",
+}: {
+  cms?: SectionCms;
+  placeholderNamespace?: string;
+} = {}) {
   const locale = await getRequestLocale();
   const t = await getTranslations({ locale, namespace: "home.hero" });
   const tc = await getTranslations({ locale, namespace: "common" });
@@ -30,8 +45,8 @@ export async function HomeHeroSection() {
           refuse autoplay, so it is no longer the priority image. */}
       <div data-parallax className="absolute -inset-10 bg-sapphire-800">
         <EditableImage
-          relUrl={HOME_REL_URL}
-          blockKey={heroBlocks.image}
+          relUrl={cms.relUrl}
+          blockKey={cms.imageKey ?? heroBlocks.image}
           locale={locale}
           placeholderUrl="/images/hero-bg.jpg"
           placeholderAlt="Dubai aerial view"
@@ -47,10 +62,10 @@ export async function HomeHeroSection() {
         <div data-hero-eyebrow>
           {/* Figma 1525:28267 — "04 Label/Small" Archivo Medium 11/14, sapphire-200 */}
           <EditableText
-            relUrl={HOME_REL_URL}
-            blockKey={heroBlocks.eyebrow}
+            relUrl={cms.relUrl}
+            blockKey={cms.eyebrowKey ?? heroBlocks.eyebrow}
             locale={locale}
-            placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "eyebrow", locale)}
+            placeholderContent={await getCmsPlaceholder(placeholderNamespace, "eyebrow", locale)}
             placeholderTag="p"
             className="text-label-muted font-medium uppercase text-sapphire-200"
           />
@@ -58,10 +73,10 @@ export async function HomeHeroSection() {
 
         <HeroTitleRevealSlot>
           <EditableText
-            relUrl={HOME_REL_URL}
-            blockKey={heroBlocks.title}
+            relUrl={cms.relUrl}
+            blockKey={cms.titleKey}
             locale={locale}
-            placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "title", locale)}
+            placeholderContent={await getCmsPlaceholder(placeholderNamespace, "title", locale)}
             placeholderTag="h1"
             className={cn(
               // Figma 1525:28268 — "01 Display/Large" Didot 44/42, -0.02em, uppercase
@@ -86,10 +101,10 @@ export async function HomeHeroSection() {
         <div data-hero-sub>
           {/* Figma 1525:28269 — "03 Body/X-Small" Archivo 12/16, white, 410px column */}
           <EditableText
-            relUrl={HOME_REL_URL}
-            blockKey={heroBlocks.body}
+            relUrl={cms.relUrl}
+            blockKey={cms.bodyKey ?? heroBlocks.body}
             locale={locale}
-            placeholderContent={await getCmsPlaceholder("placeholders.home.hero", "body", locale)}
+            placeholderContent={await getCmsPlaceholder(placeholderNamespace, "body", locale)}
             placeholderTag="p"
             className="max-w-[410px] text-body-xs font-normal text-white"
           />

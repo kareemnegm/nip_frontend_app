@@ -8,12 +8,24 @@ import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { homeEditable } from "./home-editable";
+import type { SectionCms } from "./section-cms";
+import { toSectionHeadingEditable } from "./section-cms";
 import { SectionHeading } from "./SectionHeading";
+
+const defaultCms: SectionCms = {
+  relUrl: homeEditable.relUrl,
+  titleKey: homeEditable.curatedCollection.titleKey,
+  descKey: homeEditable.curatedCollection.descKey,
+};
 
 export async function CuratedCollectionSection({
   properties = [],
+  cms = defaultCms,
+  placeholderNamespace = "placeholders.home.curatedCollection",
 }: {
   properties?: PropertyCardProps[];
+  cms?: SectionCms;
+  placeholderNamespace?: string;
 }) {
   const locale = await getRequestLocale();
   const t = await getTranslations({ locale, namespace: "home.empty" });
@@ -25,13 +37,9 @@ export async function CuratedCollectionSection({
       {/* 80px gutters → 1280px inner at 1440px → each card ≈ 410px (Figma: 408px) */}
       <div className={siteCardSectionLayoutClassName}>
         <SectionHeading
-          title={await getCmsPlaceholder("placeholders.home.curatedCollection", "title", locale)}
-          description={await getCmsPlaceholder("placeholders.home.curatedCollection", "desc", locale)}
-          editable={{
-            relUrl: homeEditable.relUrl,
-            titleKey: homeEditable.curatedCollection.titleKey,
-            descKey: homeEditable.curatedCollection.descKey,
-          }}
+          title={await getCmsPlaceholder(placeholderNamespace, "title", locale)}
+          description={await getCmsPlaceholder(placeholderNamespace, "desc", locale)}
+          editable={toSectionHeadingEditable(cms)}
         />
         {curatedCards.length === 0 ? (
           <CatalogEmptyState message={t("curated")} />

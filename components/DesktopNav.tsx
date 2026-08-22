@@ -11,6 +11,7 @@ import {
   mainNavItems,
   type NavDropdownKey,
 } from "@/lib/i18n/nav-config";
+import type { ExtraNavLink } from "@/lib/page-builder/nav-placement";
 
 const navLinkClass =
   "nav-link inline-flex items-center gap-1 text-[13px] font-medium leading-[18px] text-ink transition-colors duration-200 hover:text-brand";
@@ -27,7 +28,7 @@ function NavCaret({ open }: { open: boolean }) {
   );
 }
 
-export function DesktopNav() {
+export function DesktopNav({ extraLinks = [] }: { extraLinks?: ExtraNavLink[] }) {
   const localeContext = useOptionalLocale();
   const navT = (key: string) => clientT(localeContext?.locale, "nav", key);
   const navId = useId();
@@ -205,6 +206,17 @@ export function DesktopNav() {
           </LocalizedLink>
         );
       })}
+      {extraLinks.map((link) => (
+        <LocalizedLink
+          key={`builder-${link.href}`}
+          href={link.href}
+          className={navLinkClass}
+          onMouseEnter={closeDropdowns}
+          onFocus={closeDropdowns}
+        >
+          {link.label}
+        </LocalizedLink>
+      ))}
     </nav>
   );
 }
