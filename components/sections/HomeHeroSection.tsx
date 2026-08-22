@@ -41,8 +41,9 @@ export async function HomeHeroSection({
       {/* Figma: background 50% / cover no-repeat.
           Oversize the parallax layer (±40px) so MotionRoot's translate
           never reveals the sapphire fallback as a strip under the header.
-          The still sits under the video as the fallback for browsers that
-          refuse autoplay, so it is no longer the priority image. */}
+          The still sits under the video and is what phones actually show
+          whenever iOS refuses to autoplay (Low Power Mode), so it stays
+          priority. */}
       <div data-parallax className="absolute -inset-10 bg-sapphire-800">
         <EditableImage
           relUrl={cms.relUrl}
@@ -51,6 +52,7 @@ export async function HomeHeroSection({
           placeholderUrl="/images/hero-bg.jpg"
           placeholderAlt="Dubai aerial view"
           fill
+          priority
           className="absolute inset-0"
           imageClassName="object-cover object-center"
         />

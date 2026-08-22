@@ -14,15 +14,16 @@ export function CmsStaffBar() {
   const pathname = usePathname();
   const { locale } = useLocale();
   const { canEdit, user, loading, refresh } = useCanEditCms();
-  const [builderPage, setBuilderPage] = useState<BuilderPage | null>(null);
+  // Keyed by the path it was looked up for, so navigating away drops the stale
+  // title without an extra render pass.
+  const [lookup, setLookup] = useState<{ path: string; page: BuilderPage | null } | null>(null);
 
   const currentPath = normalizeBuilderPath(stripLocaleFromPathname(pathname ?? "/"));
+  const isBuilderPath = canEdit && !currentPath.startsWith("/admin");
+  const builderPage = lookup?.path === currentPath ? lookup.page : null;
 
   useEffect(() => {
-    if (!canEdit || currentPath.startsWith("/admin")) {
-      setBuilderPage(null);
-      return;
-    }
+    if (!isBuilderPath) return;
 
     let active = true;
 
@@ -32,19 +33,18 @@ export function CmsStaffBar() {
         const data = (await res.json()) as { pages?: BuilderPage[] };
         if (!active || !res.ok) return;
         const match =
-          (data.pages ?? []).find(
-            (page) => normalizeBuilderPath(page.path) === currentPath,
-          ) ?? null;
-        setBuilderPage(match);
+          (data.pages ?? []).find((page) => normalizeBuilderPath(page.path) === currentPath) ??
+          null;
+        setLookup({ path: currentPath, page: match });
       } catch {
-        if (active) setBuilderPage(null);
+        if (active) setLookup({ path: currentPath, page: null });
       }
     })();
 
     return () => {
       active = false;
     };
-  }, [canEdit, currentPath, locale]);
+  }, [isBuilderPath, currentPath, locale]);
 
   if (loading || !canEdit) {
     return null;
@@ -66,7 +66,10 @@ export function CmsStaffBar() {
   return (
     <div className="fixed bottom-4 end-4 z-50 flex flex-col items-end gap-2">
       <Link
-        href={localizedHref(locale, "/admin/site")}
+        href={localizedHref(
+          locale,
+          builderPage ? `/admin/site/pages/${builderPage.id}` : "/admin/site",
+        )}
         className="max-w-[280px] rounded-[var(--radius-field)] border border-line bg-white px-4 py-2 text-end text-[11px] font-semibold text-brand shadow-[var(--shadow-card)] hover:bg-sapphire-50"
       >
         {builderPage ? (
