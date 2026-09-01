@@ -95,7 +95,7 @@ export default async function InsightsPage({ params, searchParams }: PageProps) 
             {insights.length === 0 ? (
               <CatalogEmptyState message={te("insights")} />
             ) : (
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid gap-6 md:grid-cols-2" data-reveal-stagger>
                 {gridInsights.map((insight) => (
                   <InsightCard key={insight.href} className="min-h-[440px]" {...insight} />
                 ))}

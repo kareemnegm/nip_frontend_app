@@ -3,6 +3,8 @@ import { PropertyListingPage } from "@/components/catalog/PropertyListingPage";
 import { localizedMetadata } from "@/lib/i18n/metadata";
 import { resolveLocale } from "@/lib/i18n/helpers";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;

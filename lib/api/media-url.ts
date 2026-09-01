@@ -95,3 +95,59 @@ export function resolveBlogContentImage(
 ): string | undefined {
   return resolveBlogImage(blog.content_image_url, blog.content_image);
 }
+
+type DualMediaFields = {
+  urlField?: string | null;
+  rawField?: string | null;
+  storagePrefix: string;
+  /** `<video src>` can use external CDNs that `next/image` rejects. */
+  allowExternalUrl?: boolean;
+};
+
+function resolveDualMediaUrl({
+  urlField,
+  rawField,
+  storagePrefix,
+  allowExternalUrl = false,
+}: DualMediaFields): string | undefined {
+  const fromApi = resolveMediaUrl(urlField);
+  if (fromApi) return fromApi;
+
+  const raw = rawField?.trim();
+  if (!raw) return undefined;
+
+  if (raw.startsWith("http://") || raw.startsWith("https://") || raw.startsWith("/")) {
+    const resolved = resolveMediaUrl(raw);
+    if (resolved) return resolved;
+    if (allowExternalUrl && (raw.startsWith("http://") || raw.startsWith("https://"))) {
+      try {
+        new URL(raw);
+        return raw;
+      } catch {
+        return undefined;
+      }
+    }
+    return undefined;
+  }
+
+  if (raw.startsWith("storage/")) {
+    return resolveMediaUrl(`/${raw}`);
+  }
+
+  const relative = raw.includes("/") ? raw : `${storagePrefix}/${raw}`;
+  return resolveMediaUrl(`/storage/${relative}`);
+}
+
+/** Property teaser / tour video — prefers `video_url` / `videoUrl`, falls back to `video` path. */
+export function resolvePropertyVideoUrl(property: {
+  video?: string | null;
+  video_url?: string | null;
+  videoUrl?: string | null;
+}): string | undefined {
+  return resolveDualMediaUrl({
+    urlField: property.video_url ?? property.videoUrl,
+    rawField: property.video,
+    storagePrefix: "properties",
+    allowExternalUrl: true,
+  });
+}

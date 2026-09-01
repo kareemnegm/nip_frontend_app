@@ -24,6 +24,27 @@ export const pageBlockKeys = {
     marketPulse: {
       title: "market-pulse-title",
       desc: "market-pulse-desc",
+      cta: "market-pulse-cta",
+      stat1: {
+        context: "market-pulse-stat-1-context",
+        value: "market-pulse-stat-1-value",
+        label: "market-pulse-stat-1-label",
+      },
+      stat2: {
+        context: "market-pulse-stat-2-context",
+        value: "market-pulse-stat-2-value",
+        label: "market-pulse-stat-2-label",
+      },
+      stat3: {
+        context: "market-pulse-stat-3-context",
+        value: "market-pulse-stat-3-value",
+        label: "market-pulse-stat-3-label",
+      },
+      stat4: {
+        context: "market-pulse-stat-4-context",
+        value: "market-pulse-stat-4-value",
+        label: "market-pulse-stat-4-label",
+      },
     },
     privateOffice: {
       title: "private-office-title",
@@ -61,7 +82,12 @@ export const pageBlockKeys = {
   properties: {
     relUrl: "/properties",
     /* Figma properties listing hero has eyebrow + title only — no description line */
-    hero: { eyebrow: "hero-eyebrow", title: "hero-title" },
+    hero: {
+      eyebrow: "hero-eyebrow",
+      title: "hero-title",
+      titleResale: "hero-title-resale",
+      titleRental: "hero-title-rental",
+    },
   },
   offPlan: {
     relUrl: "/off-plan",

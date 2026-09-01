@@ -13,8 +13,8 @@ import {
   Badge,
   Breadcrumbs,
   Button,
+  CenteredCardGrid,
   CurrencyIcon,
-  FactsStrip,
   Icon,
   PropertyCard,
 } from "@/components/ui";
@@ -33,13 +33,16 @@ import { getMemberToken } from "@/lib/member/auth.server";
 import {
   formatAedPrice,
   isOffPlanProperty,
+  isRentalProperty,
   isResaleProperty,
   mapPropertyToCard,
+  mapPropertyToGalleryItems,
   mapPropertyToOffPlanCard,
+  showsAvailableUnits,
 } from "@/lib/mappers/property";
-import { propertyFactsFromApi } from "@/lib/mappers/property-facts";
+import { resolveAvailableUnitsFromApi } from "@/lib/off-plan/detail";
 import { getSiteUrl } from "@/lib/site-url";
-import type { ApiProperty, PropertyGalleryImage } from "@/types/api/property";
+import type { ApiProperty } from "@/types/api/property";
 
 type PropertyDetailPageProps = {
   locale: Locale;
@@ -60,6 +63,9 @@ export async function PropertyDetailPage({
   if (detailBase === "properties" && isResaleProperty(property)) {
     redirect(localizedHref(locale, `/resale/${slug}`));
   }
+  if (detailBase === "properties" && isRentalProperty(property)) {
+    redirect(localizedHref(locale, `/rental/${slug}`));
+  }
 
   const similar = await getSimilarPropertiesFor(
     property,
@@ -68,27 +74,10 @@ export async function PropertyDetailPage({
   );
   const listHref = localizedHref(locale, `/${detailBase}`);
   const t = await getTranslations({ locale, namespace: "catalog" });
-  const facts = propertyFactsFromApi(property, {
-    bedroomLabel: t("bedroomLabel"),
-    bathroomLabel: t("bathroomLabel"),
-    areaLabel:
-      detailBase === "properties" ? t("totalAreaLabel") : t("areaLabel"),
-    typeLabel:
-      detailBase === "properties" ? t("propertyTypeLabel") : t("typeLabel"),
-    furnishingLabel: t("furnishingLabel"),
-    referenceLabel: t("referenceLabel"),
-  });
-  const galleryImages: PropertyGalleryImage[] = (() => {
-    if (property.images?.length) {
-      return property.images.flatMap((image) => {
-        const url = resolveMediaUrl(image.image_url);
-        return url ? [{ url, type: image.type }] : [];
-      });
-    }
-
-    const fallback = resolveMediaUrl(property.image_url);
-    return fallback ? [{ url: fallback }] : [];
-  })();
+  const availableUnits = showsAvailableUnits(property)
+    ? resolveAvailableUnitsFromApi(property)
+    : undefined;
+  const galleryImages = mapPropertyToGalleryItems(property);
   const locationImageUrl = resolveMediaUrl(property.location_image_url);
   const siteUrl = getSiteUrl();
   const pageUrl = `${siteUrl}${localizedHref(locale, `/${detailBase}/${slug}`)}`;
@@ -188,20 +177,6 @@ export async function PropertyDetailPage({
         </div>
       </section>
 
-      {facts.length > 0 ? (
-        <section className="bg-white pb-10">
-          <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-            <div className={cn(sitePageInnerClassName, "w-full")}>
-              <FactsStrip
-                className="w-full"
-                items={facts}
-                variant={detailBase === "properties" ? "property-detail" : "property"}
-              />
-            </div>
-          </div>
-        </section>
-      ) : null}
-
       <section className="bg-white pb-[72px]">
         <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
           <div
@@ -213,6 +188,7 @@ export async function PropertyDetailPage({
             <PropertyStoryContent
               description={property.description ?? undefined}
               facilities={property.facilities}
+              availableUnits={availableUnits}
               locationNote={property.about_location ?? undefined}
               locationImageUrl={locationImageUrl}
               latitude={property.latitude}
@@ -225,6 +201,10 @@ export async function PropertyDetailPage({
                 amenitiesTitle: t("amenitiesTitle"),
                 locationTitle: t("locationTitle"),
                 openInGoogleMaps: t("openInGoogleMaps"),
+                availableUnitsTitle: t("availableUnitsTitle"),
+                unitTypeLabel: t("unitType"),
+                sizeLabel: t("sizeSqft"),
+                startingPriceLabel: t("startingPrice"),
               }}
             />
             {detailBase === "properties" ? (
@@ -267,7 +247,7 @@ export async function PropertyDetailPage({
               <p className="text-center text-overline font-semibold leading-4 text-accent">
                 {t("similarProperties")}
               </p>
-              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              <CenteredCardGrid gap="section" data-reveal-stagger>
                 {similar.map((item) => {
                   const card = isOffPlanProperty(item)
                     ? mapPropertyToOffPlanCard(item, locale)
@@ -276,7 +256,7 @@ export async function PropertyDetailPage({
                     <PropertyCard key={item.id} className="min-h-[480px]" {...card} />
                   );
                 })}
-              </div>
+              </CenteredCardGrid>
             </div>
           </div>
         </section>

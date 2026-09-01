@@ -9,6 +9,10 @@ import { getNavigation } from "@/lib/api/navigation";
 import { cn } from "@/lib/cn";
 import { getRequestLocale } from "@/lib/i18n/server";
 import { extraNavLinksForZone } from "@/lib/page-builder/nav-placement";
+import {
+  FOOTER_OFFPLAN_TAG_LINKS,
+  FOOTER_PROPERTIES_TAG_LINKS,
+} from "@/lib/catalog/property-tag-links";
 import { NAV_ZONE_KEYS } from "@/lib/navigation/zone-keys";
 import { FooterIcon, FooterSocialIcon, type FooterSocialIconName } from "./ui/FooterIcon";
 import { Logo } from "./ui/Logo";
@@ -238,12 +242,10 @@ export async function FooterContent({
     subscriptionSuccess: tNewsletter("subscriptionSuccess"),
   };
 
-  const propertiesLinks: FooterLink[] = [
-    { label: t("buyProperties"), href: "/properties?listing=sale" },
-    { label: t("rentProperties"), href: "/properties?listing=rent" },
-    { label: t("exclusives"), href: "/properties?exclusive=1" },
-    { label: t("newLaunches"), href: "/off-plan" },
-  ];
+  const propertiesLinks: FooterLink[] = FOOTER_PROPERTIES_TAG_LINKS.map((link) => ({
+    label: t(link.labelKey),
+    href: link.href,
+  }));
 
   const areasLinks: FooterLink[] = [
     { label: t("palmJumeirah"), href: "/areas/palm-jumeirah" },
@@ -253,12 +255,10 @@ export async function FooterContent({
     { label: t("allAreas"), href: "/areas" },
   ];
 
-  const offPlanLinks: FooterLink[] = [
-    { label: t("featuredProjects"), href: "/off-plan?featured=1" },
-    { label: t("upcoming"), href: "/off-plan?status=launching" },
-    { label: t("paymentPlans"), href: "/off-plan" },
-    { label: t("developersLink"), href: "/developers" },
-  ];
+  const offPlanLinks: FooterLink[] = FOOTER_OFFPLAN_TAG_LINKS.map((link) => ({
+    label: t(link.labelKey),
+    href: link.href,
+  }));
 
   const resourcesLinks: FooterLink[] = [
     { label: t("faq"), href: "/faq" },

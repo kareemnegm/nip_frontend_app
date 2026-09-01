@@ -29,6 +29,22 @@ export type AreaDetailLabels = {
 /** Formats a connectivity pill, e.g. ("Airport", 25) → "Airport · 25 min". */
 export type ConnectivityLabelFormatter = (label: string, minutes: number) => string;
 
+/** Labels staff sometimes save when a stat is unknown — treat as blank. */
+const PLACEHOLDER_TEXT = /^(n\/a|na|tbd|tbc|none|null|undefined|-+|—+|\.+)$/i;
+
+function isPlaceholderText(value: string): boolean {
+  const trimmed = value.trim();
+  return !trimmed || PLACEHOLDER_TEXT.test(trimmed);
+}
+
+/** Free-text facts (lifestyle, legacy distance copy) — omit when blank or placeholder. */
+function meaningfulText(value: string | null | undefined): string | null {
+  if (value == null) return null;
+  const trimmed = value.trim();
+  if (isPlaceholderText(trimmed)) return null;
+  return trimmed;
+}
+
 /**
  * Curated numeric stats only count when a real value was entered. Blank, junk
  * and zero all mean "nothing to show" — no area has an AED 0/sqft price, a 0%
@@ -63,7 +79,7 @@ function displayStat(
   }
 
   const trimmed = value.trim();
-  if (!trimmed) return null;
+  if (!trimmed || isPlaceholderText(trimmed)) return null;
 
   // Laravel serializes DECIMAL columns as strings ("2400.00") — still numeric.
   const numeric = Number(trimmed);
@@ -134,22 +150,26 @@ export function areaFactsFromApi(area: ApiArea, labels: AreaDetailLabels): FactI
   const avgYield = displayStat(area.avgYield ?? area.avg_yield);
   pushFact(facts, {
     label: labels.avgYieldLabel,
-    value: avgYield == null ? null : `${avgYield}%`,
+    value:
+      avgYield == null ? null
+      : avgYield.endsWith("%") ? avgYield
+      : `${avgYield}%`,
     icon: "grow",
   });
 
   pushFact(facts, {
     label: labels.lifestyleLabel,
-    value: area.lifestyle?.trim() || null,
+    value: meaningfulText(area.lifestyle),
     icon: "waterfront",
   });
 
+  const downtownMinutes = positiveNumber(area.to_downtown_minutes);
   pushFact(facts, {
     label: labels.toDowntownLabel,
     value:
-      area.to_downtown_minutes != null ?
-        labels.formatToDowntownMinutes(area.to_downtown_minutes)
-      : area.distance_downtown?.trim() || null,
+      downtownMinutes != null ?
+        labels.formatToDowntownMinutes(downtownMinutes)
+      : meaningfulText(area.distance_downtown),
     icon: "skyline",
   });
 

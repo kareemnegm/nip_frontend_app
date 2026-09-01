@@ -7,7 +7,13 @@ export type ApiDeveloper = {
   hero_description?: string | null;
   logo_url?: string | null;
   photo_url?: string | null;
+  /** Display order from admin CMS — lower values appear first. */
+  order_no?: number | null;
+  /** Legacy alias some payloads may send. */
+  order?: number | null;
   properties_count?: number;
+  /** Public list/detail API field name. */
+  property_count?: number;
   properties?: unknown[];
 
   /** Facts strip — detail + list items (Admin CMS source of truth) */

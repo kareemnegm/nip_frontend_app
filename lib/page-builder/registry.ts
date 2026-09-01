@@ -136,7 +136,7 @@ export const SECTION_REGISTRY: Record<string, SectionDefinition> = {
     placeholderNamespace: "placeholders.builder.marketPulse",
     group: "content",
     icon: "percent",
-    editableSummary: "Section heading and intro line",
+    editableSummary: "Heading, intro, stat cards, and insights link",
   },
   "private-office": {
     type: "private-office",

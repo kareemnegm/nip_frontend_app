@@ -1,8 +1,10 @@
 import type { Locale } from "@/lib/i18n/config";
-import { offPlanCardLocationLine } from "@/lib/off-plan/detail";
 import { localizedHref } from "@/lib/i18n/helpers";
-import { resolveMediaUrl } from "@/lib/api/media-url";
-import type { ApiProperty } from "@/types/api";
+import { resolveMediaUrl, resolvePropertyVideoUrl } from "@/lib/api/media-url";
+import { resolveRentalPriceLabel } from "@/lib/rental/detail";
+import { resolvePropertyTags } from "@/lib/mappers/property-tags";
+import type { PropertyTagDisplay } from "@/components/ui/PropertyTagBadge";
+import type { ApiProperty, PropertyGalleryImage } from "@/types/api/property";
 
 export function formatAedPrice(price: number | null | undefined): string {
   if (price === null || price === undefined || Number.isNaN(price)) {
@@ -21,6 +23,25 @@ export function isResaleProperty(property: ApiProperty): boolean {
   return property.listing_type?.toLowerCase() === "resale";
 }
 
+export function isReadyProperty(property: ApiProperty): boolean {
+  return property.listing_type?.toLowerCase() === "ready";
+}
+
+export function isRentalProperty(property: ApiProperty): boolean {
+  const type = property.listing_type?.toLowerCase();
+  return type === "rental" || type === "rent";
+}
+
+/** Off-plan, ready, and rental listings may expose an available-units table when the API returns rows. */
+export function showsAvailableUnits(property: ApiProperty): boolean {
+  const listingType = property.listing_type?.toLowerCase();
+  if (listingType !== "offplan" && listingType !== "ready" && listingType !== "rental" && listingType !== "rent") {
+    return false;
+  }
+  const units = property.availableUnits ?? property.available_units;
+  return Boolean(units?.length);
+}
+
 /** Display label for a raw `listing_type` value, e.g. "offplan" -> "Off-Plan". */
 export function listingTypeLabel(listingType: string): string {
   switch (listingType.toLowerCase()) {
@@ -28,6 +49,9 @@ export function listingTypeLabel(listingType: string): string {
       return "Off-Plan";
     case "resale":
       return "Resale";
+    case "rental":
+    case "rent":
+      return "Rental";
     default:
       return listingType;
   }
@@ -49,7 +73,9 @@ export function propertyDetailHref(
     ? "/off-plan"
     : isResaleProperty(property)
       ? "/resale"
-      : "/properties";
+      : isRentalProperty(property)
+        ? "/rental"
+        : "/properties";
   return localizedHref(locale, `${base}/${property.slug}`);
 }
 
@@ -81,11 +107,53 @@ export function propertyBadges(property: ApiProperty): string[] {
   return badges.length > 0 ? badges : ["Property"];
 }
 
-export function propertyLocation(property: ApiProperty): string {
-  if (property.area?.name && property.location) {
-    return `${property.area.name} | ${property.location}`;
+export function resolvePropertyTagLabels(property: ApiProperty): string[] {
+  return resolvePropertyTags(property).map((tag) => tag.label);
+}
+
+type DeveloperNameRef = {
+  name: string;
+  order_no?: number | null;
+  order?: number | null;
+};
+
+function developerOrderNo(developer: DeveloperNameRef): number {
+  const raw = developer.order_no ?? developer.order ?? 0;
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+/** Primary developer on a card — lowest `order_no`, then name. */
+export function getPrimaryDeveloperName(
+  developers?: DeveloperNameRef[] | null,
+): string | undefined {
+  if (!developers?.length) return undefined;
+  const sorted = [...developers].sort((a, b) => {
+    const orderDiff = developerOrderNo(a) - developerOrderNo(b);
+    if (orderDiff !== 0) return orderDiff;
+    return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+  });
+  return sorted[0]?.name;
+}
+
+/** Figma card line: `{area} | {developer}`. */
+export function propertyCardLocationLine(input: {
+  area?: { name: string } | null;
+  location?: string | null;
+  developers?: DeveloperNameRef[] | null;
+  developer?: { name: string } | null;
+}): string {
+  const place = input.area?.name ?? input.location ?? "Dubai";
+  const developer =
+    getPrimaryDeveloperName(input.developers) ?? input.developer?.name;
+  if (developer) {
+    return `${place} | ${developer}`;
   }
-  return property.area?.name ?? property.location ?? "Dubai";
+  return place;
+}
+
+export function propertyLocation(property: ApiProperty): string {
+  return propertyCardLocationLine(property);
 }
 
 export type PropertyCardModel = {
@@ -96,21 +164,28 @@ export type PropertyCardModel = {
   handover?: string;
   meta: string[];
   badges: string[];
+  tags: PropertyTagDisplay[];
   imageUrl?: string;
 };
 
 export function mapPropertyToCard(
   property: ApiProperty,
   locale: Locale,
+  rentalLabels?: { pricePerYear: string; pricePerMonth: string },
 ): PropertyCardModel {
+  const price = isRentalProperty(property) && rentalLabels
+    ? resolveRentalPriceLabel(property, rentalLabels)
+    : formatAedPrice(property.price ?? null);
+
   return {
     title: property.title,
     location: propertyLocation(property),
-    price: formatAedPrice(property.price ?? null),
+    price,
     href: propertyDetailHref(property, locale),
     handover: property.handover_quarter ?? undefined,
     meta: propertyMeta(property),
     badges: propertyBadges(property),
+    tags: resolvePropertyTags(property),
     imageUrl: resolveMediaUrl(property.image_url),
   };
 }
@@ -122,6 +197,32 @@ export function mapPropertyToOffPlanCard(
   const card = mapPropertyToCard(property, locale);
   return {
     ...card,
-    location: offPlanCardLocationLine(property),
+    location: propertyCardLocationLine(property),
   };
+}
+
+/** Detail-page gallery — photos plus optional teaser video (video first when present). */
+export function mapPropertyToGalleryItems(property: ApiProperty): PropertyGalleryImage[] {
+  const images: PropertyGalleryImage[] = property.images?.length
+    ? property.images.flatMap((image) => {
+        const url = resolveMediaUrl(image.image_url);
+        return url ? [{ url, type: image.type, mediaType: "image" as const }] : [];
+      })
+    : (() => {
+        const fallback = resolveMediaUrl(property.image_url);
+        return fallback ? [{ url: fallback, mediaType: "image" as const }] : [];
+      })();
+
+  const videoUrl = resolvePropertyVideoUrl(property);
+  if (!videoUrl) return images;
+
+  return [
+    {
+      url: videoUrl,
+      type: "video",
+      mediaType: "video",
+      posterUrl: images[0]?.url,
+    },
+    ...images,
+  ];
 }

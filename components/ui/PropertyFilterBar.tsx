@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { preserveScrollOnNextNavigation } from "@/lib/navigation/scroll-preserve";
+import { cn } from "@/lib/cn";
 import { LabeledSelect } from "./LabeledSelect";
 
 const KEYWORD_DEBOUNCE_MS = 400;
@@ -63,6 +64,9 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
   const [type, setType] = useState(values.type ?? "");
   const [bedrooms, setBedrooms] = useState(values.bedrooms ?? "");
   const [minPrice, setMinPrice] = useState(values.min_price ?? "");
+  const [isFocused, setIsFocused] = useState(false);
+
+  const isActive = isFocused || keyword.length > 0;
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const skipKeywordDebounceRef = useRef(false);
@@ -195,7 +199,10 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
 
   return (
     <form
-      className="flex w-full flex-col gap-2.5 rounded-[var(--radius-card)] border border-line bg-surface p-3 shadow-[var(--shadow-card)] min-[1440px]:flex-row min-[1440px]:flex-nowrap min-[1440px]:items-center"
+      className={cn(
+        "motion-search-bar overflow-visible flex w-full flex-col gap-2.5 rounded-[var(--radius-card)] border border-line bg-surface p-3 shadow-[var(--shadow-card)] min-[1440px]:flex-row min-[1440px]:flex-nowrap min-[1440px]:items-center",
+        isActive && "is-typing",
+      )}
       onSubmit={onSubmit}
     >
       <input
@@ -204,6 +211,8 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
         placeholder={t("searchPlaceholder")}
         value={keyword}
         onChange={(event) => onKeywordChange(event.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         onKeyDown={(event) => {
           if (event.key === "Escape" && keyword !== "") {
             onKeywordChange("");
@@ -217,7 +226,7 @@ export function PropertyFilterBar({ basePath, values = {} }: PropertyFilterBarPr
         }}
         className="w-full min-w-0 shrink-0 rounded-[var(--radius-field)] bg-sapphire-50 px-3.5 py-2.5 text-body-sm text-ink outline-none placeholder:text-text-inactive min-[1440px]:w-[470px] min-[1440px]:flex-none"
       />
-      <div className="grid w-full min-w-0 grid-cols-2 gap-2.5 lg:grid-cols-5 min-[1440px]:contents">
+      <div className="grid w-full min-w-0 overflow-visible grid-cols-2 gap-2.5 lg:grid-cols-5 min-[1440px]:contents">
         <LabeledSelect
           aria-label={t("location")}
           options={filterOptions}

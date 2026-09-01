@@ -2,10 +2,44 @@ import { ApiError } from "./errors";
 import type { Locale } from "@/lib/i18n/config";
 import { withLocaleParam } from "./locale-params";
 
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ??
-  process.env.API_URL ??
-  "http://127.0.0.1:8000";
+/** Hostnames treated as local backend during `npm run dev`. */
+const LOCAL_API_HOSTS = new Set([
+  "127.0.0.1",
+  "localhost",
+  "nip_reality_backend.test",
+]);
+
+const DEFAULT_LOCAL_API_URL = "http://127.0.0.1:8000";
+
+function resolveApiBaseUrl(): string {
+  const configured =
+    process.env.NEXT_PUBLIC_API_URL ??
+    process.env.API_URL ??
+    DEFAULT_LOCAL_API_URL;
+
+  const trimmed = configured.replace(/\/$/, "");
+
+  if (process.env.NODE_ENV === "development") {
+    try {
+      const { hostname } = new URL(trimmed);
+      if (!LOCAL_API_HOSTS.has(hostname)) {
+        console.warn(
+          `[NIP API] Dev mode: NEXT_PUBLIC_API_URL is "${trimmed}" — using ${DEFAULT_LOCAL_API_URL} for local backend. Update .env.local if you need a different host.`,
+        );
+        return DEFAULT_LOCAL_API_URL;
+      }
+    } catch {
+      console.warn(
+        `[NIP API] Dev mode: invalid NEXT_PUBLIC_API_URL — using ${DEFAULT_LOCAL_API_URL}.`,
+      );
+      return DEFAULT_LOCAL_API_URL;
+    }
+  }
+
+  return trimmed;
+}
+
+export const API_BASE_URL = resolveApiBaseUrl();
 
 export const API_V1_ROOT = `${API_BASE_URL.replace(/\/$/, "")}/api/v1`;
 
@@ -20,7 +54,7 @@ function resolveFetchCacheOptions(
   }
 
   if (revalidate === false) {
-    return undefined;
+    return { cache: "no-store" };
   }
 
   return { next: { revalidate: revalidate ?? DEFAULT_REVALIDATE_SECONDS } };
@@ -97,6 +131,24 @@ async function parseErrorResponse(response: Response): Promise<ApiError> {
   return new ApiError(message, response.status, errors, code);
 }
 
+async function parseJsonResponse<T>(response: Response): Promise<T> {
+  const text = await response.text();
+  if (!text.trim()) {
+    return undefined as T;
+  }
+
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    throw new ApiError(
+      "API returned invalid JSON",
+      response.status,
+      undefined,
+      "INVALID_JSON",
+    );
+  }
+}
+
 /**
  * A backend restart or a save that briefly locks a row makes one request fail.
  * Without a retry that single blip becomes a rendered 500 for every visitor
@@ -156,7 +208,7 @@ export async function apiRequest<T>(
     return undefined as T;
   }
 
-  return response.json() as Promise<T>;
+  return parseJsonResponse<T>(response);
 }
 
 export async function apiGet<T>(

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
 import { AmenityIcon } from "@/components/ui/AmenityIcon";
+import { CenteredCardGrid } from "@/components/ui/CenteredCardGrid";
 import { PaginatedCards } from "@/components/ui/PaginatedCards";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { PropertyMap } from "@/components/ui/PropertyMap";
@@ -243,7 +244,9 @@ export function AreaCardSection({
               {children}
             </PaginatedCards>
           ) : (
-            <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">{children}</div>
+            <CenteredCardGrid gap="section" className="mt-10">
+              {children}
+            </CenteredCardGrid>
           )}
         </div>
       </div>

@@ -26,11 +26,12 @@ export type NavDropdownItem = {
   children?: readonly NavDropdownLeaf[];
 };
 
-/** Sale / Resale sub-filters for a property type — both hit the backend via `listing_type`. */
-function saleResaleChildren(type: string): readonly NavDropdownLeaf[] {
+/** Sale / Resale / Rental sub-filters for a property type — hit the backend via `listing_type`. */
+function propertyListingChildren(type: string): readonly NavDropdownLeaf[] {
   return [
     { key: "sale", href: `/properties?type=${type}&listing_type=sale` },
     { key: "resale", href: `/properties?type=${type}&listing_type=resale` },
+    { key: "rental", href: `/properties?type=${type}&listing_type=rental` },
   ];
 }
 
@@ -38,17 +39,17 @@ export const propertiesDropdownItems: readonly NavDropdownItem[] = [
   {
     key: "apartments",
     href: "/properties?type=apartment",
-    children: saleResaleChildren("apartment"),
+    children: propertyListingChildren("apartment"),
   },
   {
     key: "townhouses",
     href: "/properties?type=townhouse",
-    children: saleResaleChildren("townhouse"),
+    children: propertyListingChildren("townhouse"),
   },
   {
     key: "villas",
     href: "/properties?type=villa",
-    children: saleResaleChildren("villa"),
+    children: propertyListingChildren("villa"),
   },
 ];
 

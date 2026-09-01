@@ -38,6 +38,8 @@ export type ApiMemberPropertyCard = {
   areaSqft: number | null;
   location: string | null;
   area?: { slug: string; name: string };
+  developer?: { name: string } | null;
+  developers?: Array<{ name: string; order_no?: number | null; order?: number | null }>;
   primaryImage: string | null;
   isFeatured?: boolean;
   isExclusive?: boolean;

@@ -15,8 +15,8 @@ import {
 import {
   Badge,
   Breadcrumbs,
+  CenteredCardGrid,
   CurrencyIcon,
-  FactsStrip,
   Icon,
   PropertyCard,
 } from "@/components/ui";
@@ -35,6 +35,7 @@ import {
   formatAedPrice,
   isResaleProperty,
   mapPropertyToCard,
+  mapPropertyToGalleryItems,
 } from "@/lib/mappers/property";
 import {
   hasBackendPaymentPlan,
@@ -42,9 +43,7 @@ import {
   resolvePaymentPlanGroups,
   type PaymentPlanLabels,
 } from "@/lib/off-plan/detail";
-import { resaleFactsFromApi, type ResaleDetailLabels } from "@/lib/resale/detail";
 import { getSiteUrl } from "@/lib/site-url";
-import type { PropertyGalleryImage } from "@/types/api/property";
 
 type ResaleDetailPageProps = {
   locale: Locale;
@@ -67,16 +66,6 @@ export async function ResaleDetailPage({ locale, slug }: ResaleDetailPageProps) 
   const similar = await getSimilarPropertiesFor(property, locale, "resale");
   const listHref = localizedHref(locale, "/properties?listing_type=resale");
   const t = await getTranslations({ locale, namespace: "catalog" });
-  const labels: ResaleDetailLabels = {
-    originalPriceFactLabel: t("originalPriceFactLabel"),
-    bedroomLabel: t("bedroomLabel"),
-    bathroomLabel: t("bathroomLabel"),
-    areaLabel: t("totalAreaLabel"),
-    typeLabel: t("propertyTypeLabel"),
-    furnishingLabel: t("furnishingLabel"),
-    referenceLabel: t("referenceLabel"),
-  };
-  const facts = resaleFactsFromApi(property, labels);
 
   // Resale plans come from the backend only — never fall back to the off-plan 10/20/30/40 default.
   const paymentPlanLabels: PaymentPlanLabels = {
@@ -93,17 +82,7 @@ export async function ResaleDetailPage({ locale, slug }: ResaleDetailPageProps) 
     ? resolvePaymentPlanGroups(property, paymentPlanLabels)
     : [];
 
-  const galleryImages: PropertyGalleryImage[] = (() => {
-    if (property.images?.length) {
-      return property.images.flatMap((image) => {
-        const url = resolveMediaUrl(image.image_url);
-        return url ? [{ url, type: image.type }] : [];
-      });
-    }
-
-    const fallback = resolveMediaUrl(property.image_url);
-    return fallback ? [{ url: fallback }] : [];
-  })();
+  const galleryImages = mapPropertyToGalleryItems(property);
 
   const locationImageUrl = resolveMediaUrl(property.location_image_url);
 
@@ -172,16 +151,6 @@ export async function ResaleDetailPage({ locale, slug }: ResaleDetailPageProps) 
           </div>
         </div>
       </section>
-
-      {facts.length > 0 ? (
-        <section className="bg-white pb-10">
-          <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-            <div className={cn(sitePageInnerClassName, "w-full")}>
-              <FactsStrip className="w-full" items={facts} variant="property-detail" />
-            </div>
-          </div>
-        </section>
-      ) : null}
 
       {paymentPlans.length > 0 ? (
         <section className="bg-white pb-[72px]">
@@ -258,7 +227,7 @@ export async function ResaleDetailPage({ locale, slug }: ResaleDetailPageProps) 
               <p className="text-center text-overline font-semibold leading-4 text-accent">
                 {t("moreResaleProperties")}
               </p>
-              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              <CenteredCardGrid gap="section" data-reveal-stagger>
                 {similar.slice(0, 3).map((item) => (
                   <PropertyCard
                     key={item.id}
@@ -266,7 +235,7 @@ export async function ResaleDetailPage({ locale, slug }: ResaleDetailPageProps) 
                     {...mapPropertyToCard(item, locale)}
                   />
                 ))}
-              </div>
+              </CenteredCardGrid>
             </div>
           </div>
         </section>

@@ -4,6 +4,7 @@ import { localizedHref } from "@/lib/i18n/helpers";
 import {
   formatAedPrice,
   listingTypeLabel,
+  propertyCardLocationLine,
   type PropertyCardModel,
 } from "@/lib/mappers/property";
 import type {
@@ -18,6 +19,9 @@ export function memberDetailBase(listingType?: string | null): string {
       return "/off-plan";
     case "resale":
       return "/resale";
+    case "rental":
+    case "rent":
+      return "/rental";
     default:
       return "/properties";
   }
@@ -27,10 +31,7 @@ export function mapMemberPropertyToCard(
   property: ApiMemberPropertyCard,
   locale: Locale,
 ): PropertyCardModel {
-  const location =
-    property.area?.name && property.location
-      ? `${property.area.name} | ${property.location}`
-      : property.area?.name ?? property.location ?? "Dubai";
+  const location = propertyCardLocationLine(property);
 
   const badges: string[] = [];
   if (property.propertyType) badges.push(property.propertyType);
@@ -63,6 +64,7 @@ export function mapMemberPropertyToCard(
     handover: undefined,
     meta: meta.length > 0 ? meta : ["Details on request"],
     badges: badges.length > 0 ? badges : ["Property"],
+    tags: [],
     imageUrl: resolveMediaUrl(property.primaryImage),
   };
 }
@@ -71,7 +73,10 @@ export function mapMemberProjectToCard(
   project: ApiMemberOffplanCard,
   locale: Locale,
 ): PropertyCardModel {
-  const location = project.area?.name ?? "Dubai";
+  const location = propertyCardLocationLine({
+    area: project.area,
+    developer: project.developer,
+  });
   const badges = ["Off-Plan"];
   if (project.developer?.name) badges.push(project.developer.name);
 
@@ -83,6 +88,7 @@ export function mapMemberProjectToCard(
     handover: project.handoverQuarter ?? undefined,
     meta: project.handoverQuarter ? [project.handoverQuarter] : ["Details on request"],
     badges,
+    tags: [],
     imageUrl: resolveMediaUrl(project.primaryImage),
   };
 }

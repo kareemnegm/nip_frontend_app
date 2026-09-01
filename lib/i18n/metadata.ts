@@ -23,7 +23,8 @@ export type MetaPage =
   | "thankYou"
   | "notFound"
   | "serverError"
-  | "adminLogin";
+  | "adminLogin"
+  | "search";
 
 const metaNamespaces: Record<MetaPage, `meta.${MetaPage}`> = {
   home: "meta.home",
@@ -45,6 +46,7 @@ const metaNamespaces: Record<MetaPage, `meta.${MetaPage}`> = {
   notFound: "meta.notFound",
   serverError: "meta.serverError",
   adminLogin: "meta.adminLogin",
+  search: "meta.search",
 };
 
 /**

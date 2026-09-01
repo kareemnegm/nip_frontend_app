@@ -4,12 +4,16 @@ import { getTranslations } from "next-intl/server";
 import { SiteShell } from "@/components/SiteShell";
 import { CatalogHeroSection } from "@/components/sections/CatalogHeroSection";
 import { EditableCtaBand } from "@/components/sections/EditableCtaBand";
-import { ApiPagination, CatalogEmptyState, Container, Icon } from "@/components/ui";
+import { ApiPagination, CatalogEmptyState, CenteredCardGrid, DeveloperCard } from "@/components/ui";
+import { Container } from "@/components/ui/Container";
 import { getDevelopers } from "@/lib/api/developers";
+import { getDeveloperPropertyCount } from "@/lib/mappers/developer";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { localizedHref, resolveLocale } from "@/lib/i18n/helpers";
 import { localizedMetadata } from "@/lib/i18n/metadata";
+
+export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -48,29 +52,25 @@ export default async function DevelopersPage({ params, searchParams }: PageProps
           {data.length === 0 ? (
             <CatalogEmptyState message={t("empty")} />
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-              {data.map((developer) => (
-                <Link
-                  key={developer.id}
-                  href={localizedHref(locale, `/developers/${developer.slug}`)}
-                  className="flex flex-col gap-3 rounded-[var(--radius-card)] border border-line bg-white p-8 transition-shadow hover:shadow-[var(--shadow-card)]"
-                >
-                  {/* Uppercased in CSS so the API keeps the brand's real casing. */}
-                  <span className="font-display text-h3 font-bold uppercase text-brand">
-                    {developer.name.trim()}
-                  </span>
-                  {developer.properties_count != null ? (
-                    <span className="text-body-sm text-ink-secondary">
-                      {tc("projects", { count: developer.properties_count })}
-                    </span>
-                  ) : null}
-                  <span className="mt-2 inline-flex items-center gap-1 text-label-semibold font-semibold text-accent">
-                    {tc("viewMaker")}{" "}
-                    <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
-                  </span>
-                </Link>
-              ))}
-            </div>
+            <CenteredCardGrid gap="section" data-reveal-stagger>
+              {data.map((developer) => {
+                const propertyCount = getDeveloperPropertyCount(developer);
+
+                return (
+                  <DeveloperCard
+                    key={developer.id}
+                    href={localizedHref(locale, `/developers/${developer.slug}`)}
+                    name={developer.name}
+                    viewMakerLabel={tc("viewMaker")}
+                    projectsLabel={
+                      propertyCount != null
+                        ? tc("projects", { count: propertyCount })
+                        : undefined
+                    }
+                  />
+                );
+              })}
+            </CenteredCardGrid>
           )}
           <ApiPagination
             currentPage={meta.current_page}

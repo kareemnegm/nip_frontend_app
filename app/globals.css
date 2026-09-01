@@ -529,7 +529,11 @@ textarea {
 :root {
   --motion-ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
   --motion-reveal-distance: 48px;
+  --motion-reveal-x-distance: 32px;
   --motion-reveal-duration: 1.4s;
+  --motion-carousel-speed: 50s;
+  --motion-carousel-scale: 1.04;
+  --motion-search-scale: 1.02;
 }
 
 [data-reveal] {
@@ -546,6 +550,25 @@ textarea {
 [data-reveal].is-visible {
   opacity: 1;
   transform: translateY(0);
+  animation: none;
+}
+
+[data-reveal="slide-x"] {
+  opacity: 0;
+  transform: translateX(calc(-1 * var(--motion-reveal-x-distance)));
+  transition:
+    opacity var(--motion-reveal-duration) var(--motion-ease-lux),
+    transform var(--motion-reveal-duration) var(--motion-ease-lux);
+  animation: nip-reveal-failsafe 0.45s var(--motion-ease-lux) 1.2s forwards;
+}
+
+html[dir="rtl"] [data-reveal="slide-x"] {
+  transform: translateX(var(--motion-reveal-x-distance));
+}
+
+[data-reveal="slide-x"].is-visible {
+  opacity: 1;
+  transform: translateX(0);
   animation: none;
 }
 
@@ -646,9 +669,57 @@ textarea {
   transition: transform 1.4s var(--motion-ease-lux);
 }
 
+.motion-card-lift:hover .motion-card-image,
+.motion-card-lift:focus-within .motion-card-image,
+.group:hover .motion-card-image,
+.group:focus-within .motion-card-image,
 article:hover .motion-card-image,
 article:focus-within .motion-card-image {
   transform: scale(1.05);
+}
+
+.motion-card-lift {
+  transition:
+    transform 0.5s var(--motion-ease-lux),
+    box-shadow 0.5s var(--motion-ease-lux);
+}
+
+.group:hover .motion-card-lift,
+.group:focus-within .motion-card-lift,
+.motion-card-lift:hover,
+.motion-card-lift:focus-within,
+.motion-card-lift:focus-visible {
+  position: relative;
+  z-index: 1;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover, 0 8px 24px rgba(15, 23, 42, 0.12));
+}
+
+.motion-carousel-slide {
+  transition:
+    transform 0.6s var(--motion-ease-lux),
+    filter 0.6s var(--motion-ease-lux);
+  transform: scale(0.97);
+  transform-origin: center center;
+}
+
+.motion-carousel-slide.is-focused {
+  transform: scale(var(--motion-carousel-scale));
+  filter: none;
+  z-index: 1;
+}
+
+.motion-search-bar {
+  transition:
+    transform 0.5s var(--motion-ease-lux),
+    box-shadow 0.5s var(--motion-ease-lux);
+  transform-origin: center center;
+}
+
+.motion-search-bar:focus-within,
+.motion-search-bar.is-typing {
+  transform: scale(var(--motion-search-scale));
+  box-shadow: var(--shadow-card-hover, 0 8px 24px rgba(15, 23, 42, 0.1));
 }
 
 /* The arrow nudges via relative offset, not `gap`, so hovering never reflows the
@@ -659,7 +730,9 @@ article:focus-within .motion-card-image {
   transition: inset-inline-start 0.5s var(--motion-ease-lux);
 }
 
-.motion-link-arrow:hover > :last-child {
+.motion-link-arrow:hover > :last-child,
+.group:hover .motion-link-arrow > :last-child,
+.group:focus-within .motion-link-arrow > :last-child {
   inset-inline-start: 0.375rem;
 }
 
@@ -690,6 +763,7 @@ article:focus-within .motion-card-image {
   }
 
   [data-reveal],
+  [data-reveal="slide-x"],
   [data-hero-eyebrow],
   [data-hero-sub],
   [data-hero-meta],
@@ -702,6 +776,29 @@ article:focus-within .motion-card-image {
   .motion-card-image {
     transition: none !important;
     transform: none !important;
+  }
+
+  .group:hover .motion-card-lift,
+  .group:focus-within .motion-card-lift,
+  .motion-card-lift:hover,
+  .motion-card-lift:focus-within,
+  .motion-card-lift:focus-visible {
+    transform: none !important;
+    box-shadow: var(--shadow-card) !important;
+  }
+
+  .motion-carousel-slide,
+  .motion-carousel-slide.is-focused {
+    transform: none !important;
+    transition: none !important;
+    filter: none !important;
+  }
+
+  .motion-search-bar:focus-within,
+  .motion-search-bar.is-typing {
+    transform: none !important;
+    box-shadow: none !important;
+    transition: none !important;
   }
 
   .motion-link-arrow > :last-child {

@@ -1,6 +1,6 @@
 import type { ComponentProps } from "react";
 import { getTranslations } from "next-intl/server";
-import { CatalogEmptyState, CommunityCard } from "@/components/ui";
+import { CatalogEmptyState, CenteredCardGrid, CommunityCard } from "@/components/ui";
 import { Container } from "@/components/ui/Container";
 import { siteCardSectionLayoutClassName, siteSectionY } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
@@ -33,11 +33,11 @@ export async function CommunitiesSection({
         {areas.length === 0 ? (
           <CatalogEmptyState message={t("areas")} />
         ) : (
-          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <CenteredCardGrid gap="section" className="w-full" data-reveal-stagger>
             {areas.map((area) => (
               <CommunityCard key={area.href} {...area} />
             ))}
-          </div>
+          </CenteredCardGrid>
         )}
       </Container>
     </section>

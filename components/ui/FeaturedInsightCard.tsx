@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { AppLink as Link } from "@/components/AppLink";
 import { cn } from "@/lib/cn";
+import { CardLink } from "./Cards";
 
 export type FeaturedInsightCardProps = {
   category: string;
@@ -25,19 +25,20 @@ export function FeaturedInsightCard({
 }: FeaturedInsightCardProps) {
   const card = (
     <article
+      data-reveal="slide-x"
       className={cn(
-        "flex flex-col overflow-hidden rounded-[var(--radius-card)] bg-basalt-50 lg:h-[360px] lg:flex-row lg:items-center lg:gap-10",
+        "flex flex-col overflow-hidden rounded-[var(--radius-card)] bg-basalt-50 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))] lg:h-[360px] lg:flex-row lg:items-center lg:gap-10",
         href && "cursor-pointer",
         className,
       )}
     >
       {imageUrl ? (
-        <div className="relative h-[220px] w-full shrink-0 bg-basalt-100 sm:h-[280px] lg:h-full lg:w-[520px] lg:rounded-l-[var(--radius-card)]">
+        <div className="relative h-[220px] w-full shrink-0 overflow-hidden bg-basalt-100 sm:h-[280px] lg:h-full lg:w-[520px] lg:rounded-l-[var(--radius-card)]">
           <Image
             src={imageUrl}
             alt={title}
             fill
-            className="object-cover lg:rounded-l-[var(--radius-card)]"
+            className="motion-card-image object-cover lg:rounded-l-[var(--radius-card)]"
             sizes="(max-width: 1024px) 100vw, 520px"
             priority
           />
@@ -62,16 +63,9 @@ export function FeaturedInsightCard({
     </article>
   );
 
-  if (href) {
-    return (
-      <Link
-        href={href}
-        className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2"
-      >
-        {card}
-      </Link>
-    );
-  }
-
-  return card;
+  return (
+    <CardLink href={href} className="block w-full">
+      {card}
+    </CardLink>
+  );
 }

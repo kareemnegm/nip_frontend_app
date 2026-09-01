@@ -16,6 +16,7 @@ import { PropertyGallery } from "@/components/sections/PropertyStorySections";
 import {
   Badge,
   Breadcrumbs,
+  CenteredCardGrid,
   CurrencyIcon,
   FactsStrip,
   Icon,
@@ -36,16 +37,18 @@ import { getSiteUrl } from "@/lib/site-url";
 import {
   formatAedPrice,
   isOffPlanProperty,
+  mapPropertyToGalleryItems,
   mapPropertyToOffPlanCard,
+  showsAvailableUnits,
 } from "@/lib/mappers/property";
+import { resolvePropertyTags } from "@/lib/mappers/property-tags";
 import {
   offPlanFactsFromApi,
   offPlanLocationLine,
+  resolveAvailableUnitsFromApi,
   resolvePaymentPlanGroups,
-  resolveUnits,
   type OffPlanDetailLabels,
 } from "@/lib/off-plan/detail";
-import type { PropertyGalleryImage } from "@/types/api/property";
 
 type OffPlanDetailPageProps = {
   locale: Locale;
@@ -86,19 +89,11 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
   };
   const facts = offPlanFactsFromApi(property, labels);
   const paymentPlans = resolvePaymentPlanGroups(property, labels);
-  const units = resolveUnits(property, labels);
+  const units = showsAvailableUnits(property)
+    ? resolveAvailableUnitsFromApi(property)
+    : [];
 
-  const galleryImages: PropertyGalleryImage[] = (() => {
-    if (property.images?.length) {
-      return property.images.flatMap((image) => {
-        const url = resolveMediaUrl(image.image_url);
-        return url ? [{ url, type: image.type }] : [];
-      });
-    }
-
-    const fallback = resolveMediaUrl(property.image_url);
-    return fallback ? [{ url: fallback }] : [];
-  })();
+  const galleryImages = mapPropertyToGalleryItems(property);
 
   // Masterplan render only — the map below covers location, so a location photo
   // must not stand in for the plan.
@@ -110,6 +105,7 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
   const handoverBadge = property.handover_quarter
     ? `${property.handover_quarter} ${t("handoverLabel")}`
     : null;
+  const tagLabels = resolvePropertyTags(property);
 
   return (
     <SiteShell>
@@ -128,6 +124,11 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
                 />
                 <div className="flex flex-wrap gap-2">
                   <Badge tone="property">{t("breadcrumbOffPlan")}</Badge>
+                  {tagLabels.map((tag) => (
+                    <Badge key={tag.slug} tone="property">
+                      {tag.label}
+                    </Badge>
+                  ))}
                   {handoverBadge ? <Badge tone="property">{handoverBadge}</Badge> : null}
                 </div>
                 <h1 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
@@ -156,7 +157,7 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
                     propertyId={property.id}
                     pageUrl={pageUrl}
                     label={t("registerInterest")}
-                    modalTitle={t("privateViewingTitle")}
+                    modalTitle={t("registerInterestEyebrow")}
                     className="w-auto shrink-0"
                   />
                 </div>
@@ -192,13 +193,15 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
               description={property.description}
             />
             <PaymentPlanSection title={t("paymentPlanTitle")} plans={paymentPlans} />
-            <AvailableUnitsTable
-              title={t("availableUnitsTitle")}
-              unitTypeLabel={t("unitType")}
-              sizeLabel={t("sizeSqft")}
-              startingPriceLabel={t("startingPrice")}
-              units={units}
-            />
+            {units.length > 0 ? (
+              <AvailableUnitsTable
+                title={t("availableUnitsTitle")}
+                unitTypeLabel={t("unitType")}
+                sizeLabel={t("sizeSqft")}
+                startingPriceLabel={t("startingPrice")}
+                units={units}
+              />
+            ) : null}
             <MasterplanLocationSection
               title={t("masterplanTitle")}
               imageUrl={masterPlanImageUrl}
@@ -227,7 +230,7 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
             className="max-w-[720px] font-[family-name:var(--font-display)] text-[44px] uppercase leading-[52px] tracking-[-0.04em] text-white"
           />
         }
-        modalTitle={t("privateViewingTitle")}
+        modalTitle={t("registerInterestEyebrow")}
       />
 
       {similar.length > 0 ? (
@@ -237,7 +240,7 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
               <p className="text-center text-overline font-semibold leading-4 text-accent">
                 {t("moreOffPlanProjects")}
               </p>
-              <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              <CenteredCardGrid gap="section" data-reveal-stagger>
                 {similar.slice(0, 3).map((item) => {
                   const card = mapPropertyToOffPlanCard(item, locale);
                   return (
@@ -253,7 +256,7 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
                     />
                   );
                 })}
-              </div>
+              </CenteredCardGrid>
             </div>
           </div>
         </section>

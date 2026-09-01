@@ -10,6 +10,28 @@ export type DeveloperCardModel = {
   propertiesCount?: number;
 };
 
+export function getDeveloperOrderNo(developer: ApiDeveloper): number {
+  const raw = developer.order_no ?? developer.order ?? 0;
+  const parsed = Number(raw);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+/** Match backend: `order_no` ascending, then name. */
+export function compareDevelopersByOrder(a: ApiDeveloper, b: ApiDeveloper): number {
+  const orderDiff = getDeveloperOrderNo(a) - getDeveloperOrderNo(b);
+  if (orderDiff !== 0) return orderDiff;
+  return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
+}
+
+export function sortDevelopersByOrder<T extends ApiDeveloper>(developers: T[]): T[] {
+  return [...developers].sort(compareDevelopersByOrder);
+}
+
+export function getDeveloperPropertyCount(developer: ApiDeveloper): number | undefined {
+  const count = developer.property_count ?? developer.properties_count;
+  return count == null ? undefined : count;
+}
+
 export function mapDeveloperToCard(
   developer: ApiDeveloper,
   locale: Locale,
@@ -18,6 +40,6 @@ export function mapDeveloperToCard(
     name: developer.name,
     href: localizedHref(locale, `/developers/${developer.slug}`),
     logoUrl: resolveMediaUrl(developer.logo_url ?? developer.photo_url),
-    propertiesCount: developer.properties_count,
+    propertiesCount: getDeveloperPropertyCount(developer),
   };
 }

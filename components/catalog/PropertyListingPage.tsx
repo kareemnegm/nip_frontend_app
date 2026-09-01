@@ -2,6 +2,7 @@ import { SiteShell } from "@/components/SiteShell";
 import {
   ApiPagination,
   CatalogEmptyState,
+  CenteredCardGrid,
   OffPlanCard,
   PropertyCard,
   PropertyFilterBar,
@@ -26,6 +27,7 @@ import {
   mapPropertyToOffPlanCard,
 } from "@/lib/mappers/property";
 import { getTranslations } from "next-intl/server";
+import { pageBlockKeys } from "@/lib/i18n/block-keys";
 
 type PropertyListingPageProps = {
   locale: Locale;
@@ -56,6 +58,37 @@ async function getHeroPlaceholders(catalogPage: CatalogPage, locale: Locale) {
   };
 }
 
+type PropertiesListingType = "sale" | "resale" | "rental";
+
+function propertiesHeroForListingType(
+  listingType: PropertiesListingType,
+  t: Awaited<ReturnType<typeof getTranslations<"catalog">>>,
+  defaults: { eyebrow: string; title: string },
+) {
+  const heroBlocks = pageBlockKeys.properties.hero;
+
+  switch (listingType) {
+    case "resale":
+      return {
+        eyebrow: defaults.eyebrow,
+        title: t("heroTitleResale"),
+        titleBlockKey: heroBlocks.titleResale,
+      };
+    case "rental":
+      return {
+        eyebrow: defaults.eyebrow,
+        title: t("heroTitleRental"),
+        titleBlockKey: heroBlocks.titleRental,
+      };
+    default:
+      return {
+        eyebrow: defaults.eyebrow,
+        title: t("heroTitleSale"),
+        titleBlockKey: heroBlocks.title,
+      };
+  }
+}
+
 export async function PropertyListingPage({
   locale,
   searchParams,
@@ -67,16 +100,18 @@ export async function PropertyListingPage({
   const currentView: "grid" | "list" = sp.view === "list" ? "list" : "grid";
   const currentSort = sp.sort ?? sp.order_by ?? "newest";
 
-  // Properties page filters by `listing_type` = sale | resale (both hit the
-  // backend the same way off-plan does). Off-plan is always "offplan". Default
-  // to "sale" when no valid value is present, and never let the off-plan value
-  // leak onto the properties page.
+  // Properties page filters by `listing_type` = sale | resale | rental (or legacy
+  // `rent`). Off-plan is always "offplan". Default to "sale" when no valid value
+  // is present, and never let the off-plan value leak onto the properties page.
+  const rawListingType = (sp.listing_type ?? sp.listing)?.toLowerCase();
   const listingType =
     mode === "offplan"
       ? "offplan"
-      : sp.listing_type === "resale"
+      : rawListingType === "resale"
         ? "resale"
-        : "sale";
+        : rawListingType === "rental" || rawListingType === "rent"
+          ? "rental"
+          : "sale";
 
   const params = buildPropertyListParams(searchParams, {
     listing_type: listingType,
@@ -89,13 +124,30 @@ export async function PropertyListingPage({
   const filterValues = sp;
   const heroPlaceholders = await getHeroPlaceholders(catalogPage, locale);
   const t = await getTranslations({ locale, namespace: "catalog" });
+  const propertiesHero =
+    catalogPage === "properties"
+      ? propertiesHeroForListingType(
+          listingType as PropertiesListingType,
+          t,
+          heroPlaceholders,
+        )
+      : null;
+  const rentalCardLabels =
+    listingType === "rental"
+      ? { pricePerYear: t("pricePerYear"), pricePerMonth: t("pricePerMonth") }
+      : undefined;
 
   return (
     <SiteShell>
       <CatalogHeroSection
         page={catalogPage}
         locale={locale}
-        placeholders={heroPlaceholders}
+        placeholders={
+          propertiesHero
+            ? { eyebrow: propertiesHero.eyebrow, title: propertiesHero.title }
+            : heroPlaceholders
+        }
+        titleBlockKey={propertiesHero?.titleBlockKey}
       >
         <PropertyFilterBar
           basePath={basePath}
@@ -128,7 +180,7 @@ export async function PropertyListingPage({
             ) : currentView === "list" ? (
               <div className="flex flex-col gap-4">
                 {data.map((property) => {
-                  const card = mapPropertyToCard(property, locale);
+                  const card = mapPropertyToCard(property, locale, rentalCardLabels);
                   return (
                     <PropertyCard
                       key={property.id}
@@ -139,12 +191,12 @@ export async function PropertyListingPage({
                 })}
               </div>
             ) : (
-              <div className="grid gap-x-8 gap-y-10 sm:grid-cols-2 xl:grid-cols-3">
+              <CenteredCardGrid gap="catalog" data-reveal-stagger>
                 {data.map((property) => {
                   const card =
                     mode === "offplan"
                       ? mapPropertyToOffPlanCard(property, locale)
-                      : mapPropertyToCard(property, locale);
+                      : mapPropertyToCard(property, locale, rentalCardLabels);
                   const Card = mode === "offplan" ? OffPlanCard : PropertyCard;
                   return (
                     <Card
@@ -154,7 +206,7 @@ export async function PropertyListingPage({
                     />
                   );
                 })}
-              </div>
+              </CenteredCardGrid>
             )}
 
             <ApiPagination

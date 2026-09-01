@@ -4,6 +4,10 @@ import { Children, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/cn";
 import {
+  centeredCatalogCardGridClassName,
+  centeredCatalogCardItemClassName,
+} from "./CenteredCardGrid";
+import {
   buildPageItems,
   paginationActiveClasses,
   paginationCellClasses,
@@ -28,7 +32,7 @@ export function PaginatedCards({
   children,
   perPage = 3,
   className,
-  gridClassName = "grid gap-6 sm:grid-cols-2 xl:grid-cols-3",
+  gridClassName = centeredCatalogCardGridClassName,
 }: PaginatedCardsProps) {
   const t = useTranslations("catalog");
   const items = Children.toArray(children);
@@ -46,7 +50,16 @@ export function PaginatedCards({
 
   return (
     <div className={className}>
-      <div className={gridClassName}>{visible}</div>
+      <div className={gridClassName} data-reveal-stagger>
+        {visible.map((child, index) => (
+          <div
+            key={index}
+            className={cn(centeredCatalogCardItemClassName, "[&>*]:w-full")}
+          >
+            {child}
+          </div>
+        ))}
+      </div>
 
       {lastPage > 1 ? (
         <nav

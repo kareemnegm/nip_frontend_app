@@ -7,8 +7,8 @@ import type { ApiArea } from "@/types/api";
 export type CommunityCardModel = {
   title: string;
   facts: AreaFeatureItem[];
-  projectCount: number;
-  projectsAvailableLabel: string;
+  /** Omitted when the API sends no project count — no "0 projects" placeholder. */
+  projectsAvailableLabel?: string;
   exploreAreaLabel: string;
   href: string;
   imageUrl?: string;
@@ -22,12 +22,13 @@ export function mapAreaToCommunityCard(
     exploreAreaLabel: string;
   },
 ): CommunityCardModel {
-  const projectCount = area.project_count ?? 0;
+  const projectCount =
+    area.project_count != null && area.project_count > 0 ? area.project_count : null;
   return {
     title: area.name,
     facts: resolveAreaCardFacts(area),
-    projectCount,
-    projectsAvailableLabel: options.projectsAvailableLabel(projectCount),
+    projectsAvailableLabel:
+      projectCount != null ? options.projectsAvailableLabel(projectCount) : undefined,
     exploreAreaLabel: options.exploreAreaLabel,
     href: localizedHref(locale, `/areas/${area.slug}`),
     imageUrl: resolveMediaUrl(area.image_url ?? area.photo_url),

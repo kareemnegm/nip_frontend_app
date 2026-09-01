@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { defaultLocale, type Locale } from "@/lib/i18n/config";
-import { isOffPlanProperty, isResaleProperty } from "@/lib/mappers/property";
+import { isOffPlanProperty, isResaleProperty, isRentalProperty } from "@/lib/mappers/property";
 import type {
   ApiProperty,
   LaravelPaginated,
@@ -27,6 +27,7 @@ export async function getProperties(params: PropertyListParams = {}) {
     return await apiGet<LaravelPaginated<ApiProperty>>("/properties", {
       params: toQueryParams(rest),
       locale,
+      revalidate: false,
     });
   } catch (error) {
     logApiFallback("GET /properties", error);
@@ -39,7 +40,7 @@ export const getPropertyBySlug = cache(
     try {
       const response = await apiGet<ApiProperty | { data: ApiProperty }>(
         `/properties/${slug}`,
-        { locale },
+        { locale, revalidate: false },
       );
       return unwrapData(response);
     } catch (error) {
@@ -61,7 +62,7 @@ export async function getSimilarProperties(
   try {
     const response = await apiGet<{ data: ApiProperty[] } | ApiProperty[]>(
       `/properties/${slug}/similar`,
-      { locale },
+      { locale, revalidate: false },
     );
     return Array.isArray(response) ? response : unwrapData(response);
   } catch (error) {
@@ -82,14 +83,14 @@ export async function getSimilarProperties(
 export async function getSimilarPropertiesFor(
   property: ApiProperty,
   locale: Locale = defaultLocale,
-  listingType: "sale" | "offplan" | "resale",
+  listingType: "sale" | "offplan" | "resale" | "rental",
   limit = 3,
 ): Promise<ApiProperty[]> {
-  // "sale" is the catch-all: anything that is neither off-plan nor resale.
   const matchesListingType = (item: ApiProperty) => {
     if (listingType === "offplan") return isOffPlanProperty(item);
     if (listingType === "resale") return isResaleProperty(item);
-    return !isOffPlanProperty(item) && !isResaleProperty(item);
+    if (listingType === "rental") return isRentalProperty(item);
+    return !isOffPlanProperty(item) && !isResaleProperty(item) && !isRentalProperty(item);
   };
 
   const results = (await getSimilarProperties(property.slug, locale))
@@ -132,6 +133,7 @@ export function buildPropertySearchParams(
     keyword: pick("keyword") ?? pick("q"),
     type: pick("type"),
     listing_type: pick("listing_type") ?? pick("listing"),
+    tag: pick("tag"),
     area: pick("area"),
     developer: pick("developer"),
     bedrooms: pick("bedrooms") ?? pick("beds"),

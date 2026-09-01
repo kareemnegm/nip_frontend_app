@@ -25,6 +25,7 @@ function OffPlanInquiryModal({
   onClose,
 }: OffPlanInquiryModalProps) {
   const tCommon = useTranslations("common");
+  const tCatalog = useTranslations("catalog");
 
   return (
     <Modal
@@ -33,7 +34,11 @@ function OffPlanInquiryModal({
       title={modalTitle}
       closeLabel={tCommon("close")}
     >
-      <PropertyInquiryForm propertyId={propertyId} pageUrl={pageUrl} />
+      <PropertyInquiryForm
+        propertyId={propertyId}
+        pageUrl={pageUrl}
+        submitLabel={tCatalog("submitYourDetails")}
+      />
     </Modal>
   );
 }

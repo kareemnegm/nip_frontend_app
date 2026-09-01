@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import type { PropertyCardProps } from "@/components/ui/Cards";
 import { PropertyCard } from "@/components/ui/Cards";
 import { CardCarousel } from "@/components/ui/CardCarousel";
-import { CatalogEmptyState } from "@/components/ui/ApiPagination";
+import { CatalogEmptyState, CenteredCardGrid } from "@/components/ui";
 import { siteCardSectionLayoutClassName, siteSectionY } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
@@ -47,7 +47,11 @@ export async function FeaturedSelectionSection({
           <CatalogEmptyState message={t("featured")} />
         ) : properties.length <= 3 ? (
           /* Figma 1525:28336 — 1240px row: 3×408px cards + 2×8px gaps; no side peeks */
-          <div className="grid w-full max-w-[1240px] grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-2">
+          <CenteredCardGrid
+            gap="section"
+            className="w-full max-w-[1240px] xl:gap-2"
+            itemClassName="sm:w-[calc((100%-1.5rem)/2)] xl:w-[calc((100%-1rem)/3)]"
+          >
             {properties.map((property, index) => (
               <PropertyCard
                 key={property.href ?? `featured-${index}`}
@@ -55,11 +59,11 @@ export async function FeaturedSelectionSection({
                 ctaLabel={featuredCtaLabel}
               />
             ))}
-          </div>
+          </CenteredCardGrid>
         ) : (
           /* Clip viewport to exactly 3 cards (1240px) so adjacent slides never peek */
           <div className="w-full max-w-[1240px] overflow-hidden">
-            <CardCarousel className="w-full" slideWidth={408} gap={8} trackHeight={480}>
+            <CardCarousel className="w-full" slideWidth={408} gap={8} trackHeight={480} hoverEdgeScroll>
               {properties.map((property, index) => (
                 <PropertyCard
                   key={property.href ?? `featured-${index}`}

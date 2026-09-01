@@ -12,6 +12,7 @@
     "villas": "فلل",
     "sale": "بيع",
     "resale": "إعادة بيع",
+    "rental": "إيجار",
     "openMenu": "فتح القائمة",
     "closeMenu": "إغلاق القائمة"
   },
@@ -53,6 +54,9 @@
   },
   "footer": {
     "properties": "العقارات",
+    "tagFeatured": "مميز",
+    "tagUpcoming": "قريباً",
+    "tagNewLaunch": "إطلاق جديد",
     "buyProperties": "شراء عقارات",
     "rentProperties": "إيجار عقارات",
     "exclusives": "حصري",
@@ -283,6 +287,18 @@
     "breadcrumbProperties": "العقارات",
     "breadcrumbOffPlan": "على الخارطة",
     "breadcrumbResale": "إعادة بيع",
+    "breadcrumbRental": "إيجار",
+    "heroTitleSale": "اعثر على عقاراتك الجاهزة للسكن",
+    "heroTitleResale": "اعثر على وحدتك",
+    "heroTitleRental": "اعثر على مكانك في دبي",
+    "rentalPrice": "سعر الإيجار",
+    "yearlyRent": "إيجار سنوي",
+    "monthlyRent": "إيجار شهري",
+    "chequesLabel": "{count} شيكات",
+    "chequesFactLabel": "الشيكات",
+    "pricePerYear": " / سنة",
+    "pricePerMonth": " / شهر",
+    "moreRentalProperties": "المزيد من عقارات الإيجار",
     "bedroomLabel": "غرف النوم",
     "bathroomLabel": "الحمامات",
     "areaLabel": "المساحة",
@@ -310,6 +326,9 @@
     "price10m": "10 ملايين درهم+",
     "viewAllPhotos": "عرض كل الصور",
     "photosCount": "{count} صورة",
+    "mediaCount": "{count} عنصر",
+    "videoTour": "جولة فيديو",
+    "playVideo": "تشغيل الفيديو",
     "closeGallery": "إغلاق المعرض",
     "storyTitle": "القصة",
     "overviewTitle": "نظرة عامة",
@@ -334,6 +353,7 @@
     "privateViewingTitle": "رتّب زيارة سرية",
     "privateViewingDescription": "شارك بياناتك وسيتواصل معك مستشار NIP لتأكيد الخطوة التالية.",
     "requestViewing": "طلب معاينة",
+    "submitYourDetails": "أرسل بياناتك",
     "breadcrumbFeaturedProjects": "المشاريع المميزة",
     "paymentPlanTitle": "خطة الدفع",
     "availableUnitsTitle": "الوحدات المتاحة",
@@ -545,6 +565,21 @@
           "answer": "يستجيب المستشار الخاص عادةً خلال يوم عمل واحد، وغالباً أسرع خلال ساعات العمل."
         }
       }
+    },
+    "search": {
+      "eyebrow": "بحث الموقع",
+      "title": "بحث",
+      "titleWithQuery": "نتائج \"{query}\"",
+      "prompt": "ابحث عن العقارات والمجتمعات والمطورين في دبي.",
+      "summary": "{count, plural, one {نتيجة واحدة} other {# نتائج}} في العقارات والمناطق والمطورين.",
+      "resultCount": "{count, plural, one {نتيجة واحدة} other {# نتائج}}",
+      "propertiesTitle": "العقارات",
+      "areasTitle": "المناطق والمجتمعات",
+      "developersTitle": "المطورون",
+      "empty": "لم نجد نتائج مطابقة. جرّب كلمة أخرى أو تواصل مع مستشار.",
+      "emptyProperties": "لا توجد عقارات مطابقة لهذا البحث.",
+      "emptyAreas": "لا توجد مجتمعات مطابقة لهذا البحث.",
+      "emptyDevelopers": "لا يوجد مطورون مطابقون لهذا البحث."
     }
   },
   "placeholders": {
@@ -564,7 +599,20 @@
       },
       "marketPulse": {
         "title": "نبض السوق",
-        "desc": "تابع إشارات السوق التي تهم قبل أن تصبح عناوين"
+        "desc": "تابع إشارات السوق التي تهم قبل أن تصبح عناوين",
+        "cta": "عرض منظور السوق",
+        "stat1Context": "مجتمعات متميزة",
+        "stat1Value": "2400",
+        "stat1Label": "متوسط السعر / قدم مربع",
+        "stat2Context": "إطلاقات نشطة",
+        "stat2Value": "12",
+        "stat2Label": "مشاريع على الخارطة",
+        "stat3Context": "شريحة المستثمرين",
+        "stat3Value": "6.2%",
+        "stat3Label": "متوسط العائد الإجمالي",
+        "stat4Context": "في جميع أنحاء دبي",
+        "stat4Value": "28",
+        "stat4Label": "مجتمعات تحت التغطية"
       },
       "privateOffice": {
         "title": "المكتب الخاص",
@@ -599,7 +647,20 @@
       },
       "marketPulse": {
         "title": "نبض السوق",
-        "desc": "إشارات السوق الرئيسية بلمحة."
+        "desc": "إشارات السوق الرئيسية بلمحة.",
+        "cta": "عرض منظور السوق",
+        "stat1Context": "مجتمعات متميزة",
+        "stat1Value": "2400",
+        "stat1Label": "متوسط السعر / قدم مربع",
+        "stat2Context": "إطلاقات نشطة",
+        "stat2Value": "12",
+        "stat2Label": "مشاريع على الخارطة",
+        "stat3Context": "شريحة المستثمرين",
+        "stat3Value": "6.2%",
+        "stat3Label": "متوسط العائد الإجمالي",
+        "stat4Context": "في جميع أنحاء دبي",
+        "stat4Value": "28",
+        "stat4Label": "مجتمعات تحت التغطية"
       },
       "privateOffice": {
         "title": "المكتب الخاص",
@@ -621,7 +682,7 @@
     "properties": {
       "hero": {
         "eyebrow": "العقارات | اكتشاف",
-        "title": "اعثر على مكانك في دبي"
+        "title": "اعثر على عقاراتك الجاهزة للسكن"
       }
     },
     "offPlan": {
@@ -847,6 +908,12 @@
     "adminLogin": {
       "title": "دخول الموظفين - Novel Insight Property",
       "description": "تسجيل دخول موظفي نظام إدارة المحتوى في Novel Insight Property."
+    },
+    "search": {
+      "title": "بحث - Novel Insight Property",
+      "titleWithQuery": "بحث: {query} - Novel Insight Property",
+      "description": "ابحث عن العقارات والمجتمعات والمطورين في دبي مع Novel Insight Property.",
+      "descriptionWithQuery": "نتائج البحث عن \"{query}\" — عقارات ومناطق ومطورون على Novel Insight Property."
     }
   },
   "cms": {

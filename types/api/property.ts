@@ -10,6 +10,8 @@ export type ApiDeveloperRef = {
   name: string;
   slug: string;
   logo_url?: string | null;
+  order_no?: number | null;
+  order?: number | null;
 };
 
 export type ApiFacility = {
@@ -104,6 +106,18 @@ export type ApiProperty = {
   area_sqft?: number | null;
   floors?: number | null;
   price?: number | null;
+  /** Rental — billing period, e.g. "yearly" or "monthly". */
+  price_period?: string | null;
+  pricePeriod?: string | null;
+  /** Rental — ready-made display, e.g. "AED 120,000 / year". */
+  price_label?: string | null;
+  priceLabel?: string | null;
+  /** Rental — ready-made furnishing label, e.g. "Semi Furnished". */
+  furnishing_label?: string | null;
+  furnishingLabel?: string | null;
+  /** Rental — number of cheques accepted. */
+  cheque_count?: number | null;
+  chequeCount?: number | null;
   /** Resale only — what the unit originally sold for. Hero shows `price` (selling); facts strip shows this. */
   original_price?: number | null;
   originalPrice?: number | null;
@@ -111,6 +125,12 @@ export type ApiProperty = {
   image_url?: string | null;
   hero_title?: string | null;
   featured?: boolean;
+  /** Multi-tag slugs from admin publishing, e.g. ["new_launch"]. */
+  tags?: string[] | null;
+  /** Alias of `tags` returned by some API responses. */
+  tag?: string[] | null;
+  tagLabels?: string[] | null;
+  tag_labels?: string[] | null;
   about_location?: string | null;
   location_image?: string | null;
   location_image_url?: string | null;
@@ -121,6 +141,7 @@ export type ApiProperty = {
   photo_url?: string | null;
   video?: string | null;
   video_url?: string | null;
+  videoUrl?: string | null;
   handover_date?: string | null;
   handoverDate?: string | null;
   handover_quarter?: string | null;
@@ -160,6 +181,9 @@ export type ApiProperty = {
 export type PropertyGalleryImage = {
   url: string;
   type?: string | null;
+  mediaType?: "image" | "video";
+  /** Thumbnail for video items — usually the first property photo. */
+  posterUrl?: string;
 };
 
 export type PropertyListParams = {
@@ -170,6 +194,7 @@ export type PropertyListParams = {
   type?: string;
   category?: string;
   listing_type?: string;
+  tag?: string;
   purpose?: string;
   location?: string;
   community?: string;

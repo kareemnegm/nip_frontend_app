@@ -13,6 +13,7 @@ export async function getAreas(
     return await apiGet<LaravelPaginated<ApiArea>>("/areas", {
       params: query,
       locale,
+      revalidate: false,
     });
   } catch (error) {
     logApiFallback("GET /areas", error);
@@ -24,6 +25,7 @@ export const getAreaBySlug = cache(async (slug: string, locale: Locale = default
   try {
     const response = await apiGet<ApiArea | { data: ApiArea }>(`/areas/${slug}`, {
       locale,
+      revalidate: false,
     });
     return unwrapData(response);
   } catch (error) {

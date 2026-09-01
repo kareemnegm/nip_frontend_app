@@ -24,6 +24,7 @@ const META_PAGE_PATHS: Record<MetaPage, string> = {
   notFound: "/404",
   serverError: "/500",
   adminLogin: "/admin/login",
+  search: "/search",
 };
 
 export function metaPageToPath(page: MetaPage): string {
@@ -41,6 +42,7 @@ const DEFAULT_KEYWORDS: Partial<Record<MetaPage, string>> = {
   contact: "contact NIP, Dubai real estate advisory",
   faq: "NIP FAQ, Dubai real estate questions",
   concierge: "AI concierge, Dubai property search, Novel Insight Property",
+  search: "Dubai property search, communities, developers, Novel Insight Property",
   legal: "privacy, terms, Novel Insight Property policies",
 };
 

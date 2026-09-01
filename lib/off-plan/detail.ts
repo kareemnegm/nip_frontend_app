@@ -1,5 +1,5 @@
 import type { FactItem } from "@/components/ui/FactsStrip";
-import { formatAedPrice } from "@/lib/mappers/property";
+import { formatAedPrice, getPrimaryDeveloperName, propertyCardLocationLine } from "@/lib/mappers/property";
 import type {
   ApiAvailableUnit,
   ApiPaymentPlanGroup,
@@ -369,18 +369,19 @@ function mapAvailableUnit(unit: ApiAvailableUnit): AvailableUnitRow {
   };
 }
 
+/** Maps API available-units only — no placeholder rows. */
+export function resolveAvailableUnitsFromApi(property: ApiProperty): AvailableUnitRow[] {
+  const raw = property.availableUnits ?? property.available_units;
+  if (!raw?.length) return [];
+  return raw.map(mapAvailableUnit);
+}
+
 export function resolveUnits(
   property: ApiProperty,
   labels: OffPlanDetailLabels,
 ): AvailableUnitRow[] {
-  // Prefer new camelCase shape from backend
-  if (property.availableUnits?.length) {
-    return property.availableUnits.map(mapAvailableUnit);
-  }
-  // Fallback to snake_case shape
-  if (property.available_units?.length) {
-    return property.available_units.map(mapAvailableUnit);
-  }
+  const fromApi = resolveAvailableUnitsFromApi(property);
+  if (fromApi.length) return fromApi;
   // Legacy units field
   if (property.units?.length) {
     return property.units;
@@ -514,7 +515,7 @@ export function resolveHandover(property: ApiProperty): string | null {
 }
 
 export function offPlanLocationLine(property: ApiProperty): string {
-  const developer = property.developers?.[0]?.name;
+  const developer = getPrimaryDeveloperName(property.developers);
   const location = property.location ?? property.area?.name ?? "Dubai";
   if (developer) {
     return `${location} | by ${developer}`;
@@ -524,12 +525,7 @@ export function offPlanLocationLine(property: ApiProperty): string {
 
 /** Off-plan listing card — Figma 1525:28104: `{area} | {developer}`. */
 export function offPlanCardLocationLine(property: ApiProperty): string {
-  const place = property.area?.name ?? property.location ?? "Dubai";
-  const developer = property.developers?.[0]?.name;
-  if (developer) {
-    return `${place} | ${developer}`;
-  }
-  return place;
+  return propertyCardLocationLine(property);
 }
 
 export function offPlanFactsFromApi(
@@ -537,7 +533,7 @@ export function offPlanFactsFromApi(
   labels: OffPlanDetailLabels,
 ): FactItem[] {
   const facts: FactItem[] = [];
-  const developer = property.developers?.[0]?.name;
+  const developer = getPrimaryDeveloperName(property.developers);
 
   if (developer) {
     facts.push({

@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { defaultLocale, type Locale } from "@/lib/i18n/config";
+import { sortDevelopersByOrder } from "@/lib/mappers/developer";
 import type { ApiDeveloper, LaravelPaginated } from "@/types/api";
 import { ApiError } from "./errors";
 import { emptyPaginated, isOfflineError, logApiFallback } from "./fallbacks";
@@ -10,10 +11,16 @@ export async function getDevelopers(
 ) {
   const { locale = defaultLocale, ...query } = params;
   try {
-    return await apiGet<LaravelPaginated<ApiDeveloper>>("/developers", {
+    const response = await apiGet<LaravelPaginated<ApiDeveloper>>("/developers", {
       params: query,
       locale,
+      revalidate: false,
     });
+
+    return {
+      ...response,
+      data: sortDevelopersByOrder(response.data),
+    };
   } catch (error) {
     logApiFallback("GET /developers", error);
     return emptyPaginated<ApiDeveloper>(query.per_page ?? 9);
@@ -25,7 +32,7 @@ export const getDeveloperBySlug = cache(
     try {
       const response = await apiGet<ApiDeveloper | { data: ApiDeveloper }>(
         `/developers/${slug}`,
-        { locale },
+        { locale, revalidate: false },
       );
       return unwrapData(response);
     } catch (error) {

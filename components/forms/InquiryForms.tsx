@@ -157,9 +157,12 @@ export function InquiryForm({ variant }: InquiryFormProps) {
 export function PropertyInquiryForm({
   propertyId,
   pageUrl,
+  submitLabel,
 }: {
   propertyId: number;
   pageUrl: string;
+  /** Defaults to catalog.requestViewing (sale/resale/rental). Off-plan passes submitYourDetails. */
+  submitLabel?: string;
 }) {
   const locale = useLocale().locale;
   const router = useRouter();
@@ -235,7 +238,7 @@ export function PropertyInquiryForm({
       />
       <Textarea label={tForms("message")} value={message} onChange={(e) => setMessage(e.target.value)} error={errors.message} />
       <Button type="submit" className="w-full justify-center" disabled={loading}>
-        {loading ? tCommon("sending") : tCatalog("requestViewing")}
+        {loading ? tCommon("sending") : (submitLabel ?? tCatalog("requestViewing"))}
       </Button>
     </form>
   );

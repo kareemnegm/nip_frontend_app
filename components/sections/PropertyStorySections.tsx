@@ -4,8 +4,10 @@ import { AmenityIcon } from "@/components/ui/AmenityIcon";
 import { Icon } from "@/components/ui/Icon";
 import { PropertyMap } from "@/components/ui/PropertyMap";
 import { hasValidCoordinates } from "@/lib/maps/coordinates";
+import type { AvailableUnitRow } from "@/lib/off-plan/detail";
 import type { ApiFacility } from "@/types/api";
 import type { PropertyGalleryImage } from "@/types/api/property";
+import { AvailableUnitsTable } from "./OffPlanStorySections";
 import {
   PropertyGalleryClient,
 } from "./PropertyGalleryClient";
@@ -18,6 +20,10 @@ export type PropertyStoryLabels = {
   amenitiesTitle: string;
   locationTitle: string;
   openInGoogleMaps: string;
+  availableUnitsTitle?: string;
+  unitTypeLabel?: string;
+  sizeLabel?: string;
+  startingPriceLabel?: string;
 };
 
 export function PropertyGallery({
@@ -33,6 +39,7 @@ export function PropertyGallery({
 export function PropertyStoryContent({
   description,
   facilities,
+  availableUnits,
   locationNote,
   locationImageUrl,
   latitude,
@@ -44,6 +51,7 @@ export function PropertyStoryContent({
 }: {
   description?: string;
   facilities?: ApiFacility[];
+  availableUnits?: AvailableUnitRow[];
   locationNote?: string;
   locationImageUrl?: string;
   latitude?: number | null;
@@ -55,6 +63,13 @@ export function PropertyStoryContent({
 }) {
   const amenityItems = facilities ?? [];
   const hasMapCoordinates = hasValidCoordinates(latitude, longitude);
+  const showAvailableUnits = Boolean(
+    availableUnits?.length &&
+      labels.availableUnitsTitle &&
+      labels.unitTypeLabel &&
+      labels.sizeLabel &&
+      labels.startingPriceLabel,
+  );
 
   const showLocationSection = Boolean(
     locationNote || locationImageUrl || hasMapCoordinates,
@@ -92,6 +107,17 @@ export function PropertyStoryContent({
             ))}
           </div>
         </div>
+      ) : null}
+
+      {showAvailableUnits ? (
+        <AvailableUnitsTable
+          title={labels.availableUnitsTitle!}
+          unitTypeLabel={labels.unitTypeLabel!}
+          sizeLabel={labels.sizeLabel!}
+          startingPriceLabel={labels.startingPriceLabel!}
+          units={availableUnits!}
+          className="m-0"
+        />
       ) : null}
 
       {showLocationSection ? (

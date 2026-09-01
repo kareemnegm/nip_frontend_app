@@ -148,8 +148,10 @@ export function ApiPagination({
 
 export function CatalogEmptyState({ message }: { message: string }) {
   return (
-    <p className="rounded-[var(--radius-card)] border border-dashed border-line bg-sapphire-50 px-6 py-12 text-center text-body-sm text-ink-secondary">
-      {message}
-    </p>
+    <div className="flex w-full justify-center">
+      <p className="w-full max-w-[720px] rounded-[var(--radius-card)] border border-dashed border-line bg-sapphire-50 px-6 py-12 text-center text-body-sm text-ink-secondary">
+        {message}
+      </p>
+    </div>
   );
 }

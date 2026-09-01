@@ -3,22 +3,52 @@
 import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import type { AreaFeatureItem } from "@/lib/area/detail";
 import { stripCurrencyPrefix } from "@/lib/i18n/currency-icon";
 import { AmenityIcon } from "./AmenityIcon";
 import { CurrencyIcon } from "./CurrencyIcon";
 import { Icon } from "./Icon";
+import {
+  PropertyTagBadgeStack,
+  type PropertyTagDisplay,
+} from "./PropertyTagBadge";
 
 type BaseCardProps = {
   className?: string;
 };
 
+/** Interactive card link — lift/hover lives on an inner wrapper, not the link itself. */
+export const cardLinkClassName =
+  "group block w-full text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2";
+
+export const cardLiftClassName = "motion-card-lift h-full w-full";
+
+export function CardLink({
+  href,
+  className,
+  children,
+}: {
+  href?: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  if (href) {
+    return (
+      <Link href={href} className={cn(cardLinkClassName, className)}>
+        <div className={cardLiftClassName}>{children}</div>
+      </Link>
+    );
+  }
+
+  return <div className={cn(cardLiftClassName, className)}>{children}</div>;
+}
+
 /** Shared Figma card typography — Card / Property & Card / Insight (node 1525:28291). */
 export const cardTypography = {
   shell:
-    "flex h-full flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
+    "flex h-full flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)]",
   body: "flex flex-1 flex-col justify-between px-6 pb-4 pt-6",
   /** Figma "Description" frame — pt 24, px 24, pb 16, no forced row heights (avoids dead space under short titles) */
   bodySale: "flex flex-1 flex-col px-6 pb-4 pt-6",
@@ -61,6 +91,7 @@ export type PropertyCardProps = BaseCardProps & {
   imageUrl?: string;
   meta?: string[];
   badges?: string[];
+  tags?: PropertyTagDisplay[];
   layout?: "grid" | "list";
   /** Override default "Explore Property" CTA — Featured Selection uses Figma "Read the Property Story". */
   ctaLabel?: string;
@@ -86,9 +117,16 @@ type AdvisorCardProps = BaseCardProps & {
 type CommunityCardProps = BaseCardProps & {
   title: string;
   facts: AreaFeatureItem[];
-  projectsAvailableLabel: string;
+  projectsAvailableLabel?: string;
   exploreAreaLabel: string;
   href?: string;
+};
+
+export type DeveloperCardProps = BaseCardProps & {
+  name: string;
+  href: string;
+  viewMakerLabel: string;
+  projectsLabel?: string;
 };
 
 function ImagePlaceholder({ dark = false }: { dark?: boolean }) {
@@ -123,11 +161,13 @@ function CardImage({
   alt,
   icon = "image",
   className,
+  tags = [],
 }: {
   imageUrl?: string;
   alt: string;
   icon?: "image" | "building" | "mapPin";
   className?: string;
+  tags?: PropertyTagDisplay[];
 }) {
   if (imageUrl) {
     return (
@@ -139,6 +179,10 @@ function CardImage({
           className="motion-card-image object-cover object-center"
           sizes="(max-width: 768px) 100vw, 33vw"
         />
+        <PropertyTagBadgeStack
+          tags={tags}
+          className="absolute start-3 top-3 z-10 max-w-[calc(100%-1.5rem)]"
+        />
       </div>
     );
   }
@@ -146,11 +190,15 @@ function CardImage({
   return (
     <div
       className={cn(
-        "flex h-[236px] w-full shrink-0 items-center justify-center rounded-[4px] bg-basalt-100",
+        "relative flex h-[236px] w-full shrink-0 items-center justify-center rounded-[4px] bg-basalt-100",
         className,
       )}
     >
       <Icon name={icon} className="h-[88px] w-[88px] text-white/60" />
+      <PropertyTagBadgeStack
+        tags={tags}
+        className="absolute start-3 top-3 z-10 max-w-[calc(100%-1.5rem)]"
+      />
     </div>
   );
 }
@@ -165,6 +213,7 @@ export function PropertyCard({
   imageUrl,
   meta = [],
   badges = [],
+  tags = [],
   layout = "grid",
   className,
   ctaLabel,
@@ -176,7 +225,7 @@ export function PropertyCard({
 
   const card = isList ? (
     <article
-      data-reveal
+      data-reveal="slide-x"
       className={cn(
         cardTypography.shell,
         "h-auto flex-col overflow-hidden sm:flex-row sm:items-stretch",
@@ -190,7 +239,7 @@ export function PropertyCard({
             src={imageUrl}
             alt={imageLabel ?? title}
             fill
-            className="object-cover"
+            className="motion-card-image object-cover"
             sizes="(max-width: 640px) 100vw, 220px"
           />
         ) : (
@@ -198,6 +247,10 @@ export function PropertyCard({
             <Icon name="image" className="h-14 w-14 text-white/60" />
           </div>
         )}
+        <PropertyTagBadgeStack
+          tags={tags}
+          className="absolute start-3 top-3 z-10 max-w-[calc(100%-1.5rem)]"
+        />
       </div>
       {imageLabel ? <span className="sr-only">{imageLabel}</span> : null}
       <div className="flex min-w-0 flex-1 flex-col justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5">
@@ -246,7 +299,6 @@ export function PropertyCard({
     </article>
   ) : (
     <article
-      data-reveal
       className={cn(
         cardTypography.shell,
         "h-full min-h-[480px] overflow-hidden",
@@ -254,7 +306,7 @@ export function PropertyCard({
         className,
       )}
     >
-      <CardImage imageUrl={imageUrl} alt={imageLabel ?? title} />
+      <CardImage imageUrl={imageUrl} alt={imageLabel ?? title} tags={tags} />
       {imageLabel ? <span className="sr-only">{imageLabel}</span> : null}
       <div className={cardTypography.bodySale}>
         <h3 className={cn(cardTypography.title, cardTypography.titleTwoLine)}>{title}</h3>
@@ -301,15 +353,14 @@ export function PropertyCard({
     </article>
   );
 
-  if (href) {
-    return (
-      <Link href={href} className={cn("block text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2", isList ? "w-full" : "h-full w-full")}>
-        {card}
-      </Link>
-    );
-  }
-
-  return card;
+  return (
+    <CardLink
+      href={href}
+      className={isList ? "w-full" : "h-full w-full"}
+    >
+      {card}
+    </CardLink>
+  );
 }
 
 export function OffPlanCard({
@@ -320,10 +371,19 @@ export function OffPlanCard({
   handover = "On Request",
   href,
   imageUrl,
+  tags = [],
   className,
 }: Pick<
   PropertyCardProps,
-  "title" | "location" | "price" | "currency" | "handover" | "href" | "imageUrl" | "className"
+  | "title"
+  | "location"
+  | "price"
+  | "currency"
+  | "handover"
+  | "href"
+  | "imageUrl"
+  | "tags"
+  | "className"
 >) {
   const t = useTranslations("catalog");
   const displayPrice = stripCurrencyPrefix(price, currency);
@@ -331,7 +391,6 @@ export function OffPlanCard({
   // Figma Card / Project 1525:28104 — side rows use justify-between (flush to 24px side padding)
   const card = (
     <article
-      data-reveal
       className={cn(
         cardTypography.shell,
         "h-full min-h-[480px] overflow-hidden",
@@ -339,12 +398,15 @@ export function OffPlanCard({
         className,
       )}
     >
-      <CardImage imageUrl={imageUrl} alt={title} icon="building" />
+      <CardImage imageUrl={imageUrl} alt={title} icon="building" tags={tags} />
       <div className={cardTypography.bodyOffPlan}>
-        <div className="flex w-full shrink-0 items-start justify-between">
-          <span className={cardTypography.badge}>
-            {t("breadcrumbOffPlan")}
-          </span>
+        <div className="flex w-full shrink-0 items-start justify-between gap-3">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <span className={cardTypography.badge}>{t("breadcrumbOffPlan")}</span>
+            {tags.length === 0 ? null : (
+              <PropertyTagBadgeStack tags={tags} className="min-w-0" />
+            )}
+          </div>
           <Icon name="crane" className="h-6 w-6 shrink-0 text-accent" />
         </div>
         <h3 className={cn(cardTypography.title, cardTypography.titleTwoLine, "shrink-0")}>
@@ -391,18 +453,11 @@ export function OffPlanCard({
     </article>
   );
 
-  if (href) {
-    return (
-      <Link
-        href={href}
-        className="block h-full min-h-[480px] w-full text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2"
-      >
-        {card}
-      </Link>
-    );
-  }
-
-  return card;
+  return (
+    <CardLink href={href} className="h-full min-h-[480px] w-full">
+      {card}
+    </CardLink>
+  );
 }
 
 export function InsightCard({
@@ -422,7 +477,6 @@ export function InsightCard({
   // Figma Card / Insight 1525:28283 — 480×440, p 8, image 220, description space-between
   const card = (
     <article
-      data-reveal
       className={cn(
         cardTypography.shell,
         "h-full min-h-[440px]",
@@ -452,9 +506,10 @@ export function InsightCard({
         <p className={cn(cardTypography.excerpt, "shrink-0 line-clamp-2")}>
           {excerpt}
         </p>
-        {/* Mobile: stack meta + CTA so "9 min read | Author" never wraps mid-phrase.
-            sm+: keep the side-by-side Figma footer. */}
-        <div className="flex shrink-0 flex-col items-start gap-2 overflow-hidden pt-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+        {/* Mobile: stack meta + CTA. sm+: meta left, CTA right — `ms-auto` keeps the
+            label+arrow as one unit; `justify-between` on the row was stretching the
+            CTA span so the arrow sat at the card edge away from "Read the Insight". */}
+        <div className="flex w-full shrink-0 flex-col items-start gap-2 pt-1 sm:flex-row sm:items-center sm:gap-4">
           <span
             className={cn(
               cardTypography.metaMuted,
@@ -471,11 +526,17 @@ export function InsightCard({
             <span
               className={cn(
                 cardTypography.cta,
-                "motion-link-arrow inline-flex shrink-0 gap-1 py-2 sm:ps-2",
+                "inline-flex shrink-0 items-center gap-1 whitespace-nowrap py-2 sm:ms-auto sm:ps-2",
               )}
             >
               {t("readInsight")}
-              <Icon name="arrowRight" className={cardTypography.ctaIcon} />
+              <Icon
+                name="arrowRight"
+                className={cn(
+                  cardTypography.ctaIcon,
+                  "transition-transform duration-500 ease-[var(--motion-ease-lux)] group-hover:translate-x-1 motion-reduce:translate-x-0",
+                )}
+              />
             </span>
           ) : null}
         </div>
@@ -483,18 +544,11 @@ export function InsightCard({
     </article>
   );
 
-  if (href) {
-    return (
-      <Link
-        href={href}
-        className="block h-full min-h-[440px] w-full text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2"
-      >
-        {card}
-      </Link>
-    );
-  }
-
-  return card;
+  return (
+    <CardLink href={href} className="h-full min-h-[440px] w-full">
+      {card}
+    </CardLink>
+  );
 }
 
 export function AdvisorCard({
@@ -513,8 +567,9 @@ export function AdvisorCard({
 
   return (
     <article
+      data-reveal="slide-x"
       className={cn(
-        "flex h-[440px] flex-col rounded-[var(--radius-card)] border border-platinum-600 bg-sapphire-800 p-2 text-white shadow-[var(--shadow-card)]",
+        "motion-card-lift flex h-[440px] flex-col rounded-[var(--radius-card)] border border-platinum-600 bg-sapphire-800 p-2 text-white shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
         className,
       )}
     >
@@ -524,7 +579,7 @@ export function AdvisorCard({
             src={imageUrl}
             alt=""
             fill
-            className="object-cover object-center"
+            className="motion-card-image object-cover object-center"
             sizes="(max-width: 768px) 100vw, 528px"
           />
         </div>
@@ -600,9 +655,9 @@ export function CommunityCard({
 
   const card = (
     <article
-      data-reveal
       className={cn(
-        "flex h-[442px] flex-col rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
+        cardTypography.shell,
+        "flex h-[442px] flex-col p-2",
         href && "cursor-pointer",
         className,
       )}
@@ -649,9 +704,13 @@ export function CommunityCard({
 
         {/* Bottom row — Figma: flex justify-between items-center */}
         <div className="flex items-center justify-between">
-          <span className="rounded-[2px] bg-basalt-50 px-[10px] py-1 text-label-muted font-medium leading-[14px] text-ink-secondary">
-            {projectsAvailableLabel}
-          </span>
+          {projectsAvailableLabel ? (
+            <span className="rounded-[2px] bg-basalt-50 px-[10px] py-1 text-label-muted font-medium leading-[14px] text-ink-secondary">
+              {projectsAvailableLabel}
+            </span>
+          ) : (
+            <span aria-hidden className="shrink-0" />
+          )}
           {href ? (
             <span className="motion-link-arrow inline-flex items-center gap-1 py-2 ps-2 text-label-semibold font-semibold leading-4 text-accent">
               {exploreAreaLabel}
@@ -663,16 +722,37 @@ export function CommunityCard({
     </article>
   );
 
-  if (href) {
-    return (
-      <Link
-        href={href}
-        className="block h-[442px] focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2"
+  return (
+    <CardLink href={href} className="h-[442px]">
+      {card}
+    </CardLink>
+  );
+}
+export function DeveloperCard({
+  name,
+  href,
+  viewMakerLabel,
+  projectsLabel,
+  className,
+}: DeveloperCardProps) {
+  return (
+    <CardLink href={href} className={className}>
+      <div
+        className={cn(
+          "flex h-full flex-col gap-3 rounded-[var(--radius-card)] border border-line bg-white p-8 shadow-[var(--shadow-card)]",
+        )}
       >
-        {card}
-      </Link>
-    );
-  }
-
-  return card;
+        <span className="font-display text-h3 font-bold uppercase text-brand">
+          {name.trim()}
+        </span>
+        {projectsLabel ? (
+          <span className="text-body-sm text-ink-secondary">{projectsLabel}</span>
+        ) : null}
+        <span className="motion-link-arrow mt-2 inline-flex items-center gap-1 text-label-semibold font-semibold text-accent">
+          {viewMakerLabel}
+          <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
+        </span>
+      </div>
+    </CardLink>
+  );
 }

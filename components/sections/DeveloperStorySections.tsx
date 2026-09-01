@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { SpeakWithNipButton } from "@/components/ui/Button";
+import { CenteredCardGrid } from "@/components/ui/CenteredCardGrid";
 import type { IconName } from "@/components/ui/Icon";
 import {
   siteMaxWidth,
@@ -56,29 +57,22 @@ export function DeveloperHero({
             ) : null}
           </div>
 
-          {/* Mobile: logo + CTA side by side. Desktop: stacked (logo above button).
-              Figma 1525:27840 — column sized to button; logo w-full × ~24px (wide marks). */}
-          <div className="flex w-full shrink-0 flex-row items-center justify-between gap-4 lg:w-auto lg:flex-col lg:items-stretch lg:justify-center lg:gap-0">
-            <div className="flex min-w-0 flex-1 items-center justify-center lg:w-full lg:flex-none lg:pb-10">
-              {logoUrl ? (
-                <DeveloperHeroLogo
-                  src={logoUrl}
-                  alt={`${title} logo`}
-                  className="max-w-[134px] lg:max-w-none"
-                />
-              ) : (
+          {/* Figma 1525:27840 — fixed column: 80×80 logo + 16px gap + button, centered. */}
+          <div className="flex shrink-0 flex-col items-center justify-center gap-4">
+            {logoUrl ? (
+              <DeveloperHeroLogo src={logoUrl} alt={`${title} logo`} />
+            ) : (
+              <div className="flex size-[80px] items-center justify-center">
                 <p
                   aria-hidden
-                  className="w-full max-w-[134px] text-center font-[family-name:var(--font-display)] text-[22px] uppercase leading-none tracking-[0.08em] text-brand lg:max-w-none"
+                  className="text-center font-[family-name:var(--font-display)] text-[22px] uppercase leading-none tracking-[0.08em] text-brand"
                 >
                   {fallbackLogoText}
                 </p>
-              )}
-              {!logoUrl ? (
                 <span className="sr-only">{fallbackLogoText} logo</span>
-              ) : null}
-            </div>
-            <SpeakWithNipButton href="/contact" className="shrink-0 lg:w-full lg:justify-center" />
+              </div>
+            )}
+            <SpeakWithNipButton href="/contact" />
           </div>
         </div>
       </div>
@@ -124,9 +118,9 @@ export async function DeveloperPortfolioSection({
             title={t("listingsFor", { name: developerName })}
             titleClassName={developerSectionTitleClassName}
           />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <CenteredCardGrid gap="section" className="mt-10">
             {children}
-          </div>
+          </CenteredCardGrid>
         </div>
       </div>
     </section>
@@ -152,9 +146,9 @@ export async function DeveloperCommunitiesSection({
             title={t("whereBuilds", { name: developerName })}
             titleClassName={developerSectionTitleClassName}
           />
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <CenteredCardGrid gap="section" className="mt-10">
             {children}
-          </div>
+          </CenteredCardGrid>
         </div>
       </div>
     </section>

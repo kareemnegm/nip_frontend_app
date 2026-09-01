@@ -171,7 +171,7 @@ export async function CuratedSelectionSection({
           {items.length === 0 ? (
             <CatalogEmptyState message={t("noCurated")} />
           ) : (
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2" data-reveal-stagger>
               {items.map((item) => (
                 <AdvisorCard
                   key={item.id ?? item.title}

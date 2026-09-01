@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { Breadcrumbs, Button, Icon } from "@/components/ui";
+import { Breadcrumbs, Button, CenteredCardGrid, Icon } from "@/components/ui";
 import type { InsightCardProps } from "@/components/ui/Cards";
 import { RelatedInsightCard } from "@/components/ui/RelatedInsightCard";
 import {
@@ -256,11 +256,11 @@ export function RelatedInsightsSection({ title, cards }: RelatedInsightsSectionP
           <p className="w-full text-center text-overline font-semibold uppercase text-accent">
             {title}
           </p>
-          <div className="grid w-full items-stretch gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <CenteredCardGrid gap="section" className="w-full items-stretch">
             {cards.map((insight) => (
               <RelatedInsightCard key={insight.href} {...insight} />
             ))}
-          </div>
+          </CenteredCardGrid>
         </div>
       </div>
     </section>

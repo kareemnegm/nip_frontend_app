@@ -19,6 +19,8 @@ type CatalogHeroSectionProps = {
     title: string;
     description?: string;
   };
+  /** Override hero title block key (e.g. sale vs resale listing filters). */
+  titleBlockKey?: string;
   children?: React.ReactNode;
   className?: string;
   innerClassName?: string;
@@ -29,6 +31,7 @@ export async function CatalogHeroSection({
   page,
   locale: localeProp,
   placeholders,
+  titleBlockKey,
   children,
   className,
   innerClassName,
@@ -41,7 +44,7 @@ export async function CatalogHeroSection({
   return (
     <section data-site-hero className={cn("bg-surface-muted pt-16 pb-9", className)}>
       <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
-        <div data-reveal className={cn(sitePageInnerClassName, "space-y-6", innerClassName)}>
+        <div data-reveal className={cn(sitePageInnerClassName, "space-y-6 overflow-visible", innerClassName)}>
           <div className="space-y-2">
             <EditableText
               relUrl={blocks.relUrl}
@@ -53,7 +56,7 @@ export async function CatalogHeroSection({
             />
             <EditableText
               relUrl={blocks.relUrl}
-              blockKey={hero.title}
+              blockKey={titleBlockKey ?? hero.title}
               locale={locale}
               placeholderContent={placeholders.title}
               placeholderTag="h1"

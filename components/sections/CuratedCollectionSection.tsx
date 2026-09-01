@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { Button } from "@/components/ui/Button";
 import type { PropertyCardProps } from "@/components/ui/Cards";
 import { PropertyCard } from "@/components/ui/Cards";
-import { CatalogEmptyState } from "@/components/ui/ApiPagination";
+import { CatalogEmptyState, CenteredCardGrid } from "@/components/ui";
 import { siteCardSectionLayoutClassName, siteSectionY } from "@/components/ui/SiteChrome";
 import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
@@ -44,11 +44,11 @@ export async function CuratedCollectionSection({
         {curatedCards.length === 0 ? (
           <CatalogEmptyState message={t("curated")} />
         ) : (
-          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          <CenteredCardGrid gap="section" className="w-full" data-reveal-stagger>
             {curatedCards.map((property, index) => (
               <PropertyCard key={property.href ?? `curated-${index}`} {...property} />
             ))}
-          </div>
+          </CenteredCardGrid>
         )}
         <Button href="/properties" size="lg" className="h-9">
           {tc("exploreCollection")}

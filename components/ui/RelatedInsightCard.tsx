@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { AppLink as Link } from "@/components/AppLink";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import type { InsightCardProps } from "./Cards";
+import { CardLink } from "./Cards";
 import { Icon } from "./Icon";
 
 /**
@@ -29,9 +29,9 @@ export function RelatedInsightCard({
 
   const card = (
     <article
-      data-reveal
+      data-reveal="slide-x"
       className={cn(
-        "flex h-full min-h-[440px] w-full flex-col items-start rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)]",
+        "flex h-full min-h-[440px] w-full flex-col items-start rounded-[var(--radius-card)] border border-line bg-white p-2 shadow-[var(--shadow-card)] transition hover:shadow-[var(--shadow-card-hover,0_8px_24px_rgba(15,23,42,0.12))]",
         href && "cursor-pointer",
         className,
       )}
@@ -42,7 +42,7 @@ export function RelatedInsightCard({
             src={imageUrl!}
             alt={title}
             fill
-            className="object-cover object-center"
+            className="motion-card-image object-cover object-center"
             sizes="(max-width: 768px) 100vw, 344px"
             onError={() => setImageError(true)}
           />
@@ -75,7 +75,7 @@ export function RelatedInsightCard({
             <span className="min-w-0 truncate">{author}</span>
           </div>
           {href ? (
-            <span className="inline-flex shrink-0 items-center justify-center gap-1 py-2 text-label-semibold font-semibold whitespace-nowrap text-accent sm:ps-2">
+            <span className="motion-link-arrow inline-flex shrink-0 items-center justify-center gap-1 py-2 text-label-semibold font-semibold whitespace-nowrap text-accent sm:ps-2">
               {t("readInsight")}
               <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
             </span>
@@ -85,16 +85,9 @@ export function RelatedInsightCard({
     </article>
   );
 
-  if (href) {
-    return (
-      <Link
-        href={href}
-        className="block h-full min-h-[440px] w-full text-inherit focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2"
-      >
-        {card}
-      </Link>
-    );
-  }
-
-  return card;
+  return (
+    <CardLink href={href} className="h-full min-h-[440px] w-full">
+      {card}
+    </CardLink>
+  );
 }

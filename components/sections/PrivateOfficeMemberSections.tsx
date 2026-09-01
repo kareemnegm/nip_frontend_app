@@ -1,9 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { MemberAdvisorMessageDialog } from "@/components/forms/MemberAdvisorMessageForm";
 import { MemberSignOutButton } from "@/components/forms/MemberSignOutButton";
-import { AdvisorCard, AdvisorAvatar, PropertyCard } from "@/components/ui";
+import { AdvisorCard, AdvisorAvatar, CenteredCardGrid, PropertyCard, CatalogEmptyState } from "@/components/ui";
 import type { PropertyCardProps } from "@/components/ui/Cards";
-import { CatalogEmptyState } from "@/components/ui/ApiPagination";
 import {
   siteMaxWidth,
   sitePageGutterX,
@@ -33,10 +32,6 @@ function PrivateOfficeMemberSectionTitle({
     </h2>
   );
 }
-
-/** Figma T08 — 3-up card row: 344px cards, 24px gap, 480px row height. */
-const memberCardGridClassName =
-  "grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-6";
 
 export async function PrivateOfficeMemberHero({
   user,
@@ -98,7 +93,7 @@ export async function PrivateOfficeMemberCuratedSection({
           {items.length === 0 ? (
             <CatalogEmptyState message={t("noCuratedReleased")} />
           ) : (
-            <div className={memberCardGridClassName}>
+            <CenteredCardGrid gap="section">
               {items.map((item) => (
                 <AdvisorCard
                   key={item.id ?? item.title}
@@ -106,10 +101,10 @@ export async function PrivateOfficeMemberCuratedSection({
                   excerpt={item.excerpt}
                   href={item.href}
                   imageUrl={item.imageUrl}
-                  className="min-h-[480px] w-full xl:max-w-[344px]"
+                  className="min-h-[480px]"
                 />
               ))}
-            </div>
+            </CenteredCardGrid>
           )}
         </div>
       </div>
@@ -134,15 +129,15 @@ export async function PrivateOfficeMemberSavedSection({
           {properties.length === 0 ? (
             <CatalogEmptyState message={t("noSavedProperties")} />
           ) : (
-            <div className={memberCardGridClassName}>
+            <CenteredCardGrid gap="section">
               {properties.map((property) => (
                 <PropertyCard
                   key={property.href ?? property.title}
-                  className="min-h-[480px] w-full xl:max-w-[344px]"
+                  className="min-h-[480px]"
                   {...property}
                 />
               ))}
-            </div>
+            </CenteredCardGrid>
           )}
         </div>
       </div>

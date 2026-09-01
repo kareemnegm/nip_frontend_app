@@ -12,6 +12,7 @@
     "villas": "Villas",
     "sale": "Sale",
     "resale": "Resale",
+    "rental": "Rental",
     "openMenu": "Open menu",
     "closeMenu": "Close menu"
   },
@@ -53,6 +54,9 @@
   },
   "footer": {
     "properties": "Properties",
+    "tagFeatured": "Featured",
+    "tagUpcoming": "Upcoming",
+    "tagNewLaunch": "New Launch",
     "buyProperties": "Buy Properties",
     "rentProperties": "Rent Properties",
     "exclusives": "Exclusives",
@@ -283,6 +287,18 @@
     "breadcrumbProperties": "Properties",
     "breadcrumbOffPlan": "Off-Plan",
     "breadcrumbResale": "Resale",
+    "breadcrumbRental": "Rental",
+    "heroTitleSale": "Find your Ready To move Properties",
+    "heroTitleResale": "Find your Unit",
+    "heroTitleRental": "Find your Place in Dubai",
+    "rentalPrice": "RENTAL PRICE",
+    "yearlyRent": "YEARLY RENT",
+    "monthlyRent": "MONTHLY RENT",
+    "chequesLabel": "{count} Cheques",
+    "chequesFactLabel": "Cheques",
+    "pricePerYear": " / year",
+    "pricePerMonth": " / month",
+    "moreRentalProperties": "MORE RENTAL PROPERTIES",
     "bedroomLabel": "Bedrooms",
     "bathroomLabel": "Bathrooms",
     "areaLabel": "Area",
@@ -310,6 +326,9 @@
     "price10m": "AED 10M+",
     "viewAllPhotos": "View all photos",
     "photosCount": "{count} photos",
+    "mediaCount": "{count} items",
+    "videoTour": "Video tour",
+    "playVideo": "Play video",
     "closeGallery": "Close gallery",
     "storyTitle": "The Story",
     "overviewTitle": "Overview",
@@ -334,6 +353,7 @@
     "privateViewingTitle": "Arrange a Confidential Visit",
     "privateViewingDescription": "Share your details and a NIP advisor will confirm the next step.",
     "requestViewing": "Request Viewing",
+    "submitYourDetails": "Submit your Details",
     "breadcrumbFeaturedProjects": "Featured Projects",
     "paymentPlanTitle": "Payment Plan",
     "availableUnitsTitle": "Available Units",
@@ -545,6 +565,21 @@
           "answer": "A private advisor typically responds within one business day, often sooner during business hours."
         }
       }
+    },
+    "search": {
+      "eyebrow": "SITE SEARCH",
+      "title": "Search",
+      "titleWithQuery": "Results for \"{query}\"",
+      "prompt": "Search properties, communities and developers across Dubai.",
+      "summary": "{count, plural, one {# result} other {# results}} across properties, areas and developers.",
+      "resultCount": "{count, plural, one {# result} other {# results}}",
+      "propertiesTitle": "Properties",
+      "areasTitle": "Areas & Communities",
+      "developersTitle": "Developers",
+      "empty": "No results matched your search. Try a different term or speak with an advisor.",
+      "emptyProperties": "No properties matched this search.",
+      "emptyAreas": "No communities matched this search.",
+      "emptyDevelopers": "No developers matched this search."
     }
   },
   "placeholders": {
@@ -564,7 +599,20 @@
       },
       "marketPulse": {
         "title": "Market Pulse",
-        "desc": "Track the Market Signals that matter before they Become Headlines"
+        "desc": "Track the Market Signals that matter before they Become Headlines",
+        "cta": "View Market Perspective",
+        "stat1Context": "Prime Communities",
+        "stat1Value": "2400",
+        "stat1Label": "AVG Price /Sq Ft",
+        "stat2Context": "Active Launches",
+        "stat2Value": "12",
+        "stat2Label": "Off-Plan Projects",
+        "stat3Context": "Investor Segment",
+        "stat3Value": "6.2%",
+        "stat3Label": "AVG Gross Yield",
+        "stat4Context": "Across Dubai",
+        "stat4Value": "28",
+        "stat4Label": "Communities under Coverage"
       },
       "privateOffice": {
         "title": "Private Office",
@@ -599,7 +647,20 @@
       },
       "marketPulse": {
         "title": "Market Pulse",
-        "desc": "Key market signals at a glance."
+        "desc": "Key market signals at a glance.",
+        "cta": "View Market Perspective",
+        "stat1Context": "Prime Communities",
+        "stat1Value": "2400",
+        "stat1Label": "AVG Price /Sq Ft",
+        "stat2Context": "Active Launches",
+        "stat2Value": "12",
+        "stat2Label": "Off-Plan Projects",
+        "stat3Context": "Investor Segment",
+        "stat3Value": "6.2%",
+        "stat3Label": "AVG Gross Yield",
+        "stat4Context": "Across Dubai",
+        "stat4Value": "28",
+        "stat4Label": "Communities under Coverage"
       },
       "privateOffice": {
         "title": "Private Office",
@@ -621,7 +682,7 @@
     "properties": {
       "hero": {
         "eyebrow": "PROPERTIES | DISCOVERY",
-        "title": "Find your Place in Dubai"
+        "title": "Find your Ready To move Properties"
       }
     },
     "offPlan": {
@@ -847,6 +908,12 @@
     "adminLogin": {
       "title": "Staff Login - Novel Insight Property",
       "description": "CMS staff sign-in for Novel Insight Property."
+    },
+    "search": {
+      "title": "Search - Novel Insight Property",
+      "titleWithQuery": "Search: {query} - Novel Insight Property",
+      "description": "Search properties, communities and developers across Dubai with Novel Insight Property.",
+      "descriptionWithQuery": "Search results for \"{query}\" — properties, areas and developers on Novel Insight Property."
     }
   },
   "cms": {

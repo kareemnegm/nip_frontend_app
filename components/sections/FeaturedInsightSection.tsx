@@ -30,7 +30,7 @@ export async function FeaturedInsightSection({
   const t = await getTranslations({ locale, namespace: "home.empty" });
 
   return (
-    <section className="overflow-hidden bg-white py-16 sm:py-20">
+    <section className="bg-white py-16 sm:py-20">
       <Container>
         <SectionHeading
           title={await getCmsPlaceholder(placeholderNamespace, "title", locale)}
@@ -50,6 +50,7 @@ export async function FeaturedInsightSection({
           slideWidth={480}
           gap={24}
           snapAlign="center"
+          hoverEdgeScroll
         >
           {insights.map((insight, index) => (
             <InsightCard

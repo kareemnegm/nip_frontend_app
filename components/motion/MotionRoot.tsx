@@ -3,7 +3,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-const REVEAL_SELECTOR = "[data-reveal]";
+const REVEAL_SELECTOR = "[data-reveal], [data-reveal='slide-x']";
 const COUNT_SELECTOR = "[data-count]";
 const PARALLAX_SELECTOR = "[data-parallax]";
 const HERO_TITLE_SELECTOR = "[data-hero-title]";
@@ -230,6 +230,22 @@ function initSmoothAnchors() {
   return () => document.removeEventListener("click", onClick);
 }
 
+function initStaggerReveals(root: ParentNode) {
+  root.querySelectorAll("[data-reveal-stagger]").forEach((parent) => {
+    Array.from(parent.children).forEach((child, index) => {
+      const revealEl = child.matches(REVEAL_SELECTOR)
+        ? child
+        : child.querySelector<HTMLElement>(REVEAL_SELECTOR);
+      if (!revealEl || index === 0) return;
+
+      const delay = Math.min(index, 3);
+      if (!revealEl.hasAttribute("data-reveal-delay")) {
+        revealEl.setAttribute("data-reveal-delay", String(delay));
+      }
+    });
+  });
+}
+
 function discoverSectionReveals(root: ParentNode) {
   root
     .querySelectorAll("main section:not([data-site-hero]):not([data-no-reveal])")
@@ -267,6 +283,7 @@ function discoverSectionReveals(root: ParentNode) {
 function initMotion() {
   const root = document;
   discoverSectionReveals(root);
+  initStaggerReveals(root);
   const cleanups = [
     initReveal(root),
     initHeroReveal(root),

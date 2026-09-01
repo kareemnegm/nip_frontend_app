@@ -1,6 +1,7 @@
 import type { PropertyCardProps } from "@/components/ui/Cards";
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
+import { resolvePropertyTagFromSearchParams } from "@/lib/catalog/property-tag-links";
 import type { PropertyListParams } from "@/types/api";
 
 export function searchParamsToObject(
@@ -22,6 +23,7 @@ export function buildPropertyListParams(
     page: sp.page ? Number(sp.page) : defaults.page,
     per_page: defaults.per_page ?? 9,
     listing_type: defaults.listing_type ?? sp.listing_type ?? sp.listing,
+    tag: defaults.tag ?? resolvePropertyTagFromSearchParams(sp),
     keyword: sp.keyword ?? sp.q,
     type: sp.type,
     area: sp.area ?? sp.location ?? sp.community,

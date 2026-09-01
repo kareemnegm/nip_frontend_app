@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { SiteShell } from "@/components/SiteShell";
 import { CatalogHeroSection } from "@/components/sections/CatalogHeroSection";
 import { EditableCtaBand } from "@/components/sections/EditableCtaBand";
-import { ApiPagination, AreaSearchBar, CatalogEmptyState, CommunityCard } from "@/components/ui";
+import { ApiPagination, AreaSearchBar, CatalogEmptyState, CenteredCardGrid, CommunityCard } from "@/components/ui";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui";
 import { getAreas } from "@/lib/api/areas";
@@ -13,6 +13,8 @@ import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { pageBlockKeys } from "@/lib/i18n/block-keys";
 import { localizedHref, resolveLocale } from "@/lib/i18n/helpers";
 import { localizedMetadata } from "@/lib/i18n/metadata";
+
+export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -72,11 +74,11 @@ export default async function AreasPage({ params, searchParams }: PageProps) {
               <CatalogEmptyState message={t("empty")} />
             )
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+            <CenteredCardGrid gap="section" data-reveal-stagger>
               {areas.map((area) => (
                 <CommunityCard key={area.href} {...area} />
               ))}
-            </div>
+            </CenteredCardGrid>
           )}
           <ApiPagination
             currentPage={meta.current_page}

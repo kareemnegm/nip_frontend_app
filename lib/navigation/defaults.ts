@@ -13,6 +13,10 @@ import {
   propertiesDropdownItems,
   offPlanDropdownItems,
 } from "@/lib/i18n/nav-config";
+import {
+  FOOTER_OFFPLAN_TAG_LINKS,
+  FOOTER_PROPERTIES_TAG_LINKS,
+} from "@/lib/catalog/property-tag-links";
 
 type FooterMessages = typeof en.footer;
 type NavMessages = typeof en.nav;
@@ -117,15 +121,9 @@ function buildFooterItems(
 ): NavigationItem[] {
   const items: NavigationItem[] = [];
 
-  const propertiesLinks = [
-    { label: f.buyProperties, href: "/properties?listing=sale" },
-    { label: f.rentProperties, href: "/properties?listing=rent" },
-    { label: f.exclusives, href: "/properties?exclusive=1" },
-    { label: f.newLaunches, href: "/off-plan" },
-  ];
-  propertiesLinks.forEach((link, i) => {
+  FOOTER_PROPERTIES_TAG_LINKS.forEach((link, i) => {
     items.push(
-      makeItem(NAV_ZONE_KEYS.FOOTER_PROPERTIES, locale, link.label, link.href, i + 1),
+      makeItem(NAV_ZONE_KEYS.FOOTER_PROPERTIES, locale, f[link.labelKey], link.href, i + 1),
     );
   });
 
@@ -140,14 +138,8 @@ function buildFooterItems(
     items.push(makeItem(NAV_ZONE_KEYS.FOOTER_AREAS, locale, link.label, link.href, i + 1));
   });
 
-  const offPlanLinks = [
-    { label: f.featuredProjects, href: "/off-plan?featured=1" },
-    { label: f.upcoming, href: "/off-plan?status=launching" },
-    { label: f.paymentPlans, href: "/off-plan" },
-    { label: f.developersLink, href: "/developers" },
-  ];
-  offPlanLinks.forEach((link, i) => {
-    items.push(makeItem(NAV_ZONE_KEYS.FOOTER_OFF_PLAN, locale, link.label, link.href, i + 1));
+  FOOTER_OFFPLAN_TAG_LINKS.forEach((link, i) => {
+    items.push(makeItem(NAV_ZONE_KEYS.FOOTER_OFF_PLAN, locale, f[link.labelKey], link.href, i + 1));
   });
 
   const resourcesLinks = [
