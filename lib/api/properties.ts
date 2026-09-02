@@ -7,8 +7,8 @@ import type {
   PropertyListParams,
 } from "@/types/api";
 import { ApiError } from "./errors";
-import { emptyPaginated, isOfflineError, logApiFallback } from "./fallbacks";
-import { apiGet, unwrapData } from "./client";
+import { emptyPaginated, isTransientApiError, logApiFallback } from "./fallbacks";
+import { apiGet, DEFAULT_REVALIDATE_SECONDS, unwrapData } from "./client";
 
 function toQueryParams(params: PropertyListParams = {}) {
   const query: Record<string, string | number> = {};
@@ -40,14 +40,15 @@ export const getPropertyBySlug = cache(
     try {
       const response = await apiGet<ApiProperty | { data: ApiProperty }>(
         `/properties/${slug}`,
-        { locale, revalidate: false },
+        { locale, revalidate: DEFAULT_REVALIDATE_SECONDS },
       );
       return unwrapData(response);
     } catch (error) {
       if (error instanceof ApiError && error.status === 404) {
         return null;
       }
-      if (isOfflineError(error)) {
+      if (isTransientApiError(error)) {
+        logApiFallback(`GET /properties/${slug}`, error, { production: true });
         return null;
       }
       throw error;

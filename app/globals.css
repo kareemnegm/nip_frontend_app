@@ -724,6 +724,10 @@ article:focus-within .motion-card-image {
 
 /* The arrow nudges via relative offset, not `gap`, so hovering never reflows the
    row the link sits in (property cards keep their badges on one line). */
+.motion-link-arrow {
+  overflow: visible;
+}
+
 .motion-link-arrow > :last-child {
   position: relative;
   inset-inline-start: 0;

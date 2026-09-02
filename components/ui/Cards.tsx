@@ -54,7 +54,7 @@ export const cardTypography = {
   bodySale: "flex flex-1 flex-col px-6 pb-4 pt-6",
   /** Figma Card / Project (Off-Plan) 1525:28104 — Description: pt 24, px 24, pb 16, space-between */
   bodyOffPlan:
-    "flex min-h-0 flex-1 flex-col justify-between overflow-hidden px-6 pb-4 pt-6",
+    "flex min-h-0 flex-1 flex-col justify-between px-6 pb-4 pt-6",
   /** Figma Card / Insight 1525:28283 — Description: pt 24, px 24, pb 8, space-between */
   bodyInsight:
     "flex min-h-0 flex-1 flex-col justify-between overflow-hidden px-6 pb-2 pt-6",
@@ -73,7 +73,7 @@ export const cardTypography = {
   priceIcon: "h-[18px] w-[18px] shrink-0",
   badge:
     "rounded-[2px] bg-basalt-50 px-2.5 py-1 text-label-muted font-medium text-ink-secondary",
-  cta: "inline-flex shrink-0 items-center gap-1 text-label-semibold font-semibold text-accent",
+  cta: "inline-flex shrink-0 items-center gap-1 overflow-visible pe-0.5 text-label-semibold font-semibold text-accent",
   ctaIcon: "h-4 w-4 rtl:rotate-180",
   category: "text-overline font-semibold uppercase text-accent",
   excerpt: "text-body-sm text-ink-secondary",
@@ -228,7 +228,7 @@ export function PropertyCard({
       data-reveal="slide-x"
       className={cn(
         cardTypography.shell,
-        "h-auto flex-col overflow-hidden sm:flex-row sm:items-stretch",
+        "h-auto flex-col sm:flex-row sm:items-stretch",
         href && "cursor-pointer",
         className,
       )}
@@ -301,7 +301,7 @@ export function PropertyCard({
     <article
       className={cn(
         cardTypography.shell,
-        "h-full min-h-[480px] overflow-hidden",
+        "h-full min-h-[480px]",
         href && "cursor-pointer",
         className,
       )}
@@ -334,8 +334,8 @@ export function PropertyCard({
             {stripCurrencyPrefix(price, currency)}
           </p>
         </div>
-        <div className="mt-4 flex items-center justify-between gap-4">
-          <div className="flex flex-wrap gap-2">
+        <div className="mt-4 flex items-center justify-between gap-4 overflow-visible">
+          <div className="flex min-w-0 flex-wrap gap-2">
             {badges.map((badge) => (
               <span key={badge} className={cardTypography.badge}>
                 {badge}
@@ -393,7 +393,7 @@ export function OffPlanCard({
     <article
       className={cn(
         cardTypography.shell,
-        "h-full min-h-[480px] overflow-hidden",
+        "h-full min-h-[480px]",
         href && "cursor-pointer",
         className,
       )}
@@ -435,7 +435,7 @@ export function OffPlanCard({
             </p>
           </div>
         </div>
-        <div className="flex w-full shrink-0 items-center justify-between overflow-hidden">
+        <div className="flex w-full shrink-0 items-center justify-between overflow-visible">
           <span className={cardTypography.badge}>{t("paymentPlanAvailable")}</span>
           {href ? (
             <span

@@ -155,10 +155,19 @@ async function parseJsonResponse<T>(response: Response): Promise<T> {
  * until the next revalidation, so retry idempotent reads once.
  */
 const RETRYABLE_METHODS = new Set(["GET", "HEAD"]);
-const RETRY_DELAY_MS = 300;
+const RETRY_BASE_DELAY_MS = 300;
+const RETRY_MAX_ATTEMPTS = 3;
 
 function isRetryableStatus(status: number): boolean {
   return status >= 500 || status === 408 || status === 429;
+}
+
+function retryDelayMs(attempt: number): number {
+  return RETRY_BASE_DELAY_MS * 2 ** attempt;
+}
+
+async function sleep(ms: number): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export async function apiRequest<T>(
@@ -186,18 +195,36 @@ export async function apiRequest<T>(
       ...resolveFetchCacheOptions(revalidate),
     });
 
-  let response: Response;
-  try {
-    response = await send();
-  } catch (error) {
-    if (!canRetry) throw error;
-    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
-    response = await send();
+  let response: Response | undefined;
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt < (canRetry ? RETRY_MAX_ATTEMPTS : 1); attempt += 1) {
+    if (attempt > 0) {
+      await sleep(retryDelayMs(attempt - 1));
+    }
+
+    try {
+      response = await send();
+      lastError = undefined;
+    } catch (error) {
+      lastError = error;
+      if (!canRetry || attempt >= RETRY_MAX_ATTEMPTS - 1) {
+        throw error;
+      }
+      continue;
+    }
+
+    if (response.ok || !canRetry || !isRetryableStatus(response.status)) {
+      break;
+    }
+
+    if (attempt >= RETRY_MAX_ATTEMPTS - 1) {
+      break;
+    }
   }
 
-  if (!response.ok && canRetry && isRetryableStatus(response.status)) {
-    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
-    response = await send();
+  if (!response) {
+    throw lastError ?? new ApiError("Request failed", 500);
   }
 
   if (!response.ok) {

@@ -1,5 +1,6 @@
 import type { ApiHomeData } from "@/types/api";
 import type { LaravelPaginated } from "@/types/api";
+import { ApiError } from "./errors";
 
 export const EMPTY_HOME: ApiHomeData = {
   featured_properties: [],
@@ -38,15 +39,38 @@ export function isOfflineError(error: unknown): boolean {
   return false;
 }
 
-/** Log in dev when an API call fails and the UI falls back to empty data. */
-export function logApiFallback(endpoint: string, error: unknown): void {
-  if (process.env.NODE_ENV !== "development") return;
+/** Backend timeout, 5xx, rate limit, or malformed JSON — usually clears on retry. */
+export function isTransientApiError(error: unknown): boolean {
+  if (isOfflineError(error)) return true;
+  if (error instanceof ApiError) {
+    return (
+      error.status >= 500 ||
+      error.status === 408 ||
+      error.status === 429 ||
+      error.code === "INVALID_JSON"
+    );
+  }
+  return false;
+}
+
+/** Log when an API call fails and the UI falls back instead of crashing. */
+export function logApiFallback(
+  endpoint: string,
+  error: unknown,
+  options: { production?: boolean } = {},
+): void {
+  const inDev = process.env.NODE_ENV === "development";
+  if (!inDev && !options.production) return;
 
   const offline = isOfflineError(error);
   const message =
     error instanceof Error ? error.message : String(error ?? "Unknown error");
 
-  console.warn(
-    `[NIP API] ${endpoint} failed${offline ? " (backend unreachable)" : ""}: ${message}. Showing empty fallback — check Laragon/backend is running and NEXT_PUBLIC_API_URL is correct.`,
-  );
+  const line = `[NIP API] ${endpoint} failed${offline ? " (backend unreachable)" : ""}: ${message}. Showing fallback instead of a 500 page.`;
+
+  if (inDev) {
+    console.warn(`${line} Check Laragon/backend is running and NEXT_PUBLIC_API_URL is correct.`);
+  } else {
+    console.error(line);
+  }
 }

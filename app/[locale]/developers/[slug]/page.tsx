@@ -4,8 +4,6 @@ import { getDeveloperBySlug } from "@/lib/api/developers";
 import { resolveMediaUrl } from "@/lib/api/media-url";
 import { resolveLocale } from "@/lib/i18n/helpers";
 
-export const dynamic = "force-dynamic";
-
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;
 };
@@ -13,7 +11,12 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug, locale: rawLocale } = await params;
   const locale = resolveLocale(rawLocale);
-  const developer = await getDeveloperBySlug(slug, locale);
+  let developer: Awaited<ReturnType<typeof getDeveloperBySlug>>;
+  try {
+    developer = await getDeveloperBySlug(slug, locale);
+  } catch {
+    return { title: "Developer - Novel Insight Property" };
+  }
   if (!developer) return { title: "Developer - Novel Insight Property" };
 
   const title = `${developer.name} - Novel Insight Property`;

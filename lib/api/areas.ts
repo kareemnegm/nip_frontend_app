@@ -2,8 +2,8 @@ import { cache } from "react";
 import { defaultLocale, type Locale } from "@/lib/i18n/config";
 import type { ApiArea, LaravelPaginated } from "@/types/api";
 import { ApiError } from "./errors";
-import { emptyPaginated, isOfflineError, logApiFallback } from "./fallbacks";
-import { apiGet, unwrapData } from "./client";
+import { emptyPaginated, isTransientApiError, logApiFallback } from "./fallbacks";
+import { apiGet, DEFAULT_REVALIDATE_SECONDS, unwrapData } from "./client";
 
 export async function getAreas(
   params: { page?: number; per_page?: number; keyword?: string; locale?: Locale } = {},
@@ -25,14 +25,15 @@ export const getAreaBySlug = cache(async (slug: string, locale: Locale = default
   try {
     const response = await apiGet<ApiArea | { data: ApiArea }>(`/areas/${slug}`, {
       locale,
-      revalidate: false,
+      revalidate: DEFAULT_REVALIDATE_SECONDS,
     });
     return unwrapData(response);
   } catch (error) {
     if (error instanceof ApiError && error.status === 404) {
       return null;
     }
-    if (isOfflineError(error)) {
+    if (isTransientApiError(error)) {
+      logApiFallback(`GET /areas/${slug}`, error, { production: true });
       return null;
     }
     throw error;
