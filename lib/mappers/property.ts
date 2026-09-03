@@ -114,23 +114,29 @@ export function resolvePropertyTagLabels(property: ApiProperty): string[] {
 type DeveloperNameRef = {
   name: string;
   order_no?: number | null;
+  orderNo?: number | null;
   order?: number | null;
 };
 
 function developerOrderNo(developer: DeveloperNameRef): number {
-  const raw = developer.order_no ?? developer.order ?? 0;
+  const raw = developer.order_no ?? developer.orderNo ?? developer.order ?? 0;
   const parsed = Number(raw);
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-/** Primary developer on a card — lowest `order_no`, then name. */
+/** Primary developer on a card — lowest explicit `order_no` (>0), then name; zeros last. */
 export function getPrimaryDeveloperName(
   developers?: DeveloperNameRef[] | null,
 ): string | undefined {
   if (!developers?.length) return undefined;
   const sorted = [...developers].sort((a, b) => {
-    const orderDiff = developerOrderNo(a) - developerOrderNo(b);
-    if (orderDiff !== 0) return orderDiff;
+    const explicitA = developerOrderNo(a) > 0;
+    const explicitB = developerOrderNo(b) > 0;
+    if (explicitA !== explicitB) return explicitA ? -1 : 1;
+    if (explicitA && explicitB) {
+      const orderDiff = developerOrderNo(a) - developerOrderNo(b);
+      if (orderDiff !== 0) return orderDiff;
+    }
     return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
   });
   return sorted[0]?.name;

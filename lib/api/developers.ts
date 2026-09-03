@@ -6,24 +6,61 @@ import { ApiError } from "./errors";
 import { emptyPaginated, isTransientApiError, logApiFallback } from "./fallbacks";
 import { apiGet, DEFAULT_REVALIDATE_SECONDS, unwrapData } from "./client";
 
-export async function getDevelopers(
-  params: { page?: number; per_page?: number; locale?: Locale } = {},
-) {
-  const { locale = defaultLocale, ...query } = params;
+/** Developers catalog is small — fetch all rows once so CMS `order_no` applies across pages. */
+const DEVELOPERS_CATALOG_CAP = 200;
+
+type DeveloperListParams = {
+  page?: number;
+  per_page?: number;
+  locale?: Locale;
+  /** When true, sort the full catalog by CMS order then slice the requested page. */
+  globalOrder?: boolean;
+};
+
+async function fetchDevelopersPage(
+  query: { page?: number; per_page?: number },
+  locale: Locale,
+): Promise<LaravelPaginated<ApiDeveloper>> {
+  return apiGet<LaravelPaginated<ApiDeveloper>>("/developers", {
+    params: { ...query, sort: "order_no" },
+    locale,
+    revalidate: false,
+  });
+}
+
+export async function getDevelopers(params: DeveloperListParams = {}) {
+  const { locale = defaultLocale, globalOrder = false, page = 1, per_page = 9 } = params;
+
   try {
-    const response = await apiGet<LaravelPaginated<ApiDeveloper>>("/developers", {
-      params: query,
-      locale,
-      revalidate: false,
-    });
+    if (!globalOrder) {
+      const response = await fetchDevelopersPage({ page, per_page }, locale);
+      return {
+        ...response,
+        data: sortDevelopersByOrder(response.data),
+      };
+    }
+
+    const bulk = await fetchDevelopersPage({ page: 1, per_page: DEVELOPERS_CATALOG_CAP }, locale);
+    const sorted = sortDevelopersByOrder(bulk.data);
+    const total = bulk.meta.total;
+    const start = (page - 1) * per_page;
 
     return {
-      ...response,
-      data: sortDevelopersByOrder(response.data),
+      ...bulk,
+      data: sorted.slice(start, start + per_page),
+      meta: {
+        ...bulk.meta,
+        total,
+        per_page,
+        current_page: page,
+        last_page: Math.max(1, Math.ceil(total / per_page)),
+        from: total === 0 ? null : start + 1,
+        to: total === 0 ? null : Math.min(start + per_page, total),
+      },
     };
   } catch (error) {
     logApiFallback("GET /developers", error);
-    return emptyPaginated<ApiDeveloper>(query.per_page ?? 9);
+    return emptyPaginated<ApiDeveloper>(per_page);
   }
 }
 

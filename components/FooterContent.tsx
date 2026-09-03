@@ -293,14 +293,25 @@ export async function FooterContent({
 
   const aboutLinks: FooterLink[] = [{ label: t("aboutUs"), href: "/about" }];
 
-  const withBuilderLinks = (zoneKey: string, links: FooterLink[]): FooterLink[] => [
-    ...links,
-    ...extraNavLinksForZone(
+  const FOOTER_EXCLUDED_EXTRA_HREFS: Record<string, Set<string>> = {
+    [NAV_ZONE_KEYS.FOOTER_PROPERTIES]: new Set(["/off-plan"]),
+    [NAV_ZONE_KEYS.FOOTER_OFF_PLAN]: new Set(["/developers"]),
+  };
+
+  const withBuilderLinks = (zoneKey: string, links: FooterLink[]): FooterLink[] => {
+    const excluded = FOOTER_EXCLUDED_EXTRA_HREFS[zoneKey];
+    const extras = extraNavLinksForZone(
       navigation.items,
       zoneKey,
       links.map((link) => link.href),
-    ),
-  ];
+    ).filter((link) => {
+      if (!excluded) return true;
+      const path = link.href.split("#")[0]?.split("?")[0] ?? link.href;
+      return !excluded.has(path);
+    });
+
+    return [...links, ...extras];
+  };
 
   const propertiesColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_PROPERTIES, propertiesLinks);
   const areasColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_AREAS, areasLinks);

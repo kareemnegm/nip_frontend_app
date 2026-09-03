@@ -9,6 +9,8 @@ export type ApiDeveloper = {
   photo_url?: string | null;
   /** Display order from admin CMS — lower values appear first. */
   order_no?: number | null;
+  /** CamelCase alias from some API resources. */
+  orderNo?: number | null;
   /** Legacy alias some payloads may send. */
   order?: number | null;
   properties_count?: number;

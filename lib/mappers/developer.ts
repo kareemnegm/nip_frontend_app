@@ -11,15 +11,29 @@ export type DeveloperCardModel = {
 };
 
 export function getDeveloperOrderNo(developer: ApiDeveloper): number {
-  const raw = developer.order_no ?? developer.order ?? 0;
+  const raw = developer.order_no ?? developer.orderNo ?? developer.order ?? 0;
   const parsed = Number(raw);
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-/** Match backend: `order_no` ascending, then name. */
+function hasExplicitDeveloperOrder(developer: ApiDeveloper): boolean {
+  return getDeveloperOrderNo(developer) > 0;
+}
+
+/** CMS order ascending (1, 5, 8…), then unset/`0` rows, then name within each group. */
 export function compareDevelopersByOrder(a: ApiDeveloper, b: ApiDeveloper): number {
-  const orderDiff = getDeveloperOrderNo(a) - getDeveloperOrderNo(b);
-  if (orderDiff !== 0) return orderDiff;
+  const explicitA = hasExplicitDeveloperOrder(a);
+  const explicitB = hasExplicitDeveloperOrder(b);
+
+  if (explicitA !== explicitB) {
+    return explicitA ? -1 : 1;
+  }
+
+  if (explicitA && explicitB) {
+    const orderDiff = getDeveloperOrderNo(a) - getDeveloperOrderNo(b);
+    if (orderDiff !== 0) return orderDiff;
+  }
+
   return a.name.localeCompare(b.name, undefined, { sensitivity: "base" });
 }
 

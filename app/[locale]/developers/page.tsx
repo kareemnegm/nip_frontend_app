@@ -30,7 +30,7 @@ export default async function DevelopersPage({ params, searchParams }: PageProps
   const locale = resolveLocale(rawLocale);
   const sp = await searchParams;
   const page = sp.page ? Number(Array.isArray(sp.page) ? sp.page[0] : sp.page) : 1;
-  const { data, meta } = await getDevelopers({ page, per_page: 9, locale });
+  const { data, meta } = await getDevelopers({ page, per_page: 9, locale, globalOrder: true });
   const t = await getTranslations({ locale, namespace: "pages.developers" });
   const tc = await getTranslations({ locale, namespace: "common" });
   const developerBlocks = pageBlockKeys.developers;
