@@ -79,7 +79,23 @@ export function formatUnitPrice(price: number | null | undefined): string {
   return `AED ${formatAedPrice(price)}`;
 }
 
-/** Top card labels are fixed design copy, not backend data. */
+/** Top card label — admin `description` wins when set; else localized design fallback. */
+function resolveStageCaption(
+  item: {
+    description?: string | null;
+    milestone?: string | null;
+    caption?: string | null;
+  },
+  captions: string[],
+  index: number,
+): string | null {
+  const fromBackend =
+    item.description?.trim() ||
+    item.milestone?.trim() ||
+    item.caption?.trim() ||
+    "";
+  return fromBackend || captions[index] || null;
+}
 function paymentPlanCaptions(labels: PaymentPlanLabels): string[] {
   return [
     labels.paymentStep1Caption,
@@ -198,11 +214,8 @@ export function resolvePaymentPlan(
   }
   // Fallback to snake_case shape
   if (property.payment_plan?.length) {
-    const isStandardPlan = property.payment_plan.length === captions.length;
     return property.payment_plan.map((step, index) => {
-      const caption = isStandardPlan
-        ? (captions[index] ?? null)
-        : (step.caption ?? captions[index] ?? null);
+      const caption = resolveStageCaption(step, captions, index);
       const percentage = parseStepPercentage(step.percentage);
       return {
         caption,
@@ -221,36 +234,24 @@ export function resolvePaymentPlan(
 }
 
 /**
- * Caption ownership:
- *
- * - The standard 4-stage plan is a fixed design layout, so its top labels are
- *   frontend copy (localized, and identical on every property). The backend's
- *   `description` is ignored there — stored values have repeatedly been wrong
- *   ("Reservation& Spa", "keys&completeions") and there is no Arabic for them.
- * - Any other plan shape (e.g. a 2-stage post-handover plan) is bespoke per
- *   property, so its captions come from the backend, falling back to the design
- *   copy when a description is blank.
- *
- * The backend always owns `stage` and the numeric share/amount input. EOI stages
- * render as AED (see formatPaymentPlanDisplayValue), not as a percentage.
+ * Card layout: top = admin description (or design fallback), middle = %/AED,
+ * bottom = backend `stage`. Admin preview: "{stage} / {percentage}% / {description}".
  */
 function stagesToSteps(
   stages: {
     stage: string;
     percentage: number;
-    description?: string;
+    description?: string | null;
+    milestone?: string | null;
+    caption?: string | null;
     amount?: number | null;
     amount_aed?: number | null;
   }[],
   captions: string[],
   propertyPrice?: number | null,
 ): PaymentPlanStep[] {
-  const isStandardPlan = stages.length === captions.length;
-
   return stages.map((item, index) => {
-    const caption = isStandardPlan
-      ? (captions[index] ?? null)
-      : item.description?.trim() || captions[index] || null;
+    const caption = resolveStageCaption(item, captions, index);
     const amount = item.amount ?? item.amount_aed ?? null;
 
     return {

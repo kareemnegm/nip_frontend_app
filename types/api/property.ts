@@ -44,6 +44,8 @@ export type ApiPaymentPlanItem = {
   stage: string;
   percentage: number;
   description?: string;
+  milestone?: string | null;
+  caption?: string | null;
   /** Fixed EOI/booking amount in AED when the stage is currency-based. */
   amount?: number | null;
   amount_aed?: number | null;
