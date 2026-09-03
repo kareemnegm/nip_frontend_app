@@ -6,6 +6,10 @@ import type {
   BlogListParams,
   LaravelPaginated,
 } from "@/types/api";
+import {
+  filterEditorialBlogCategories,
+  isLegacyBlogCategorySlug,
+} from "@/lib/mappers/blog-categories";
 import { ApiError } from "./errors";
 import { emptyPaginated, isOfflineError, logApiFallback } from "./fallbacks";
 import { apiGet, unwrapData } from "./client";
@@ -38,13 +42,15 @@ const CONTRIBUTOR_CATEGORY_SLUGS = [
 ];
 
 export async function getContributorCategories(locale: Locale = defaultLocale) {
-  const categories = await getBlogCategories(locale);
+  const categories = filterEditorialBlogCategories(await getBlogCategories(locale));
   const bySlug = new Map(categories.map((category) => [category.slug, category]));
 
   return CONTRIBUTOR_CATEGORY_SLUGS.map((slug) => bySlug.get(slug)).filter(
     (category): category is ApiBlogCategory => Boolean(category),
   );
 }
+
+export { filterEditorialBlogCategories, isLegacyBlogCategorySlug };
 
 export async function getBlogs(params: BlogListParams = {}) {
   const { locale = defaultLocale, ...query } = params;

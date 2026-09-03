@@ -14,7 +14,7 @@ import {
   sitePageGutterX,
   sitePageInnerClassName,
 } from "@/components/ui/SiteChrome";
-import { getBlogCategories, getBlogs } from "@/lib/api/blogs";
+import { getBlogCategories, getBlogs, filterEditorialBlogCategories } from "@/lib/api/blogs";
 import { cn } from "@/lib/cn";
 import { getCmsPlaceholder } from "@/lib/i18n/cms-placeholder";
 import { localizedHref, resolveLocale } from "@/lib/i18n/helpers";
@@ -40,10 +40,11 @@ export default async function InsightsPage({ params, searchParams }: PageProps) 
   const t = await getTranslations({ locale, namespace: "pages.insights" });
   const te = await getTranslations({ locale, namespace: "home.empty" });
 
-  const [{ data, meta }, categories] = await Promise.all([
+  const [{ data, meta }, categoriesRaw] = await Promise.all([
     getBlogs({ page, per_page: 9, category, locale }),
     getBlogCategories(locale),
   ]);
+  const categories = filterEditorialBlogCategories(categoriesRaw);
 
   const insights = data.map((blog) => mapBlogToInsightCard(blog, locale));
   const featured = insights[0];

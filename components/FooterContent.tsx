@@ -5,6 +5,10 @@ import {
   type NewsletterFormLabels,
 } from "@/components/forms/InquiryForms";
 import { getBlogCategories } from "@/lib/api/blogs";
+import {
+  filterEditorialBlogCategories,
+  mapBlogCategoryToInsightLink,
+} from "@/lib/mappers/blog-categories";
 import { getNavigation } from "@/lib/api/navigation";
 import { cn } from "@/lib/cn";
 import { getRequestLocale } from "@/lib/i18n/server";
@@ -266,18 +270,17 @@ export async function FooterContent({
     { label: t("submitArticle"), href: "/contribute" },
   ];
 
-  // The backend doesn't localize blog category names yet — translate the
-  // known slugs on the frontend so the footer isn't English-only in Arabic.
   const categoryLabels = (t.raw as (key: string) => Record<string, string>)(
     "blogCategoryLabels",
   );
-  const blogCategories = await getBlogCategories(locale);
+  const editorialCategories = filterEditorialBlogCategories(
+    await getBlogCategories(locale),
+  );
   const insightsLinks: FooterLink[] =
-    blogCategories.length > 0
-      ? blogCategories.map((category) => ({
-          label: categoryLabels[category.slug] ?? category.name,
-          href: `/insights?category=${encodeURIComponent(category.slug)}`,
-        }))
+    editorialCategories.length > 0
+      ? editorialCategories.map((category) =>
+          mapBlogCategoryToInsightLink(category, categoryLabels),
+        )
       : [
           {
             label: t("marketIntelligence"),
@@ -287,8 +290,11 @@ export async function FooterContent({
             label: t("investmentGuides"),
             href: "/insights?category=investment-guides",
           },
+          {
+            label: t("communityGuides"),
+            href: "/insights?category=community-guides",
+          },
           { label: t("goldenVisa"), href: "/insights?category=golden-visa" },
-          { label: t("journal"), href: "/insights" },
         ];
 
   const aboutLinks: FooterLink[] = [{ label: t("aboutUs"), href: "/about" }];
@@ -317,7 +323,7 @@ export async function FooterContent({
   const areasColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_AREAS, areasLinks);
   const offPlanColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_OFF_PLAN, offPlanLinks);
   const resourcesColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_RESOURCES, resourcesLinks);
-  const insightsColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_INSIGHTS, insightsLinks);
+  const insightsColumn = insightsLinks;
   const aboutColumn = withBuilderLinks(NAV_ZONE_KEYS.FOOTER_ABOUT, aboutLinks);
 
   const socialLinks: SocialLink[] = [

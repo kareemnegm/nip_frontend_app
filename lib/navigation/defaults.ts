@@ -1,5 +1,9 @@
 import type { Locale } from "@/lib/i18n/config";
-import type { ApiBlogCategory } from "@/types/api";
+import {
+  filterEditorialBlogCategories,
+  mapBlogCategoryToInsightLink,
+} from "@/lib/mappers/blog-categories";
+import type { ApiBlogCategory } from "@/types/api/blog";
 import type { NavigationItem, NavigationPayload, NavigationZone } from "@/types/api/navigation";
 import en from "@/messages/en.json";
 import ar from "@/messages/ar.json";
@@ -99,18 +103,16 @@ function footerInsightsLinks(
   f: FooterMessages,
   blogCategories?: ApiBlogCategory[],
 ): { label: string; href: string }[] {
-  if (blogCategories && blogCategories.length > 0) {
-    return blogCategories.map((category) => ({
-      label: category.name,
-      href: `/insights?category=${encodeURIComponent(category.slug)}`,
-    }));
+  const editorial = filterEditorialBlogCategories(blogCategories ?? []);
+  if (editorial.length > 0) {
+    return editorial.map((category) => mapBlogCategoryToInsightLink(category));
   }
 
   return [
     { label: f.marketIntelligence, href: "/insights?category=market-intelligence" },
     { label: f.investmentGuides, href: "/insights?category=investment-guides" },
+    { label: f.communityGuides, href: "/insights?category=community-guides" },
     { label: f.goldenVisa, href: "/insights?category=golden-visa" },
-    { label: f.journal, href: "/insights" },
   ];
 }
 

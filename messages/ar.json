@@ -79,13 +79,14 @@
     "insights": "رؤى السوق",
     "marketIntelligence": "ذكاء السوق",
     "investmentGuides": "أدلة الاستثمار",
+    "communityGuides": "أدلة المجتمعات",
     "goldenVisa": "الإقامة الذهبية",
     "journal": "المجلة",
     "blogCategoryLabels": {
-      "market-insights": "رؤى السوق",
-      "tips": "نصائح",
-      "investment-guide": "دليل الاستثمار",
-      "lifestyle": "نمط الحياة"
+      "market-intelligence": "ذكاء السوق",
+      "investment-guides": "أدلة الاستثمار",
+      "community-guides": "أدلة المجتمعات",
+      "golden-visa": "الإقامة الذهبية"
     },
     "aboutNip": "عن NIP",
     "aboutUs": "من نحن",

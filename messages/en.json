@@ -79,13 +79,14 @@
     "insights": "Insights",
     "marketIntelligence": "Market Intelligence",
     "investmentGuides": "Investment Guides",
+    "communityGuides": "Community Guides",
     "goldenVisa": "Golden Visa",
     "journal": "Journal",
     "blogCategoryLabels": {
-      "market-insights": "Market Insights",
-      "tips": "Tips",
-      "investment-guide": "Investment Guide",
-      "lifestyle": "Lifestyle"
+      "market-intelligence": "Market Intelligence",
+      "investment-guides": "Investment Guides",
+      "community-guides": "Community Guides",
+      "golden-visa": "Golden Visa"
     },
     "aboutNip": "About NIP",
     "aboutUs": "About Us",
