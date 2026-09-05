@@ -40,7 +40,7 @@ export function DeveloperHero({
         <div
           className={cn(
             sitePageInnerClassName,
-            "flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center",
+            "flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center lg:justify-between",
           )}
         >
           <div className="flex max-w-[558px] flex-col gap-2">
@@ -57,21 +57,23 @@ export function DeveloperHero({
             ) : null}
           </div>
 
-          {/* Figma 1525:27840 — fixed column: 80×80 logo + 16px gap + button, centered. */}
-          <div className="flex shrink-0 flex-col items-center justify-center gap-4">
-            {logoUrl ? (
-              <DeveloperHeroLogo src={logoUrl} alt={`${title} logo`} />
-            ) : (
-              <div className="flex size-[80px] items-center justify-center">
-                <p
-                  aria-hidden
-                  className="text-center font-[family-name:var(--font-display)] text-[22px] uppercase leading-none tracking-[0.08em] text-brand"
-                >
-                  {fallbackLogoText}
-                </p>
-                <span className="sr-only">{fallbackLogoText} logo</span>
-              </div>
-            )}
+          {/* Figma 1525:27835 / 27840 — logo bottom-aligned in 80px slot, 16px gap, then button. */}
+          <div className="flex shrink-0 flex-col items-center justify-center gap-[16px]">
+            <div className="flex h-[80px] items-end justify-center">
+              {logoUrl ? (
+                <DeveloperHeroLogo src={logoUrl} alt={`${title} logo`} />
+              ) : (
+                <>
+                  <p
+                    aria-hidden
+                    className="text-center font-[family-name:var(--font-display)] text-[22px] uppercase leading-none tracking-[0.08em] text-brand"
+                  >
+                    {fallbackLogoText}
+                  </p>
+                  <span className="sr-only">{fallbackLogoText} logo</span>
+                </>
+              )}
+            </div>
             <SpeakWithNipButton href="/contact" />
           </div>
         </div>

@@ -77,6 +77,55 @@ export function rentalPriceEyebrowKey(property: ApiProperty): "yearlyRent" | "mo
   return "rentalPrice";
 }
 
+export type RentalCardPriceParts = {
+  amount: string;
+  period: string | null;
+  eyebrowKey: "yearlyRent" | "monthlyRent" | "rentalPrice";
+};
+
+function parseRentalPriceLabelForCard(label: string): { amount: string; period: string | null } {
+  const withoutCurrency = label.replace(/^AED\s*/i, "").trim();
+  const slashIndex = withoutCurrency.lastIndexOf(" / ");
+  if (slashIndex !== -1) {
+    return {
+      amount: withoutCurrency.slice(0, slashIndex).trim(),
+      period: withoutCurrency.slice(slashIndex).trim(),
+    };
+  }
+  return { amount: withoutCurrency, period: null };
+}
+
+/** Card layout — amount and "/ month|year" split so long rents do not wrap awkwardly. */
+export function resolveRentalCardPriceParts(
+  property: ApiProperty,
+  labels: Pick<RentalDetailLabels, "pricePerYear" | "pricePerMonth">,
+): RentalCardPriceParts {
+  const eyebrowKey = rentalPriceEyebrowKey(property);
+  const fromApi = property.priceLabel ?? property.price_label;
+
+  if (fromApi?.trim()) {
+    const parsed = parseRentalPriceLabelForCard(fromApi.trim());
+    const fallbackPeriod = rentalPricePeriodSuffix(property, labels);
+    return {
+      amount: parsed.amount || "—",
+      period: parsed.period ?? (fallbackPeriod ? fallbackPeriod.trim() : null),
+      eyebrowKey,
+    };
+  }
+
+  const price = property.price;
+  if (price == null || Number.isNaN(price)) {
+    return { amount: "—", period: null, eyebrowKey };
+  }
+
+  const suffix = rentalPricePeriodSuffix(property, labels);
+  return {
+    amount: formatAedPrice(price),
+    period: suffix ? suffix.trim() : null,
+    eyebrowKey,
+  };
+}
+
 /** Facts strip for rental — core unit specs + cheques; reference lives in the hero. */
 export function rentalFactsFromApi(
   property: ApiProperty,
@@ -130,6 +179,17 @@ function appendRentalPeriodToPriceLabel(
   return suffix ? `${priceLabel}${suffix}` : priceLabel;
 }
 
+function splitPriceLabelPeriod(priceLabel: string): { amount: string; period: string | null } {
+  const slashIndex = priceLabel.lastIndexOf(" / ");
+  if (slashIndex !== -1) {
+    return {
+      amount: priceLabel.slice(0, slashIndex).trim(),
+      period: priceLabel.slice(slashIndex).trim(),
+    };
+  }
+  return { amount: priceLabel, period: null };
+}
+
 function mapRentalAvailableUnit(
   unit: ApiAvailableUnit,
   property: ApiProperty,
@@ -152,10 +212,14 @@ function mapRentalAvailableUnit(
     priceLabel = appendRentalPeriodToPriceLabel(priceLabel, property, labels);
   }
 
+  const { amount, period } =
+    priceLabel === "—" ? { amount: priceLabel, period: null } : splitPriceLabelPeriod(priceLabel);
+
   return {
     unit_type: unitType,
     size_sqft: sizeLabel,
-    starting_price: priceLabel,
+    starting_price: amount,
+    starting_price_period: period,
   };
 }
 

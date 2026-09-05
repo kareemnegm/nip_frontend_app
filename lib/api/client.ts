@@ -43,21 +43,11 @@ export const API_BASE_URL = resolveApiBaseUrl();
 
 export const API_V1_ROOT = `${API_BASE_URL.replace(/\/$/, "")}/api/v1`;
 
-export const DEFAULT_REVALIDATE_SECONDS = 60;
+/** @deprecated ISR disabled — all API reads use no-store. Kept for /api/revalidate docs. */
+export const DEFAULT_REVALIDATE_SECONDS = 0;
 
-function resolveFetchCacheOptions(
-  revalidate?: number | false,
-): Pick<RequestInit, "cache"> | { next: { revalidate: number } } | undefined {
-  // Always hit the backend in dev — avoids stale empty pages after a failed request.
-  if (process.env.NODE_ENV === "development") {
-    return { cache: "no-store" };
-  }
-
-  if (revalidate === false) {
-    return { cache: "no-store" };
-  }
-
-  return { next: { revalidate: revalidate ?? DEFAULT_REVALIDATE_SECONDS } };
+function resolveFetchCacheOptions(): Pick<RequestInit, "cache"> {
+  return { cache: "no-store" };
 }
 
 type RequestOptions = Omit<RequestInit, "body"> & {
@@ -192,7 +182,7 @@ export async function apiRequest<T>(
           : isFormData
             ? (body as FormData)
             : JSON.stringify(body),
-      ...resolveFetchCacheOptions(revalidate),
+      ...resolveFetchCacheOptions(),
     });
 
   let response: Response | undefined;

@@ -2,6 +2,9 @@ export type ApiBlogCategory = {
   id: number;
   name: string;
   slug: string;
+  description?: string | null;
+  order_no?: number | null;
+  is_active?: boolean | null;
 };
 
 export type ApiBlog = {

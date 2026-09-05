@@ -38,6 +38,7 @@ const twMerge = extendTailwindMerge({
             "label",
             "label-semibold",
             "label-muted",
+            "property-tag",
           ],
         },
       ],

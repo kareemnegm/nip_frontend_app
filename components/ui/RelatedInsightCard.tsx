@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import type { InsightCardProps } from "./Cards";
-import { CardLink } from "./Cards";
+import { CardLink, cardTypography } from "./Cards";
 import { Icon } from "./Icon";
 
 /**
@@ -65,19 +65,36 @@ export function RelatedInsightCard({
           {excerpt}
         </p>
 
-        {/* Mobile: stack meta + CTA; sm+: side-by-side like Figma */}
-        <div className="flex w-full shrink-0 flex-col items-start gap-2 overflow-hidden pt-1 sm:flex-row sm:items-center sm:justify-between">
-          <div className="inline-flex max-w-full min-w-0 items-center gap-1 text-label-muted font-medium text-platinum-400">
+        {/* Mobile: stack meta + CTA. sm+: meta left, CTA right — ms-auto keeps label+arrow
+            together; justify-between was clipping the arrow at the card edge. */}
+        <div className="flex w-full shrink-0 flex-col items-start gap-2 overflow-visible pt-1 sm:flex-row sm:items-center sm:gap-4">
+          <span
+            className={cn(
+              cardTypography.metaMuted,
+              "inline-flex max-w-full min-w-0 items-center gap-1",
+            )}
+          >
             <span className="shrink-0 whitespace-nowrap">{readTime}</span>
             <span aria-hidden className="shrink-0">
               |
             </span>
             <span className="min-w-0 truncate">{author}</span>
-          </div>
+          </span>
           {href ? (
-            <span className="motion-link-arrow inline-flex shrink-0 items-center justify-center gap-1 py-2 text-label-semibold font-semibold whitespace-nowrap text-accent sm:ps-2">
+            <span
+              className={cn(
+                cardTypography.cta,
+                "motion-link-arrow inline-flex shrink-0 items-center gap-1 whitespace-nowrap py-2 sm:ms-auto sm:ps-2",
+              )}
+            >
               {t("readInsight")}
-              <Icon name="arrowRight" className="h-4 w-4 rtl:rotate-180" />
+              <Icon
+                name="arrowRight"
+                className={cn(
+                  cardTypography.ctaIcon,
+                  "transition-transform duration-500 ease-[var(--motion-ease-lux)] group-hover:translate-x-1 motion-reduce:translate-x-0",
+                )}
+              />
             </span>
           ) : null}
         </div>

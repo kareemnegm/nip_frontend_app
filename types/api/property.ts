@@ -139,6 +139,11 @@ export type ApiProperty = {
   master_plan_description?: string | null;
   master_plan_image?: string | null;
   master_plan_image_url?: string | null;
+  /** RERA / listing QR — shown on property & off-plan detail hero when set. */
+  qr_code_image_url?: string | null;
+  qrCodeImageUrl?: string | null;
+  qr_code_image?: string | null;
+  qrCodeImage?: string | null;
   photo?: string | null;
   photo_url?: string | null;
   video?: string | null;

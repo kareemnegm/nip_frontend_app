@@ -125,6 +125,10 @@
   --text-label-semibold--line-height: 1rem;
   --text-label-muted: 0.6875rem;        /* 11px */
   --text-label-muted--line-height: 0.875rem;
+  /** Figma property card image tags (3670:12106) — Archivo 11/14 bold, -0.22px */
+  --text-property-tag: 0.6875rem;
+  --text-property-tag--line-height: 0.875rem;
+  --text-property-tag--letter-spacing: -0.22px;
   --text-tagline-micro: 0.5rem;         /* 8px — auth-card logo tagline ("For Those Who Expect More") only */
   --text-tagline-micro--line-height: 0.625rem;
 }
@@ -173,6 +177,29 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+/* Figma property card image tags — Frame 3670:12105 / stack 3670:12114 */
+.property-tag-chip {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--radius-field);
+  background-color: var(--color-white);
+  color: var(--color-ink-secondary);
+  font-family: var(--font-archivo), Arial, Helvetica, sans-serif;
+  font-size: var(--text-property-tag);
+  font-style: normal;
+  font-weight: 700;
+  line-height: var(--text-property-tag--line-height);
+  letter-spacing: var(--text-property-tag--letter-spacing);
+}
+
+.property-tag-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 /* iOS Safari auto-zooms the page when a focused form field is smaller than

@@ -17,10 +17,10 @@ import {
   Badge,
   Breadcrumbs,
   CenteredCardGrid,
-  CurrencyIcon,
   FactsStrip,
   Icon,
   OffPlanCard,
+  PropertyDetailHeroAside,
 } from "@/components/ui";
 import {
   siteMaxWidth,
@@ -39,10 +39,12 @@ import {
   isOffPlanProperty,
   mapPropertyToGalleryItems,
   mapPropertyToOffPlanCard,
+  resolvePropertyQrCodeUrl,
   showsAvailableUnits,
 } from "@/lib/mappers/property";
 import { resolvePropertyTags } from "@/lib/mappers/property-tags";
 import {
+  hasBackendPaymentPlan,
   offPlanFactsFromApi,
   offPlanLocationLine,
   resolveAvailableUnitsFromApi,
@@ -88,7 +90,9 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
     defaultUnit4Size: t("defaultUnit4Size"),
   };
   const facts = offPlanFactsFromApi(property, labels);
-  const paymentPlans = resolvePaymentPlanGroups(property, labels);
+  const paymentPlans = hasBackendPaymentPlan(property)
+    ? resolvePaymentPlanGroups(property, labels)
+    : [];
   const units = showsAvailableUnits(property)
     ? resolveAvailableUnitsFromApi(property)
     : [];
@@ -106,6 +110,7 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
     ? `${property.handover_quarter} ${t("handoverLabel")}`
     : null;
   const tagLabels = resolvePropertyTags(property);
+  const qrCodeUrl = resolvePropertyQrCodeUrl(property);
 
   return (
     <SiteShell>
@@ -140,28 +145,20 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
                 </p>
               </div>
 
-              <div className="flex w-full flex-col gap-4 lg:w-auto lg:items-end">
-                <p className="text-[11px] font-medium uppercase leading-[14px] text-basalt-300 lg:text-end">
-                  {t("startingFrom")}
-                </p>
-                {/* Mobile: price + CTA on one row. Desktop: stacked & right-aligned. */}
-                <div className="flex w-full items-center justify-between gap-3 lg:w-auto lg:flex-col lg:items-end lg:justify-start lg:gap-4">
-                  {/* Figma 1525:28125 — h-[20px] so 16px flex gaps stay tight despite 38px leading */}
-                  <div className="flex h-5 items-center gap-2 overflow-visible text-[30px] font-bold leading-[38px] text-brand lg:justify-end">
-                    <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
-                    <span className="whitespace-nowrap">
-                      {formatAedPrice(property.price ?? null)}
-                    </span>
-                  </div>
-                  <OffPlanRegisterInterestButton
-                    propertyId={property.id}
-                    pageUrl={pageUrl}
-                    label={t("registerInterest")}
-                    modalTitle={t("registerInterestEyebrow")}
-                    className="w-auto shrink-0"
-                  />
-                </div>
-              </div>
+              <PropertyDetailHeroAside
+                priceLabel={t("startingFrom")}
+                price={formatAedPrice(property.price ?? null)}
+                qrCodeUrl={qrCodeUrl}
+                qrAlt={`${property.title} QR code`}
+              >
+                <OffPlanRegisterInterestButton
+                  propertyId={property.id}
+                  pageUrl={pageUrl}
+                  label={t("registerInterest")}
+                  modalTitle={t("registerInterestEyebrow")}
+                  className="w-auto shrink-0"
+                />
+              </PropertyDetailHeroAside>
             </div>
           </div>
         </div>
@@ -192,7 +189,9 @@ export async function OffPlanDetailPage({ locale, slug }: OffPlanDetailPageProps
               title={t("overviewTitle")}
               description={property.description}
             />
-            <PaymentPlanSection title={t("paymentPlanTitle")} plans={paymentPlans} />
+            {paymentPlans.length > 0 ? (
+              <PaymentPlanSection title={t("paymentPlanTitle")} plans={paymentPlans} />
+            ) : null}
             {units.length > 0 ? (
               <AvailableUnitsTable
                 title={t("availableUnitsTitle")}

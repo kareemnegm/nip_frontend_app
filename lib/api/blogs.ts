@@ -21,9 +21,18 @@ export async function getBlogCategories(locale: Locale = defaultLocale) {
       { locale },
     );
     return Array.isArray(response) ? response : unwrapData(response);
-  } catch (error) {
-    logApiFallback("GET /blog-categories", error);
-    return [];
+  } catch (primaryError) {
+    try {
+      const response = await apiGet<{ data: ApiBlogCategory[] } | ApiBlogCategory[]>(
+        "/insights/categories",
+        { locale },
+      );
+      return Array.isArray(response) ? response : unwrapData(response);
+    } catch (fallbackError) {
+      logApiFallback("GET /blog-categories", primaryError);
+      logApiFallback("GET /insights/categories", fallbackError);
+      return [];
+    }
   }
 }
 
@@ -42,7 +51,9 @@ const CONTRIBUTOR_CATEGORY_SLUGS = [
 ];
 
 export async function getContributorCategories(locale: Locale = defaultLocale) {
-  const categories = filterEditorialBlogCategories(await getBlogCategories(locale));
+  const categories = (await getBlogCategories(locale)).filter(
+    (category) => !isLegacyBlogCategorySlug(category.slug),
+  );
   const bySlug = new Map(categories.map((category) => [category.slug, category]));
 
   return CONTRIBUTOR_CATEGORY_SLUGS.map((slug) => bySlug.get(slug)).filter(

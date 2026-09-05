@@ -2,7 +2,6 @@ import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
 import { getTranslations } from "next-intl/server";
 import { AmenityIcon } from "@/components/ui/AmenityIcon";
-import { Icon } from "@/components/ui/Icon";
 import { PropertyMap } from "@/components/ui/PropertyMap";
 import { hasValidCoordinates } from "@/lib/maps/coordinates";
 import {
@@ -58,8 +57,9 @@ export function AvailableUnitsTable({
       <h2 className="font-[family-name:var(--font-display)] text-[30px] uppercase leading-[38px] tracking-[-0.04em] text-brand">
         {title}
       </h2>
-      <div className="overflow-hidden rounded-[var(--radius-card)] border border-line">
-        <div className="grid grid-cols-[1.2fr_1fr_1fr] bg-brand px-6 py-4 text-xs font-semibold leading-4 text-white">
+      <div className="overflow-x-auto rounded-[var(--radius-card)] border border-line">
+        <div className="min-w-[320px]">
+        <div className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,0.85fr)_minmax(0,1.25fr)] bg-brand px-6 py-4 text-xs font-semibold leading-4 text-white">
           <span>{unitTypeLabel}</span>
           <span>{sizeLabel}</span>
           <span className="text-end">{startingPriceLabel}</span>
@@ -67,13 +67,23 @@ export function AvailableUnitsTable({
         {units.map((unit, index) => (
           <div
             key={`${unit.unit_type}-${index}`}
-            className="grid grid-cols-[1.2fr_1fr_1fr] border-b border-line px-6 py-4 text-sm leading-5 text-ink-secondary last:border-b-0"
+            className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,0.85fr)_minmax(0,1.25fr)] border-b border-line px-6 py-4 text-sm leading-5 text-ink-secondary last:border-b-0"
           >
             <span className="font-medium text-brand">{unit.unit_type}</span>
             <span>{unit.size_sqft}</span>
-            <span className="text-end font-semibold text-brand">{unit.starting_price}</span>
+            <span className="text-end font-semibold text-brand">
+              {unit.starting_price_period ? (
+                <span className="inline-flex max-w-full flex-wrap items-baseline justify-end gap-x-1">
+                  <span className="tabular-nums">{unit.starting_price}</span>
+                  <span className="whitespace-nowrap">{unit.starting_price_period}</span>
+                </span>
+              ) : (
+                <span className="tabular-nums">{unit.starting_price}</span>
+              )}
+            </span>
           </div>
         ))}
+        </div>
       </div>
     </section>
   );
@@ -102,6 +112,10 @@ export function MasterplanLocationSection({
 }) {
   const items = facilities?.filter((item) => item.facility?.trim()) ?? [];
   const hasMapCoordinates = hasValidCoordinates(latitude, longitude);
+
+  if (!imageUrl && items.length === 0 && !hasMapCoordinates) {
+    return null;
+  }
 
   return (
     <section className={cn("space-y-7", className)}>
@@ -147,11 +161,7 @@ export function MasterplanLocationSection({
           locale={locale}
           className="h-[420px]"
         />
-      ) : imageUrl ? null : (
-        <div className="flex h-[420px] items-center justify-center rounded-[var(--radius-card)] border border-line bg-basalt-100 shadow-[var(--shadow-card)]">
-          <Icon name="mapPin" className="h-[100px] w-[100px] text-white/80" />
-        </div>
-      )}
+      ) : null}
     </section>
   );
 }

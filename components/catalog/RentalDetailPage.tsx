@@ -31,7 +31,6 @@ import { isRentalProperty, mapPropertyToCard, mapPropertyToGalleryItems, showsAv
 import { getMemberToken } from "@/lib/member/auth.server";
 import {
   rentalFactsFromApi,
-  rentalHighlightsLine,
   rentalPriceEyebrowKey,
   resolveRentalAvailableUnitsFromApi,
   resolveRentalPriceLabel,
@@ -68,7 +67,6 @@ export async function RentalDetailPage({ locale, slug }: RentalDetailPageProps) 
     pricePerMonth: labels.pricePerMonth,
   };
   const facts = rentalFactsFromApi(property, labels);
-  const highlights = rentalHighlightsLine(property, labels);
   const priceEyebrowKey = rentalPriceEyebrowKey(property);
   const priceLabel = resolveRentalPriceLabel(property, labels);
   const availableUnits = showsAvailableUnits(property)
@@ -124,9 +122,6 @@ export async function RentalDetailPage({ locale, slug }: RentalDetailPageProps) 
                     {t("referenceLabel")}: {property.reference_no}
                   </p>
                 ) : null}
-                {highlights ? (
-                  <p className="m-0 text-body-sm text-ink-secondary">{highlights}</p>
-                ) : null}
               </div>
 
               <div className="flex w-full shrink-0 flex-col gap-4 lg:w-auto lg:items-end">
@@ -172,7 +167,7 @@ export async function RentalDetailPage({ locale, slug }: RentalDetailPageProps) 
         <section className="bg-white pb-10">
           <div className={cn("mx-auto w-full", siteMaxWidth, sitePageGutterX)}>
             <div className={cn(sitePageInnerClassName, "w-full")}>
-              <FactsStrip className="w-full" items={facts} variant="rental-detail" />
+              <FactsStrip className="w-full" items={facts} variant="property" />
             </div>
           </div>
         </section>

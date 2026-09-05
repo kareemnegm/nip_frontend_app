@@ -1,7 +1,7 @@
 import type { Locale } from "@/lib/i18n/config";
 import { localizedHref } from "@/lib/i18n/helpers";
-import { resolveMediaUrl, resolvePropertyVideoUrl } from "@/lib/api/media-url";
-import { resolveRentalPriceLabel } from "@/lib/rental/detail";
+import { resolveMediaUrl, resolvePropertyQrCodeUrl, resolvePropertyVideoUrl } from "@/lib/api/media-url";
+import { resolveRentalCardPriceParts } from "@/lib/rental/detail";
 import { resolvePropertyTags } from "@/lib/mappers/property-tags";
 import type { PropertyTagDisplay } from "@/components/ui/PropertyTagBadge";
 import type { ApiProperty, PropertyGalleryImage } from "@/types/api/property";
@@ -14,6 +14,8 @@ export function formatAedPrice(price: number | null | undefined): string {
     maximumFractionDigits: 0,
   }).format(price);
 }
+
+export { resolvePropertyQrCodeUrl } from "@/lib/api/media-url";
 
 export function isOffPlanProperty(property: ApiProperty): boolean {
   return property.listing_type?.toLowerCase() === "offplan";
@@ -166,6 +168,10 @@ export type PropertyCardModel = {
   title: string;
   location: string;
   price: string;
+  /** Rental only — e.g. "/ month" or "/ year", shown under the amount on cards. */
+  pricePeriod?: string | null;
+  /** Rental only — catalog key for the price eyebrow (monthlyRent, yearlyRent, …). */
+  priceEyebrow?: "yearlyRent" | "monthlyRent" | "rentalPrice";
   href: string;
   handover?: string;
   meta: string[];
@@ -179,9 +185,26 @@ export function mapPropertyToCard(
   locale: Locale,
   rentalLabels?: { pricePerYear: string; pricePerMonth: string },
 ): PropertyCardModel {
-  const price = isRentalProperty(property) && rentalLabels
-    ? resolveRentalPriceLabel(property, rentalLabels)
-    : formatAedPrice(property.price ?? null);
+  if (isRentalProperty(property)) {
+    const rentalPrice = resolveRentalCardPriceParts(property, rentalLabels ?? {
+      pricePerYear: " / year",
+      pricePerMonth: " / month",
+    });
+    return {
+      title: property.title,
+      location: propertyLocation(property),
+      price: rentalPrice.amount,
+      priceEyebrow: rentalPrice.eyebrowKey,
+      href: propertyDetailHref(property, locale),
+      handover: property.handover_quarter ?? undefined,
+      meta: propertyMeta(property),
+      badges: propertyBadges(property),
+      tags: resolvePropertyTags(property),
+      imageUrl: resolveMediaUrl(property.image_url),
+    };
+  }
+
+  const price = formatAedPrice(property.price ?? null);
 
   return {
     title: property.title,

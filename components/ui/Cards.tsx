@@ -93,6 +93,10 @@ export type PropertyCardProps = BaseCardProps & {
   badges?: string[];
   tags?: PropertyTagDisplay[];
   layout?: "grid" | "list";
+  /** Rental cards — period line under the amount, e.g. "/ month". */
+  pricePeriod?: string | null;
+  /** Rental cards — eyebrow above price (monthlyRent, yearlyRent, …). */
+  priceEyebrow?: "yearlyRent" | "monthlyRent" | "rentalPrice";
   /** Override default "Explore Property" CTA — Featured Selection uses Figma "Read the Property Story". */
   ctaLabel?: string;
 };
@@ -156,6 +160,50 @@ function metaIconForLabel(item: string) {
   return "grid" as const;
 }
 
+type PropertyCardPriceEyebrowKey = "yearlyRent" | "monthlyRent" | "rentalPrice";
+
+function PropertyCardPriceRow({
+  amount,
+  currency = "AED",
+  eyebrowKey,
+  period,
+  className,
+}: {
+  amount: string;
+  currency?: string;
+  eyebrowKey?: PropertyCardPriceEyebrowKey;
+  period?: string | null;
+  className?: string;
+}) {
+  const t = useTranslations("catalog");
+  const eyebrow = eyebrowKey ? t(eyebrowKey) : t("startingFrom");
+  const displayAmount = stripCurrencyPrefix(amount, currency);
+  // Monthly/yearly rent eyebrow already states the period — no "/ month" on cards.
+  const showPeriod =
+    Boolean(period) &&
+    eyebrowKey !== "monthlyRent" &&
+    eyebrowKey !== "yearlyRent";
+
+  return (
+    <div className={cn("flex items-end justify-between gap-3", className)}>
+      <p className={cn(cardTypography.startingFrom, "max-w-[40%] shrink-0 leading-tight")}>
+        {eyebrow}
+      </p>
+      <p className={cn(cardTypography.price, "min-w-0 flex-1 justify-end text-end")}>
+        <span className="inline-flex max-w-full flex-wrap items-baseline justify-end gap-x-1.5">
+          <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
+          <span className="tabular-nums">{displayAmount}</span>
+          {showPeriod ? (
+            <span className="whitespace-nowrap text-body-xs font-medium text-ink-tertiary">
+              {period}
+            </span>
+          ) : null}
+        </span>
+      </p>
+    </div>
+  );
+}
+
 function CardImage({
   imageUrl,
   alt,
@@ -181,7 +229,7 @@ function CardImage({
         />
         <PropertyTagBadgeStack
           tags={tags}
-          className="absolute start-3 top-3 z-10 max-w-[calc(100%-1.5rem)]"
+          className="absolute start-2 top-2 z-10 max-w-[calc(100%-1rem)]"
         />
       </div>
     );
@@ -197,7 +245,7 @@ function CardImage({
       <Icon name={icon} className="h-[88px] w-[88px] text-white/60" />
       <PropertyTagBadgeStack
         tags={tags}
-        className="absolute start-3 top-3 z-10 max-w-[calc(100%-1.5rem)]"
+        className="absolute start-2 top-2 z-10 max-w-[calc(100%-1rem)]"
       />
     </div>
   );
@@ -217,6 +265,8 @@ export function PropertyCard({
   layout = "grid",
   className,
   ctaLabel,
+  pricePeriod,
+  priceEyebrow,
 }: PropertyCardProps) {
   const t = useTranslations("catalog");
   const ctaText = ctaLabel ?? t("exploreProperty");
@@ -249,7 +299,7 @@ export function PropertyCard({
         )}
         <PropertyTagBadgeStack
           tags={tags}
-          className="absolute start-3 top-3 z-10 max-w-[calc(100%-1.5rem)]"
+          className="absolute start-2 top-2 z-10 max-w-[calc(100%-1rem)]"
         />
       </div>
       {imageLabel ? <span className="sr-only">{imageLabel}</span> : null}
@@ -272,13 +322,13 @@ export function PropertyCard({
           </div>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="min-w-0">
-            <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
-            <p className={cardTypography.price}>
-              <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
-              {stripCurrencyPrefix(price, currency)}
-            </p>
-          </div>
+        <PropertyCardPriceRow
+          amount={price}
+          currency={currency}
+          eyebrowKey={priceEyebrow}
+          period={pricePeriod}
+          className="w-full min-w-0"
+        />
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex flex-wrap gap-2">
               {badges.map((badge) => (
@@ -327,13 +377,13 @@ export function PropertyCard({
             </span>
           ))}
         </div>
-        <div className="mt-auto flex items-center justify-between gap-4 pt-6">
-          <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
-          <p className={cardTypography.price}>
-            <CurrencyIcon currency={currency} className={cardTypography.priceIcon} />
-            {stripCurrencyPrefix(price, currency)}
-          </p>
-        </div>
+        <PropertyCardPriceRow
+          amount={price}
+          currency={currency}
+          eyebrowKey={priceEyebrow}
+          period={pricePeriod}
+          className="mt-auto pt-6"
+        />
         <div className="mt-4 flex items-center justify-between gap-4 overflow-visible">
           <div className="flex min-w-0 flex-wrap gap-2">
             {badges.map((badge) => (
@@ -401,12 +451,7 @@ export function OffPlanCard({
       <CardImage imageUrl={imageUrl} alt={title} icon="building" tags={tags} />
       <div className={cardTypography.bodyOffPlan}>
         <div className="flex w-full shrink-0 items-start justify-between gap-3">
-          <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <span className={cardTypography.badge}>{t("breadcrumbOffPlan")}</span>
-            {tags.length === 0 ? null : (
-              <PropertyTagBadgeStack tags={tags} className="min-w-0" />
-            )}
-          </div>
+          <span className={cardTypography.badge}>{t("breadcrumbOffPlan")}</span>
           <Icon name="crane" className="h-6 w-6 shrink-0 text-accent" />
         </div>
         <h3 className={cn(cardTypography.title, cardTypography.titleTwoLine, "shrink-0")}>

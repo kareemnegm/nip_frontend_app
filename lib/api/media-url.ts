@@ -151,3 +151,17 @@ export function resolvePropertyVideoUrl(property: {
     allowExternalUrl: true,
   });
 }
+
+/** RERA / listing QR — prefers `qr_code_image_url`, falls back to `qr_code_image` path. */
+export function resolvePropertyQrCodeUrl(property: {
+  qr_code_image_url?: string | null;
+  qrCodeImageUrl?: string | null;
+  qr_code_image?: string | null;
+  qrCodeImage?: string | null;
+}): string | undefined {
+  return resolveDualMediaUrl({
+    urlField: property.qr_code_image_url ?? property.qrCodeImageUrl,
+    rawField: property.qr_code_image ?? property.qrCodeImage,
+    storagePrefix: "properties",
+  });
+}

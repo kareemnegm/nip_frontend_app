@@ -192,12 +192,6 @@ function buildFooterItems(
     items.push(makeItem(NAV_ZONE_KEYS.FOOTER_LEGAL, locale, link.label, link.href, i + 1));
   });
 
-  items.push(
-    makeItem(NAV_ZONE_KEYS.FOOTER_LEGAL, locale, f.staffLogin, "/admin/login", 99, {
-      seo_path: null,
-    }),
-  );
-
   return items;
 }
 

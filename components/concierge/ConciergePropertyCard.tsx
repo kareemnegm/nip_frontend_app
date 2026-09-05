@@ -46,6 +46,8 @@ export function ConciergePropertyCard({
   title,
   location,
   price,
+  pricePeriod,
+  priceEyebrow,
   href,
   imageUrl,
   meta = [],
@@ -53,7 +55,12 @@ export function ConciergePropertyCard({
   className,
 }: ConciergePropertyCardProps) {
   const t = useTranslations("catalog");
-  const displayPrice = stripCurrencyPrefix(price, "AED");
+  const eyebrow = priceEyebrow ? t(priceEyebrow) : t("startingFrom");
+  const displayAmount = stripCurrencyPrefix(price, "AED");
+  const showPeriod =
+    Boolean(pricePeriod) &&
+    priceEyebrow !== "monthlyRent" &&
+    priceEyebrow !== "yearlyRent";
 
   const card = (
     <article
@@ -93,11 +100,20 @@ export function ConciergePropertyCard({
           </div>
         </div>
         <div className="mt-6 space-y-4">
-          <div className="flex items-center justify-between gap-4 pt-6">
-            <p className={cardTypography.startingFrom}>{t("startingFrom")}</p>
-            <p className={cardTypography.price}>
-              <CurrencyIcon currency="AED" className={cardTypography.priceIcon} />
-              {displayPrice}
+          <div className="flex items-end justify-between gap-3 pt-6">
+            <p className={cn(cardTypography.startingFrom, "max-w-[40%] shrink-0 leading-tight")}>
+              {eyebrow}
+            </p>
+            <p className={cn(cardTypography.price, "min-w-0 flex-1 justify-end text-end")}>
+              <span className="inline-flex max-w-full flex-wrap items-baseline justify-end gap-x-1.5">
+                <CurrencyIcon currency="AED" className={cardTypography.priceIcon} />
+                <span className="tabular-nums">{displayAmount}</span>
+                {showPeriod ? (
+                  <span className="whitespace-nowrap text-body-xs font-medium text-ink-tertiary">
+                    {pricePeriod}
+                  </span>
+                ) : null}
+              </span>
             </p>
           </div>
           <div className="flex items-center justify-between gap-4">

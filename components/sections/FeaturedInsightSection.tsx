@@ -50,7 +50,11 @@ export async function FeaturedInsightSection({
           slideWidth={480}
           gap={24}
           snapAlign="center"
+          autoPlay
+          autoPlaySpeed={0.55}
+          pauseOnHover
           hoverEdgeScroll
+          focusOnHover
         >
           {insights.map((insight, index) => (
             <InsightCard

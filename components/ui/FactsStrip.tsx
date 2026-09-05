@@ -15,73 +15,15 @@ export type FactItem = {
 
 export type FactsStripProps = {
   items: FactItem[];
-  variant?: "default" | "property" | "property-detail" | "rental-detail" | "area";
+  variant?: "default" | "property" | "property-detail" | "area";
   className?: string;
 };
-
-function FactCell({
-  item,
-  iconVariant,
-}: {
-  item: FactItem;
-  iconVariant: "property-detail" | "rental-detail" | "generic";
-}) {
-  const icon =
-    iconVariant === "property-detail" && isPropertyFactIconName(item.icon) ? (
-      <PropertyFactIcon name={item.icon} className="h-9 w-9 shrink-0" />
-    ) : iconVariant === "rental-detail" && isPropertyFactIconName(item.icon) ? (
-      <PropertyFactIcon name={item.icon} className="h-9 w-9 shrink-0" />
-    ) : (
-      <Icon name={item.icon} className="h-9 w-9 shrink-0 text-sapphire-600" />
-    );
-
-  return (
-    <>
-      {icon}
-      <div className="nip-facts-strip-stack min-w-0 flex-1">
-        <p className="nip-facts-strip-stack__label text-label-muted font-medium text-text-inactive">
-          {item.label}
-        </p>
-        <p
-          className={cn(
-            "nip-facts-strip-stack__value text-body-regular font-semibold tracking-[-0.01em] text-brand",
-            iconVariant === "rental-detail" ? "truncate" : "break-words",
-          )}
-          title={iconVariant === "rental-detail" ? item.value : undefined}
-        >
-          {item.value}
-        </p>
-      </div>
-    </>
-  );
-}
 
 export function FactsStrip({
   items,
   variant = "default",
   className,
 }: FactsStripProps) {
-  if (variant === "rental-detail") {
-    return (
-      <div
-        className={cn(
-          "mx-auto grid w-full grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-card)] border border-border-default bg-border-default",
-          "sm:grid-cols-3 lg:grid-cols-4",
-          className,
-        )}
-      >
-        {items.map((item, index) => (
-          <div
-            key={`${item.label}-${index}`}
-            className="flex min-h-[72px] items-center gap-1.5 bg-white px-4 py-3 lg:min-h-[80px] lg:px-5 lg:py-[22px]"
-          >
-            <FactCell item={item} iconVariant="rental-detail" />
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   if (variant === "property" || variant === "property-detail" || variant === "area") {
     return (
       <div

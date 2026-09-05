@@ -427,12 +427,6 @@ export async function FooterContent({
                 {link.label}
               </LocalizedLink>
             ))}
-            <LocalizedLink
-              href="/admin/login"
-              className="transition-colors hover:text-white"
-            >
-              {t("staffLogin")}
-            </LocalizedLink>
           </div>
         </div>
       </div>

@@ -14,9 +14,9 @@ import {
   Breadcrumbs,
   Button,
   CenteredCardGrid,
-  CurrencyIcon,
   Icon,
   PropertyCard,
+  PropertyDetailHeroAside,
 } from "@/components/ui";
 import {
   siteMaxWidth,
@@ -38,6 +38,7 @@ import {
   mapPropertyToCard,
   mapPropertyToGalleryItems,
   mapPropertyToOffPlanCard,
+  resolvePropertyQrCodeUrl,
   showsAvailableUnits,
 } from "@/lib/mappers/property";
 import { resolveAvailableUnitsFromApi } from "@/lib/off-plan/detail";
@@ -81,6 +82,7 @@ export async function PropertyDetailPage({
   const locationImageUrl = resolveMediaUrl(property.location_image_url);
   const siteUrl = getSiteUrl();
   const pageUrl = `${siteUrl}${localizedHref(locale, `/${detailBase}/${slug}`)}`;
+  const qrCodeUrl = resolvePropertyQrCodeUrl(property);
 
   const memberToken = await getMemberToken();
   let initialSaved = false;
@@ -128,42 +130,29 @@ export async function PropertyDetailPage({
                 ) : null}
               </div>
 
-              <div className="flex w-full shrink-0 flex-col gap-4 lg:w-auto lg:items-end">
-                <p className="m-0 text-[11px] font-medium leading-[14px] text-basalt-300 lg:text-end">
-                  {t("guidePrice")}
-                </p>
-                {/* Mobile: price + CTA on one row. Desktop: stacked & right-aligned (Figma 1525:28123). */}
-                <div className="flex w-full items-center justify-between gap-3 lg:w-auto lg:flex-col lg:items-end lg:justify-start lg:gap-4">
-                  {/* Figma 1525:28125 — h-[20px] so 16px flex gaps stay tight despite 38px leading */}
-                  <div
-                    className={cn(
-                      "flex items-center gap-2 text-[30px] font-bold leading-[38px] text-brand",
-                      detailBase === "properties" && "h-5 overflow-visible lg:justify-end",
-                    )}
-                  >
-                    <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
-                    <span className="whitespace-nowrap">
-                      {formatAedPrice(property.price ?? null)}
-                    </span>
-                  </div>
-                  <div className="flex shrink-0 items-center gap-3">
-                    {memberToken ? (
-                      <SavePropertyButton
-                        propertyId={property.id}
-                        initialSaved={initialSaved}
-                        labels={{
-                          save: t("saveProperty"),
-                          saved: t("savedProperty"),
-                          remove: t("removeSavedProperty"),
-                        }}
-                      />
-                    ) : null}
-                    <Button href={localizedHref(locale, "/contact")}>
-                      {t("requestAdvisory")}
-                    </Button>
-                  </div>
+              <PropertyDetailHeroAside
+                priceLabel={t("guidePrice")}
+                price={formatAedPrice(property.price ?? null)}
+                qrCodeUrl={qrCodeUrl}
+                qrAlt={`${property.title} QR code`}
+              >
+                <div className="flex shrink-0 items-center gap-3">
+                  {memberToken ? (
+                    <SavePropertyButton
+                      propertyId={property.id}
+                      initialSaved={initialSaved}
+                      labels={{
+                        save: t("saveProperty"),
+                        saved: t("savedProperty"),
+                        remove: t("removeSavedProperty"),
+                      }}
+                    />
+                  ) : null}
+                  <Button href={localizedHref(locale, "/contact")}>
+                    {t("requestAdvisory")}
+                  </Button>
                 </div>
-              </div>
+              </PropertyDetailHeroAside>
             </div>
           </div>
         </div>

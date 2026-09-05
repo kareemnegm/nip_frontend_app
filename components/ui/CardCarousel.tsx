@@ -138,6 +138,9 @@ export function CardCarousel({
     () => typeof window !== "undefined" && prefersReducedMotion(),
   );
 
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const [isVerticalTouch, setIsVerticalTouch] = useState(false);
+
   const shouldAutoPlay = autoPlay && !reducedMotion;
   const shouldEdgeScroll = hoverEdgeScroll && !reducedMotion;
 
@@ -184,7 +187,7 @@ export function CardCarousel({
   }, [updateScrollState]);
 
   useEffect(() => {
-    if (!shouldAutoPlay || isPaused || isDragging) return;
+    if (!shouldAutoPlay || isPaused || isDragging || isVerticalTouch) return;
 
     const element = scrollRef.current;
     if (!element) return;
@@ -217,7 +220,7 @@ export function CardCarousel({
     frameId = requestAnimationFrame(tick);
 
     return () => cancelAnimationFrame(frameId);
-  }, [shouldAutoPlay, isPaused, isDragging, autoPlaySpeed, snapAlign]);
+  }, [shouldAutoPlay, isPaused, isDragging, isVerticalTouch, autoPlaySpeed, snapAlign]);
 
   useEffect(() => {
     if (!shouldEdgeScroll || !hoverEdge || isDragging) return;
@@ -340,12 +343,15 @@ export function CardCarousel({
           focusOnHover && "py-3 sm:py-4",
           shouldEdgeScroll && hoverEdge === "left" && "cursor-w-resize rtl:cursor-e-resize",
           shouldEdgeScroll && hoverEdge === "right" && "cursor-e-resize rtl:cursor-w-resize",
-          shouldAutoPlay && !isPaused && !isDragging
+          shouldAutoPlay && !isPaused && !isDragging && !isVerticalTouch
             ? "snap-none"
             : hoverEdge
               ? "snap-none"
               : "snap-x snap-mandatory",
-          "touch-pan-x [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+          /* Do not use touch-pan-x — it blocks vertical page scroll when the finger
+             starts on a card (common mobile bug). Pan-y on coarse pointers keeps
+             page scroll natural; horizontal swipe still works via overflow-x-auto. */
+          "touch-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           trackHeight !== undefined && "h-[var(--carousel-track-height)]",
           // Full-bleed carousels lose the page's ambient gutter — restore it on
           // mobile only so the first/last slide isn't flush against the screen
@@ -378,8 +384,38 @@ export function CardCarousel({
         }}
         onPointerUp={() => setIsDragging(false)}
         onPointerCancel={() => setIsDragging(false)}
-        onTouchStart={() => setIsDragging(true)}
-        onTouchEnd={() => setIsDragging(false)}
+        onTouchStart={(event) => {
+          const touch = event.touches[0];
+          if (touch) {
+            touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+          }
+          setIsVerticalTouch(false);
+          setIsDragging(true);
+        }}
+        onTouchMove={(event) => {
+          const start = touchStartRef.current;
+          const touch = event.touches[0];
+          if (!start || !touch) return;
+
+          const deltaX = Math.abs(touch.clientX - start.x);
+          const deltaY = Math.abs(touch.clientY - start.y);
+
+          // Once the gesture is clearly vertical, pause carousel capture so the page scrolls.
+          if (deltaY > deltaX + 6) {
+            setIsVerticalTouch(true);
+            setIsDragging(false);
+          }
+        }}
+        onTouchEnd={() => {
+          touchStartRef.current = null;
+          setIsVerticalTouch(false);
+          setIsDragging(false);
+        }}
+        onTouchCancel={() => {
+          touchStartRef.current = null;
+          setIsVerticalTouch(false);
+          setIsDragging(false);
+        }}
       >
         {items.map((child, index) => (
           <div

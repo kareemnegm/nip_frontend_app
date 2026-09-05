@@ -25,6 +25,8 @@ export type AvailableUnitRow = {
   unit_type: string;
   size_sqft: string;
   starting_price: string;
+  /** Rental tables — e.g. "/ month", kept inline with the amount. */
+  starting_price_period?: string | null;
 };
 
 /** Shared by off-plan and resale — both render the payment plan cards. */
@@ -230,7 +232,7 @@ export function resolvePaymentPlan(
       };
     });
   }
-  return defaultPaymentPlan(labels, propertyPrice);
+  return [];
 }
 
 /**
@@ -270,8 +272,8 @@ function stagesToSteps(
 }
 
 /**
- * Every plan the buyer can switch between. Falls back to a single unnamed group
- * so callers can always render the same component.
+ * Every plan the buyer can switch between. Returns an empty list when the backend
+ * did not ship payment-plan data — never invent a default 10/20/30/40 plan.
  */
 export function resolvePaymentPlanGroups(
   property: ApiProperty,
@@ -290,7 +292,8 @@ export function resolvePaymentPlanGroups(
       .sort((a, b) => a.position - b.position)
       .map(({ title, steps }) => ({ title, steps }));
   }
-  return [{ title: "", steps: resolvePaymentPlan(property, labels) }];
+  const steps = resolvePaymentPlan(property, labels);
+  return steps.length ? [{ title: "", steps }] : [];
 }
 
 export function defaultUnits(
@@ -425,7 +428,7 @@ function bedsRangeFromAvailableUnits(
   return { min: Math.min(...counts), max: Math.max(...counts) };
 }
 
-export function resolveUnitTypes(property: ApiProperty): string {
+export function resolveUnitTypes(property: ApiProperty): string | null {
   // Prefer backend-computed summary (new camelCase, then snake_case)
   if (property.unitTypes?.trim()) {
     return property.unitTypes;
@@ -441,12 +444,12 @@ export function resolveUnitTypes(property: ApiProperty): string {
   // Derive from available_units' unitType labels
   const fromUnits = bedsRangeFromAvailableUnits(property);
   if (fromUnits) {
-    return formatBedsRange(fromUnits.min, fromUnits.max) ?? "1–4 Bed";
+    return formatBedsRange(fromUnits.min, fromUnits.max);
   }
   if (property.bedrooms != null) {
     return bedLabel(property.bedrooms);
   }
-  return "1–4 Bed";
+  return null;
 }
 
 /** Raw payment_plan_summary_parts values, fixed length 4 (unused slots are null) */
@@ -468,7 +471,7 @@ function summaryFromParts(parts: (number | null)[]): string | null {
   return filled.length ? filled.join(" / ") : null;
 }
 
-export function resolvePaymentSplit(property: ApiProperty): string {
+export function resolvePaymentSplit(property: ApiProperty): string | null {
   // Prefer new camelCase shape from backend
   if (property.paymentPlanSummary?.trim()) {
     return property.paymentPlanSummary;
@@ -481,7 +484,7 @@ export function resolvePaymentSplit(property: ApiProperty): string {
   const fromParts = summaryFromParts(resolvePaymentSplitParts(property));
   if (fromParts) return fromParts;
   // Legacy payment_split field
-  return property.payment_split?.trim() || "60 / 40";
+  return property.payment_split?.trim() || null;
 }
 
 function formatHandoverDate(dateStr: string): string {
@@ -553,11 +556,14 @@ export function offPlanFactsFromApi(
     });
   }
 
-  facts.push({
-    label: labels.unitTypesLabel,
-    value: resolveUnitTypes(property),
-    icon: "floorplan",
-  });
+  const unitTypes = resolveUnitTypes(property);
+  if (unitTypes) {
+    facts.push({
+      label: labels.unitTypesLabel,
+      value: unitTypes,
+      icon: "floorplan",
+    });
+  }
 
   if (property.price != null) {
     facts.push({
@@ -567,11 +573,14 @@ export function offPlanFactsFromApi(
     });
   }
 
-  facts.push({
-    label: labels.paymentLabel,
-    value: resolvePaymentSplit(property),
-    icon: "mortgage",
-  });
+  const paymentSplit = resolvePaymentSplit(property);
+  if (paymentSplit) {
+    facts.push({
+      label: labels.paymentLabel,
+      value: paymentSplit,
+      icon: "mortgage",
+    });
+  }
 
   facts.push({
     label: labels.statusLabel,

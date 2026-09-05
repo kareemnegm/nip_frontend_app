@@ -76,6 +76,7 @@ export type { PropertyFilterValues } from "./PropertyFilterBar";
 export { AreaSearchBar } from "./AreaSearchBar";
 export type { AreaSearchValues } from "./AreaSearchBar";
 export { PropertyMap } from "./PropertyMap";
+export { PropertyDetailHeroAside } from "./PropertyDetailHeroAside";
 export { GenericSearchBar } from "./SearchBars";
 export { PropertyResultsToolbar } from "./PropertyResultsToolbar";
 export type { PropertyResultsToolbarProps } from "./PropertyResultsToolbar";

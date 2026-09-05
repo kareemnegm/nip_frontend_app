@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { NO_STORE_CACHE_CONTROL } from "./lib/no-cache";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
@@ -28,6 +29,28 @@ function apiImageHosts(): { protocol: "http" | "https"; hostname: string }[] {
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  async headers() {
+    const noStore = [
+      { key: "Cache-Control", value: NO_STORE_CACHE_CONTROL },
+      { key: "Pragma", value: "no-cache" },
+      { key: "Expires", value: "0" },
+    ];
+
+    return [
+      // Hashed build assets — safe to cache forever; new deploys get new filenames.
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      // Everything else (HTML, API routes, public images) — never cache.
+      {
+        source: "/:path*",
+        headers: noStore,
+      },
+    ];
+  },
   async redirects() {
     return [
       // Browsers request /favicon.ico — send them to the real PNG (never serve PNG bytes at .ico).
