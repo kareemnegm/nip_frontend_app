@@ -9,6 +9,7 @@ import type {
 import { ApiError } from "./errors";
 import { emptyPaginated, isTransientApiError, logApiFallback } from "./fallbacks";
 import { apiGet, DEFAULT_REVALIDATE_SECONDS, unwrapData } from "./client";
+import { CATALOG_PAGE_REVALIDATE_SECONDS } from "@/lib/page-cache";
 
 function toQueryParams(params: PropertyListParams = {}) {
   const query: Record<string, string | number> = {};
@@ -36,11 +37,20 @@ export async function getProperties(params: PropertyListParams = {}) {
 }
 
 export const getPropertyBySlug = cache(
-  async (slug: string, locale: Locale = defaultLocale) => {
+  async (
+    slug: string,
+    locale: Locale = defaultLocale,
+    options: { catalog?: boolean } = {},
+  ) => {
     try {
       const response = await apiGet<ApiProperty | { data: ApiProperty }>(
         `/properties/${slug}`,
-        { locale, revalidate: DEFAULT_REVALIDATE_SECONDS },
+        {
+          locale,
+          revalidate: options.catalog
+            ? CATALOG_PAGE_REVALIDATE_SECONDS || false
+            : DEFAULT_REVALIDATE_SECONDS,
+        },
       );
       return unwrapData(response);
     } catch (error) {

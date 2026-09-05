@@ -13,19 +13,20 @@ import {
 import { ApiError } from "./errors";
 import { emptyPaginated, isOfflineError, logApiFallback } from "./fallbacks";
 import { apiGet, unwrapData } from "./client";
+import { STATIC_PAGE_REVALIDATE_SECONDS } from "@/lib/page-cache";
 
 export async function getBlogCategories(locale: Locale = defaultLocale) {
   try {
     const response = await apiGet<{ data: ApiBlogCategory[] } | ApiBlogCategory[]>(
       "/blog-categories",
-      { locale },
+      { locale, revalidate: STATIC_PAGE_REVALIDATE_SECONDS },
     );
     return Array.isArray(response) ? response : unwrapData(response);
   } catch (primaryError) {
     try {
       const response = await apiGet<{ data: ApiBlogCategory[] } | ApiBlogCategory[]>(
         "/insights/categories",
-        { locale },
+        { locale, revalidate: STATIC_PAGE_REVALIDATE_SECONDS },
       );
       return Array.isArray(response) ? response : unwrapData(response);
     } catch (fallbackError) {
@@ -73,6 +74,7 @@ export async function getBlogs(params: BlogListParams = {}) {
         category: query.category,
       },
       locale,
+      revalidate: STATIC_PAGE_REVALIDATE_SECONDS,
     });
   } catch (error) {
     logApiFallback("GET /blogs", error);
@@ -85,7 +87,7 @@ export const getBlogBySlug = cache(
     try {
       const response = await apiGet<ApiBlog | { data: ApiBlog }>(
         `/blogs/${slug}`,
-        { locale },
+        { locale, revalidate: STATIC_PAGE_REVALIDATE_SECONDS },
       );
       return unwrapData(response);
     } catch (error) {

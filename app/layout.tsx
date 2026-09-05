@@ -11,11 +11,6 @@ import { defaultLocale, getDirection, isLocale, LOCALE_COOKIE } from "@/lib/i18n
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
-/** Every page and API read is rendered fresh — no ISR or data cache. */
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
-export const revalidate = 0;
-
 const archivo = Archivo({
   variable: "--font-archivo",
   subsets: ["latin"],

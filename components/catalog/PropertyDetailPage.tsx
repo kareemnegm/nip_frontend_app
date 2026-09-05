@@ -56,7 +56,9 @@ export async function PropertyDetailPage({
   slug,
   detailBase,
 }: PropertyDetailPageProps) {
-  const property = await getPropertyBySlug(slug, locale);
+  const property = await getPropertyBySlug(slug, locale, {
+    catalog: detailBase === "properties",
+  });
   if (!property) notFound();
   if (detailBase === "off-plan" && !isOffPlanProperty(property)) notFound();
   if (detailBase === "properties" && isOffPlanProperty(property)) notFound();

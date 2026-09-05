@@ -4,7 +4,8 @@ import { sortDevelopersByOrder } from "@/lib/mappers/developer";
 import type { ApiDeveloper, LaravelPaginated } from "@/types/api";
 import { ApiError } from "./errors";
 import { emptyPaginated, isTransientApiError, logApiFallback } from "./fallbacks";
-import { apiGet, DEFAULT_REVALIDATE_SECONDS, unwrapData } from "./client";
+import { apiGet, unwrapData } from "./client";
+import { CATALOG_PAGE_REVALIDATE_SECONDS } from "@/lib/page-cache";
 
 /** Developers catalog is small — fetch all rows once so CMS `order_no` applies across pages. */
 const DEVELOPERS_CATALOG_CAP = 200;
@@ -69,7 +70,7 @@ export const getDeveloperBySlug = cache(
     try {
       const response = await apiGet<ApiDeveloper | { data: ApiDeveloper }>(
         `/developers/${slug}`,
-        { locale, revalidate: DEFAULT_REVALIDATE_SECONDS },
+        { locale, revalidate: CATALOG_PAGE_REVALIDATE_SECONDS || false },
       );
       return unwrapData(response);
     } catch (error) {

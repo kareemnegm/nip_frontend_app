@@ -36,6 +36,8 @@ type CardCarouselProps = {
   hoverEdgeScrollSpeed?: number;
   /** Scale up hovered or centered slide. */
   focusOnHover?: boolean;
+  /** When true, reaching the last slide jumps back to the first (and vice versa). Defaults to `autoPlay`. */
+  loop?: boolean;
 };
 
 function getScrollMetrics(element: HTMLElement, isRtl: boolean) {
@@ -105,6 +107,31 @@ function getActiveSlideIndex(
   return closest;
 }
 
+function jumpToSlide(
+  scroller: HTMLElement,
+  slides: HTMLDivElement[],
+  index: number,
+  snapAlign: "start" | "center",
+  behavior: ScrollBehavior = "auto",
+) {
+  const slide = slides[index];
+  if (!slide) return;
+
+  const scrollerRect = scroller.getBoundingClientRect();
+  const slideRect = slide.getBoundingClientRect();
+  const delta =
+    snapAlign === "center"
+      ? slideRect.left +
+        slideRect.width / 2 -
+        (scrollerRect.left + scrollerRect.width / 2)
+      : slideRect.left - scrollerRect.left;
+
+  scroller.scrollTo({
+    left: scroller.scrollLeft + delta,
+    behavior,
+  });
+}
+
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
@@ -124,6 +151,7 @@ export function CardCarousel({
   hoverEdgeScroll = true,
   hoverEdgeScrollSpeed = 2,
   focusOnHover = true,
+  loop,
 }: CardCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -143,6 +171,7 @@ export function CardCarousel({
 
   const shouldAutoPlay = autoPlay && !reducedMotion;
   const shouldEdgeScroll = hoverEdgeScroll && !reducedMotion;
+  const shouldLoop = loop ?? autoPlay;
 
   const updateScrollState = useCallback(() => {
     const element = scrollRef.current;
@@ -197,16 +226,14 @@ export function CardCarousel({
     const tick = () => {
       const isRtl = document.documentElement.dir === "rtl";
       const metrics = getScrollMetrics(element, isRtl);
+      const slides = slideRefs.current.filter(
+        (slide): slide is HTMLDivElement => slide !== null,
+      );
 
       if (!metrics.canScrollNext) {
-        const slides = slideRefs.current.filter(
-          (slide): slide is HTMLDivElement => slide !== null,
-        );
-        slides[0]?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: snapAlign === "center" ? "center" : "start",
-        });
+        if (shouldLoop && slides.length > 1) {
+          jumpToSlide(element, slides, 0, snapAlign);
+        }
       } else {
         element.scrollBy({
           left: isRtl ? -autoPlaySpeed : autoPlaySpeed,
@@ -220,7 +247,7 @@ export function CardCarousel({
     frameId = requestAnimationFrame(tick);
 
     return () => cancelAnimationFrame(frameId);
-  }, [shouldAutoPlay, isPaused, isDragging, isVerticalTouch, autoPlaySpeed, snapAlign]);
+  }, [shouldAutoPlay, shouldLoop, isPaused, isDragging, isVerticalTouch, autoPlaySpeed, snapAlign]);
 
   useEffect(() => {
     if (!shouldEdgeScroll || !hoverEdge || isDragging) return;
@@ -235,6 +262,9 @@ export function CardCarousel({
       const metrics = getScrollMetrics(element, isRtl);
       const scrollForward = hoverEdge === "right";
       const canScroll = scrollForward ? metrics.canScrollNext : metrics.canScrollPrev;
+      const slides = slideRefs.current.filter(
+        (slide): slide is HTMLDivElement => slide !== null,
+      );
 
       if (canScroll) {
         const delta = scrollForward ? hoverEdgeScrollSpeed : -hoverEdgeScrollSpeed;
@@ -242,6 +272,8 @@ export function CardCarousel({
           left: isRtl ? -delta : delta,
           behavior: "auto",
         });
+      } else if (shouldLoop && slides.length > 1) {
+        jumpToSlide(element, slides, scrollForward ? 0 : slides.length - 1, snapAlign);
       }
 
       frameId = requestAnimationFrame(tick);
@@ -250,7 +282,7 @@ export function CardCarousel({
     frameId = requestAnimationFrame(tick);
 
     return () => cancelAnimationFrame(frameId);
-  }, [shouldEdgeScroll, hoverEdge, isDragging, hoverEdgeScrollSpeed]);
+  }, [shouldEdgeScroll, shouldLoop, hoverEdge, isDragging, hoverEdgeScrollSpeed, snapAlign]);
 
   const scroll = (direction: "prev" | "next") => {
     const element = scrollRef.current;
@@ -263,16 +295,30 @@ export function CardCarousel({
 
     const isRtl = document.documentElement.dir === "rtl";
     const currentIndex = getActiveSlideIndex(element, slides, snapAlign, isRtl);
-    const nextIndex =
-      direction === "next"
-        ? Math.min(currentIndex + 1, slides.length - 1)
-        : Math.max(currentIndex - 1, 0);
+    let nextIndex: number;
 
-    slides[nextIndex]?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: snapAlign === "center" ? "center" : "start",
-    });
+    if (direction === "next") {
+      nextIndex =
+        currentIndex >= slides.length - 1
+          ? shouldLoop
+            ? 0
+            : slides.length - 1
+          : currentIndex + 1;
+    } else {
+      nextIndex =
+        currentIndex <= 0
+          ? shouldLoop
+            ? slides.length - 1
+            : 0
+          : currentIndex - 1;
+    }
+
+    const isWrapping =
+      shouldLoop &&
+      ((direction === "next" && currentIndex >= slides.length - 1) ||
+        (direction === "prev" && currentIndex <= 0));
+
+    jumpToSlide(element, slides, nextIndex, snapAlign, isWrapping ? "auto" : "smooth");
   };
 
   const items = Children.toArray(children);
@@ -309,7 +355,7 @@ export function CardCarousel({
         className,
       )}
     >
-      {canScrollPrev ? (
+      {canScrollPrev || shouldLoop ? (
         <button
           type="button"
           aria-label="Previous slide"
@@ -322,7 +368,7 @@ export function CardCarousel({
           <Icon name="arrowRight" className="h-5 w-5 rotate-180 rtl:rotate-0" />
         </button>
       ) : null}
-      {canScrollNext ? (
+      {canScrollNext || shouldLoop ? (
         <button
           type="button"
           aria-label="Next slide"

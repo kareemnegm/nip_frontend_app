@@ -3,7 +3,8 @@ import { defaultLocale, type Locale } from "@/lib/i18n/config";
 import type { ApiArea, LaravelPaginated } from "@/types/api";
 import { ApiError } from "./errors";
 import { emptyPaginated, isTransientApiError, logApiFallback } from "./fallbacks";
-import { apiGet, DEFAULT_REVALIDATE_SECONDS, unwrapData } from "./client";
+import { apiGet, unwrapData } from "./client";
+import { CATALOG_PAGE_REVALIDATE_SECONDS } from "@/lib/page-cache";
 
 export async function getAreas(
   params: { page?: number; per_page?: number; keyword?: string; locale?: Locale } = {},
@@ -25,7 +26,7 @@ export const getAreaBySlug = cache(async (slug: string, locale: Locale = default
   try {
     const response = await apiGet<ApiArea | { data: ApiArea }>(`/areas/${slug}`, {
       locale,
-      revalidate: DEFAULT_REVALIDATE_SECONDS,
+      revalidate: CATALOG_PAGE_REVALIDATE_SECONDS || false,
     });
     return unwrapData(response);
   } catch (error) {

@@ -4,7 +4,6 @@ import { RentalDetailPage } from "@/components/catalog/RentalDetailPage";
 import { getPropertyBySlug } from "@/lib/api/properties";
 import { resolveLocale } from "@/lib/i18n/helpers";
 
-export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: Promise<{ locale: string; slug: string }>;

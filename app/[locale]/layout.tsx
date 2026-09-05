@@ -6,6 +6,9 @@ import { ScrollToTopOnNavigate } from "@/components/ScrollToTopOnNavigate";
 import { LocaleProvider } from "@/lib/i18n/context";
 import { isLocale, locales } from "@/lib/i18n/config";
 import { resolveLocale } from "@/lib/i18n/helpers";
+import { STATIC_PAGE_REVALIDATE_SECONDS } from "@/lib/page-cache";
+
+export const revalidate = STATIC_PAGE_REVALIDATE_SECONDS;
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));

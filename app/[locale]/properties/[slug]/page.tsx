@@ -15,7 +15,7 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale: rawLocale, slug } = await params;
   const locale = resolveLocale(rawLocale);
-  const property = await getPropertyBySlug(slug, locale);
+  const property = await getPropertyBySlug(slug, locale, { catalog: true });
   if (!property) return { title: "Property - Novel Insight Property" };
   return buildPropertyMetadata(property);
 }
