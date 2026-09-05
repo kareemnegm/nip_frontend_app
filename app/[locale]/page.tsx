@@ -17,6 +17,9 @@ import { mapBlogToInsightCard } from "@/lib/mappers/blog";
 import { isOffPlanProperty, mapPropertyToCard } from "@/lib/mappers/property";
 import { resolveLocale } from "@/lib/i18n/helpers";
 
+/** ISR — must be a literal (Next.js build requirement). Bust via POST /api/revalidate. */
+export const revalidate = 60;
+
 type HomePageProps = {
   params: Promise<{ locale: string }>;
 };
