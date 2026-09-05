@@ -1,18 +1,43 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import {
-  defaultLocale,
-  isLocale,
-  LOCALE_COOKIE,
-  type Locale,
-} from "@/lib/i18n/config";
+import { defaultLocale, isLocale, LOCALE_COOKIE, type Locale } from "@/lib/i18n/config";
 import { localizedHref, toLocaleAgnosticPath } from "@/lib/i18n/helpers";
 import {
   normalizeBuilderPath,
   shouldRewriteToBuilderPage,
 } from "@/lib/page-builder/reserved-paths";
+import { applyNoStoreHeaders } from "@/lib/no-cache";
 
 const PUBLIC_FILE = /\.[^/]+$/;
+
+function withNoCache(response: NextResponse): NextResponse {
+  applyNoStoreHeaders(response.headers);
+  return response;
+}
+
+/** Catalog sections stay uncached; marketing pages use Next.js ISR headers. */
+function isAlwaysFreshPath(pathname: string): boolean {
+  if (pathname.startsWith("/api") || pathname.startsWith("/admin")) {
+    return true;
+  }
+
+  const agnostic = toLocaleAgnosticPath(pathname);
+  return (
+    agnostic === "/properties" ||
+    agnostic.startsWith("/properties/") ||
+    agnostic === "/areas" ||
+    agnostic.startsWith("/areas/") ||
+    agnostic === "/developers" ||
+    agnostic.startsWith("/developers/")
+  );
+}
+
+function finalizeResponse(request: NextRequest, response: NextResponse): NextResponse {
+  if (isAlwaysFreshPath(request.nextUrl.pathname)) {
+    return withNoCache(response);
+  }
+  return response;
+}
 
 /** Pretty Arancia URLs → static HTML (rewrite keeps address bar; base href in each HTML fixes assets). */
 const ARANCIA_PAGE_REWRITE: Record<string, string> = {
@@ -55,7 +80,7 @@ export function proxy(request: NextRequest) {
     pathname.startsWith("/_next") ||
     PUBLIC_FILE.test(pathname)
   ) {
-    return NextResponse.next();
+    return finalizeResponse(request, NextResponse.next());
   }
 
   const aranciaPath = normalizeAranciaPathname(pathname);
@@ -63,7 +88,7 @@ export function proxy(request: NextRequest) {
   if (aranciaHtml) {
     const url = request.nextUrl.clone();
     url.pathname = aranciaHtml;
-    return NextResponse.rewrite(url);
+    return withNoCache(NextResponse.rewrite(url));
   }
 
   const segments = pathname.split("/").filter(Boolean);
@@ -74,7 +99,7 @@ export function proxy(request: NextRequest) {
       const rest = segments.slice(2).join("/");
       const url = request.nextUrl.clone();
       url.pathname = rest ? `/arancia/${rest}`.replace(/\/+$/, "") : "/arancia";
-      return NextResponse.redirect(url);
+      return withNoCache(NextResponse.redirect(url));
     }
     // Fix accidental double-locale URLs such as /en/en/properties
     if (segments[1] && isLocale(segments[1])) {
@@ -89,7 +114,7 @@ export function proxy(request: NextRequest) {
         maxAge: 60 * 60 * 24 * 365,
         sameSite: "lax",
       });
-      return response;
+      return withNoCache(response);
     }
 
     const rest = segments.slice(1);
@@ -104,7 +129,7 @@ export function proxy(request: NextRequest) {
           maxAge: 60 * 60 * 24 * 365,
           sameSite: "lax",
         });
-        return response;
+        return withNoCache(response);
       }
     }
 
@@ -114,7 +139,7 @@ export function proxy(request: NextRequest) {
       maxAge: 60 * 60 * 24 * 365,
       sameSite: "lax",
     });
-    return response;
+    return finalizeResponse(request, response);
   }
 
   const locale = getPreferredLocale(request);
@@ -128,7 +153,7 @@ export function proxy(request: NextRequest) {
     maxAge: 60 * 60 * 24 * 365,
     sameSite: "lax",
   });
-  return response;
+  return withNoCache(response);
 }
 
 export const config = {
