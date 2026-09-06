@@ -51,9 +51,10 @@ export async function FeaturedInsightSection({
           gap={24}
           snapAlign="center"
           autoPlay
-          autoPlaySpeed={0.55}
+          autoPlayBounce
+          autoPlaySpeed={0.75}
           pauseOnHover
-          hoverEdgeScroll
+          hoverEdgeScroll={false}
           focusOnHover
         >
           {insights.map((insight, index) => (

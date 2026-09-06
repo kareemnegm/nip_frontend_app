@@ -8,8 +8,7 @@ import type {
 } from "@/types/api";
 import { ApiError } from "./errors";
 import { emptyPaginated, isTransientApiError, logApiFallback } from "./fallbacks";
-import { apiGet, DEFAULT_REVALIDATE_SECONDS, unwrapData } from "./client";
-import { CATALOG_PAGE_REVALIDATE_SECONDS } from "@/lib/page-cache";
+import { apiGet, unwrapData } from "./client";
 
 function toQueryParams(params: PropertyListParams = {}) {
   const query: Record<string, string | number> = {};
@@ -37,20 +36,11 @@ export async function getProperties(params: PropertyListParams = {}) {
 }
 
 export const getPropertyBySlug = cache(
-  async (
-    slug: string,
-    locale: Locale = defaultLocale,
-    options: { catalog?: boolean } = {},
-  ) => {
+  async (slug: string, locale: Locale = defaultLocale) => {
     try {
       const response = await apiGet<ApiProperty | { data: ApiProperty }>(
         `/properties/${slug}`,
-        {
-          locale,
-          revalidate: options.catalog
-            ? CATALOG_PAGE_REVALIDATE_SECONDS || false
-            : DEFAULT_REVALIDATE_SECONDS,
-        },
+        { locale, revalidate: false },
       );
       return unwrapData(response);
     } catch (error) {

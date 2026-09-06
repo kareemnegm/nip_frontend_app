@@ -736,6 +736,15 @@ article:focus-within .motion-card-image {
   z-index: 1;
 }
 
+@media (hover: none), (pointer: coarse) {
+  .motion-carousel-slide,
+  .motion-carousel-slide.is-focused {
+    transform: none;
+    transition: none;
+    filter: none;
+  }
+}
+
 .motion-search-bar {
   transition:
     transform 0.5s var(--motion-ease-lux),
