@@ -737,10 +737,13 @@ article:focus-within .motion-card-image {
 }
 
 @media (hover: none), (pointer: coarse) {
-  .motion-carousel-slide,
+  .motion-carousel-slide {
+    transform: scale(0.98);
+    transition: transform 0.45s var(--motion-ease-lux);
+  }
+
   .motion-carousel-slide.is-focused {
-    transform: none;
-    transition: none;
+    transform: scale(1);
     filter: none;
   }
 }
