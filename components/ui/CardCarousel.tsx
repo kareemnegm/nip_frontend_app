@@ -24,11 +24,11 @@ type CardCarouselProps = {
   fullBleed?: boolean;
   /** Snap alignment — center matches Figma insight carousel peek effect. */
   snapAlign?: "start" | "center";
-  /** Gentle continuous auto-scroll. Disabled when prefers-reduced-motion. */
+  /** Gentle auto-scroll. Disabled when prefers-reduced-motion. */
   autoPlay?: boolean;
-  /** Pixels advanced per animation frame while auto-playing. */
+  /** Pixels advanced per animation frame (continuous mode, desktop). */
   autoPlaySpeed?: number;
-  /** Pause auto-scroll while pointer is over the track. */
+  /** Pause auto-scroll while pointer is over the track (desktop). */
   pauseOnHover?: boolean;
   /** Scroll continuously while pointer hovers the left/right edge of the track. */
   hoverEdgeScroll?: boolean;
@@ -36,37 +36,47 @@ type CardCarouselProps = {
   hoverEdgeScrollSpeed?: number;
   /** Scale up hovered or centered slide. */
   focusOnHover?: boolean;
+  /** Reverse direction at each end instead of jumping to the first slide. */
+  autoPlayBounce?: boolean;
+  /**
+   * `slide` — advance one card on an interval (mobile-friendly).
+   * `continuous` — pixel crawl every frame (desktop).
+   */
+  autoPlayMode?: "slide" | "continuous";
+  /** Milliseconds between auto-advances in slide mode. */
+  autoPlayInterval?: number;
 };
 
 function getScrollMetrics(element: HTMLElement, isRtl: boolean) {
   const maxScroll = Math.max(0, element.scrollWidth - element.clientWidth);
   if (maxScroll <= 1) {
-    return { canScrollPrev: false, canScrollNext: false };
+    return { canScrollPrev: false, canScrollNext: false, maxScroll };
+  }
+
+  if (!isRtl) {
+    const left = element.scrollLeft;
+    return {
+      canScrollPrev: left > 2,
+      canScrollNext: left < maxScroll - 2,
+      maxScroll,
+    };
   }
 
   const first = element.firstElementChild as HTMLElement | null;
   const last = element.lastElementChild as HTMLElement | null;
   if (!first || !last) {
-    return { canScrollPrev: false, canScrollNext: false };
+    return { canScrollPrev: false, canScrollNext: false, maxScroll };
   }
 
-  // Prefer geometry over scrollLeft — RTL scrollLeft signs differ by browser.
   const containerRect = element.getBoundingClientRect();
   const firstRect = first.getBoundingClientRect();
   const lastRect = last.getBoundingClientRect();
   const epsilon = 2;
 
-  if (isRtl) {
-    // Start is on the right: next reveals content to the left.
-    return {
-      canScrollPrev: firstRect.right > containerRect.right + epsilon,
-      canScrollNext: lastRect.left < containerRect.left - epsilon,
-    };
-  }
-
   return {
-    canScrollPrev: firstRect.left < containerRect.left - epsilon,
-    canScrollNext: lastRect.right > containerRect.right + epsilon,
+    canScrollPrev: firstRect.right > containerRect.right + epsilon,
+    canScrollNext: lastRect.left < containerRect.left - epsilon,
+    maxScroll,
   };
 }
 
@@ -105,6 +115,30 @@ function getActiveSlideIndex(
   return closest;
 }
 
+function jumpToSlide(
+  scroller: HTMLElement,
+  slides: HTMLDivElement[],
+  index: number,
+  snapAlign: "start" | "center",
+  behavior: ScrollBehavior = "smooth",
+) {
+  const slide = slides[index];
+  if (!slide) return;
+
+  const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+  const slideOffset = slide.offsetLeft;
+  const slideSize = slide.offsetWidth;
+  const containerSize = scroller.clientWidth;
+
+  let targetScroll =
+    snapAlign === "center"
+      ? slideOffset + slideSize / 2 - containerSize / 2
+      : slideOffset;
+
+  targetScroll = Math.max(0, Math.min(maxScroll, targetScroll));
+  scroller.scrollTo({ left: targetScroll, behavior });
+}
+
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
@@ -124,9 +158,19 @@ export function CardCarousel({
   hoverEdgeScroll = true,
   hoverEdgeScrollSpeed = 2,
   focusOnHover = true,
+  autoPlayBounce = true,
+  autoPlayMode = "slide",
+  autoPlayInterval = 4500,
 }: CardCarouselProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const autoPlayDirectionRef = useRef(1);
+  const activeIndexRef = useRef(0);
+  const userInteractingRef = useRef(false);
+  const interactionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -134,15 +178,35 @@ export function CardCarousel({
   const [hoverEdge, setHoverEdge] = useState<"left" | "right" | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [canHover, setCanHover] = useState(true);
+  const [isInView, setIsInView] = useState(true);
   const [reducedMotion, setReducedMotion] = useState(
     () => typeof window !== "undefined" && prefersReducedMotion(),
   );
-
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const [isTouchScrolling, setIsTouchScrolling] = useState(false);
   const [isVerticalTouch, setIsVerticalTouch] = useState(false);
 
-  const shouldAutoPlay = autoPlay && !reducedMotion;
-  const shouldEdgeScroll = hoverEdgeScroll && !reducedMotion;
+  const isTouchDevice = !canHover;
+  const shouldAutoPlay = autoPlay && !reducedMotion && isInView;
+  const shouldEdgeScroll = hoverEdgeScroll && !reducedMotion && canHover;
+  const enableFocusEffect = focusOnHover;
+  const enableHoverIndex = focusOnHover && canHover;
+  const autoPlayPausedByInteraction = isTouchDevice
+    ? isTouchScrolling || isVerticalTouch
+    : isDragging || isVerticalTouch;
+  const effectiveAutoPlayMode =
+    autoPlayMode === "continuous" && canHover ? "continuous" : "slide";
+
+  const markUserInteracting = useCallback((pauseMs = 1800) => {
+    userInteractingRef.current = true;
+    if (interactionTimeoutRef.current) {
+      clearTimeout(interactionTimeoutRef.current);
+    }
+    interactionTimeoutRef.current = setTimeout(() => {
+      userInteractingRef.current = false;
+      interactionTimeoutRef.current = null;
+    }, pauseMs);
+  }, []);
 
   const updateScrollState = useCallback(() => {
     const element = scrollRef.current;
@@ -157,16 +221,85 @@ export function CardCarousel({
       (slide): slide is HTMLDivElement => slide !== null,
     );
     if (slides.length > 0) {
-      setActiveIndex(getActiveSlideIndex(element, slides, snapAlign, isRtl));
+      const index = getActiveSlideIndex(element, slides, snapAlign, isRtl);
+      activeIndexRef.current = index;
+      setActiveIndex(index);
     }
   }, [snapAlign]);
+
+  const advanceAutoSlide = useCallback(() => {
+    const element = scrollRef.current;
+    if (!element || userInteractingRef.current || isPaused) return;
+
+    const slides = slideRefs.current.filter(
+      (slide): slide is HTMLDivElement => slide !== null,
+    );
+    if (slides.length <= 1) return;
+
+    const currentIndex = activeIndexRef.current;
+
+    if (autoPlayBounce) {
+      if (currentIndex >= slides.length - 1) {
+        autoPlayDirectionRef.current = -1;
+      } else if (currentIndex <= 0) {
+        autoPlayDirectionRef.current = 1;
+      }
+    } else if (currentIndex >= slides.length - 1) {
+      autoPlayDirectionRef.current = 1;
+    }
+
+    const direction = autoPlayDirectionRef.current;
+    let nextIndex = currentIndex + direction;
+
+    if (autoPlayBounce) {
+      nextIndex = Math.max(0, Math.min(slides.length - 1, nextIndex));
+    } else if (nextIndex >= slides.length) {
+      nextIndex = 0;
+    } else if (nextIndex < 0) {
+      nextIndex = slides.length - 1;
+    }
+
+    activeIndexRef.current = nextIndex;
+    setActiveIndex(nextIndex);
+    jumpToSlide(element, slides, nextIndex, snapAlign, "smooth");
+  }, [autoPlayBounce, isPaused, snapAlign]);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry?.isIntersecting ?? false),
+      { rootMargin: "80px", threshold: 0.1 },
+    );
+    observer.observe(root);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const onChange = () => setReducedMotion(media.matches);
+    setReducedMotion(media.matches);
     media.addEventListener("change", onChange);
     return () => media.removeEventListener("change", onChange);
   }, []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const onChange = () => setCanHover(media.matches);
+    setCanHover(media.matches);
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (interactionTimeoutRef.current) {
+        clearTimeout(interactionTimeoutRef.current);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     updateScrollState();
@@ -187,7 +320,33 @@ export function CardCarousel({
   }, [updateScrollState]);
 
   useEffect(() => {
-    if (!shouldAutoPlay || isPaused || isDragging || isVerticalTouch) return;
+    if (
+      !shouldAutoPlay ||
+      effectiveAutoPlayMode !== "slide" ||
+      autoPlayPausedByInteraction
+    ) {
+      return;
+    }
+
+    const id = window.setInterval(advanceAutoSlide, autoPlayInterval);
+    return () => window.clearInterval(id);
+  }, [
+    shouldAutoPlay,
+    effectiveAutoPlayMode,
+    autoPlayPausedByInteraction,
+    autoPlayInterval,
+    advanceAutoSlide,
+  ]);
+
+  useEffect(() => {
+    if (
+      !shouldAutoPlay ||
+      effectiveAutoPlayMode !== "continuous" ||
+      isPaused ||
+      autoPlayPausedByInteraction
+    ) {
+      return;
+    }
 
     const element = scrollRef.current;
     if (!element) return;
@@ -195,18 +354,34 @@ export function CardCarousel({
     let frameId = 0;
 
     const tick = () => {
+      if (userInteractingRef.current) {
+        frameId = requestAnimationFrame(tick);
+        return;
+      }
+
       const isRtl = document.documentElement.dir === "rtl";
       const metrics = getScrollMetrics(element, isRtl);
 
-      if (!metrics.canScrollNext) {
+      if (autoPlayBounce) {
+        if (!metrics.canScrollNext && autoPlayDirectionRef.current > 0) {
+          autoPlayDirectionRef.current = -1;
+        } else if (!metrics.canScrollPrev && autoPlayDirectionRef.current < 0) {
+          autoPlayDirectionRef.current = 1;
+        }
+
+        const delta = autoPlaySpeed * autoPlayDirectionRef.current;
+        element.scrollBy({
+          left: isRtl ? -delta : delta,
+          behavior: "auto",
+        });
+      } else if (!metrics.canScrollNext) {
         const slides = slideRefs.current.filter(
           (slide): slide is HTMLDivElement => slide !== null,
         );
-        slides[0]?.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: snapAlign === "center" ? "center" : "start",
-        });
+        if (slides.length > 0) {
+          jumpToSlide(element, slides, 0, snapAlign, "smooth");
+          autoPlayDirectionRef.current = 1;
+        }
       } else {
         element.scrollBy({
           left: isRtl ? -autoPlaySpeed : autoPlaySpeed,
@@ -218,9 +393,16 @@ export function CardCarousel({
     };
 
     frameId = requestAnimationFrame(tick);
-
     return () => cancelAnimationFrame(frameId);
-  }, [shouldAutoPlay, isPaused, isDragging, isVerticalTouch, autoPlaySpeed, snapAlign]);
+  }, [
+    shouldAutoPlay,
+    effectiveAutoPlayMode,
+    autoPlayBounce,
+    isPaused,
+    autoPlayPausedByInteraction,
+    autoPlaySpeed,
+    snapAlign,
+  ]);
 
   useEffect(() => {
     if (!shouldEdgeScroll || !hoverEdge || isDragging) return;
@@ -248,7 +430,6 @@ export function CardCarousel({
     };
 
     frameId = requestAnimationFrame(tick);
-
     return () => cancelAnimationFrame(frameId);
   }, [shouldEdgeScroll, hoverEdge, isDragging, hoverEdgeScrollSpeed]);
 
@@ -268,15 +449,17 @@ export function CardCarousel({
         ? Math.min(currentIndex + 1, slides.length - 1)
         : Math.max(currentIndex - 1, 0);
 
-    slides[nextIndex]?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: snapAlign === "center" ? "center" : "start",
-    });
+    activeIndexRef.current = nextIndex;
+    setActiveIndex(nextIndex);
+    jumpToSlide(element, slides, nextIndex, snapAlign, "smooth");
   };
 
   const items = Children.toArray(children);
-  const focusedIndex = hoveredIndex ?? (focusOnHover ? activeIndex : null);
+  const focusedIndex = enableHoverIndex
+    ? (hoveredIndex ?? activeIndex)
+    : enableFocusEffect
+      ? activeIndex
+      : null;
 
   const updateHoverEdgeFromPointer = (clientX: number, track: HTMLElement) => {
     if (!shouldEdgeScroll || isDragging) {
@@ -302,8 +485,8 @@ export function CardCarousel({
 
   return (
     <div
+      ref={rootRef}
       className={cn(
-        /* Scale-on-focus grows past the slide box — clip horizontally only. */
         "relative overflow-x-hidden overflow-y-visible",
         fullBleed && "left-1/2 w-screen max-w-[100vw] -translate-x-1/2",
         className,
@@ -339,23 +522,21 @@ export function CardCarousel({
         ref={scrollRef}
         className={cn(
           "flex scroll-smooth items-start overflow-x-auto overflow-y-visible overscroll-x-contain",
-          /* Room for scale(1.04), card lift, and hover shadow so borders never clip. */
-          focusOnHover && "py-3 sm:py-4",
+          enableFocusEffect && "py-3 sm:py-4",
           shouldEdgeScroll && hoverEdge === "left" && "cursor-w-resize rtl:cursor-e-resize",
           shouldEdgeScroll && hoverEdge === "right" && "cursor-e-resize rtl:cursor-w-resize",
-          shouldAutoPlay && !isPaused && !isDragging && !isVerticalTouch
+          shouldAutoPlay &&
+            effectiveAutoPlayMode === "continuous" &&
+            !isPaused &&
+            !autoPlayPausedByInteraction
             ? "snap-none"
             : hoverEdge
               ? "snap-none"
-              : "snap-x snap-mandatory",
-          /* Do not use touch-pan-x — it blocks vertical page scroll when the finger
-             starts on a card (common mobile bug). Pan-y on coarse pointers keeps
-             page scroll natural; horizontal swipe still works via overflow-x-auto. */
+              : isTouchDevice
+                ? "snap-x snap-proximity"
+                : "snap-x snap-mandatory",
           "touch-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           trackHeight !== undefined && "h-[var(--carousel-track-height)]",
-          // Full-bleed carousels lose the page's ambient gutter — restore it on
-          // mobile only so the first/last slide isn't flush against the screen
-          // edge (desktop/tablet keep the original edge-to-edge bleed).
           fullBleed && "px-5 sm:px-0",
         )}
         style={{
@@ -369,28 +550,40 @@ export function CardCarousel({
               : undefined,
         }}
         onMouseEnter={() => {
-          if (shouldAutoPlay && pauseOnHover) setIsPaused(true);
+          if (shouldAutoPlay && pauseOnHover && canHover) setIsPaused(true);
         }}
         onMouseLeave={() => {
-          if (shouldAutoPlay && pauseOnHover) setIsPaused(false);
+          if (shouldAutoPlay && pauseOnHover && canHover) setIsPaused(false);
           setHoverEdge(null);
         }}
         onMouseMove={(event) => {
           updateHoverEdgeFromPointer(event.clientX, event.currentTarget);
         }}
-        onPointerDown={() => {
-          setIsDragging(true);
-          setHoverEdge(null);
-        }}
-        onPointerUp={() => setIsDragging(false)}
-        onPointerCancel={() => setIsDragging(false)}
+        {...(canHover
+          ? {
+              onPointerDown: (event: React.PointerEvent<HTMLDivElement>) => {
+                if (event.pointerType !== "mouse") return;
+                setIsDragging(true);
+                setHoverEdge(null);
+                markUserInteracting();
+              },
+              onPointerUp: (event: React.PointerEvent<HTMLDivElement>) => {
+                if (event.pointerType !== "mouse") return;
+                setIsDragging(false);
+              },
+              onPointerCancel: (event: React.PointerEvent<HTMLDivElement>) => {
+                if (event.pointerType !== "mouse") return;
+                setIsDragging(false);
+              },
+            }
+          : {})}
         onTouchStart={(event) => {
           const touch = event.touches[0];
           if (touch) {
             touchStartRef.current = { x: touch.clientX, y: touch.clientY };
           }
           setIsVerticalTouch(false);
-          setIsDragging(true);
+          setIsTouchScrolling(false);
         }}
         onTouchMove={(event) => {
           const start = touchStartRef.current;
@@ -400,21 +593,25 @@ export function CardCarousel({
           const deltaX = Math.abs(touch.clientX - start.x);
           const deltaY = Math.abs(touch.clientY - start.y);
 
-          // Once the gesture is clearly vertical, pause carousel capture so the page scrolls.
-          if (deltaY > deltaX + 6) {
+          if (deltaX > 8 && deltaX > deltaY) {
+            setIsTouchScrolling(true);
+            markUserInteracting(1200);
+          }
+
+          if (deltaY > deltaX + 10) {
             setIsVerticalTouch(true);
-            setIsDragging(false);
+            setIsTouchScrolling(false);
           }
         }}
         onTouchEnd={() => {
           touchStartRef.current = null;
           setIsVerticalTouch(false);
-          setIsDragging(false);
+          setIsTouchScrolling(false);
         }}
         onTouchCancel={() => {
           touchStartRef.current = null;
           setIsVerticalTouch(false);
-          setIsDragging(false);
+          setIsTouchScrolling(false);
         }}
       >
         {items.map((child, index) => (
@@ -435,8 +632,8 @@ export function CardCarousel({
             <div
               className={cn(
                 "flex w-full [&>*]:w-full",
-                focusOnHover && "motion-carousel-slide",
-                focusOnHover && focusedIndex === index && "is-focused",
+                enableFocusEffect && "motion-carousel-slide",
+                enableFocusEffect && focusedIndex === index && "is-focused",
                 trackHeight !== undefined ? "h-full [&>*]:h-full" : "[&>*]:h-full",
               )}
             >
