@@ -190,6 +190,7 @@ export function CardCarousel({
   const scrollRef = useRef<HTMLDivElement>(null);
   const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
   const autoPlayDirectionRef = useRef(1);
+  const activeIndexRef = useRef(0);
   const userInteractingRef = useRef(false);
   const interactionTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const scrollStateRafRef = useRef(0);
@@ -207,18 +208,28 @@ export function CardCarousel({
   );
 
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const touchMovedHorizontallyRef = useRef(false);
+  const pendingTouchSnapRef = useRef(false);
+  const scrollSnapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [isTouchScrolling, setIsTouchScrolling] = useState(false);
   const [isVerticalTouch, setIsVerticalTouch] = useState(false);
 
+  const isTouchDevice = !canHover;
   const shouldAutoPlay = autoPlay && !reducedMotion && isInView;
   const shouldEdgeScroll = hoverEdgeScroll && !reducedMotion && canHover;
   const shouldLoop = loop ?? autoPlay;
   const enableFocusEffect = focusOnHover;
   const enableHoverIndex = focusOnHover && canHover;
+  const autoPlayPausedByInteraction =
+    isTouchDevice ? isTouchScrolling || isVerticalTouch : isDragging || isVerticalTouch;
   const effectiveAutoPlayMode =
     autoPlayMode === "continuous" && canHover ? "continuous" : "slide";
-  const centerSpacerWidth = `max(1.25rem, calc(50vw - clamp(140px, 42.5vw, ${slideWidth / 2}px)))`;
+  const slideWidthCss = `clamp(280px, 85vw, ${slideWidth}px)`;
+  const centerInsetCss = fullBleed
+    ? `max(1.25rem, calc((100vw - ${isTouchDevice ? "2.5rem - " : ""}${slideWidthCss}) / 2))`
+    : `max(1.25rem, calc((100% - ${slideWidthCss}) / 2))`;
 
-  const markUserInteracting = useCallback((pauseMs = 2500) => {
+  const markUserInteracting = useCallback((pauseMs = 2000) => {
     userInteractingRef.current = true;
     if (interactionTimeoutRef.current) {
       clearTimeout(interactionTimeoutRef.current);
@@ -244,7 +255,9 @@ export function CardCarousel({
       (slide): slide is HTMLDivElement => slide !== null,
     );
     if (slides.length > 0) {
-      setActiveIndex(getActiveSlideIndex(element, slides, snapAlign, isRtl));
+      const index = getActiveSlideIndex(element, slides, snapAlign, isRtl);
+      activeIndexRef.current = index;
+      setActiveIndex(index);
     }
   }, [snapAlign, enableFocusEffect]);
 
@@ -289,6 +302,9 @@ export function CardCarousel({
       if (interactionTimeoutRef.current) {
         clearTimeout(interactionTimeoutRef.current);
       }
+      if (scrollSnapTimeoutRef.current) {
+        clearTimeout(scrollSnapTimeoutRef.current);
+      }
     },
     [],
   );
@@ -312,6 +328,20 @@ export function CardCarousel({
     };
   }, [scheduleScrollStateUpdate]);
 
+  useEffect(() => {
+    if (snapAlign !== "center") return;
+
+    const element = scrollRef.current;
+    const slides = slideRefs.current.filter(
+      (slide): slide is HTMLDivElement => slide !== null,
+    );
+    if (!element || slides.length === 0) return;
+
+    jumpToSlide(element, slides, 0, snapAlign, "auto");
+    activeIndexRef.current = 0;
+    setActiveIndex(0);
+  }, [snapAlign, children]);
+
   const snapToNearestSlide = useCallback(
     (behavior: ScrollBehavior = "smooth") => {
       const element = scrollRef.current;
@@ -329,17 +359,35 @@ export function CardCarousel({
     [snapAlign],
   );
 
+  useEffect(() => {
+    const element = scrollRef.current;
+    if (!element || snapAlign !== "center" || !isTouchDevice) return;
+
+    const onScrollEnd = () => {
+      if (!pendingTouchSnapRef.current) return;
+
+      pendingTouchSnapRef.current = false;
+      if (scrollSnapTimeoutRef.current) {
+        clearTimeout(scrollSnapTimeoutRef.current);
+        scrollSnapTimeoutRef.current = null;
+      }
+      snapToNearestSlide("smooth");
+    };
+
+    element.addEventListener("scrollend", onScrollEnd);
+    return () => element.removeEventListener("scrollend", onScrollEnd);
+  }, [isTouchDevice, snapAlign, snapToNearestSlide]);
+
   const advanceAutoSlide = useCallback(() => {
     const element = scrollRef.current;
-    if (!element || userInteractingRef.current) return;
+    if (!element || userInteractingRef.current || isPaused) return;
 
     const slides = slideRefs.current.filter(
       (slide): slide is HTMLDivElement => slide !== null,
     );
     if (slides.length <= 1) return;
 
-    const isRtl = document.documentElement.dir === "rtl";
-    const currentIndex = getActiveSlideIndex(element, slides, snapAlign, isRtl);
+    const currentIndex = activeIndexRef.current;
 
     if (autoPlayBounce) {
       if (currentIndex >= slides.length - 1) {
@@ -362,16 +410,17 @@ export function CardCarousel({
       nextIndex = shouldLoop ? slides.length - 1 : 0;
     }
 
+    activeIndexRef.current = nextIndex;
+    setActiveIndex(nextIndex);
     jumpToSlide(element, slides, nextIndex, snapAlign, "smooth");
-  }, [autoPlayBounce, shouldLoop, snapAlign]);
+  }, [autoPlayBounce, shouldLoop, snapAlign, isPaused]);
 
   useEffect(() => {
     if (
       !shouldAutoPlay ||
       effectiveAutoPlayMode !== "slide" ||
       isPaused ||
-      isDragging ||
-      isVerticalTouch
+      autoPlayPausedByInteraction
     ) {
       return;
     }
@@ -382,8 +431,7 @@ export function CardCarousel({
     shouldAutoPlay,
     effectiveAutoPlayMode,
     isPaused,
-    isDragging,
-    isVerticalTouch,
+    autoPlayPausedByInteraction,
     autoPlayInterval,
     advanceAutoSlide,
   ]);
@@ -393,8 +441,7 @@ export function CardCarousel({
       !shouldAutoPlay ||
       effectiveAutoPlayMode !== "continuous" ||
       isPaused ||
-      isDragging ||
-      isVerticalTouch
+      autoPlayPausedByInteraction
     ) {
       return;
     }
@@ -453,8 +500,7 @@ export function CardCarousel({
     shouldLoop,
     autoPlayBounce,
     isPaused,
-    isDragging,
-    isVerticalTouch,
+    autoPlayPausedByInteraction,
     autoPlaySpeed,
     snapAlign,
   ]);
@@ -529,6 +575,8 @@ export function CardCarousel({
         (direction === "prev" && currentIndex <= 0));
 
     jumpToSlide(element, slides, nextIndex, snapAlign, isWrapping ? "auto" : "smooth");
+    activeIndexRef.current = nextIndex;
+    setActiveIndex(nextIndex);
   };
 
   const items = Children.toArray(children);
@@ -599,22 +647,22 @@ export function CardCarousel({
       <div
         ref={scrollRef}
         className={cn(
-          "flex items-start overflow-x-auto overflow-y-visible overscroll-x-contain",
-          /* Room for scale(1.04), card lift, and hover shadow so borders never clip. */
+          "flex items-start overflow-x-auto overflow-y-visible overscroll-x-contain touch-pan-x touch-pan-y",
           enableFocusEffect && "py-3 sm:py-4",
           shouldEdgeScroll && hoverEdge === "left" && "cursor-w-resize rtl:cursor-e-resize",
           shouldEdgeScroll && hoverEdge === "right" && "cursor-e-resize rtl:cursor-w-resize",
           shouldAutoPlay &&
             effectiveAutoPlayMode === "continuous" &&
             !isPaused &&
-            !isDragging &&
-            !isVerticalTouch
+            !autoPlayPausedByInteraction
             ? "snap-none"
             : hoverEdge
               ? "snap-none"
-              : snapAlign === "center"
-                ? "snap-x snap-mandatory"
-                : "snap-x snap-proximity",
+              : isTouchDevice
+                ? "snap-x snap-proximity"
+                : snapAlign === "center"
+                  ? "snap-x snap-mandatory"
+                  : "snap-x snap-proximity",
           "[overflow-scrolling:touch] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
           trackHeight !== undefined && "h-[var(--carousel-track-height)]",
           // Full-bleed carousels lose the page's ambient gutter — restore it on
@@ -627,33 +675,45 @@ export function CardCarousel({
           ...(trackHeight !== undefined
             ? ({ ["--carousel-track-height" as string]: `${trackHeight}px` } as React.CSSProperties)
             : {}),
-          scrollPaddingInline:
-            snapAlign === "center" ? centerSpacerWidth : undefined,
+          paddingInline: snapAlign === "center" ? centerInsetCss : undefined,
+          scrollBehavior: shouldAutoPlay ? "smooth" : undefined,
         }}
         onMouseEnter={() => {
-          if (shouldAutoPlay && pauseOnHover) setIsPaused(true);
+          if (shouldAutoPlay && pauseOnHover && canHover) setIsPaused(true);
         }}
         onMouseLeave={() => {
-          if (shouldAutoPlay && pauseOnHover) setIsPaused(false);
+          if (shouldAutoPlay && pauseOnHover && canHover) setIsPaused(false);
           setHoverEdge(null);
         }}
         onMouseMove={(event) => {
           updateHoverEdgeFromPointer(event.clientX, event.currentTarget);
         }}
-        onPointerDown={() => {
-          setIsDragging(true);
-          setHoverEdge(null);
-          markUserInteracting();
-        }}
-        onPointerUp={() => setIsDragging(false)}
-        onPointerCancel={() => setIsDragging(false)}
+        {...(canHover
+          ? {
+              onPointerDown: (event: React.PointerEvent<HTMLDivElement>) => {
+                if (event.pointerType !== "mouse") return;
+                setIsDragging(true);
+                setHoverEdge(null);
+                markUserInteracting();
+              },
+              onPointerUp: (event: React.PointerEvent<HTMLDivElement>) => {
+                if (event.pointerType !== "mouse") return;
+                setIsDragging(false);
+              },
+              onPointerCancel: (event: React.PointerEvent<HTMLDivElement>) => {
+                if (event.pointerType !== "mouse") return;
+                setIsDragging(false);
+              },
+            }
+          : {})}
         onTouchStart={(event) => {
           const touch = event.touches[0];
           if (touch) {
             touchStartRef.current = { x: touch.clientX, y: touch.clientY };
           }
+          touchMovedHorizontallyRef.current = false;
           setIsVerticalTouch(false);
-          markUserInteracting(3500);
+          setIsTouchScrolling(false);
         }}
         onTouchMove={(event) => {
           const start = touchStartRef.current;
@@ -663,38 +723,51 @@ export function CardCarousel({
           const deltaX = Math.abs(touch.clientX - start.x);
           const deltaY = Math.abs(touch.clientY - start.y);
 
-          if (deltaX > deltaY + 4) {
-            markUserInteracting(3500);
+          if (deltaX > 8 && deltaX > deltaY) {
+            touchMovedHorizontallyRef.current = true;
+            setIsTouchScrolling(true);
+            markUserInteracting(1200);
           }
 
-          // Once the gesture is clearly vertical, pause carousel capture so the page scrolls.
-          if (deltaY > deltaX + 6) {
+          if (deltaY > deltaX + 10) {
             setIsVerticalTouch(true);
-            setIsDragging(false);
+            setIsTouchScrolling(false);
           }
         }}
         onTouchEnd={() => {
           touchStartRef.current = null;
           setIsVerticalTouch(false);
-          setIsDragging(false);
-          markUserInteracting(3500);
-          window.requestAnimationFrame(() => snapToNearestSlide("smooth"));
+          setIsTouchScrolling(false);
+
+          if (touchMovedHorizontallyRef.current) {
+            pendingTouchSnapRef.current = true;
+            markUserInteracting(1200);
+
+            if (scrollSnapTimeoutRef.current) {
+              clearTimeout(scrollSnapTimeoutRef.current);
+            }
+            scrollSnapTimeoutRef.current = setTimeout(() => {
+              scrollSnapTimeoutRef.current = null;
+              if (!pendingTouchSnapRef.current) return;
+              pendingTouchSnapRef.current = false;
+              snapToNearestSlide("smooth");
+            }, 180);
+          }
+
+          touchMovedHorizontallyRef.current = false;
         }}
         onTouchCancel={() => {
           touchStartRef.current = null;
           setIsVerticalTouch(false);
-          setIsDragging(false);
-          markUserInteracting(3500);
-          window.requestAnimationFrame(() => snapToNearestSlide("smooth"));
+          setIsTouchScrolling(false);
+          pendingTouchSnapRef.current = false;
+          touchMovedHorizontallyRef.current = false;
+          if (scrollSnapTimeoutRef.current) {
+            clearTimeout(scrollSnapTimeoutRef.current);
+            scrollSnapTimeoutRef.current = null;
+          }
         }}
       >
-        {snapAlign === "center" ? (
-          <div
-            aria-hidden
-            className="shrink-0"
-            style={{ width: centerSpacerWidth, minWidth: centerSpacerWidth }}
-          />
-        ) : null}
         {items.map((child, index) => (
           <div
             key={index}
@@ -722,13 +795,6 @@ export function CardCarousel({
             </div>
           </div>
         ))}
-        {snapAlign === "center" ? (
-          <div
-            aria-hidden
-            className="shrink-0"
-            style={{ width: centerSpacerWidth, minWidth: centerSpacerWidth }}
-          />
-        ) : null}
       </div>
     </div>
   );
