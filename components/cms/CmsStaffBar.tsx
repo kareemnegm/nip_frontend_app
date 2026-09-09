@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useCanEditCms } from "./CmsAuthProvider";
 import { useLocale } from "@/lib/i18n/context";
 import { localizedHref, stripLocaleFromPathname } from "@/lib/i18n/helpers";
@@ -10,10 +10,9 @@ import { normalizeBuilderPath } from "@/lib/page-builder/reserved-paths";
 import type { BuilderPage } from "@/types/api/page-builder";
 
 export function CmsStaffBar() {
-  const router = useRouter();
   const pathname = usePathname();
   const { locale } = useLocale();
-  const { canEdit, user, loading, refresh } = useCanEditCms();
+  const { canEdit, user, loading } = useCanEditCms();
   // Keyed by the path it was looked up for, so navigating away drops the stale
   // title without an extra render pass.
   const [lookup, setLookup] = useState<{ path: string; page: BuilderPage | null } | null>(null);
@@ -51,16 +50,12 @@ export function CmsStaffBar() {
   }
 
   async function signOut() {
-    const response = await fetch("/api/cms/logout", {
+    await fetch("/api/cms/logout", {
       method: "POST",
       credentials: "same-origin",
-    });
-    if (!response.ok) {
-      return;
-    }
+    }).catch(() => undefined);
 
-    await refresh();
-    router.refresh();
+    window.location.assign(localizedHref(locale, "/"));
   }
 
   return (

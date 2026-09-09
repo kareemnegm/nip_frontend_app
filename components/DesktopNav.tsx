@@ -14,14 +14,17 @@ import {
 import type { ExtraNavLink } from "@/lib/page-builder/nav-placement";
 
 const navLinkClass =
-  "nav-link inline-flex items-center gap-1 text-[13px] font-medium leading-[18px] text-ink transition-colors duration-200 hover:text-brand";
+  "nav-link inline-flex items-center gap-1 text-label font-medium text-ink transition-colors duration-150 hover:text-brand";
+
+const menuItemClass =
+  "block px-5 py-2 text-label text-ink transition-colors duration-150 hover:bg-sapphire-50 hover:text-brand";
 
 function NavCaret({ open }: { open: boolean }) {
   return (
     <Icon
       name="chevronDown"
       className={cn(
-        "nav-caret h-2.5 w-2.5 shrink-0 transition-transform duration-300 ease-[var(--motion-ease-lux)]",
+        "nav-caret h-2.5 w-2.5 shrink-0 transition-transform duration-150",
         open && "rotate-180",
       )}
     />
@@ -34,13 +37,16 @@ export function DesktopNav({ extraLinks = [] }: { extraLinks?: ExtraNavLink[] })
   const navId = useId();
   const navRef = useRef<HTMLElement>(null);
   const [openDropdown, setOpenDropdown] = useState<NavDropdownKey | null>(null);
+  const [openSubKey, setOpenSubKey] = useState<string | null>(null);
 
   function openOnly(dropdown: NavDropdownKey) {
+    if (dropdown !== openDropdown) setOpenSubKey(null);
     setOpenDropdown(dropdown);
   }
 
   function closeDropdowns() {
     setOpenDropdown(null);
+    setOpenSubKey(null);
   }
 
   useEffect(() => {
@@ -107,21 +113,29 @@ export function DesktopNav({ extraLinks = [] }: { extraLinks?: ExtraNavLink[] })
                   role="menu"
                   aria-hidden={false}
                   data-open="true"
-                  className="nav-dropdown-panel pointer-events-auto visible absolute start-1/2 top-full z-30 -translate-x-1/2 pt-3 opacity-100 transition-[opacity,transform,visibility] duration-300 ease-[var(--motion-ease-lux)] rtl:translate-x-1/2"
+                  className="nav-dropdown-panel pointer-events-auto visible absolute start-1/2 top-full z-30 -translate-x-1/2 overflow-visible pt-3 opacity-100 rtl:translate-x-1/2"
                 >
-                  <div className="min-w-[180px] translate-y-0 rounded-[var(--radius-field)] border border-line bg-white py-3 shadow-[var(--shadow-card)] transition-transform duration-300 ease-[var(--motion-ease-lux)]">
+                  <div className="min-w-[180px] overflow-visible rounded-[var(--radius-field)] border border-line bg-white py-3 shadow-[var(--shadow-card)]">
                     <ul className="flex flex-col gap-1">
                       {dropdownItems.map((link) => {
                         const hasChildren = Boolean(link.children?.length);
+                        const isSubOpen = openSubKey === link.key;
 
                         if (!hasChildren) {
                           return (
-                            <li key={`${dropdownKey}-${link.key}`} role="none">
+                            <li
+                              key={`${dropdownKey}-${link.key}`}
+                              role="none"
+                              onMouseEnter={() => setOpenSubKey(null)}
+                            >
                               <LocalizedLink
                                 href={link.href}
                                 role="menuitem"
-                                className="block px-5 py-2 text-[13px] leading-[18px] text-ink transition-colors duration-200 hover:bg-sapphire-50 hover:text-brand"
-                                onFocus={() => openOnly(dropdownKey)}
+                                className={menuItemClass}
+                                onFocus={() => {
+                                  openOnly(dropdownKey);
+                                  setOpenSubKey(null);
+                                }}
                               >
                                 {navT(link.key)}
                               </LocalizedLink>
@@ -133,14 +147,22 @@ export function DesktopNav({ extraLinks = [] }: { extraLinks?: ExtraNavLink[] })
                           <li
                             key={`${dropdownKey}-${link.key}`}
                             role="none"
-                            className="nav-subdropdown group/sub relative"
+                            className="relative"
+                            onMouseEnter={() => setOpenSubKey(link.key)}
                           >
                             <LocalizedLink
                               href={link.href}
                               role="menuitem"
                               aria-haspopup="menu"
-                              className="flex items-center justify-between gap-3 px-5 py-2 text-[13px] leading-[18px] text-ink transition-colors duration-200 hover:bg-sapphire-50 hover:text-brand group-focus-within/sub:bg-sapphire-50 group-focus-within/sub:text-brand"
-                              onFocus={() => openOnly(dropdownKey)}
+                              aria-expanded={isSubOpen}
+                              className={cn(
+                                "flex items-center justify-between gap-3 px-5 py-2 text-label text-ink transition-colors duration-150 hover:bg-sapphire-50 hover:text-brand",
+                                isSubOpen && "bg-sapphire-50 text-brand",
+                              )}
+                              onFocus={() => {
+                                openOnly(dropdownKey);
+                                setOpenSubKey(link.key);
+                              }}
                             >
                               <span>{navT(link.key)}</span>
                               <Icon
@@ -148,29 +170,30 @@ export function DesktopNav({ extraLinks = [] }: { extraLinks?: ExtraNavLink[] })
                                 className="h-2.5 w-2.5 shrink-0 -rotate-90 rtl:rotate-90"
                               />
                             </LocalizedLink>
-                            <div
-                              className={cn(
-                                "nav-subdropdown-panel absolute top-0 start-full z-40 ps-1",
-                                "invisible pointer-events-none opacity-0 transition-[opacity,visibility] duration-200 ease-[var(--motion-ease-lux)]",
-                                "group-hover/sub:visible group-hover/sub:pointer-events-auto group-hover/sub:opacity-100",
-                                "group-focus-within/sub:visible group-focus-within/sub:pointer-events-auto group-focus-within/sub:opacity-100",
-                              )}
-                            >
-                              <ul className="min-w-[150px] rounded-[var(--radius-field)] border border-line bg-white py-2 shadow-[var(--shadow-card)]">
-                                {link.children!.map((child) => (
-                                  <li key={`${link.key}-${child.key}`} role="none">
-                                    <LocalizedLink
-                                      href={child.href}
-                                      role="menuitem"
-                                      className="block px-5 py-2 text-[13px] leading-[18px] text-ink transition-colors duration-200 hover:bg-sapphire-50 hover:text-brand"
-                                      onFocus={() => openOnly(dropdownKey)}
+                            {isSubOpen ? (
+                              <div className="absolute top-0 start-full z-50 ps-1">
+                                <ul className="min-w-[150px] rounded-[var(--radius-field)] border border-line bg-white py-2 shadow-[var(--shadow-card)]">
+                                  {link.children!.map((child) => (
+                                    <li
+                                      key={`${dropdownKey}-${link.key}-${child.key}`}
+                                      role="none"
                                     >
-                                      {navT(child.key)}
-                                    </LocalizedLink>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
+                                      <LocalizedLink
+                                        href={child.href}
+                                        role="menuitem"
+                                        className={menuItemClass}
+                                        onFocus={() => {
+                                          openOnly(dropdownKey);
+                                          setOpenSubKey(link.key);
+                                        }}
+                                      >
+                                        {navT(child.key)}
+                                      </LocalizedLink>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ) : null}
                           </li>
                         );
                       })}

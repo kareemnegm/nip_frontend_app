@@ -28,7 +28,7 @@ export async function Header() {
   return (
     <header
       id="site-header"
-      className="relative z-40 w-full border border-line bg-white"
+      className="relative z-40 w-full overflow-visible border border-line bg-white"
     >
       <div
         className={cn(

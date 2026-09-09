@@ -107,7 +107,7 @@ export default async function RootLayout({
         <GoogleTagManager />
         <GoogleAnalytics />
       </head>
-      <body className="flex min-h-full flex-col">
+      <body className="flex min-h-full flex-col bg-background text-ink">
         <GoogleTagManagerNoScript />
         <AnalyticsRouteTracker />
         {children}

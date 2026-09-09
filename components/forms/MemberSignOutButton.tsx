@@ -1,10 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { scrollPageToTop } from "@/lib/navigation/scroll-to-top";
+import { useLocale } from "@/lib/i18n/context";
+import { localizedHref } from "@/lib/i18n/helpers";
 
 type MemberSignOutButtonProps = {
   className?: string;
@@ -15,7 +15,7 @@ export function MemberSignOutButton({
   className,
   redirectTo = "/private-office",
 }: MemberSignOutButtonProps) {
-  const router = useRouter();
+  const { locale } = useLocale();
   const t = useTranslations("common");
   const [loading, setLoading] = useState(false);
 
@@ -24,9 +24,7 @@ export function MemberSignOutButton({
     try {
       await fetch("/api/member/logout", { method: "POST" });
     } finally {
-      scrollPageToTop();
-      router.push(redirectTo, { scroll: true });
-      router.refresh();
+      window.location.assign(localizedHref(locale, redirectTo));
     }
   }
 
