@@ -13,6 +13,8 @@ echo "==> Install dependencies (npm ci)"
 npm ci
 
 echo "==> Production build"
+rm -f "$ROOT/public/favicon.ico"
 npm run build
 
-echo "==> Done. Restart your Next.js process (e.g. pm2 restart nip_frontend)."
+echo "==> Done. Build complete in $ROOT"
+echo "    Restart your app process separately if your host does not do it automatically."
