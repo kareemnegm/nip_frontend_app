@@ -51,11 +51,12 @@ export async function FeaturedInsightSection({
           gap={24}
           snapAlign="center"
           autoPlay
-          autoPlayBounce
+          autoPlayBounce={false}
+          autoPlayLoop
           autoPlayMode="continuous"
-          autoPlayInterval={2000}
+          autoPlayInterval={4000}
           autoPlaySpeed={0.75}
-          pauseOnHover={false}
+          pauseOnHover
           hoverEdgeScroll={false}
           focusOnHover
         >

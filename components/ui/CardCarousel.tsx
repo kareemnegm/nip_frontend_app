@@ -38,6 +38,8 @@ type CardCarouselProps = {
   focusOnHover?: boolean;
   /** Reverse direction at each end instead of jumping to the first slide. */
   autoPlayBounce?: boolean;
+  /** Repeat the slides seamlessly from first to last. */
+  autoPlayLoop?: boolean;
   /**
    * `slide` — advance one card on an interval (mobile-friendly).
    * `continuous` — pixel crawl every frame (desktop).
@@ -159,6 +161,7 @@ export function CardCarousel({
   hoverEdgeScrollSpeed = 2,
   focusOnHover = true,
   autoPlayBounce = true,
+  autoPlayLoop = false,
   autoPlayMode = "slide",
   autoPlayInterval = 4500,
 }: CardCarouselProps) {
@@ -196,6 +199,9 @@ export function CardCarousel({
     : isDragging || isVerticalTouch;
   const effectiveAutoPlayMode =
     autoPlayMode === "continuous" && canHover ? "continuous" : "slide";
+  const items = Children.toArray(children);
+  const renderedItems =
+    autoPlayLoop && items.length > 1 ? [...items, ...items] : items;
 
   const markUserInteracting = useCallback((pauseMs = 1800) => {
     userInteractingRef.current = true;
@@ -236,7 +242,21 @@ export function CardCarousel({
     );
     if (slides.length <= 1) return;
 
-    const currentIndex = activeIndexRef.current;
+    let currentIndex = activeIndexRef.current;
+
+    if (autoPlayLoop && currentIndex >= items.length) {
+      currentIndex -= items.length;
+      activeIndexRef.current = currentIndex;
+      jumpToSlide(element, slides, currentIndex, snapAlign, "auto");
+    }
+
+    if (autoPlayLoop) {
+      const nextIndex = currentIndex + 1;
+      activeIndexRef.current = nextIndex;
+      setActiveIndex(nextIndex);
+      jumpToSlide(element, slides, nextIndex, snapAlign, "smooth");
+      return;
+    }
 
     if (autoPlayBounce) {
       if (currentIndex >= slides.length - 1) {
@@ -262,7 +282,7 @@ export function CardCarousel({
     activeIndexRef.current = nextIndex;
     setActiveIndex(nextIndex);
     jumpToSlide(element, slides, nextIndex, snapAlign, "smooth");
-  }, [autoPlayBounce, isPaused, snapAlign]);
+  }, [autoPlayBounce, autoPlayLoop, isPaused, items.length, snapAlign]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -279,7 +299,6 @@ export function CardCarousel({
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
     const onChange = () => setReducedMotion(media.matches);
-    setReducedMotion(media.matches);
     media.addEventListener("change", onChange);
     return () => media.removeEventListener("change", onChange);
   }, []);
@@ -287,9 +306,12 @@ export function CardCarousel({
   useEffect(() => {
     const media = window.matchMedia("(hover: hover) and (pointer: fine)");
     const onChange = () => setCanHover(media.matches);
-    setCanHover(media.matches);
+    const frameId = requestAnimationFrame(onChange);
     media.addEventListener("change", onChange);
-    return () => media.removeEventListener("change", onChange);
+    return () => {
+      cancelAnimationFrame(frameId);
+      media.removeEventListener("change", onChange);
+    };
   }, []);
 
   useEffect(
@@ -360,9 +382,30 @@ export function CardCarousel({
       }
 
       const isRtl = document.documentElement.dir === "rtl";
+
+      if (autoPlayLoop && !isRtl) {
+        const slides = slideRefs.current.filter(
+          (slide): slide is HTMLDivElement => slide !== null,
+        );
+        const repeatedFirst = slides[items.length];
+        const originalFirst = slides[0];
+
+        if (repeatedFirst && originalFirst) {
+          const loopWidth = repeatedFirst.offsetLeft - originalFirst.offsetLeft;
+          if (loopWidth > 0 && element.scrollLeft >= loopWidth) {
+            element.scrollLeft -= loopWidth;
+          }
+        }
+      }
+
       const metrics = getScrollMetrics(element, isRtl);
 
-      if (autoPlayBounce) {
+      if (autoPlayLoop) {
+        element.scrollBy({
+          left: isRtl ? -autoPlaySpeed : autoPlaySpeed,
+          behavior: "auto",
+        });
+      } else if (autoPlayBounce) {
         if (!metrics.canScrollNext && autoPlayDirectionRef.current > 0) {
           autoPlayDirectionRef.current = -1;
         } else if (!metrics.canScrollPrev && autoPlayDirectionRef.current < 0) {
@@ -398,9 +441,11 @@ export function CardCarousel({
     shouldAutoPlay,
     effectiveAutoPlayMode,
     autoPlayBounce,
+    autoPlayLoop,
     isPaused,
     autoPlayPausedByInteraction,
     autoPlaySpeed,
+    items.length,
     snapAlign,
   ]);
 
@@ -454,7 +499,6 @@ export function CardCarousel({
     jumpToSlide(element, slides, nextIndex, snapAlign, "smooth");
   };
 
-  const items = Children.toArray(children);
   const focusedIndex = enableHoverIndex
     ? (hoveredIndex ?? activeIndex)
     : enableFocusEffect
@@ -614,9 +658,9 @@ export function CardCarousel({
           setIsTouchScrolling(false);
         }}
       >
-        {items.map((child, index) => (
+        {renderedItems.map((child, index) => (
           <div
-            key={index}
+            key={`${index % items.length}-${index >= items.length ? "repeat" : "original"}`}
             ref={(node) => {
               slideRefs.current[index] = node;
             }}
