@@ -792,6 +792,13 @@ article:focus-within .motion-card-image {
   position: relative;
 }
 
+/* iOS Safari can retain a tapped footer link's highlight while a client
+   navigation shortens the page and moves the footer. The stale highlight is
+   then repainted as a large blue rectangle over the footer brand area. */
+[data-site-footer] a {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Closed menus must stay invisible in every browser / a11y mode (opacity alone is not enough). */
 .nav-dropdown-panel[hidden],
 .nav-dropdown-panel[data-open="false"] {
