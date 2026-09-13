@@ -60,7 +60,7 @@ export async function CatalogHeroSection({
               locale={locale}
               placeholderContent={placeholders.title}
               placeholderTag="h1"
-              className="font-[family-name:var(--font-display)] text-display-sm uppercase text-brand sm:text-display-lg"
+              className="max-w-full break-words font-[family-name:var(--font-display)] text-heading-h1 uppercase text-brand sm:text-display-lg"
             />
             {"description" in hero && hero.description ? (
               <EditableText

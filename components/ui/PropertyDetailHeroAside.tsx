@@ -26,18 +26,22 @@ export function PropertyDetailHeroAside({
   children,
 }: PropertyDetailHeroAsideProps) {
   return (
-    <div className={cn("flex w-full flex-col gap-4 lg:w-auto lg:items-end", className)}>
+    <div
+      className={cn(
+        "flex w-full min-w-0 flex-col items-start gap-3 lg:w-auto lg:items-end lg:gap-4",
+        className,
+      )}
+    >
       {qrCodeUrl ? (
         <PropertyQrCodeImage src={qrCodeUrl} alt={qrAlt} />
       ) : null}
-      <p className="m-0 text-[11px] font-medium uppercase leading-[14px] text-basalt-300 lg:text-end">
+      <p className="m-0 text-label-muted font-medium uppercase text-basalt-300 lg:text-end">
         {priceLabel}
       </p>
-      {/* Mobile: price + CTA on one row. Desktop: stacked & right-aligned. */}
-      <div className="flex w-full items-center justify-between gap-3 lg:w-auto lg:flex-col lg:items-end lg:justify-start lg:gap-4">
-        <div className="flex h-5 items-center gap-2 overflow-visible text-[30px] font-bold leading-[38px] text-brand lg:justify-end">
-          <CurrencyIcon currency="AED" className="h-6 w-6 shrink-0" />
-          <span className="whitespace-nowrap">{price}</span>
+      <div className="flex w-full min-w-0 flex-wrap items-center justify-between gap-3 lg:w-auto lg:flex-col lg:items-end lg:gap-4">
+        <div className="flex min-w-0 shrink-0 items-center gap-2 text-heading-h2 font-bold tracking-normal text-brand sm:text-heading-h1 lg:justify-end">
+          <CurrencyIcon currency="AED" className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
+          <span className="min-w-0 break-words">{price}</span>
         </div>
         {children}
       </div>

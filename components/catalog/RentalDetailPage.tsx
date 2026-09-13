@@ -124,15 +124,15 @@ export async function RentalDetailPage({ locale, slug }: RentalDetailPageProps) 
                 ) : null}
               </div>
 
-              <div className="flex w-full shrink-0 flex-col gap-4 lg:w-auto lg:items-end">
+              <div className="flex w-full min-w-0 shrink-0 flex-col items-start gap-3 lg:w-auto lg:items-end lg:gap-4">
                 <p className="m-0 text-label-muted font-medium lg:text-end">
                   {t(priceEyebrowKey)}
                 </p>
-                <div className="flex w-full items-center justify-between gap-3 lg:w-auto lg:flex-col lg:items-end lg:justify-start lg:gap-4">
-                  <div className="flex h-5 items-center overflow-visible text-heading-h1 font-bold tracking-normal text-brand lg:justify-end">
-                    <span className="whitespace-nowrap">{priceLabel}</span>
+                <div className="flex w-full min-w-0 flex-col items-stretch gap-4 lg:w-auto lg:items-end">
+                  <div className="min-w-0 break-words text-heading-h2 font-bold tracking-normal text-brand sm:text-heading-h1 lg:text-end">
+                    {priceLabel}
                   </div>
-                  <div className="flex shrink-0 items-center gap-3">
+                  <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center lg:justify-end">
                     {memberToken ? (
                       <SavePropertyButton
                         propertyId={property.id}
@@ -144,7 +144,10 @@ export async function RentalDetailPage({ locale, slug }: RentalDetailPageProps) 
                         }}
                       />
                     ) : null}
-                    <Button href={localizedHref(locale, "/contact")}>
+                    <Button
+                      href={localizedHref(locale, "/contact")}
+                      className="w-full sm:w-auto"
+                    >
                       {t("requestAdvisory")}
                     </Button>
                   </div>
