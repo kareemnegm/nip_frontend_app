@@ -750,6 +750,15 @@ article:focus-within .motion-card-image {
     opacity: 1;
     filter: none;
   }
+
+  /* Avoid iOS Safari leaving a composited copy of the blue search button over
+     the footer after the filtered results shorten the page. */
+  .motion-search-bar,
+  .motion-search-bar:focus-within,
+  .motion-search-bar.is-typing {
+    transform: none;
+    transition: box-shadow 0.2s ease;
+  }
 }
 
 .motion-search-bar {
